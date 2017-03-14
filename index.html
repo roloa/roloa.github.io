@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<title>escolar</title>
+	<link type="text/css" rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<h1>escolar<a href="https://www.google.co.jp/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=escolar">
+		<img src="img/escolar.png" title="escolar fish" title="アブラソコムツ" id="escolarFish"/></a></h1>
+	<div>
+	</div>
+
+	<input type="button" value="<" onclick="document.getElementById('escolarFish').style.transform='rotate(0deg)'">
+	<input type="button" value="v" onclick="document.getElementById('escolarFish').style.transform='rotate(270deg)'">
+	<input type="button" value="^" onclick="document.getElementById('escolarFish').style.transform='rotate(90deg)'">
+	<input type="button" value=">" onclick="document.getElementById('escolarFish').style.transform='rotate(180deg)'">
+
+
+</body>
+<script>
+	function onClickSankaku(targetId, sankaku){
+		var targetDOM = document.getElementById(targetId);
+		if(targetDOM.style.display == ""){
+			document.cookie = targetId + "=" + "hide";
+			hide(targetDOM, sankaku);
+		} else {
+			document.cookie = targetId + "=" + "show";
+			show(targetDOM, sankaku);
+		}
+	}
+	function hide(targetDOM, sankaku){
+		targetDOM.style.display =  "none";
+		sankaku.innerHTML = "▽";
+	}
+	function show(targetDOM, sankaku){
+		targetDOM.style.display = "";
+		sankaku.innerHTML = "△";
+	}
+</script>
+
+</html>
