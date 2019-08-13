@@ -2,19 +2,21 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>MediaDevices.getUserMedia()</title>
+    <title>Fortnite OCR Tracker</title>
 </head>
 <body>
 
 <button onclick="startVideo()">ビデオ開始！</button>
 <button onclick="stopVideo()">ビデオ終了！</button>
 <button onclick="snapshot()">写真撮影！</button>
+<button onclick="dumpImageAsBase64()">Base64エンコード！</button>
+<button onclick="ocrRequest()">OCRリクエスト！</button>
 
 <h2>JavaScriptでカメラ表示(・８・)</h2>
 <video autoplay width="320" height="240"></video>
 
 <h2>スナップショット！</h2>
-<img/>
+<img id="snapshot"/>
 
 
 <canvas style="display: none" width="320" height="240"></canvas>
