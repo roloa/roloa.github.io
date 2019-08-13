@@ -88,6 +88,7 @@ function ocrRequest(){
 
   img = document.getElementById('snapshot')
   base64img = imageToBase64(img)
+  base64img = base64img.replace(/^data:image\/(png|jpeg);base64,/, '')
 
   requestBody = {
     requests: [
@@ -100,15 +101,17 @@ function ocrRequest(){
 
   api_key = 'AIzaSyCSNagN0YiVjNxc12WLbuyiZTkYtym0eG0';
   url = 'https://vision.googleapis.com/v1/images:annotate';
-  xhr.open('POST', url + "key=" + api_key, true);
+  xhr.open('POST', url + "?key=" + api_key, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
+//  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
   xhr.onreadystatechange = function(){
     if (xhr.readyState != XMLHttpRequest.DONE){
       if( xhr.status == 200) {
-        console.log("OCRリクエスト成功。")
-        console.log(xhr.response)
+        console.log("OCRリクエスト成功。");
+        console.log(xhr.response);
       } else if(xhr.status >= 400) {
-        console.log("OCRリクエスト失敗。:" + xhr.status)
+        console.log("OCRリクエスト失敗。:" + xhr.status);
+        console.log(xhr.response);
       }
     }
   }
