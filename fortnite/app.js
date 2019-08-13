@@ -139,6 +139,34 @@ function dumpImageAsBase64() {
   console.log(base64img)
 }
 
+function fortniteTrackerRequest() {
+  xhr = new XMLHttpRequest();
+
+  img = document.getElementById('snapshot')
+  base64img = imageToBase64(img)
+  base64img = base64img.replace(/^data:image\/(png|jpeg);base64,/, '')
+
+  api_key = 'e989cc22-f52b-4821-8df7-a7d7229bfe2d';
+  url = 'https://api.fortnitetracker.com/v1/profile';
+  user_platform = 'pc'
+  user_nickname = 'Yut40'
+  xhr.open('GET', url + '/' + user_platform + '/' + user_nickname);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('Api-Key', api_key);
+
+  xhr.onreadystatechange = function(){
+    if (xhr.readyState != XMLHttpRequest.DONE){
+      if( xhr.status == 200) {
+        console.log("Trackerリクエスト成功。");
+        console.log(xhr.response);
+      } else if(xhr.status >= 400) {
+        console.log("Trackerリクエスト失敗。:" + xhr.status);
+        console.log(xhr.response);
+      }
+    }
+  }
+  xhr.send();
+}
 
 /*
 // Read input file
