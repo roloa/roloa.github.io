@@ -181,7 +181,7 @@ function fortniteTrackerRequest(userNickname) {
   user_nickname = userNickname
   xhr.open('GET', url + '/' + user_platform + '/' + user_nickname);
   xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.setRequestHeader('Api-Key', api_key);
+  xhr.setRequestHeader('TRN-Api-Key', api_key);
   promise = new Promise( function(resolve, reject) {
     xhr.onreadystatechange = function(){
       if (xhr.readyState != XMLHttpRequest.DONE){
