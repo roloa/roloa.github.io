@@ -86,7 +86,7 @@ function ocrRequest(){
 
   xhr = new XMLHttpRequest();
 
-  img = document.getElementById('snapshot')
+  img = document.getElementById('snapshotImage')
   base64img = imageToBase64(img)
   base64img = base64img.replace(/^data:image\/(png|jpeg);base64,/, '')
 
@@ -109,6 +109,10 @@ function ocrRequest(){
       if( xhr.status == 200) {
         console.log("OCRリクエスト成功。");
         console.log(xhr.response);
+        
+        ocrResultList = parseOcrResult(xhr.response);
+        getTrackerAll(ocrResultList)
+        
       } else if(xhr.status >= 400) {
         console.log("OCRリクエスト失敗。:" + xhr.status);
         console.log(xhr.response);
@@ -131,7 +135,7 @@ function imageToBase64(img) {
 }
 
 function dumpImageAsBase64() {
-  img = document.getElementById('snapshot')
+  img = document.getElementById('snapshotImage')
   base64img = imageToBase64(img)
   console.log("width : " + img.width)
   console.log("height: " + img.height)
@@ -139,63 +143,71 @@ function dumpImageAsBase64() {
   console.log(base64img)
 }
 
-function fortniteTrackerRequest() {
-  xhr = new XMLHttpRequest();
+function parseOcrResult(ocrResult) {
+  descriptionArray = []
+  ocrResult.responses[0].textAnnotations.forEach(function(element){
+    if(!element.description.match(/\n/)) {
+      descriptionArray.push(element.description)
+    }
+  });
+  return descriptionArray;
+}
 
-  img = document.getElementById('snapshot')
-  base64img = imageToBase64(img)
-  base64img = base64img.replace(/^data:image\/(png|jpeg);base64,/, '')
+function getTrackerAll(userNicknameList) {
+  if(userNicknameList.length == 0) {
+    return;
+  } 
+  userNickname = userNicknameList.pop();
+  
+  fortniteTrackerRequest(userNickname).then(function(trackerResult){
+      // 3秒待ってから次のリクエストをする
+      setTimeout(function(){
+        getTrackerAll(userNicknameList);
+      }, 3000)
+      
+    }).catch(function(error){
+      console.log("Trackerリクエスト失敗により中止。")
+      console.log(error)
+    })
+  
+}
+
+function fortniteTrackerRequest(userNickname) {
+  xhr = new XMLHttpRequest();
 
   api_key = 'e989cc22-f52b-4821-8df7-a7d7229bfe2d';
   url = 'https://api.fortnitetracker.com/v1/profile';
   user_platform = 'pc'
-  user_nickname = 'Yut40'
+  user_nickname = userNickname
   xhr.open('GET', url + '/' + user_platform + '/' + user_nickname);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.setRequestHeader('Api-Key', api_key);
-
-  xhr.onreadystatechange = function(){
-    if (xhr.readyState != XMLHttpRequest.DONE){
-      if( xhr.status == 200) {
-        console.log("Trackerリクエスト成功。");
-        console.log(xhr.response);
-      } else if(xhr.status >= 400) {
-        console.log("Trackerリクエスト失敗。:" + xhr.status);
-        console.log(xhr.response);
+  promise = new Promise( function(resolve, reject) {
+    xhr.onreadystatechange = function(){
+      if (xhr.readyState != XMLHttpRequest.DONE){
+        if( xhr.status == 200) {
+          console.log("Trackerリクエスト成功。");
+          console.log(xhr.response);
+          resolve(xhr.response)
+        } else if(xhr.status >= 400) {
+          console.log("Trackerリクエスト失敗。:" + xhr.status);
+          console.log(xhr.response);
+          reject(xhr.status + ": response => " + xhr.response)
+        }
       }
     }
-  }
+  });
   xhr.send();
+  return promise;
 }
 
-/*
-// Read input file
-const readFile = (file) => {
-let reader = new FileReader();
-const p = new Promise((resolve, reject) => {
-  reader.onload = (ev) => {
-    document.querySelector('img').setAttribute('src', ev.target.result);
-    resolve(ev.target.result.replace(/^data:image\/(png|jpeg);base64,/, ''));
-  };
-})
-reader.readAsDataURL(file);
-return p;
-};
-// Event handling
-document.querySelector('input').addEventListener('change', ev => {
-if (!ev.target.files || ev.target.files.length == 0) return;
-Promise.resolve(ev.target.files[0])
-  .then(readFile)
-  .then(sendAPI)
-  .then(res => {
-    console.log('SUCCESS!', res);
-    document.querySelector('pre').innerHTML = JSON.stringify(res, null, 2);
-  })
-  .catch(err => {
-    console.log('FAILED:(', err);
-    document.querySelector('pre').innerHTML = JSON.stringify(err, null, 2);
-  });
-});
-*/
+function testrun() {
+  console.log("テストラン！")
+  testJsonString = '{"responses":[{"textAnnotations":[{"locale":"en","description":"Yut4o\\nhirofit\\n","boundingPoly":{"vertices":[{"x":134,"y":72},{"x":257,"y":72},{"x":257,"y":171},{"x":134,"y":171}]}},{"description":"Yut4o","boundingPoly":{"vertices":[{"x":134,"y":78},{"x":246,"y":72},{"x":248,"y":112},{"x":136,"y":118}]}},{"description":"hirofit","boundingPoly":{"vertices":[{"x":140,"y":146},{"x":254,"y":134},{"x":257,"y":159},{"x":143,"y":171}]}}],"fullTextAnnotation":{"pages":[{"property":{"detectedLanguages":[{"languageCode":"en","confidence":0.58}]},"width":320,"height":240,"blocks":[{"boundingBox":{"vertices":[{"x":134,"y":78},{"x":246,"y":72},{"x":248,"y":112},{"x":136,"y":118}]},"paragraphs":[{"boundingBox":{"vertices":[{"x":134,"y":78},{"x":246,"y":72},{"x":248,"y":112},{"x":136,"y":118}]},"words":[{"boundingBox":{"vertices":[{"x":134,"y":78},{"x":246,"y":72},{"x":248,"y":112},{"x":136,"y":118}]},"symbols":[{"boundingBox":{"vertices":[{"x":134,"y":78},{"x":151,"y":77},{"x":153,"y":117},{"x":136,"y":118}]},"text":"Y"},{"boundingBox":{"vertices":[{"x":154,"y":77},{"x":174,"y":76},{"x":176,"y":116},{"x":156,"y":117}]},"text":"u"},{"boundingBox":{"vertices":[{"x":174,"y":76},{"x":193,"y":75},{"x":195,"y":115},{"x":176,"y":116}]},"text":"t"},{"boundingBox":{"vertices":[{"x":194,"y":75},{"x":214,"y":74},{"x":216,"y":114},{"x":196,"y":115}]},"text":"4"},{"property":{"detectedBreak":{"type":"EOL_SURE_SPACE"}},"boundingBox":{"vertices":[{"x":215,"y":74},{"x":247,"y":72},{"x":249,"y":112},{"x":217,"y":114}]},"text":"o"}]}]}],"blockType":"TEXT"},{"property":{"detectedLanguages":[{"languageCode":"en","confidence":1}]},"boundingBox":{"vertices":[{"x":140,"y":146},{"x":254,"y":134},{"x":257,"y":159},{"x":143,"y":171}]},"paragraphs":[{"property":{"detectedLanguages":[{"languageCode":"en","confidence":1}]},"boundingBox":{"vertices":[{"x":140,"y":146},{"x":254,"y":134},{"x":257,"y":159},{"x":143,"y":171}]},"words":[{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":140,"y":146},{"x":254,"y":134},{"x":257,"y":159},{"x":143,"y":171}]},"symbols":[{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":140,"y":147},{"x":152,"y":146},{"x":154,"y":168},{"x":142,"y":169}]},"text":"h"},{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":163,"y":148},{"x":166,"y":148},{"x":168,"y":166},{"x":165,"y":166}]},"text":"i"},{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":174,"y":153},{"x":184,"y":152},{"x":185,"y":164},{"x":175,"y":165}]},"text":"r"},{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":189,"y":153},{"x":199,"y":152},{"x":200,"y":162},{"x":190,"y":163}]},"text":"o"},{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":208,"y":139},{"x":219,"y":138},{"x":221,"y":160},{"x":210,"y":161}]},"text":"f"},{"property":{"detectedLanguages":[{"languageCode":"en"}]},"boundingBox":{"vertices":[{"x":227,"y":142},{"x":232,"y":141},{"x":234,"y":158},{"x":229,"y":159}]},"text":"i"},{"property":{"detectedLanguages":[{"languageCode":"en"}],"detectedBreak":{"type":"EOL_SURE_SPACE"}},"boundingBox":{"vertices":[{"x":245,"y":136},{"x":254,"y":135},{"x":256,"y":159},{"x":247,"y":160}]},"text":"t"}]}]}],"blockType":"TEXT"}]}],"text":"Yut4o\\nhirofit\\n"}}]}'
+  testResult = JSON.parse(testJsonString)
+  returnVal = parseOcrResult(testResult);
+  console.log(returnVal)
+  getTrackerAll(returnVal)
+}
 
 

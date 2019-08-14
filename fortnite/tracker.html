@@ -6,21 +6,32 @@
 </head>
 <body>
 
-<button onclick="startVideo()">ビデオ開始！</button>
-<button onclick="stopVideo()">ビデオ終了！</button>
-<button onclick="snapshot()">写真撮影！</button>
-<button onclick="dumpImageAsBase64()">Base64エンコード！</button>
-<button onclick="ocrRequest()">OCRリクエスト！</button>
-<button onclick="fortniteTrackerRequest()">トラッカーリクエスト！</button>
+<button onclick="startVideo()" style="width:100px;height:50px">カメラ起動</button>
+<button onclick="stopVideo()" style="width:100px;height:50px">カメラ停止</button>
+<button onclick="snapshot()" style="width:100px;height:50px">写真撮影</button>
+<button onclick="ocrRequest()" style="width:100px;height:50px">解析開始</button>
+<!--
+  <button onclick="dumpImageAsBase64()" style="width:100px;height:50px">Base64エンコード！</button>
+  <button onclick="fortniteTrackerRequest()" style="width:100px;height:50px">トラッカーリクエスト！</button>
+-->
+  <button onclick="testrun()" style="width:100px;height:50px">テストラン</button>
 
-<h2>JavaScriptでカメラ表示(・８・)</h2>
-<video autoplay width="320" height="240"></video>
+<h2>Fortnite OCR Tracker</h2>
+<div id="camera" style="float:left">
+  <h3>Camera</h3>
+  <video autoplay width="320" height="240"></video>
+</div>
+<div id="snapshot" style="float:left">
+  <h3>SnapShot</h3>
+  <img id="snapshotImage"/>
+</div>
 
-<h2>スナップショット！</h2>
-<img id="snapshot"/>
-
+<div id="result" style="clear: both;">
+  <h3>Result</h3>
+</div>
 
 <canvas style="display: none" width="320" height="240"></canvas>
+
 <script src="app.js"></script>
 </body>
 </html>
