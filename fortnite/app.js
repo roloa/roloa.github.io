@@ -18,7 +18,7 @@ function startVideo() {
             return navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    deviceId: videoDevices[0].deviceId
+                    deviceId: videoDevices[videoDevices.length - 1].deviceId
                 }
             });
         })
