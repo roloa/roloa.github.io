@@ -1,6 +1,12 @@
-function startVideo() {
-    console.info('入出力デバイスを確認してビデオを開始するよ！');
 
+isFirstStart = true;
+
+function startVideo() {
+
+  if( isFirstStart ){
+    // 初めて押したとき
+    isFirstStart = false;
+    console.info('入出力デバイスを確認してビデオを開始するよ！');
     Promise.resolve()
         .then(function () {
             return navigator.mediaDevices.enumerateDevices();
@@ -14,10 +20,18 @@ function startVideo() {
             if (videoDevices.length < 1) {
                 throw new Error('ビデオの入力デバイスがない、、、、、。');
             }
+            for(var i = 0 ; i < videoDevices.length ; i++) {
+              // ビデオデバイスの選択肢を作る
+              videoSelect = document.getElementById('videoSource');
+              option = document.createElement('option');
+              option.value = videoDevices[i].deviceId
+              option.text = videoDevices[i].label || `camera ${videoSelect.length + 1}`;
+              videoSelect.appendChild(option);
+            }
             return navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    deviceId: videoDevices[1].deviceId
+                    deviceId: videoDevices[0].deviceId
                 }
             });
         })
@@ -27,13 +41,34 @@ function startVideo() {
             //document.querySelector('video').src = window.URL.createObjectURL(mediaStream);
             // 対応していればこっちの方が良い
              document.querySelector('video').srcObject = mediaStream;
-
-
         })
         .catch(function (error) {
             console.error('ビデオの設定に失敗、、、、', error);
         });
+  } else {
+    // ２回目以降に押したとき
+    
+    // ビデオが動いてたら止める
+    if (videoStreamInUse.active) {
+        stopVideo(stopVideo())
+    }
+    // 選択ボックスの選択によってカメラを選択して再生する
+    Promise.resolve().then(function() {
+      videoSelect = document.getElementById('videoSource');
+      return navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    deviceId: videoSelect.value
+                }
+      });
+    }).then(function (mediaStream) {
+      console.log('取得したMediaStream->', mediaStream);
+      videoStreamInUse = mediaStream;
+      document.querySelector('video').srcObject = mediaStream;
+    });
+  }
 }
+
 
 function stopVideo() {
     console.info('ビデオを止めるよ！');
@@ -41,7 +76,7 @@ function stopVideo() {
     videoStreamInUse.getVideoTracks()[0].stop();
 
     if (videoStreamInUse.active) {
-        console.error('停止できかた、、、', videoStreamInUse);
+        console.error('停止できなかった、、、', videoStreamInUse);
     } else {
         console.log('停止できたよ！', videoStreamInUse);
     }
