@@ -182,7 +182,7 @@ function fortniteTrackerRequest(userNickname) {
   xhr.open('GET', url + '/' + user_platform + '/' + user_nickname);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.setRequestHeader('TRN-Api-Key', api_key);
-  xhr.setRequestHeader('Origin', https://roloa.github.io)
+  xhr.setRequestHeader('Origin', 'https://roloa.github.io')
   promise = new Promise( function(resolve, reject) {
     xhr.onreadystatechange = function(){
       if (xhr.readyState != XMLHttpRequest.DONE){
