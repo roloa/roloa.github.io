@@ -14,30 +14,32 @@ function startVideo() {
         .then(function (mediaDeviceInfoList) {
             console.log('使える入出力デバイスs->', mediaDeviceInfoList);
 
-            var videoDevices = mediaDeviceInfoList.filter(function (deviceInfo) {
-                return deviceInfo.kind == 'videoinput';
-            });
+            var videoDevices = [];
+            for(var i = 0 ; i < mediaDeviceInfoList.length ; i++) {
+              // ビデオデバイスの選択肢を作る
+              if( mediaDeviceInfoList[i].kind == 'videoinput' ){
+                  videoSelect = document.getElementById('videoSource');
+                  option = document.createElement('option');
+                  option.value = mediaDeviceInfoList[i].deviceId
+                  option.text = mediaDeviceInfoList[i].label || `camera ${videoSelect.length + 1}`;
+                  document.getElementById('logText').textContent += JSON.stringify(mediaDeviceInfoList[i].deviceId);
+
+                  videoSelect.appendChild(option);
+                  videoDevices.push(mediaDeviceInfoList[i])
+              }
+            }
+
             if (videoDevices.length < 1) {
                 throw new Error('ビデオの入力デバイスがない、、、、、。');
             }
-            for(var i = 0 ; i < videoDevices.length ; i++) {
-              // ビデオデバイスの選択肢を作る
-              videoSelect = document.getElementById('videoSource');
-              option = document.createElement('option');
-              option.value = videoDevices[i].deviceId
-              option.text = videoDevices[i].label || `camera ${videoSelect.length + 1}`;
-              document.getElementById('logText').textContent += JSON.stringify(videoDevices);
 
-              videoSelect.appendChild(option);
-            }
             return navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
                     deviceId: videoDevices[0].deviceId
                 }
             });
-        })
-        .then(function (mediaStream) {
+        }).then(function (mediaStream) {
             console.log('取得したMediaStream->', mediaStream);
             videoStreamInUse = mediaStream;
             //document.querySelector('video').src = window.URL.createObjectURL(mediaStream);
