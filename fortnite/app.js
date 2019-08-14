@@ -14,7 +14,9 @@ function startVideo() {
             if (videoDevices.length < 1) {
                 throw new Error('ビデオの入力デバイスがない、、、、、。');
             }
-
+            
+            document.write(videoDevices.toString())
+            
             return navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
