@@ -26,6 +26,8 @@ function startVideo() {
               option = document.createElement('option');
               option.value = videoDevices[i].deviceId
               option.text = videoDevices[i].label || `camera ${videoSelect.length + 1}`;
+              document.getElementById('logText').textContent += JSON.stringify(videoDevices);
+
               videoSelect.appendChild(option);
             }
             return navigator.mediaDevices.getUserMedia({
@@ -40,7 +42,7 @@ function startVideo() {
             videoStreamInUse = mediaStream;
             //document.querySelector('video').src = window.URL.createObjectURL(mediaStream);
             // 対応していればこっちの方が良い
-             document.querySelector('video').srcObject = mediaStream;
+            document.querySelector('video').srcObject = mediaStream;
         })
         .catch(function (error) {
             console.error('ビデオの設定に失敗、、、、', error);
