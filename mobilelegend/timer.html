@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Minion Timer for MLBB</title>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+
+    <link type="text/css" rel="stylesheet" href="../style.css">
+
+</head>
+<body>
+<h1>Minion Timer for MLBB</h1>
+
+<button onclick="welcome()" style="width:150px;height:150px;vertical-align: top;">Welcome to Mobile Legend</button>
+<button onclick="startMinion()" style="width:150px;height:150px;vertical-align: top;">ミニオン出撃</button>
+<button onclick="stopAll()" style="width:150px;height:150px;vertical-align: top;">停止</button>
+
+<p>
+経過時間: <span id="displayText">0</span>秒
+</p>
+
+<p>
+<span id="welcomeTimer">  </span>
+</p>
+
+<p>
+使い方:<br />
+試合開始のWelcome to～のアナウンスに合わせてWelcome to～のボタンか、<br />
+ミニオン出撃に合わせて出撃ボタンを押す。<br />
+ドラムの音がミニオンの出撃、衝突のタイミングを教えてくれる。<br />
+<br />
+ハイハット = ミニオン進軍中<br />
+シンバル　 = ミニオン衝突<br />
+キック　　 = ミニオン戦闘中<br />
+スネア　　 = ミニオン出撃<br />
+</p>
+
+<script src="app.js"></script>
+</body>
+</html>
