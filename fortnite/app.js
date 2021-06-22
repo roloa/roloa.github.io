@@ -158,7 +158,7 @@ function ocrRequest(){
     ]
   };
 
-  api_key = 'AIzaSyCSNagN0YiVjNxc12WLbuyiZTkYtym0eG0';
+  api_key = '';
   url = 'https://vision.googleapis.com/v1/images:annotate';
   xhr.open('POST', url + "?key=" + api_key, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
