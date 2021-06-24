@@ -3,22 +3,28 @@
 <body>
 
     <div id='div4' style="float:none; ">
-        <button id='reset_button' value='hoge' style="font-size:30px; background-color: #fcc;" >Reset</button>
+        <button id='reset_button' value='hoge' style="font-size:30px; background-color: #cfc;" >Reset</button>
         <span style="font-size:30px">Level:</span><input id='size_input' size='5' value='5' style="font-size:30px"></input>
-        <button id='judge_button' value='hoge' style="font-size:30px;background-color: #ccf" >Judge</button>
+        <!-- <button id='judge_button' value='hoge' style="font-size:30px;background-color: #ccf" >Judge</button> -->
     </div>
 
     <div id='div3' style="float:none">
         <div id='div1' style="float:left">
             <center><span id='count1' style='font-size:40px'>?</span></center>
-            <canvas id='disp1' height='300px' width='300px' />
+            <div><canvas id='disp1' height='300px' width='300px' /></div>
+            <center><button id='red_button' value='hoge' style="font-size:30px;background-color: #fcc" >赤が多い</button></center>
         </div>
         <div id='div2' style="float:left">
             <center><span id='count2' style='font-size:40px'>?</span></center>
-            <canvas id='disp2' height='300px' width='300px' />
+            <div><canvas id='disp2' height='300px' width='300px' /></div>
+            <center><button id='blue_button' value='hoge' style="font-size:30px;background-color: #ccf" >青が多い</button></center>
         </div>
     </div>
 
+    <div style="clear:both">
+        <br />
+        <span id='message' style='font-size:20px'>箱が多いと思う方のボタンを押してください。</span>
+    </div>
 
 <script src='main.js'></script>
 

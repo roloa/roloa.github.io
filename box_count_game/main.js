@@ -207,17 +207,47 @@
         if( picked1 || picked2){
             setTimeout( counting_cube, count_speed )
         } else {
+            document.getElementById('message').innerHTML = '予想は' + answer_judge + 'でした。<br />'
             if(count_stack1 < count_stack2){
                 document.getElementById('count2').innerHTML += " !!"
+                document.getElementById('message').innerHTML += '正解は' + '青' + 'でした。<br />'
+                if(answer_judge == '青'){
+                    document.getElementById('message').innerHTML += 'おめでとう！'
+                }
             } else {
                 document.getElementById('count1').innerHTML += " !!"
+                document.getElementById('message').innerHTML += '正解は' + '赤' + 'でした。<br />'
+                if(answer_judge == '赤'){
+                    document.getElementById('message').innerHTML += 'おめでとう！'
+                }
             }
+
         }
 
     }
 
     function reset(){
         quiz_size = document.getElementById('size_input').value;
+        quiz_size = Number(quiz_size)
+        quiz_size = Math.floor(quiz_size)
+        document.getElementById('message').innerHTML = '箱が多いと思う方のボタンを押してください。'
+
+        if( Number.isNaN(quiz_size) ){
+            quiz_size = 5
+        }
+        if( 15 < quiz_size ){
+            if(window.confirm('レベルが大きすぎるとブラウザが止まったりします。レベルを['+ quiz_size +']に設定しますか。')){
+
+            } else {
+                quiz_size = 7
+            }
+        }
+        if( quiz_size < 3 ){
+            document.getElementById('message').innerHTML = 'レベルは3以上の整数で指定してください。'
+            quiz_size = 3
+        }
+        document.getElementById('size_input').value = quiz_size;
+
         document.getElementById('count1').innerHTML = "?"
         document.getElementById('count2').innerHTML = "?"
         //
@@ -238,11 +268,23 @@
         redraw_cube();
         count_stack1 = 0
         count_stack2 = 0
-
+        answer_judge = null
     }
-    function judge(){
-        count_speed = 200;
-        setTimeout( counting_cube, count_speed )
+    function red_judge(){
+        if(answer_judge == null){
+            count_speed = 200;
+            answer_judge = '赤'
+            document.getElementById('message').innerHTML = '計数中...'
+            setTimeout( counting_cube, count_speed )
+        }
+    }
+    function blue_judge(){
+        if(answer_judge == null){
+            count_speed = 200;
+            answer_judge = '青'
+            document.getElementById('message').innerHTML = '計数中...'
+            setTimeout( counting_cube, count_speed )
+        }
     }
     //document.getElementById('hoge').innerHTML = 'hogehoges'
 
@@ -252,6 +294,7 @@
     disp1 = document.getElementById('disp1').getContext('2d');
     disp2 = document.getElementById('disp2').getContext('2d');
 
+    answer_judge = null;
 
     disp1.scale(-1,1);
     disp1.translate( -CANVAS_SIZE, 0);
@@ -284,5 +327,6 @@
 
 
     document.getElementById('reset_button').onclick = reset;
-    document.getElementById('judge_button').onclick = judge;
+    document.getElementById('red_button').onclick = red_judge;
+    document.getElementById('blue_button').onclick = blue_judge;
 })();
