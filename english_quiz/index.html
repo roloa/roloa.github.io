@@ -1,32 +1,106 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <link rel="apple-touch-icon" href="webclip.png" />
     <title>英単語クイズ</title>
     <style>
-    th,td{
-        padding: 10px;
-    }
-    #button_quiz{
-        padding: 20px;
-    }
-    .answer_button{
-        padding: 20px;
-    }
+        #app {
+            margin-top: 30px;
+            margin-right: auto;
+            margin-left: auto;
+            min-height: 500px;
+            width: 80%;
+            min-width: 300px;
+            border: solid;
+        }
+
+        #quiz {
+            margin-top: 40px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #quiz_description {
+            margin: 10px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        #quiz_en {
+            font-size: 36px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+
+        #button_quiz {
+            margin: 10px;
+            padding: 20px;
+            width: 270px;
+            height: 90px;
+            font-size: 20px;
+        }
+
+        .answer_button {
+            padding: 20px;
+            width: 270px;
+            height: 90px;
+            font-size: 20px;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .answers {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .answer {
+            margin: 10px;
+        }
+
     </style>
 </head>
+
 <body>
-
-    <p id="quiz"><span id='quiz_en'>word</span><button id="button_quiz">出題</button><span id="quiz_description">単語の説明</span></p>
-    <p id="answer1_p"><span id=''>1.</span><button class="answer_button" id="answer1">回答！</button></p>
-    <p id="answer2_p"><span id=''>2.</span><button class="answer_button" id="answer2">回答！</button></p>
-    <p id="answer3_p"><span id=''>3.</span><button class="answer_button" id="answer3">回答！</button></p>
-    <p id="answer4_p"><span id=''>4.</span><button class="answer_button" id="answer4">回答！</button></p>
-
-
-
+    <div id="app">
+        <div id="quiz">
+            <span id='quiz_en'>word</span>
+        </div>
+        <div>
+            <span id='quiz_description'></span>
+        </div>
+        <div class="answers">
+            <div class="row">
+                <div class="answer" id="answer1_p">
+                    <button class="answer_button" id="answer1">回答！</button>
+                </div>
+                <div class="answer" id="answer2_p">
+                    <button class="answer_button" id="answer2">回答！</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="answer" id="answer3_p">
+                    <button class="answer_button" id="answer3">回答！</button>
+                </div>
+                <div class="answer" id="answer4_p">
+                    <button class="answer_button" id="answer4">回答！</button>
+                </div>
+            </div>
+            <button id="button_quiz">出題</button>
+        </div>
+    </div>
 </body>
 <script src='main.js'></script>
 

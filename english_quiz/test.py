@@ -14,7 +14,7 @@ with open("./source_dic.csv", "r", encoding="utf-8", errors="", newline="" ) as 
 
     for row in csv_list:
         print(row)
-        if int(row[1]) < 1000:
+        if int(row[1]) < 10000:
             new_word = {
                 "en":row[0],
                 "jp":row[3],
@@ -22,7 +22,7 @@ with open("./source_dic.csv", "r", encoding="utf-8", errors="", newline="" ) as 
             }
             out_json.append(new_word)
             count += 1
-        if 100 < count:
+        if 10000 < count:
             break
 
 with open('mydata.json', mode='wt', encoding='utf-8') as file:
