@@ -121,6 +121,9 @@
             var new_answer = null
             while(true){
                 new_answer = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]
+                if( new_answer['en'] == correct_answer['en'] ){
+                    continue;
+                }
                 if(check_similar_word( new_answer['en'], correct_answer['en'] )){
                     break;
                 }
@@ -130,7 +133,8 @@
             console.log(new_answer)
             while(true){
                 new_answer = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]
-                if( new_answer['jp'] == answer_display_list[0].innerHTML ){
+                if( new_answer['en'] == correct_answer['en'] ||
+                    new_answer['jp'] == answer_display_list[0].innerHTML ){
                     continue;
                 }
                 if(check_similar_word( new_answer['en'], correct_answer['en'] )){
@@ -142,7 +146,8 @@
             console.log(new_answer)
             while(true){
                 new_answer = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]
-                if( new_answer['jp'] == answer_display_list[0].innerHTML ||
+                if( new_answer['en'] == correct_answer['en'] ||
+                    new_answer['jp'] == answer_display_list[0].innerHTML ||
                     new_answer['jp'] == answer_display_list[1].innerHTML ){
                     continue;
                 }
@@ -155,7 +160,8 @@
             console.log(new_answer)
             while(true){
                 new_answer = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]
-                if( new_answer['jp'] == answer_display_list[0].innerHTML ||
+                if( new_answer['en'] == correct_answer['en'] ||
+                    new_answer['jp'] == answer_display_list[0].innerHTML ||
                     new_answer['jp'] == answer_display_list[1].innerHTML ||
                     new_answer['jp'] == answer_display_list[2].innerHTML
                 ){
