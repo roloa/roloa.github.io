@@ -15,12 +15,23 @@
     answer_display_list[2] = document.getElementById('answer3')
     answer_display_list[3] = document.getElementById('answer4')
 
-    var description_display_list = []
-    description_display_list[0] = document.getElementById('description1')
-    description_display_list[1] = document.getElementById('description2')
-    description_display_list[2] = document.getElementById('description3')
-    description_display_list[3] = document.getElementById('description4')
+    var explain_jp_list = []
+    explain_jp_list[0] = document.getElementById('explain_jp_1')
+    explain_jp_list[1] = document.getElementById('explain_jp_2')
+    explain_jp_list[2] = document.getElementById('explain_jp_3')
+    explain_jp_list[3] = document.getElementById('explain_jp_4')
 
+    var explain_en_list = []
+    explain_en_list[0] = document.getElementById('explain_en_1')
+    explain_en_list[1] = document.getElementById('explain_en_2')
+    explain_en_list[2] = document.getElementById('explain_en_3')
+    explain_en_list[3] = document.getElementById('explain_en_4')
+
+    var explain_description_list = []
+    explain_description_list[0] = document.getElementById('explain_description_1')
+    explain_description_list[1] = document.getElementById('explain_description_2')
+    explain_description_list[2] = document.getElementById('explain_description_3')
+    explain_description_list[3] = document.getElementById('explain_description_4')
 
     var correct_answer_index = 0
 
@@ -59,10 +70,18 @@
         answer_display_list[1].style["background-color"] = null
         answer_display_list[2].style["background-color"] = null
         answer_display_list[3].style["background-color"] = null
-        description_display_list[0].innerHTML = ''
-        description_display_list[1].innerHTML = ''
-        description_display_list[2].innerHTML = ''
-        description_display_list[3].innerHTML = ''
+        explain_description_list[0].innerHTML = ''
+        explain_description_list[1].innerHTML = ''
+        explain_description_list[2].innerHTML = ''
+        explain_description_list[3].innerHTML = ''
+        explain_en_list[0].innerHTML = ''
+        explain_en_list[1].innerHTML = ''
+        explain_en_list[2].innerHTML = ''
+        explain_en_list[3].innerHTML = ''
+        explain_jp_list[0].innerHTML = ''
+        explain_jp_list[1].innerHTML = ''
+        explain_jp_list[2].innerHTML = ''
+        explain_jp_list[3].innerHTML = ''
         document.getElementById('quiz_description').innerHTML = ''
 
         correct_answer = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]
@@ -131,16 +150,25 @@
         }
         var correct_answer_index = Math.floor(Math.random() * 4);
         answer_display_list[correct_answer_index].innerHTML = correct_answer['jp']
+        answer_list[correct_answer_index] = correct_answer
 
     var on_answer_button = function( answer_numbers ){
         answer_display_list[answer_numbers].style["background-color"] = '#FCC'
         answer_display_list[correct_answer_index].style["background-color"] = '#CFC'
         document.getElementById('quiz_description').innerHTML = correct_answer['description']
 
-        description_display_list[0].innerHTML = answer_list[0]['description']
-        description_display_list[1].innerHTML = answer_list[1]['description']
-        description_display_list[2].innerHTML = answer_list[2]['description']
-        description_display_list[3].innerHTML = answer_list[3]['description']
+        explain_description_list[0].innerHTML = answer_list[0]['description']
+        explain_description_list[1].innerHTML = answer_list[1]['description']
+        explain_description_list[2].innerHTML = answer_list[2]['description']
+        explain_description_list[3].innerHTML = answer_list[3]['description']
+        explain_jp_list[0].innerHTML = answer_list[0]['jp']
+        explain_jp_list[1].innerHTML = answer_list[1]['jp']
+        explain_jp_list[2].innerHTML = answer_list[2]['jp']
+        explain_jp_list[3].innerHTML = answer_list[3]['jp']
+        explain_en_list[0].innerHTML = answer_list[0]['en']
+        explain_en_list[1].innerHTML = answer_list[1]['en']
+        explain_en_list[2].innerHTML = answer_list[2]['en']
+        explain_en_list[3].innerHTML = answer_list[3]['en']
     }
 
     document.getElementById('answer1').onclick = function(){
