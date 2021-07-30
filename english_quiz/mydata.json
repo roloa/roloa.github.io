@@ -1,0 +1,502 @@
+[
+  {
+    "en": "a",
+    "jp": "a",
+    "description": "アルファベットのa. ひとつの. 1人の. 例示時(NATO phonetic alphabetという. 以下zまで同) A as Alpha. "
+  },
+  {
+    "en": "ability",
+    "jp": "能力",
+    "description": "能力. 腕力. 才能"
+  },
+  {
+    "en": "able",
+    "jp": "できる",
+    "description": "能力のある. ～できる"
+  },
+  {
+    "en": "about",
+    "jp": "約",
+    "description": "約. について"
+  },
+  {
+    "en": "above",
+    "jp": "の上に",
+    "description": "の上に. 超越して"
+  },
+  {
+    "en": "access",
+    "jp": "アクセス",
+    "description": "アクセスする. 交通の便. 接近. 面接. 発作. "
+  },
+  {
+    "en": "accord",
+    "jp": "調和",
+    "description": "調和(する). 協定. 合意(する). 一致. 与える. agreement"
+  },
+  {
+    "en": "account",
+    "jp": "アカウント",
+    "description": "アカウント. 勘定書. 預金口座. . 説明する"
+  },
+  {
+    "en": "acid",
+    "jp": "酸",
+    "description": "酸. 酸性. 酸塩基反応(acid-base reaction). 酸っぱい. 麻薬. LSD (cf. alkali)"
+  },
+  {
+    "en": "across",
+    "jp": "横断して",
+    "description": "横断して"
+  },
+  {
+    "en": "act",
+    "jp": "行為",
+    "description": "作用する. 行動する. 行為. 議定書"
+  },
+  {
+    "en": "action",
+    "jp": "アクション",
+    "description": "動作. 行動"
+  },
+  {
+    "en": "activity",
+    "jp": "活動",
+    "description": "活動. 活躍. 働き. 動き. 活気"
+  },
+  {
+    "en": "actually",
+    "jp": "実際に",
+    "description": "実際に. 現実に. 実は"
+  },
+  {
+    "en": "AD",
+    "jp": "AD",
+    "description": "Alzheimer's disease(アルツハイマー病),Anno Domini(西暦),Atopic Dermatitis(アトピー性皮膚炎),Attention Deficit(注意欠陥性障害)  他"
+  },
+  {
+    "en": "add",
+    "jp": "加える",
+    "description": "加える. 足す"
+  },
+  {
+    "en": "addition",
+    "jp": "追加",
+    "description": "足し算. 追加"
+  },
+  {
+    "en": "additional",
+    "jp": "追加の",
+    "description": "追加の"
+  },
+  {
+    "en": "address",
+    "jp": "住所",
+    "description": "住所. (仕事などに)取り組む. に話しかける. 演説"
+  },
+  {
+    "en": "administration",
+    "jp": "管理",
+    "description": "行政. 政治. 管理. 執行. 支配. 処理. 投与. 主管庁. 政権"
+  },
+  {
+    "en": "adult",
+    "jp": "アダルト",
+    "description": "おとな. 成熟した. 成人の. 成人専用の"
+  },
+  {
+    "en": "affect",
+    "jp": "影響を及ぼす",
+    "description": "に影響する. に作用する. 気取る. ふりをする. 愛着を感じる"
+  },
+  {
+    "en": "after",
+    "jp": "後に",
+    "description": "後に. (後). "
+  },
+  {
+    "en": "again",
+    "jp": "再び",
+    "description": "再び. また. もう一度"
+  },
+  {
+    "en": "against",
+    "jp": "に対して",
+    "description": "に対する. に対して"
+  },
+  {
+    "en": "age",
+    "jp": "年齢",
+    "description": "年齢"
+  },
+  {
+    "en": "agency",
+    "jp": "代理店",
+    "description": "代理店. 機関. 媒体. 作用"
+  },
+  {
+    "en": "agent",
+    "jp": "代理人",
+    "description": "代理人. 代理店. 行為の主体. 媒介. 外交員. スパイ"
+  },
+  {
+    "en": "ago",
+    "jp": "前に",
+    "description": "前に"
+  },
+  {
+    "en": "agree",
+    "jp": "同意する",
+    "description": "同意する. 賛成する"
+  },
+  {
+    "en": "aid",
+    "jp": "援助",
+    "description": "支援. 補佐. 助手. 応援する. 助ける. assistance"
+  },
+  {
+    "en": "air",
+    "jp": "空気",
+    "description": "空気. 態度"
+  },
+  {
+    "en": "AL",
+    "jp": "アラバマ州",
+    "description": "Alabamaアラバマ州"
+  },
+  {
+    "en": "all",
+    "jp": "すべて",
+    "description": "すべての. 全部の. すべて(のこと)"
+  },
+  {
+    "en": "allow",
+    "jp": "許可する",
+    "description": "許可する. 許す. を可能にする"
+  },
+  {
+    "en": "almost",
+    "jp": "ほとんど",
+    "description": "ほとんど"
+  },
+  {
+    "en": "alone",
+    "jp": "唯一の",
+    "description": "唯一の. 単に. 離れて"
+  },
+  {
+    "en": "along",
+    "jp": "に沿って",
+    "description": "に沿って"
+  },
+  {
+    "en": "already",
+    "jp": "すでに",
+    "description": "すでに. もう"
+  },
+  {
+    "en": "also",
+    "jp": "もまた",
+    "description": "もまた"
+  },
+  {
+    "en": "although",
+    "jp": "しかし",
+    "description": "たとえ～でも. しかし. とはいえ"
+  },
+  {
+    "en": "always",
+    "jp": "常に",
+    "description": "いつも,常に"
+  },
+  {
+    "en": "America",
+    "jp": "アメリカ",
+    "description": "アメリカ合衆国 United State of America 他"
+  },
+  {
+    "en": "American",
+    "jp": "アメリカの",
+    "description": "アメリカの"
+  },
+  {
+    "en": "among",
+    "jp": "の間で",
+    "description": "間で. の間で"
+  },
+  {
+    "en": "amount",
+    "jp": "量",
+    "description": "量. に等しくなる. 総計. 総額. 額"
+  },
+  {
+    "en": "an",
+    "jp": "ひとつの",
+    "description": "ひとつの. 1人の"
+  },
+  {
+    "en": "analysis",
+    "jp": "解析",
+    "description": "分析. 詳細な検討. 分解. 解析. 見方. 解析学"
+  },
+  {
+    "en": "and",
+    "jp": "と",
+    "description": "と. そして. (接続詞)そうすれば"
+  },
+  {
+    "en": "angel",
+    "jp": "天使",
+    "description": "天使"
+  },
+  {
+    "en": "Angeles",
+    "jp": "ロサンゼルス",
+    "description": "ロサンゼルス"
+  },
+  {
+    "en": "animal",
+    "jp": "動物",
+    "description": "動物"
+  },
+  {
+    "en": "another",
+    "jp": "別の",
+    "description": "別の. 他の. 別のもの. もう1人. もう1つ"
+  },
+  {
+    "en": "answer",
+    "jp": "答え",
+    "description": "答える. 返事をする. 答え. 返事"
+  },
+  {
+    "en": "antibody",
+    "jp": "抗体",
+    "description": "免疫体. 抗体"
+  },
+  {
+    "en": "any",
+    "jp": "いくつかの",
+    "description": "いくつかの. いく人かの. いかなる. どの"
+  },
+  {
+    "en": "anyone",
+    "jp": "誰でも",
+    "description": "だれか"
+  },
+  {
+    "en": "anything",
+    "jp": "何か",
+    "description": "何か. 何でも. 何も"
+  },
+  {
+    "en": "anyway",
+    "jp": "とにかく",
+    "description": "とにかく"
+  },
+  {
+    "en": "appear",
+    "jp": "現れる",
+    "description": "現れる. 出頭する. 見える. 思われる"
+  },
+  {
+    "en": "apply",
+    "jp": "申し込む",
+    "description": "申し込む. あてはまる. あてはめる. 応用する"
+  },
+  {
+    "en": "approach",
+    "jp": "アプローチ",
+    "description": "接近する. に取り組む. 方法. 接近"
+  },
+  {
+    "en": "area",
+    "jp": "エリア",
+    "description": "地域. エリア. 面積"
+  },
+  {
+    "en": "argue",
+    "jp": "主張する",
+    "description": "論争する. と主張する. 議論する"
+  },
+  {
+    "en": "arm",
+    "jp": "腕",
+    "description": "腕. (the upper arm. 二の腕)"
+  },
+  {
+    "en": "around",
+    "jp": "周りに",
+    "description": "周りに. (周囲)"
+  },
+  {
+    "en": "art",
+    "jp": "アート",
+    "description": "芸術. 美術. 技能"
+  },
+  {
+    "en": "article",
+    "jp": "記事",
+    "description": "記事. 論文. 論説. 品物. 一品. 契約. 条項. (文法)冠詞"
+  },
+  {
+    "en": "as",
+    "jp": "として",
+    "description": "ように. (多義語)"
+  },
+  {
+    "en": "ask",
+    "jp": "頼む",
+    "description": "たずねる(inquire). 質問する. 聞く. 頼む"
+  },
+  {
+    "en": "associate",
+    "jp": "仲間",
+    "description": "関連づける. 連想する. つきあう. 仲間. 同僚"
+  },
+  {
+    "en": "association",
+    "jp": "組合",
+    "description": "組合. 連想. 会. 教会. 連合. 合同. 関連性"
+  },
+  {
+    "en": "assume",
+    "jp": "引き受ける",
+    "description": "と仮定する. を引き受ける. (形態を)とる. のふりをする"
+  },
+  {
+    "en": "at",
+    "jp": "に",
+    "description": "場所を示す前置詞"
+  },
+  {
+    "en": "attack",
+    "jp": "攻撃",
+    "description": "攻撃する. 到達する. 襲う. 着手する. (N)攻撃. 発作. 糺弾. 指弾. 襲撃事件. 発病. 非難"
+  },
+  {
+    "en": "attempt",
+    "jp": "試み",
+    "description": "を試みる. 襲う. 企てる. 企画. 試み. 攻撃"
+  },
+  {
+    "en": "attention",
+    "jp": "注目",
+    "description": "注意. 心遣い. 世話. 親切"
+  },
+  {
+    "en": "author",
+    "jp": "著者",
+    "description": "著者. 張本人. 作家"
+  },
+  {
+    "en": "authority",
+    "jp": "権限",
+    "description": "権威. 権威者. 出典. 権限. 権力. 許可. 職務権限. 当局"
+  },
+  {
+    "en": "available",
+    "jp": "利用できる",
+    "description": "利用できる. 有効な. 役に立つ. 入手できる. 可能な. 人が会議や電話に出られる"
+  },
+  {
+    "en": "average",
+    "jp": "平均",
+    "description": "平均的な. 平均"
+  },
+  {
+    "en": "away",
+    "jp": "離れて",
+    "description": "あちらへ. 去って. 不在で. 外出して"
+  },
+  {
+    "en": "b",
+    "jp": "b",
+    "description": "アルファベットのb. 例示時 B as Bravo. "
+  },
+  {
+    "en": "baby",
+    "jp": "赤ちゃん",
+    "description": "赤ん坊"
+  },
+  {
+    "en": "back",
+    "jp": "バック",
+    "description": "バック. 後ろに. support. 支援する. 推薦する. 後退する. 背中. (the back of one's hand. 手の甲). (lower back腰)"
+  },
+  {
+    "en": "bad",
+    "jp": "悪い　",
+    "description": "悪い"
+  },
+  {
+    "en": "bank",
+    "jp": "銀行",
+    "description": "銀行. 預ける. 2. (川の)土手"
+  },
+  {
+    "en": "bar",
+    "jp": "禁止する",
+    "description": "禁止する. ふさぐ. 柵. 法廷. 弁護士業. 帯. 縞. スナック. 2. バール. 大工道具,工具の一種. (バールという名は製品名で,正式名称ではない). (cf. burl試し. 別語)"
+  },
+  {
+    "en": "base",
+    "jp": "ベース",
+    "description": "基づく. 基礎をおく. 基礎. 根拠. 基地. ベース. (文法)語幹"
+  },
+  {
+    "en": "be",
+    "jp": "ある",
+    "description": "である. ある. (助動詞)受け身を作る"
+  },
+  {
+    "en": "beach",
+    "jp": "ビーチ",
+    "description": "(海･湖･河川の)浜辺"
+  },
+  {
+    "en": "bear",
+    "jp": "クマ",
+    "description": "運ぶ. を生む. を持っている. 負担する. がまんする. クマ. 熊. 乱暴者. 弱気筋. 慎重派"
+  },
+  {
+    "en": "because",
+    "jp": "なぜなら",
+    "description": "なぜなら"
+  },
+  {
+    "en": "become",
+    "jp": "になる",
+    "description": "になる. (ある状態)になる･変わる"
+  },
+  {
+    "en": "before",
+    "jp": "前",
+    "description": "前に. (前). . "
+  },
+  {
+    "en": "begin",
+    "jp": "ベギン",
+    "description": "始まる. 始める"
+  },
+  {
+    "en": "behind",
+    "jp": "後ろ",
+    "description": "うしろに"
+  },
+  {
+    "en": "believe",
+    "jp": "信じる",
+    "description": "信じる. (存在を)信じる"
+  },
+  {
+    "en": "benefit",
+    "jp": "利益",
+    "description": "利益. ためになる. 恩恵. 便宜. 給付. 給付金"
+  },
+  {
+    "en": "best",
+    "jp": "ベスト",
+    "description": "ベストの. 最もよく"
+  }
+]
