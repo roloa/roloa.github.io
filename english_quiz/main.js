@@ -38,7 +38,11 @@
     // 辞書ファイルの読み込み
     fetch('https://roloa.github.io/english_quiz/mydata.json')
       .then(response => response.json())
-      .then(function(data){ quiz_dict = data; console.log('loaded!') } );
+      .then(function(data){
+          quiz_dict = data
+          console.log('loaded!')
+          document.getElementById('button_quiz').onclick()
+    });
 
     check_similar_word = function( word1, word2 ){
         if( Math.random() < 0.00001 ){
