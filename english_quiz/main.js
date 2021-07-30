@@ -68,7 +68,7 @@
     document.getElementById('difficulty_normal').onclick()
 
     check_similar_word = function( word1, word2 ){
-        if( Math.random() < 0.000001 ){
+        if( Math.random() < 0.00001 ){
             // 確率で無条件
             return true
         }
@@ -78,11 +78,16 @@
         if( word1.substr(-2) == word2.substr(-2) ){
             return true
         }
-        if( Math.random() < 0.99 ){
+        if( Math.random() < 0.9 ){
             return false
         }
         if( word1.substr(-1) == word2.substr(-1) ){
-            return true
+            if( word1.charAt(0) == word2.charAt(0) ){
+                return true
+            }
+            if( Math.random() < 0.01 ){
+                return true
+            }
         }
         if( Math.random() < 0.9999 ){
             return false
