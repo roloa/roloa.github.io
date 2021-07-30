@@ -1,6 +1,7 @@
 
 import csv
 import json
+import re
 
 out_json = []
 
@@ -14,14 +15,21 @@ with open("./source_dic.csv", "r", encoding="utf-8", errors="", newline="" ) as 
 
     for row in csv_list:
         print(row)
-        if int(row[1]) < 10000:
-            new_word = {
-                "en":row[0],
-                "jp":row[3],
-                "description":row[4]
-            }
-            out_json.append(new_word)
-            count += 1
+
+        if int(row[1]) < 100:
+            continue;
+        if 10000 < int(row[1]):
+            continue;
+        if re.search('[A-Z]', row[0]):
+            continue;
+
+        new_word = {
+            "en":row[0],
+            "jp":row[3],
+            "description":row[4]
+        }
+        out_json.append(new_word)
+        count += 1
         if 10000 < count:
             break
 
