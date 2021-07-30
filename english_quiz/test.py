@@ -16,9 +16,11 @@ with open("./source_dic.csv", "r", encoding="utf-8", errors="", newline="" ) as 
     for row in csv_list:
         print(row)
 
+        if len(row[0]) == 1:
+            continue;
         if int(row[1]) < 100:
             continue;
-        if 10000 < int(row[1]):
+        if 1000 < int(row[1]):
             continue;
         if re.search('[A-Z]', row[0]):
             continue;
@@ -30,7 +32,7 @@ with open("./source_dic.csv", "r", encoding="utf-8", errors="", newline="" ) as 
         }
         out_json.append(new_word)
         count += 1
-        if 10000 < count:
+        if 100000 < count:
             break
 
 with open('mydata.json', mode='wt', encoding='utf-8') as file:

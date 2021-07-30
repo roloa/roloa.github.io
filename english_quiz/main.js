@@ -35,14 +35,37 @@
 
     var correct_answer_index = 0
 
-    // 辞書ファイルの読み込み
-    fetch('https://roloa.github.io/english_quiz/mydata.json')
-      .then(response => response.json())
-      .then(function(data){
-          quiz_dict = data
-          console.log('loaded!')
-          document.getElementById('button_quiz').onclick()
-    });
+
+    loading_dictionary = function( url ){
+        // 辞書ファイルの読み込み
+        fetch(url)
+          .then(response => response.json())
+          .then(function(data){
+              quiz_dict = data
+              console.log('loaded!')
+              document.getElementById('button_quiz').onclick()
+        });
+    }
+    document.getElementById('difficulty_easy').onclick = function(){
+        loading_dictionary('https://roloa.github.io/english_quiz/easy.json')
+        document.getElementById('difficulty_easy').style["background-color"] = '#FFC'
+        document.getElementById('difficulty_normal').style["background-color"] = null
+        document.getElementById('difficulty_hard').style["background-color"] = null
+    }
+    document.getElementById('difficulty_normal').onclick = function(){
+        loading_dictionary('https://roloa.github.io/english_quiz/normal.json')
+        document.getElementById('difficulty_easy').style["background-color"] = null
+        document.getElementById('difficulty_normal').style["background-color"] = '#FFC'
+        document.getElementById('difficulty_hard').style["background-color"] = null
+    }
+    document.getElementById('difficulty_hard').onclick = function(){
+        loading_dictionary('https://roloa.github.io/english_quiz/hard.json')
+        document.getElementById('difficulty_easy').style["background-color"] = null
+        document.getElementById('difficulty_normal').style["background-color"] = null
+        document.getElementById('difficulty_hard').style["background-color"] = '#FFC'
+    }
+    // ノーマルボタンを押しておく
+    document.getElementById('difficulty_normal').onclick()
 
     check_similar_word = function( word1, word2 ){
         if( Math.random() < 0.00001 ){
