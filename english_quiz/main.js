@@ -72,17 +72,23 @@
             // 確率で無条件
             return true
         }
-        if( word1.substr(2) == word2.substr(2) ){
+        if( word1.substr(-3) == word2.substr(-3) ){
             return true
         }
-        if( word1.substr(-3) == word2.substr(-3) ){
+        if( word1.substr(3) == word2.substr(3) ){
+            return true
+        }
+        if( word1.substr(-2) == word2.substr(-2) ){
+            return true
+        }
+        if( Math.random() < 0.1 ){
+            return false
+        }
+        if( word1.substr(2) == word2.substr(2) ){
             return true
         }
         if( Math.random() < 0.001 ){
             return false
-        }
-        if( word1.substr(-2) == word2.substr(-2) ){
-            return true
         }
         if( word1.charAt(0) == word2.charAt(0) ){
             return true
