@@ -6,19 +6,26 @@
     <link rel="apple-touch-icon" href="webclip.png" />
     <title>英単語クイズ</title>
     <style>
-        th,td{
-            padding: 10px;
-        }
+    th,td{
+        padding: 10px;
+    }
+    #button_quiz{
+        padding: 20px;
+    }
+    .answer_button{
+        padding: 20px;
+    }
     </style>
 </head>
 <body>
 
-    <p id="en">word</p>
-    <p id="answer1">こたえ１</p>
-    <p id="answer2">こたえ２</p>
-    <p id="answer3">こたえ３</p>
+    <p id="quiz"><span id='quiz_en'>word</span><button id="button_quiz">出題</button></p>
+    <p id="answer1_p"><span id='answer1'>こたえ１</span><button class="answer_button" id="button_answer_1">回答！</button></p>
+    <p id="answer2_p"><span id='answer2'>こたえ２</span><button class="answer_button" id="button_answer_2">回答！</button></p>
+    <p id="answer3_p"><span id='answer3'>こたえ３</span><button class="answer_button" id="button_answer_3">回答！</button></p>
+    <p id="answer4_p"><span id='answer4'>こたえ３</span><button class="answer_button" id="button_answer_4">回答！</button></p>
 
-    <button id="button_quiz">出題</button>
+
 
 </body>
 <script src='main.js'></script>
