@@ -204,6 +204,10 @@
         answer_display_list[correct_answer_index].innerHTML = correct_answer['jp']
         answer_list[correct_answer_index] = correct_answer
 
+        document.getElementById('quiz_sound').onclick()
+
+    }
+
     var on_answer_button = function( answer_numbers ){
         answer_display_list[answer_numbers].style["background-color"] = '#FCC'
         answer_display_list[correct_answer_index].style["background-color"] = '#CFC'
@@ -236,6 +240,14 @@
 
     }
 
+    document.getElementById('quiz_sound').onclick = function(){
+        var quiz_word = document.getElementById('quiz_en').innerHTML;
+        var speech_synthesis = new SpeechSynthesisUtterance();
+        speech_synthesis.lang = 'en-US';
+        speech_synthesis.text = quiz_word;
+        speechSynthesis.speak(speech_synthesis);
+    }
+
     document.getElementById('answer1').onclick = function(){
         on_answer_button(0)
     }
@@ -249,7 +261,4 @@
         on_answer_button(3)
     }
 
-
-
-}
 })();
