@@ -200,7 +200,7 @@
             answer_display_list[2].innerHTML = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]['jp']
             answer_display_list[3].innerHTML = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]['jp']
         }
-        var correct_answer_index = Math.floor(Math.random() * 4);
+        correct_answer_index = Math.floor(Math.random() * 4);
         answer_display_list[correct_answer_index].innerHTML = correct_answer['jp']
         answer_list[correct_answer_index] = correct_answer
 
