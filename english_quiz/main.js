@@ -33,6 +33,11 @@
     explain_description_list[2] = document.getElementById('explain_description_3')
     explain_description_list[3] = document.getElementById('explain_description_4')
 
+    var status_text = document.getElementById('status_text')
+    var quiz_count = 0
+    var quiz_correct_count = 0
+    var is_answered = false;
+
     var correct_answer_index = 0
 
 
@@ -124,6 +129,7 @@
         explain_jp_list[2].innerHTML = ''
         explain_jp_list[3].innerHTML = ''
         document.getElementById('quiz_description').innerHTML = ''
+        is_answered = false
 
         correct_answer = quiz_dict[Math.floor( Math.random() * quiz_dict.length )]
         document.getElementById('quiz_en').innerHTML = correct_answer['en']
@@ -215,6 +221,19 @@
         explain_en_list[1].innerHTML = answer_list[1]['en']
         explain_en_list[2].innerHTML = answer_list[2]['en']
         explain_en_list[3].innerHTML = answer_list[3]['en']
+
+        if( !is_answered ) {
+            // 未回答なら
+            is_answered = true
+            quiz_count += 1
+            if( correct_answer['en'] == answer_list[answer_numbers]['en'] ){
+                // 正解
+                quiz_correct_count += 1
+            }
+            var correct_rate = Math.round((quiz_correct_count / quiz_count) * 100 )
+            status_text.innerHTML = quiz_count + '問中' + quiz_correct_count + "問正解("+ correct_rate +"%)"
+        }
+
     }
 
     document.getElementById('answer1').onclick = function(){
