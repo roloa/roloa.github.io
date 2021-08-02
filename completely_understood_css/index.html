@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>完全に理解したCSS</title>
+    <style type='text/css'>
+        #waku{
+            border: 5px solid;
+            border-radius: 50px;
+            width: 40%;
+            height: 250px;
+            margin: auto;
+            margin-top: 10%;
+        }
+        #moji{
+            font-size: 50px;
+            margin-left: 50px;
+            margin-top: 50px;
+            width: 150%;
+        }
+        #input-container{
+            text-align: center;
+            margin-top: 100px;
+        }
+        .input{
+            font-size: 25px;
+        }
+    </style>
+    </head>
+    <body>
+        <div id='waku'>
+            <div id='moji'>
+                CSS<br />
+                完全に理解した
+            </div>
+        </div>
+        <div id='input-container'>
+            <input class='input' id='input_text' type='text' size='30' value='やっぱり<br />理解してない？'></input>
+            <input class='input' type='submit' value='理解した！' onclick='submit_text()'></input>
+            <br />
+            <br />
+            <input class='input' type='submit' value='背景を理解する' onclick='background_color_change()'></input>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+        <!--
+            function submit_text(){
+                document.getElementById('moji').innerHTML = document.getElementById('input_text').value
+            }
+
+            function background_color_change(){
+                if( document.getElementById('waku').style['background-color'] ){
+                    document.getElementById('waku').style['background-color'] = null
+                    document.getElementById('moji').style['background-color'] = null
+                } else {
+                    document.getElementById('waku').style['background-color'] = '#FFD'
+                    document.getElementById('moji').style['background-color'] = '#DFF'
+                }
+            }
+        -->
+    </script>
+</html>
