@@ -78,13 +78,16 @@
             quiz_display_en.innerHTML = "";
 
             // 正答を比較する
+            // 最初に正解に設定する
+            is_correct_answer = true
             for(var count = 0 ; count < current_quiz['en'].length ; count++ ){
                 if( current_quiz['en'].charAt( count ) == input_answer.charAt( count ) ){
-                    is_correct_answer = true
                     quiz_display_en.innerHTML += "<button class='quiz_en quiz_en_correct'>" +
                     current_quiz['en'][count] +
                     "</button>"
                 } else {
+                    // 1文字でも違ったらアウトにする
+                    is_correct_answer = false
                     quiz_display_en.innerHTML += "<button class='quiz_en quiz_en_incorrect'>" +
                     current_quiz['en'][count] +
                     "</button>"
