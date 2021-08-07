@@ -42,8 +42,8 @@
             document.getElementById('difficulty_normal').style["background-color"] = null
             document.getElementById('difficulty_hard').style["background-color"] = '#FFC'
         }
-        // ノーマルボタンを押しておく
-        document.getElementById('difficulty_normal').onclick()
+        // イージーボタンを押しておく
+        document.getElementById('difficulty_easy').onclick()
 
         // 出題ボタン
         document.getElementById('button_new_quiz').onclick = function(){
