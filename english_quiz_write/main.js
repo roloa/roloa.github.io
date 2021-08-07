@@ -55,7 +55,7 @@
 
             quiz_display_en.innerHTML = ""
             for(var count = 0 ; count < current_quiz['en'].length ; count++ ){
-                quiz_display_en.innerHTML += "<button class='quiz_en'>" +
+                quiz_display_en.innerHTML += "<button id='quiz_en_button_"+ count +"' class='quiz_en'>" +
                 "?" +
                 "</button>"
             }
@@ -81,11 +81,11 @@
             for(var count = 0 ; count < current_quiz['en'].length ; count++ ){
                 if( current_quiz['en'].charAt( count ) == input_answer.charAt( count ) ){
                     is_correct_answer = true
-                    quiz_display_en.innerHTML += "<button class='quiz_en_correct'>" +
+                    quiz_display_en.innerHTML += "<button class='quiz_en quiz_en_correct'>" +
                     current_quiz['en'][count] +
                     "</button>"
                 } else {
-                    quiz_display_en.innerHTML += "<button class='quiz_en_incorrect'>" +
+                    quiz_display_en.innerHTML += "<button class='quiz_en quiz_en_incorrect'>" +
                     current_quiz['en'][count] +
                     "</button>"
                 }
