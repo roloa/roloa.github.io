@@ -8,8 +8,11 @@ out_json = []
 
 with open("./source_dic.csv", "r", encoding="utf-8", errors="", newline="" ) as csv_file:
 
-    csv_list = csv.reader(csv_file, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+    csv_file_reader = csv.reader(csv_file, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
 
+    csv_list = []
+    for file_row in csv_file_reader:
+        csv_list.append( file_row )
 
     count = 1
 
