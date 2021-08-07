@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" href="webclip.png" />
+    <title>英単語クイズ_Write</title>
+    <style>
+        #app {
+            margin-top: 30px;
+            margin-right: auto;
+            margin-left: auto;
+            min-height: 500px;
+            width: 80%;
+            min-width: 300px;
+            border: solid;
+        }
+
+        .quiz_container {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #quiz_description_container {
+            margin: 10px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .quiz_en {
+            font-size: 36px;
+        }
+        #quiz_jp {
+            font-size: 36px;
+        }
+
+        .quiz_sound {
+            margin-left: 10px;
+        }
+
+        #status_container {
+            margin: 10px;
+        }
+        #status_text {
+            font-size: 20px;
+        }
+
+        #explain_table{
+            display: flex;
+            justify-content: center;
+        }
+        th,
+        td {
+            padding: 10px;
+        }
+
+        #button_quiz {
+            margin: 10px;
+            padding: 20px;
+            width: 270px;
+            height: 90px;
+            font-size: 20px;
+        }
+
+        .answer_button {
+            padding: 20px;
+            width: 270px;
+            height: 90px;
+            font-size: 20px;
+        }
+
+        #button_new_quiz {
+            padding: 20px;
+            width: 270px;
+            height: 90px;
+            font-size: 20px;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .button_new_quiz_container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #answer_container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        #answer {
+            margin: 5px;
+            font-size: 30px;
+            text-align: center;
+        }
+        #button_confirm_answer {
+            margin: 5px;
+            font-size: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="difficulty">
+            <button class="difficulty_button" id="difficulty_easy">イージー</button>
+            <button class="difficulty_button" id="difficulty_normal">ノーマル</button>
+            <button class="difficulty_button" id="difficulty_hard">ハード</button>
+        </div>
+        <div id="status_container">
+            <span id="status_text">0問中0問正解</span>
+        </div>
+        <div id="quiz_en_container" class="quiz_container">
+            <span id='quiz_en'>word</span></input>
+        </div>
+        <div id="quiz_jp_container" class="quiz_container">
+            <span id='quiz_jp'>word</span><input class='quiz_sound' type='button' value='&lt;))'></input>
+        </div>
+        <div id="quiz_description_container">
+            <span id='quiz_description'>description</span><input class='quiz_sound' type='button' value='&lt;))'></input>
+        </div>
+        <div id="answer_container">
+            <div>
+                <input id="answer" type='text' placeholder="plz write answer here"></input>
+                <input id="button_confirm_answer" type="button" value='確定(Enter)'></input>
+            </div>
+        </div>
+
+        <div class="button_new_quiz_container">
+            <button id="button_new_quiz">出題</button>
+        </div>
+        <div>
+            <div id="explain_table">
+                <table>
+                    <tr>
+                        <td><span id="explain_en_1"/></td>
+                        <td><span id="explain_jp_1"/></td>
+                        <td><span id="explain_description_1"/></td>
+                    </tr>
+                    <tr>
+                        <td><span id="explain_en_2"/></td>
+                        <td><span id="explain_jp_2"/></td>
+                        <td><span id="explain_description_2"/></td>
+                    </tr>
+                    <tr>
+                        <td><span id="explain_en_3"/></td>
+                        <td><span id="explain_jp_3"/></td>
+                        <td><span id="explain_description_3"/></td>
+                    </tr>
+                    <tr>
+                        <td><span id="explain_en_4"/></td>
+                        <td><span id="explain_jp_4"/></td>
+                        <td><span id="explain_description_4"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src='main.js'></script>
+
+<html>
