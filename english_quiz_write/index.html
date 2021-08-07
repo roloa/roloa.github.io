@@ -33,21 +33,17 @@
         }
 
         .quiz_en {
+            display: inline-block;
             font-size: 36px;
-            width: 40px;
+            font-family: "Courier New", Consolas, monospace;
             text-align: center;
-            background-color: #FFF;
+            text-align: center;
+            background-color: #EEE;
         }
         .quiz_en_correct {
-            font-size: 36px;
-            width: 40px;
-            text-align: center;
             background-color: #DFD;
         }
         .quiz_en_incorrect {
-            font-size: 36px;
-            width: 40px;
-            text-align: center;
             background-color: #FDD;
         }
         #quiz_jp {
@@ -121,7 +117,7 @@
             font-size: 30px;
         }
         .synonyms_item {
-
+            font-family: "Courier New", Consolas, monospace;
         }
         .synonyms_item_correct {
             color: #F33;
@@ -137,6 +133,11 @@
             <button class="difficulty_button" id="difficulty_normal">ノーマル</button>
             <button class="difficulty_button" id="difficulty_hard">ハード</button>
         </div>
+        <div id="hint_settings_container">
+            <input type='checkbox' class="hint_settings" id="hint_first" checked='checked'>先頭の文字をオープン</input><br />
+            <input type='checkbox' class="hint_settings" id="hint_last">末尾の文字のオープン</input>
+        </div>
+
         <div id="status_container">
             <span id="status_text">0問中0問正解</span>
         </div>

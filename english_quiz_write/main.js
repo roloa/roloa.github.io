@@ -8,6 +8,9 @@
         var quiz_display_en = document.getElementById('quiz_en')
         var quiz_display_description = document.getElementById('quiz_description')
 
+        var hint_first_checkbox = document.getElementById('hint_first')
+        var hint_last_checkbox = document.getElementById('hint_last')
+
         var quiz_dictionary = null
         var current_quiz = null
         var is_in_quiz = false;
@@ -54,13 +57,21 @@
             current_quiz = quiz_dictionary[Math.floor( Math.random() * quiz_dictionary.length )]
 
             quiz_display_en.innerHTML = ""
+
             for(var count = 0 ; count < current_quiz['en'].length ; count++ ){
-                quiz_display_en.innerHTML += "<button id='quiz_en_button_"+ count +"' class='quiz_en'>" +
-                "?" +
-                "</button>"
+                if( (count == 0 && hint_first_checkbox.checked ) ||
+                    (count == current_quiz['en'].length - 1 && hint_last_checkbox.checked ) ) {
+                        quiz_display_en.innerHTML += "<span id='quiz_en_button_"+ count +"' class='quiz_en'>" +
+                        current_quiz['en'][count] +
+                        "</span>"
+                } else {
+                    quiz_display_en.innerHTML += "<span id='quiz_en_button_"+ count +"' class='quiz_en'>" +
+                    "?" +
+                    "</span>"
+                }
             }
             quiz_display_en.innerHTML += "<span class='quiz_en'>" +
-            " ("+ current_quiz['en'].length +")" +
+            //" ("+ current_quiz['en'].length +")" +
             "</span>"
 
             quiz_display_jp.innerHTML = current_quiz['jp']
@@ -82,15 +93,15 @@
             is_correct_answer = true
             for(var count = 0 ; count < current_quiz['en'].length ; count++ ){
                 if( current_quiz['en'].charAt( count ) == input_answer.charAt( count ) ){
-                    quiz_display_en.innerHTML += "<button class='quiz_en quiz_en_correct'>" +
+                    quiz_display_en.innerHTML += "<span class='quiz_en quiz_en_correct'>" +
                     current_quiz['en'][count] +
-                    "</button>"
+                    "</span>"
                 } else {
                     // 1文字でも違ったらアウトにする
                     is_correct_answer = false
-                    quiz_display_en.innerHTML += "<button class='quiz_en quiz_en_incorrect'>" +
+                    quiz_display_en.innerHTML += "<span class='quiz_en quiz_en_incorrect'>" +
                     current_quiz['en'][count] +
-                    "</button>"
+                    "</span>"
                 }
             }
 
