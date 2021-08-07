@@ -204,7 +204,7 @@
         answer_display_list[correct_answer_index].innerHTML = correct_answer['jp']
         answer_list[correct_answer_index] = correct_answer
 
-        document.getElementById('quiz_sound').onclick()
+        //document.getElementById('quiz_sound').onclick()
 
     }
 
