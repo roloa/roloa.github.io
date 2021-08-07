@@ -101,7 +101,7 @@
             } else {
 
                 // 別解を探す
-                for(var count = 0 ; count < current_quiz['synonyms'].length && count < 10; count++ ){
+                for(var count = 0 ; count < current_quiz['synonyms'].length ; count++ ){
                     if( current_quiz['synonyms'][ count ] == input_answer ){
                         // 別解正解
                         is_correct_answer = true
