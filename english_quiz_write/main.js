@@ -149,6 +149,15 @@
 
         }
 
+        // 読み上げボタン
+        document.getElementById('quiz_sound').onclick = function(){
+            var quiz_word = document.getElementById('quiz_jp').innerHTML;
+            var speech_synthesis = new SpeechSynthesisUtterance();
+            speech_synthesis.lang = 'ja-JP';
+            speech_synthesis.text = quiz_word;
+            speechSynthesis.speak(speech_synthesis);
+        }
+
         // エンターキー制御
         document.onkeypress = function(){
             if( window.event.keyCode == 13 ){
