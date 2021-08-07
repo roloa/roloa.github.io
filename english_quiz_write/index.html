@@ -35,6 +35,14 @@
         .quiz_en {
             font-size: 36px;
         }
+        .quiz_en_correct {
+            font-size: 36px;
+            background-color: #DFD;
+        }
+        .quiz_en_incorrect {
+            font-size: 36px;
+            background-color: #FDD;
+        }
         #quiz_jp {
             font-size: 36px;
         }
@@ -105,6 +113,12 @@
             margin: 5px;
             font-size: 30px;
         }
+        .synonyms_item {
+
+        }
+        .synonyms_item_correct {
+            color: #F33;
+        }
 
     </style>
 </head>
@@ -126,7 +140,7 @@
             <span id='quiz_jp'>word</span><input class='quiz_sound' type='button' value='&lt;))'></input>
         </div>
         <div id="quiz_description_container">
-            <span id='quiz_description'>description</span><input class='quiz_sound' type='button' value='&lt;))'></input>
+            <span id='quiz_description'>description</span>
         </div>
         <div id="answer_container">
             <div>
@@ -137,32 +151,6 @@
 
         <div class="button_new_quiz_container">
             <button id="button_new_quiz">出題</button>
-        </div>
-        <div>
-            <div id="explain_table">
-                <table>
-                    <tr>
-                        <td><span id="explain_en_1"/></td>
-                        <td><span id="explain_jp_1"/></td>
-                        <td><span id="explain_description_1"/></td>
-                    </tr>
-                    <tr>
-                        <td><span id="explain_en_2"/></td>
-                        <td><span id="explain_jp_2"/></td>
-                        <td><span id="explain_description_2"/></td>
-                    </tr>
-                    <tr>
-                        <td><span id="explain_en_3"/></td>
-                        <td><span id="explain_jp_3"/></td>
-                        <td><span id="explain_description_3"/></td>
-                    </tr>
-                    <tr>
-                        <td><span id="explain_en_4"/></td>
-                        <td><span id="explain_jp_4"/></td>
-                        <td><span id="explain_description_4"/></td>
-                    </tr>
-                </table>
-            </div>
         </div>
     </div>
 </body>
