@@ -151,11 +151,32 @@
 
         // 読み上げボタン
         document.getElementById('quiz_sound').onclick = function(){
-            var quiz_word = document.getElementById('quiz_jp').innerHTML;
-            var speech_synthesis = new SpeechSynthesisUtterance();
-            speech_synthesis.lang = 'ja-JP';
-            speech_synthesis.text = quiz_word;
-            speechSynthesis.speak(speech_synthesis);
+            if( document.getElementById('show_voice').checked ){
+                var xhr = new XMLHttpRequest();
+                var url = 'https://api.voicetext.jp/v1/tts'
+                var key = 'w8xn0ll450546du9'
+                xhr.open('get', url, true, key, '');
+                xhr.setRequestHeader('text', 'hogehoge')
+                xhr.setRequestHeader('speaker', 'show')
+                xhr.setRequestHeader('pitch', '135')
+	            xhr.onreadystatechange = function() {
+                    if( xhr.readyState == 4 ){
+                        if( xhr.status == 200 ){
+                            console.log('xhr complete!')
+                        } else {
+                            console.log('xhr error!')
+                        }
+                    }
+                }
+                xhr.send()
+
+            } else {
+                var quiz_word = document.getElementById('quiz_jp').innerHTML;
+                var speech_synthesis = new SpeechSynthesisUtterance();
+                speech_synthesis.lang = 'ja-JP';
+                speech_synthesis.text = quiz_word;
+                speechSynthesis.speak(speech_synthesis);
+            }
         }
 
         // エンターキー制御
