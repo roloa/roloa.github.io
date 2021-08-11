@@ -1,0 +1,28 @@
+#app {
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 640px;
+    width: 95%;
+    min-width: 500px;
+    border: solid;
+}
+
+.grid-cell {
+    padding: 30px;
+}
+
+.sub-cell {
+    padding: 10px;
+}
+
+
+.sub-cell-horizontal {
+    background-color : #FCC;
+}
+.sub-cell-vertical {
+    background-color : #CFC;
+}
+.sub-cell-corner {
+    background-color : #CCF;
+}
