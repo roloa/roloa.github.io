@@ -8,12 +8,20 @@
     border: solid;
 }
 
+#grid-table{
+    border: solid 1px;
+    border-collapse: collapse;
+}
+
 .grid-cell {
-    padding: 30px;
+    width: 80px;
+    height: 80px;
+    border: solid 1px;
 }
 
 .sub-cell {
     padding: 10px;
+    border: solid 1px;
 }
 
 

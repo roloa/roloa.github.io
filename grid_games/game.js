@@ -1,72 +1,68 @@
 game = (function(){
-  var _game = {}
-  /**
-   * メインのゲーム画面になるテーブルを作る
-   */
-  _game.setup_table_dom = function(){
-    var grid_table = document.createElement('table')
-    grid_table.id = 'grid-table'
-    // テーブル構成
-    var top_edge = document.createElement('tr')
-    var top_left_edge = document.createElement('td')
-    top_left_edge.classList.add('sub-cell')
-    top_left_edge.classList.add('sub-cell-corner')
-    top_edge.appendChild(top_left_edge)
-    for(var x = 0 ; x < 5 ; x++){
-      var sub_grid_cell = document.createElement('td')
-      sub_grid_cell.classList.add('sub-cell')
-      sub_grid_cell.classList.add('sub-cell-horizontal')
-      top_edge.appendChild(sub_grid_cell);
-      var sub_right_side_cell = document.createElement('td')
-      sub_right_side_cell.classList.add('sub-cell')
-      sub_right_side_cell.classList.add('sub-cell-corner')
-      top_edge.appendChild(sub_right_side_cell);
-    }
-    grid_table.appendChild(top_edge)
+    var _game = {}
+    var cell_list = []
 
-    for(var y = 0 ; y < 5 ; y++){
-      var grid_row = document.createElement('tr')
-      var left_edge = document.createElement('td')
-      left_edge.classList.add('sub-cell')
-      left_edge.classList.add('sub-cell-vertical')
-      grid_row.appendChild(left_edge);
-      for(var x = 0 ; x < 5 ; x++){
-        var grid_cell = document.createElement('td')
-        grid_row.appendChild(grid_cell);
-        var text = document.createElement('span')
-        text.textContent = 'x'
-        grid_cell.appendChild(text);
-        grid_cell.classList.add('grid-cell')
-
-        var right_side_cell = document.createElement('td')
-        right_side_cell.classList.add('sub-cell')
-        right_side_cell.classList.add('sub-cell-vertical')
-        grid_row.appendChild(right_side_cell);
-      }
-      grid_table.appendChild(grid_row);
-      var sub_row = document.createElement('tr')
-      var sub_left_edge = document.createElement('td')
-      sub_left_edge.classList.add('sub-cell')
-      sub_left_edge.classList.add('sub-cell-corner')
-      sub_row.appendChild(sub_left_edge);
-      for(var x = 0 ; x < 5 ; x++){
-        var sub_grid_cell = document.createElement('td')
-        sub_grid_cell.classList.add('sub-cell')
-        sub_grid_cell.classList.add('sub-cell-horizontal')
-        sub_row.appendChild(sub_grid_cell);
-        var sub_right_side_cell = document.createElement('td')
-        sub_right_side_cell.classList.add('sub-cell')
-        sub_right_side_cell.classList.add('sub-cell-corner')
-        sub_row.appendChild(sub_right_side_cell);
-      }
-      grid_table.appendChild(sub_row);
-
+    _game.cell_onmousedown = function( x, y ){
+        console.log(x,y)
     }
 
+    _game.initialize_cell_list = function(){
+        cell_list[0] = document.getElementById('grid-cell-0-0')
+        cell_list[1] = document.getElementById('grid-cell-1-0')
+        cell_list[2] = document.getElementById('grid-cell-2-0')
+        cell_list[3] = document.getElementById('grid-cell-3-0')
+        cell_list[4] = document.getElementById('grid-cell-4-0')
+        cell_list[5] = document.getElementById('grid-cell-0-1')
+        cell_list[6] = document.getElementById('grid-cell-1-1')
+        cell_list[7] = document.getElementById('grid-cell-2-1')
+        cell_list[8] = document.getElementById('grid-cell-3-1')
+        cell_list[9] = document.getElementById('grid-cell-4-1')
+        cell_list[10] = document.getElementById('grid-cell-0-2')
+        cell_list[11] = document.getElementById('grid-cell-1-2')
+        cell_list[12] = document.getElementById('grid-cell-2-2')
+        cell_list[13] = document.getElementById('grid-cell-3-2')
+        cell_list[14] = document.getElementById('grid-cell-4-2')
+        cell_list[15] = document.getElementById('grid-cell-0-3')
+        cell_list[16] = document.getElementById('grid-cell-1-3')
+        cell_list[17] = document.getElementById('grid-cell-2-3')
+        cell_list[18] = document.getElementById('grid-cell-3-3')
+        cell_list[19] = document.getElementById('grid-cell-4-3')
+        cell_list[20] = document.getElementById('grid-cell-0-4')
+        cell_list[21] = document.getElementById('grid-cell-1-4')
+        cell_list[22] = document.getElementById('grid-cell-2-4')
+        cell_list[23] = document.getElementById('grid-cell-3-4')
+        cell_list[24] = document.getElementById('grid-cell-4-4')
+    }
 
-    document.getElementById('grid-container').appendChild(grid_table)
-  };
+    _game.assign_onmousedown_to_grid_cell = function(){
+        cell_list[0].onmousedown = function(){ _game.cell_onmousedown(0,0) }
+        cell_list[1].onmousedown = function(){ _game.cell_onmousedown(1,0) }
+        cell_list[2].onmousedown = function(){ _game.cell_onmousedown(2,0) }
+        cell_list[3].onmousedown = function(){ _game.cell_onmousedown(3,0) }
+        cell_list[4].onmousedown = function(){ _game.cell_onmousedown(4,0) }
+        cell_list[5].onmousedown = function(){ _game.cell_onmousedown(0,1) }
+        cell_list[6].onmousedown = function(){ _game.cell_onmousedown(1,1) }
+        cell_list[7].onmousedown = function(){ _game.cell_onmousedown(2,1) }
+        cell_list[8].onmousedown = function(){ _game.cell_onmousedown(3,1) }
+        cell_list[9].onmousedown = function(){ _game.cell_onmousedown(4,1) }
+        cell_list[10].onmousedown = function(){ _game.cell_onmousedown(0,2) }
+        cell_list[11].onmousedown = function(){ _game.cell_onmousedown(1,2) }
+        cell_list[12].onmousedown = function(){ _game.cell_onmousedown(2,2) }
+        cell_list[13].onmousedown = function(){ _game.cell_onmousedown(3,2) }
+        cell_list[14].onmousedown = function(){ _game.cell_onmousedown(4,2) }
+        cell_list[15].onmousedown = function(){ _game.cell_onmousedown(0,3) }
+        cell_list[16].onmousedown = function(){ _game.cell_onmousedown(1,3) }
+        cell_list[17].onmousedown = function(){ _game.cell_onmousedown(2,3) }
+        cell_list[18].onmousedown = function(){ _game.cell_onmousedown(3,3) }
+        cell_list[19].onmousedown = function(){ _game.cell_onmousedown(4,3) }
+        cell_list[20].onmousedown = function(){ _game.cell_onmousedown(0,4) }
+        cell_list[21].onmousedown = function(){ _game.cell_onmousedown(1,4) }
+        cell_list[22].onmousedown = function(){ _game.cell_onmousedown(2,4) }
+        cell_list[23].onmousedown = function(){ _game.cell_onmousedown(3,4) }
+        cell_list[24].onmousedown = function(){ _game.cell_onmousedown(4,4) }
+    }
 
-  return _game;
+
+    return _game;
 
 })();
