@@ -9,13 +9,52 @@ export class Game {
 
         this.ball_list = []
         this.ball_id_counter = 10
-        this.canvas = document.getElementById('my_canvas').getContext('2d')
+
+        this.canvas = document.getElementById('my_canvas')
+        this.canvas2d = this.canvas.getContext('2d')
 
         this.field = {}
         this.field.width = 640
         this.field.height = 480
 
+        this.grabbing_ball = null
+
+        this.mouse_x = 100
+        this.mouse_y = 100
+
         setInterval( this.on_update.bind(this), 20 )
+        this.canvas.onmousedown = this.on_mouse_down.bind(this)
+        this.canvas.onmouseup = this.on_mouse_up.bind(this)
+        this.canvas.onmousemove = this.on_mouse_move.bind(this)
+    }
+
+    on_mouse_down( event ){
+        let bcr = this.canvas.getBoundingClientRect()
+        this.mouse_x = event.clientX -  bcr.x
+        this.mouse_y = event.clientY -  bcr.y
+
+        for( let i in this.ball_list ){
+            if( this.ball_list[ i ].hit_point_test( this.mouse_x, this.mouse_y )){
+                this.grabbing_ball = this.ball_list[ i ]
+                this.grabbing_ball.on_grab( this )
+                break;
+            }
+        }
+    }
+
+    on_mouse_up( event ){
+        let bcr = this.canvas.getBoundingClientRect()
+        this.mouse_x = event.clientX -  bcr.x
+        this.mouse_y = event.clientY -  bcr.y
+        if( this.grabbing_ball !== null ){
+            this.grabbing_ball.on_release( this )
+            this.grabbing_ball = null
+        }
+    }
+    on_mouse_move( event ) {
+        let bcr = this.canvas.getBoundingClientRect()
+        this.mouse_x = event.clientX -  bcr.x
+        this.mouse_y = event.clientY -  bcr.y
 
     }
 
@@ -23,6 +62,8 @@ export class Game {
         console.log(this.name, this.version)
 
 
+        this.add_ball( new Balls.BaseBall() , Math.random()*400, Math.random()*400 )
+        this.add_ball( new Balls.BaseBall() , Math.random()*400, Math.random()*400 )
         this.add_ball( new Balls.BaseBall() , Math.random()*400, Math.random()*400 )
         this.add_ball( new Balls.RedBall() , Math.random()*400, Math.random()*400 )
     }
@@ -65,11 +106,11 @@ export class Game {
             this.ball_list[ ball ].on_update( this )
         }
 
-        this.canvas.fillStyle = 'rgb(200,200,255)'
-        this.canvas.fillRect(0,0,640,480)
+        this.canvas2d.fillStyle = 'rgb(200,200,255)'
+        this.canvas2d.fillRect(0,0,640,480)
 
         for( let ball in this.ball_list ){
-            this.ball_list[ ball ].draw_canvas( this.canvas )
+            this.ball_list[ ball ].draw_canvas( this.canvas2d )
         }
 
     }
