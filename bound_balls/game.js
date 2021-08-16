@@ -1,7 +1,6 @@
 
 import * as Balls from './balls.js';
 
-
 export class Game {
     constructor(){
         this.name = 'Bound Balls'
@@ -64,7 +63,9 @@ export class Game {
 
         this.add_ball( new Balls.BaseBall() , Math.random()*400, Math.random()*400 )
         this.add_ball( new Balls.BaseBall() , Math.random()*400, Math.random()*400 )
-        this.add_ball( new Balls.BaseBall() , Math.random()*400, Math.random()*400 )
+        this.add_ball( new Balls.NineBall() , Math.random()*400, Math.random()*400 )
+        this.add_ball( new Balls.NineBall() , Math.random()*400, Math.random()*400 )
+        this.add_ball( new Balls.NineBall() , Math.random()*400, Math.random()*400 )
         this.add_ball( new Balls.RedBall() , Math.random()*400, Math.random()*400 )
     }
 
