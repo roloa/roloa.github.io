@@ -50,6 +50,7 @@ export class Raindrop extends Sprites {
         super()
         this.dx = 0
         this.dy = 0
+        this.is_can_make_child = true
 
         this.GRAVITY = 1
         this.AIR_FRICTION = 0.9
@@ -74,6 +75,15 @@ export class Raindrop extends Sprites {
                 this.dy *= -Math.random()
                 this.dx = Math.random()*4-2
 
+                if( this.is_can_make_child ){
+                    this.is_can_make_child = false
+                    let new_drop = new Raindrop()
+                    new_drop.dx = -this.dx
+                    new_drop.dy = this.dy
+                    new_drop.is_can_make_child = false
+
+                    game.add_sprite( new_drop, this.x, this.y )
+                }
 
             } else {
                 this.isAlive = false
