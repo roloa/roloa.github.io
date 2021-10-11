@@ -51,6 +51,7 @@ export class Raindrop extends Sprites {
         this.dx = 0
         this.dy = 0
         this.is_can_make_child = true
+        this.is_can_bound = true
         let brightness = Math.floor(Math.random() * 30)
         let c_blue = Math.floor(255-Math.random()*100)
         this.drop_color = "rgb(" + [20,20,c_blue] + ")"
@@ -73,21 +74,46 @@ export class Raindrop extends Sprites {
         if( game.canvas.height < this.y ||
             30 < pixel_red ) {
             // 跳ね返り
-            if( 5 < this.dy ){
+
+            if( this.is_can_make_child ){
+                let new_drop = new Raindrop()
+                let new_dx = 2 + Math.random() * 2
+                new_drop.dx = new_dx
+                new_drop.dy = this.dy * -0.99
+                new_drop.is_can_make_child = false
+                new_drop.drop_color = this.drop_color
+                new_drop.is_can_make_child = false
+                new_drop.is_can_bound = false
+                game.add_sprite( new_drop, this.x, this.y )
+
+                new_drop = new Raindrop()
+                new_drop.dx = -new_dx
+                new_drop.dy = this.dy * -0.99
+                new_drop.is_can_make_child = false
+                new_drop.drop_color = this.drop_color
+                new_drop.is_can_make_child = false
+                new_drop.is_can_bound = false
+                game.add_sprite( new_drop, this.x, this.y )
+            }
+
+            if( this.is_can_bound && 5 < this.dy ){
                 this.y -= this.dy * 1.0
                 this.dy *= -(Math.random()*1.1)
                 this.dx += Math.random()*4-2
 
-                if( this.is_can_make_child ){
-                    this.is_can_make_child = false
-                    let new_drop = new Raindrop()
-                    new_drop.dx = this.dx + Math.random()*10-5
-                    new_drop.dy = this.dy
-                    new_drop.is_can_make_child = false
-                    new_drop.drop_color = this.drop_color
+                // 旧式
+                // if( this.is_can_make_child ){
+                //     this.is_can_make_child = false
+                //     let new_drop = new Raindrop()
+                //     new_drop.dx = this.dx + Math.random()*10-5
+                //     new_drop.dy = this.dy
+                //     new_drop.is_can_make_child = false
+                //     new_drop.drop_color = this.drop_color
+                //
+                //     game.add_sprite( new_drop, this.x, this.y )
+                // }
 
-                    game.add_sprite( new_drop, this.x, this.y )
-                }
+
 
             } else {
                 if( Math.random() < 0.1 || game.canvas.height < this.y ){
