@@ -82,7 +82,7 @@ export class Game {
         }
 
         // 降雨
-        for(let i = 0 ; i < 2 ; i++) {
+        for(let i = 0 ; i < 1 ; i++) {
             let new_rain_x = (Math.random() * (this.canvas.width + 400)) - 200
             let new_rain_y = -10
             this.add_sprite( new Sprites.Raindrop(), new_rain_x , new_rain_y )
