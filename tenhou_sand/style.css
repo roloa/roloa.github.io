@@ -1,0 +1,14 @@
+body{
+    background-color: rgb(0, 0, 0);
+}
+
+#app {
+    margin-right: auto;
+    margin-left: auto;
+    width: 80%;
+    min-width: 300px;
+    border: solid;
+}
+#my_canvas {
+
+}
