@@ -4,7 +4,9 @@ import {Tile} from './tile.js';
 export class Game {
     constructor(){
         this.name = 'Tenhou Sand'
-        this.version = '0.2'
+        this.version = '0.4'
+
+
 
         this.tile_list = []
         this.TILE_NUM = 136
@@ -203,20 +205,20 @@ export class Game {
     }
     place_manzu(){
         for(let number = 1 ; number <= 9 ; number++ ){
-            this.field[ 2 ][ 1 + number ] = new Tile( 1, number, false )
+            this.field[ 1 ][ 1 + number ] = new Tile( 1, number, false )
         }
     }
     place_ton(){
-        this.field[ 2 ][ 2 ] = new Tile( 4, 1, false )
+        this.field[ 5 ][ 2 ] = new Tile( 4, 1, false )
     }
     place_red_five_pin(){
         let red_five = new Tile( 2, 5, true )
         red_five.is_red = true;
-        this.field[ 2 ][ 2 ] = red_five
+        this.field[ 1 ][ 16 ] = red_five
     }
     place_pei10(){
         for(let x = 1 ; x <= 14 ; x++){
-            this.field[ 2 ][ x ] = new Tile( 4, 4, false )
+            this.field[ 5 ][ x+2 ] = new Tile( 4, 4, false )
         }
     }
     clear_pai(){

@@ -12,6 +12,9 @@
                 <canvas id='my_canvas' width='480' height='640' ></canvas>
             </div>
             <div id='control_panel'>
+                <div id='app_name_container'>
+                    <span id='app_name'><span class='tenhou'>天和</span>サンド <span id='app_version'></span></span>
+                </div>
                 <ul>
                     <li>
                         <span>シミュレーション</span>
@@ -27,7 +30,7 @@
                             <input type='checkbox' id='check_lock_on_richi'>ダブル立直で手牌ロックする</input>
                         </li>
                         <li>
-                            <input type='checkbox' id='check_lock_on_tenhou' checked>天和で手牌ロックする</input>
+                            <input type='checkbox' id='check_lock_on_tenhou' checked><span class='tenhou'>天和</span>で手牌ロックする</input>
                         </li>
                         <li>
                             <input type='checkbox' id='check_lock_not_allow_seven_pairs' >七対子の形を無視する</input>
@@ -48,12 +51,8 @@
                         </li>
                         <li>
                             <button id='button_put_man'>[一]-[九]</button>
-                        </li>
-                        <li>
                             <button id='button_put_red_five'>赤[➄]</button>
                             <button id='button_put_ton'>[東]</button>
-                        </li>
-                        <li>
                             <button id='button_put_pei10'>[北]x14</button>
                         </li>
                         <li>
@@ -67,6 +66,9 @@
                         <span>壁配置</span>
                     </li>
                     <ul>
+                        <li>
+                            <span>画面内クリックで壁を配置/撤去します。<br />スマホはサポートしていません。</span>
+                        </li>
                         <li>
                             <button id='button_wall_reset'>壁を初期化</button>
                         </li>

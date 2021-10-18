@@ -7,6 +7,8 @@ let control = new Control()
 
 //document.game = game
 
+document.getElementById('app_version').innerHTML = game.version
+
 control.init( game )
 
 game.reset()

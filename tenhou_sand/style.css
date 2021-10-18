@@ -12,6 +12,15 @@ body{
 
 }
 
+.tenhou{
+    color: rgb(222,55,55)
+}
+#app_name_container{
+    margin: 20px
+}
+#app_name{
+    font-size: 20px
+}
 #game_container{
     display: flex;
 }
