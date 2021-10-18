@@ -7,7 +7,76 @@
 	</head>
 	<body>
     <div id='app'>
-        <canvas id='my_canvas' width='480' height='640' ></canvas>
+        <div id='game_container'>
+            <div id='canvas_container'>
+                <canvas id='my_canvas' width='480' height='640' ></canvas>
+            </div>
+            <div id='control_panel'>
+                <ul>
+                    <li>
+                        <span>シミュレーション</span>
+                    </li>
+                    <ul>
+                        <li>
+                            <button id='button_pause'>ポーズ/解除</button>
+                        </li>
+                        <li>
+                            <button id='button_lock'>手牌ロック/解除</button>
+                        </li>
+                        <li>
+                            <input type='checkbox' id='check_lock_on_richi'>ダブル立直で手牌ロックする</input>
+                        </li>
+                        <li>
+                            <input type='checkbox' id='check_lock_on_tenhou' checked>天和で手牌ロックする</input>
+                        </li>
+                        <li>
+                            <input type='checkbox' id='check_lock_not_allow_seven_pairs' >七対子の形を無視する</input>
+                        </li>
+                        <li>
+                            <input type='checkbox' id='check_slow_mode' >毎回手牌を一時停止する</input>
+                        </li>
+                        <li>
+                            <input type='checkbox' id='check_sort_hand' checked>探索中も理牌する</input>
+                        </li>
+                    </ul>
+                    <li>
+                        <span>牌配置</span>
+                    </li>
+                    <ul>
+                        <li>
+                            <button id='button_put_136'>全136牌</button>
+                        </li>
+                        <li>
+                            <button id='button_put_man'>[一]-[九]</button>
+                        </li>
+                        <li>
+                            <button id='button_put_red_five'>赤[➄]</button>
+                            <button id='button_put_ton'>[東]</button>
+                        </li>
+                        <li>
+                            <button id='button_put_pei10'>[北]x14</button>
+                        </li>
+                        <li>
+                            <button id='button_pai_shuffle'>全牌をシャッフル</button>
+                        </li>
+                        <li>
+                            <button id='button_pai_clear'>全牌をクリア</button>
+                        </li>
+                    </ul>
+                    <li>
+                        <span>壁配置</span>
+                    </li>
+                    <ul>
+                        <li>
+                            <button id='button_wall_reset'>壁を初期化</button>
+                        </li>
+                        <li>
+                            <button id='button_wall_clear'>壁をクリア</button>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
     </div>
 </body>
     <script src='./main.js' type='module'></script>

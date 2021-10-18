@@ -4,7 +4,7 @@ import {Tile} from './tile.js';
 export class Game {
     constructor(){
         this.name = 'Tenhou Sand'
-        this.version = '0.1'
+        this.version = '0.2'
 
         this.tile_list = []
         this.TILE_NUM = 136
@@ -19,11 +19,22 @@ export class Game {
         this.FIELD_WIDTH  = this.SCREEN_WIDTH  / this.TILE_SIZE
         this.FIELD_HEIGHT = this.SCREEN_HEIGHT / this.TILE_SIZE
 
-        this.hand_hold_time = 30;
-        this.hand_release_time = 30;
+        this.is_wall_placing = true;
+        this.is_mouse_holding = false;
+
+        this.hand_hold_time = 5;
+        this.hand_release_time = 5;
         this.hand = [null,null,null,null,null,null,null,null,null,null,null,null,null,null]
         this.shanten_text = ''
         this.hand_lock = false
+
+        this.is_paused = false;
+
+        this.setting_lock_on_richi = false;
+        this.setting_lock_on_tenhou = false;
+        this.setting_lock_not_allow_seven_pairs = false;
+        this.setting_slow_mode = false;
+        this.setting_sort_hand = false;
 
         this.field = []
         for(let y = 0 ; y < this.FIELD_HEIGHT ; y++){
@@ -33,30 +44,8 @@ export class Game {
             }
         }
 
-        // 麻雀牌の初期配置
-        for(let number = 1 ; number <= 9 ; number++ ){
-            for(let y = 1 ; y <= 4 ; y++){
-                this.field[ y ][ 1 + number ] = new Tile( 1, number, false )
-            }
-        }
-        for(let number = 1 ; number <= 9 ; number++ ){
-            for(let y = 1 ; y <= 4 ; y++){
-                this.field[ y ][ 11 + number ] = new Tile( 2, number, false )
-            }
-        }
-
-        for(let number = 1 ; number <= 9 ; number++ ){
-            for(let y = 1 ; y <= 4 ; y++){
-                this.field[ 5 + y ][ 1 + number ] = new Tile( 3, number, false )
-            }
-        }
-
-        for(let number = 1 ; number <= 7 ; number++ ){
-            for(let y = 1 ; y <= 4 ; y++){
-                this.field[ 5 + y ][ 11 + number ] = new Tile( 4, number, false )
-            }
-        }
-
+        this.place_136()
+        this.shuffle_field()
 
         this.field_wall = []
         for(let y = 0 ; y < this.FIELD_HEIGHT ; y++){
@@ -69,36 +58,7 @@ export class Game {
                 }
             }
         }
-        this.field_wall[26][1] = true
-        this.field_wall[27][2] = true
-        this.field_wall[27][3] = true
-        this.field_wall[28][4] = true
-        this.field_wall[28][5] = true
-        this.field_wall[28][6] = true
-//        this.field_wall[29][7] = true
-        this.field_wall[29][8] = true
-        this.field_wall[29][9] = true
-        this.field_wall[29][10] = true
-//        this.field_wall[8][11] = true
-//        this.field_wall[5][12] = true
-        this.field_wall[29][13] = true
-        this.field_wall[29][14] = true
-        this.field_wall[29][15] = true
-//        this.field_wall[29][16] = true
-        this.field_wall[28][17] = true
-        this.field_wall[28][18] = true
-        this.field_wall[28][19] = true
-        this.field_wall[27][20] = true
-        this.field_wall[27][21] = true
-        this.field_wall[26][22] = true
-
-        for(let x = 1 ; x < 22 ; x++){
-            for(let y=4 ; y < 10 ; y++){
-                if( Math.random() < 0.2){
-                    this.field_wall[y][x] = true
-                }
-            }
-        }
+        this.reset_wall()
 
         this.mouse_x = 100
         this.mouse_y = 100
@@ -113,9 +73,11 @@ export class Game {
         // クリック箇所に壁を生成する
         let field_x = Math.floor(this.mouse_x / this.TILE_SIZE)
         let field_y = Math.floor(this.mouse_y / this.TILE_SIZE)
-        if( true ){
+        if( 0 < field_x && field_x < 23 ){
             // TODO 範囲外
-            this.field_wall[field_y][field_x] = !this.field_wall[field_y][field_x]
+            this.is_wall_placing = !this.field_wall[field_y][field_x]
+            this.field_wall[field_y][field_x] = this.is_wall_placing;
+            this.is_mouse_holding = true;
         }
     }
 
@@ -123,11 +85,23 @@ export class Game {
         let bcr = this.canvas.getBoundingClientRect()
         this.mouse_x = event.clientX -  bcr.x
         this.mouse_y = event.clientY -  bcr.y
+
+        this.is_mouse_holding = false;
     }
     on_mouse_move( event ) {
         let bcr = this.canvas.getBoundingClientRect()
         this.mouse_x = event.clientX -  bcr.x
         this.mouse_y = event.clientY -  bcr.y
+
+        if( this.is_mouse_holding ){
+            let field_x = Math.floor(this.mouse_x / this.TILE_SIZE)
+            let field_y = Math.floor(this.mouse_y / this.TILE_SIZE)
+
+            if( 0 < field_x && field_x < 23 ){
+                // TODO 範囲外
+                this.field_wall[field_y][field_x] = this.is_wall_placing;
+            }
+        }
     }
 
     reset(){
@@ -138,6 +112,119 @@ export class Game {
         this.canvas.onmousedown = this.on_mouse_down.bind(this)
         this.canvas.onmouseup = this.on_mouse_up.bind(this)
         this.canvas.onmousemove = this.on_mouse_move.bind(this)
+    }
+
+    reset_wall(){
+        this.clear_wall()
+
+        this.field_wall[24][1] = true
+        this.field_wall[25][2] = true
+        this.field_wall[26][3] = true
+        this.field_wall[27][4] = true
+        this.field_wall[28][5] = true
+        this.field_wall[29][6] = true
+//        this.field_wall[29][7] = true
+//        this.field_wall[29][8] = true
+        this.field_wall[28][9] = true
+        this.field_wall[27][10] = true
+        this.field_wall[26][11] = true
+        this.field_wall[26][12] = true
+        this.field_wall[27][13] = true
+        this.field_wall[28][14] = true
+//        this.field_wall[29][15] = true
+//        this.field_wall[29][16] = true
+        this.field_wall[29][17] = true
+        this.field_wall[28][18] = true
+        this.field_wall[27][19] = true
+        this.field_wall[26][20] = true
+        this.field_wall[25][21] = true
+        this.field_wall[24][22] = true
+
+        for(let x = 1 ; x < 22 ; x++){
+            for(let y = 4 ; y < 15 ; y++){
+                if( Math.random() < 0.15){
+                    this.field_wall[y][x] = true
+                }
+            }
+        }
+    }
+    clear_wall(){
+        for(let y = 0 ; y < this.FIELD_HEIGHT ; y++){
+            for(let x = 0 ; x < this.FIELD_WIDTH ; x++){
+                this.field_wall[y][x] = false
+                if( x == 0 || x + 1 ==  this.FIELD_WIDTH){
+                    this.field_wall[y][x] = true
+                }
+            }
+        }
+    }
+
+    place_136(){
+
+        this.hand_hold_time = 0;
+        this.hand_release_time = 250;
+
+        // 麻雀牌の初期配置
+        for(let number = 1 ; number <= 9 ; number++ ){
+            for(let y = 1 ; y <= 4 ; y++){
+                this.field[ y ][ 1 + number ] = new Tile( 3, number, false )
+            }
+        }
+        for(let number = 1 ; number <= 9 ; number++ ){
+            for(let y = 1 ; y <= 4 ; y++){
+                this.field[ y ][ 11 + number ] = new Tile( 2, number, false )
+            }
+        }
+
+        for(let number = 1 ; number <= 9 ; number++ ){
+            for(let y = 1 ; y <= 4 ; y++){
+                this.field[ 5 + y ][ 11 + number ] = new Tile( 1, number, false )
+            }
+        }
+
+        for(let number = 1 ; number <= 7 ; number++ ){
+            for(let y = 1 ; y <= 4 ; y++){
+                this.field[ 5 + y ][ 1 + number ] = new Tile( 4, number, false )
+            }
+        }
+    }
+
+    shuffle_field(){
+
+        for(let x = 1 ; x < this.FIELD_WIDTH - 1 ; x++){
+            for(let y = 0 ; y < this.FIELD_HEIGHT ; y++){
+                let random_x = Math.floor( Math.random() * (this.FIELD_WIDTH - 4) ) + 2
+                let random_y = Math.floor( Math.random() * (this.FIELD_HEIGHT - 4) ) + 2
+                let temp = this.field[y][x]
+                this.field[y][x] = this.field[ random_y ][ random_x ]
+                this.field[ random_y ][ random_x ] = temp
+            }
+        }
+    }
+    place_manzu(){
+        for(let number = 1 ; number <= 9 ; number++ ){
+            this.field[ 2 ][ 1 + number ] = new Tile( 1, number, false )
+        }
+    }
+    place_ton(){
+        this.field[ 2 ][ 2 ] = new Tile( 4, 1, false )
+    }
+    place_red_five_pin(){
+        let red_five = new Tile( 2, 5, true )
+        red_five.is_red = true;
+        this.field[ 2 ][ 2 ] = red_five
+    }
+    place_pei10(){
+        for(let x = 1 ; x <= 14 ; x++){
+            this.field[ 2 ][ x ] = new Tile( 4, 4, false )
+        }
+    }
+    clear_pai(){
+        for(let y = 0 ; y < this.FIELD_HEIGHT ; y++){
+            for(let x = 0 ; x < this.FIELD_WIDTH ; x++){
+                this.field[y][x] = null
+            }
+        }
     }
 
     test(){
@@ -391,148 +478,215 @@ export class Game {
         return null;
     }
 
+    fall_process(x, y){
+        // 一番下の場合
+        if( Math.random() < 0.1){
+        } else if( y == this.FIELD_HEIGHT - 1){
+            // 同列一番上に牌がない場合は一番上にワープする
+            if(this.field[0][x] == null){
+                this.field[0][x] = this.field[y][x]
+                this.field[y][x] = null
+            }
+        } else if( this.field_wall[y+1][x] == false && this.field[y+1][x] == null ){
+             // 下に何もなかったら1つ下に移動
+            this.field[y+1][x] = this.field[y][x]
+            this.field[y][x] = null
+        //}
+        // else if( 0 < y && this.field_wall[y-1][x] == false && this.field[y-1][x] == null && Math.random() < 0.5) {
+            // 上に何もない場合は確率で動かない
+        } else if( (this.field_wall[y][x-1] == true || this.field[y][x-1] != null)
+        　　　　　&& (this.field_wall[y][x+1] == false && this.field[y][x+1] == null) ){
+            // その逆パターン
+            if(Math.random() < 0.9){
+                this.field[y][x+1] = this.field[y][x]
+                this.field[y][x] = null
+            }
+        } else if( (this.field_wall[y][x+1] == true || this.field[y][x+1] != null)
+        　　　　　&& (this.field_wall[y][x-1] == false && this.field[y][x-1] == null) ){
+            // 右に障害があって左にないなら左に移動
+            if(Math.random() < 0.9){
+                this.field[y][x-1] = this.field[y][x]
+                this.field[y][x] = null
+            }
+        } else if( (this.field_wall[y][x-1] == false && this.field[y][x-1] == null)
+        　　　　　&& (this.field_wall[y][x+1] == false && this.field[y][x+1] == null) ){
+            // 両側に障害がないなら、左右ランダムに動く
+            if( Math.random() < 0.5){
+                this.field[y][x-1] = this.field[y][x]
+                this.field[y][x] = null
+            } else {
+                this.field[y][x+1] = this.field[y][x]
+                this.field[y][x] = null
+            }
+        }
+    }
+
     on_update(){
 
         // 手牌受け皿の処理
-        if( this.hand_lock ){
-            // ロック中
-        } else if( 0 < this.hand_hold_time ){
-            this.hand_hold_time -= 1
-        }else if( 0 < this.hand_release_time ){
-            // 開放残り時間を減らす
-            this.hand_release_time -= 1
-
-
-            // 手牌受け皿を開放する
-            this.field_wall[20][5] = false
-            this.field_wall[20][6] = false
-            this.field_wall[20][7] = false
-            this.field_wall[20][8] = false
-            this.field_wall[20][9] = false
-            this.field_wall[20][10] = false
-            this.field_wall[20][11] = false
-            this.field_wall[20][12] = false
-            this.field_wall[20][13] = false
-            this.field_wall[20][14] = false
-            this.field_wall[20][15] = false
-            this.field_wall[20][16] = false
-            this.field_wall[20][17] = false
-            this.field_wall[20][18] = false
-
+        if( this.is_paused ){
+            // ポーズ中
         } else {
-            // 開放時間ではない場合
+            if( 0 < this.hand_hold_time || this.hand_lock ){
+                this.hand_hold_time -= 1
 
-            // フィールド上に手牌受け皿を生成する
+                this.field_wall[19][4] = true
+                this.field_wall[20][4] = true
 
-            this.field_wall[19][4] = true
-            this.field_wall[20][4] = true
+                this.field_wall[20][5] = true
+                this.field_wall[20][6] = true
+                this.field_wall[20][7] = true
+                this.field_wall[20][8] = true
+                this.field_wall[20][9] = true
+                this.field_wall[20][10] = true
+                this.field_wall[20][11] = true
+                this.field_wall[20][12] = true
+                this.field_wall[20][13] = true
+                this.field_wall[20][14] = true
+                this.field_wall[20][15] = true
+                this.field_wall[20][16] = true
+                this.field_wall[20][17] = true
+                this.field_wall[20][18] = true
 
-            this.field_wall[20][5] = true
-            this.field_wall[20][6] = true
-            this.field_wall[20][7] = true
-            this.field_wall[20][8] = true
-            this.field_wall[20][9] = true
-            this.field_wall[20][10] = true
-            this.field_wall[20][11] = true
-            this.field_wall[20][12] = true
-            this.field_wall[20][13] = true
-            this.field_wall[20][14] = true
-            this.field_wall[20][15] = true
-            this.field_wall[20][16] = true
-            this.field_wall[20][17] = true
-            this.field_wall[20][18] = true
+                this.field_wall[19][19] = true
+                this.field_wall[20][19] = true
 
-            this.field_wall[19][19] = true
-            this.field_wall[20][19] = true
+            } else if( 0 < this.hand_release_time ){
+                // 開放残り時間を減らす
+                this.hand_release_time -= 1
 
-            if(
-                this.field[19][5] != null &&
-                this.field[19][6] != null &&
-                this.field[19][7] != null &&
-                this.field[19][8] != null &&
-                this.field[19][9] != null &&
-                this.field[19][10] != null &&
-                this.field[19][11] != null &&
-                this.field[19][12] != null &&
-                this.field[19][13] != null &&
-                this.field[19][14] != null &&
-                this.field[19][15] != null &&
-                this.field[19][16] != null &&
-                this.field[19][17] != null &&
-                this.field[19][18] != null
-            ) {
-
-
-                // 手牌をソートする
-                for(let i = 0 ; i < 14 ; i++){
-                    this.hand[i] = this.field[19][5 + i]
+                if( 30 < this.hand_release_time){
+                    this.shanten_text = '[洗牌中...]'
                 }
-                this.hand.sort( function( a, b ){
-                    if( a.color == b.color ){
-                        return a.number - b.number
-                    } else {
-                        return a.color - b.color
+
+                // 手牌受け皿を開放する
+                this.field_wall[20][5] = false
+                this.field_wall[20][6] = false
+                this.field_wall[20][7] = false
+                this.field_wall[20][8] = false
+                this.field_wall[20][9] = false
+                this.field_wall[20][10] = false
+                this.field_wall[20][11] = false
+                this.field_wall[20][12] = false
+                this.field_wall[20][13] = false
+                this.field_wall[20][14] = false
+                this.field_wall[20][15] = false
+                this.field_wall[20][16] = false
+                this.field_wall[20][17] = false
+                this.field_wall[20][18] = false
+
+            } else {
+                // 開放時間ではない場合
+
+                // フィールド上に手牌受け皿を生成する
+
+                this.field_wall[19][4] = true
+                this.field_wall[20][4] = true
+
+                this.field_wall[20][5] = true
+                this.field_wall[20][6] = true
+                this.field_wall[20][7] = true
+                this.field_wall[20][8] = true
+                this.field_wall[20][9] = true
+                this.field_wall[20][10] = true
+                this.field_wall[20][11] = true
+                this.field_wall[20][12] = true
+                this.field_wall[20][13] = true
+                this.field_wall[20][14] = true
+                this.field_wall[20][15] = true
+                this.field_wall[20][16] = true
+                this.field_wall[20][17] = true
+                this.field_wall[20][18] = true
+
+                this.field_wall[19][19] = true
+                this.field_wall[20][19] = true
+
+                if(
+                    this.field[19][5] != null &&
+                    this.field[19][6] != null &&
+                    this.field[19][7] != null &&
+                    this.field[19][8] != null &&
+                    this.field[19][9] != null &&
+                    this.field[19][10] != null &&
+                    this.field[19][11] != null &&
+                    this.field[19][12] != null &&
+                    this.field[19][13] != null &&
+                    this.field[19][14] != null &&
+                    this.field[19][15] != null &&
+                    this.field[19][16] != null &&
+                    this.field[19][17] != null &&
+                    this.field[19][18] != null
+                ) {
+
+
+                    // 手牌をソートする
+                    for(let i = 0 ; i < 14 ; i++){
+                        this.hand[i] = this.field[19][5 + i]
                     }
-                } )
-                for(let i = 0 ; i < 14 ; i++){
-                    this.field[19][5 + i] = this.hand[i]
-                }
-                // しゃんてんすうを計算
-                let shanten = this.calc_hand_shanten( this.hand )
-                this.shanten_text = '[' + shanten + ']'
+                    this.hand.sort( function( a, b ){
+                        if( a.color == b.color ){
+                            return a.number - b.number
+                        } else {
+                            return a.color - b.color
+                        }
+                    } )
 
-                if( shanten != null){
-                    console.log( this.hand_to_string(this.hand), shanten )
-                    this.hand_lock = true
-                }
+                    // しゃんてんすうを計算
+                    let shanten = this.calc_hand_shanten( this.hand )
+                    if( shanten == null ){
+                        this.shanten_text = '[' + '探索中...' + ']'
+                    } else {
+                        this.shanten_text = '[' + shanten + ']'
+                    }
 
-                this.hand_hold_time = 1
-                this.hand_release_time = 1
+
+                    if( shanten != null){
+                        console.log( this.hand_to_string(this.hand), shanten )
+                        if( this.setting_lock_on_tenhou ){
+                            if( shanten == '天和' || shanten == '天和(七対子)' ) {
+                                this.hand_lock = true
+                            }
+                        }
+                        if( this.setting_lock_on_richi ){
+                            if( shanten == 'ダブル立直' || shanten == 'ダブル立直(七対子)' || shanten == 'ダブル立直(単騎待ち)' ) {
+                                this.hand_lock = true
+                            }
+                        }
+                        if( this.setting_lock_not_allow_seven_pairs ){
+                            if( shanten == '天和(七対子)' || shanten == 'ダブル立直(七対子)' ) {
+                                this.hand_lock = false
+                            }
+                        }
+                    }
+                    // ソートした手牌を反映する
+                    if( this.setting_sort_hand || shanten != null ){
+                        for(let i = 0 ; i < 14 ; i++){
+                            this.field[19][5 + i] = this.hand[i]
+                        }
+                    }
+
+                    if( this.setting_slow_mode ) {
+                        this.hand_hold_time = 50
+                        this.hand_release_time = 10
+                    } else {
+                        this.hand_hold_time = 1
+                        this.hand_release_time = 1
+                    }
+                }
             }
-        }
 
-        // 落下処理
-        for(let x = 0 ; x < this.FIELD_WIDTH ; x++){
-            for(let y = this.FIELD_HEIGHT - 1; 0 <= y ; y--){
-            //for(let y = 0; y < this.FIELD_HEIGHT ; y++){
-
-                // 一番下の場合
-                if( Math.random() < 0.1){
-                } else if( y == this.FIELD_HEIGHT - 1){
-                    // 同列一番上に牌がない場合は一番上にワープする
-                    if(this.field[0][x] == null){
-                        this.field[0][x] = this.field[y][x]
-                        this.field[y][x] = null
+            // 落下処理
+            // 確率で上下左右どちらかから処理する
+            if(Math.random() < 0.5){
+                for(let x = 0 ; x < this.FIELD_WIDTH ; x++){
+                    for(let y = this.FIELD_HEIGHT - 1; 0 <= y ; y--){
+                        this.fall_process(x, y)
                     }
-                } else if( this.field_wall[y+1][x] == false && this.field[y+1][x] == null ){
-                     // 下に何もなかったら1つ下に移動
-                    this.field[y+1][x] = this.field[y][x]
-                    this.field[y][x] = null
-                } else if( 0 < y && this.field_wall[y-1][x] == false && this.field[y-1][x] == null && Math.random() < 0.5) {
-
-                } else if( (this.field_wall[y][x-1] == true || this.field[y][x-1] != null)
-                　　　　　&& (this.field_wall[y][x+1] == false && this.field[y][x+1] == null) ){
-                    // その逆パターン
-                    if(Math.random() < 0.9){
-                        this.field[y][x+1] = this.field[y][x]
-                        this.field[y][x] = null
-                    }
-                } else if( (this.field_wall[y][x+1] == true || this.field[y][x+1] != null)
-                　　　　　&& (this.field_wall[y][x-1] == false && this.field[y][x-1] == null) ){
-                    // 右に障害があって左にないなら左に移動
-                    if(Math.random() < 0.9){
-                        this.field[y][x-1] = this.field[y][x]
-                        this.field[y][x] = null
-                    }
-                } else if( (this.field_wall[y][x-1] == false && this.field[y][x-1] == null)
-                　　　　　&& (this.field_wall[y][x+1] == false && this.field[y][x+1] == null) ){
-                    // 両側に障害がないなら、左右ランダムに動く
-                    if( Math.random() < 0.5){
-                        this.field[y][x-1] = this.field[y][x]
-                        this.field[y][x] = null
-                    } else {
-                        this.field[y][x+1] = this.field[y][x]
-                        this.field[y][x] = null
+                }
+            } else {
+                for(let x = this.FIELD_WIDTH- 1 ; 0 < x ; x--){
+                    for(let y = this.FIELD_HEIGHT - 1; 0 <= y ; y--){
+                        this.fall_process(x, y)
                     }
                 }
             }
@@ -549,7 +703,13 @@ export class Game {
                     this.canvas2d.fillRect(x*this.TILE_SIZE,y*this.TILE_SIZE, this.TILE_SIZE,this.TILE_SIZE  )
                     this.canvas2d.strokeRect(x*this.TILE_SIZE,y*this.TILE_SIZE, this.TILE_SIZE,this.TILE_SIZE )
 
-                    this.canvas2d.fillStyle = 'rgb(0,0,0)'
+                    if( this.field[y][x].is_red ){
+                        this.canvas2d.fillStyle = 'rgb(200,0,0)'
+                    } else if( this.field[y][x].is_green ){
+                        this.canvas2d.fillStyle = 'rgb(0,200,0)'
+                    } else {
+                        this.canvas2d.fillStyle = 'rgb(0,0,0)'
+                    }
                     this.canvas2d.font = '16px Gothic'
                     this.canvas2d.textAlign = 'left'
                     this.canvas2d.textBaseline = 'hanging'
@@ -564,7 +724,7 @@ export class Game {
         }
 
         // しゃんてんテキスト
-        this.canvas2d.fillStyle = 'rgb(100,0,0)'
+        this.canvas2d.fillStyle = 'rgb(200,0,200)'
         this.canvas2d.font = '16px Gothic'
         this.canvas2d.textAlign = 'left'
         this.canvas2d.textBaseline = 'hanging'
