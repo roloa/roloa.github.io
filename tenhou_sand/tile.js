@@ -68,6 +68,14 @@ export class Tile {
         }
 
     }
-    on_update(){
+    is_greater_than( another_tile ){
+        if( another_tile.color == this.color ){
+            return another_tile.number < this.number
+        } else {
+            return another_tile.color < this.color
+        }
+    }
+    equals( another_tile ){
+        return another_tile.color == this.color && another_tile.number == this.number
     }
 }

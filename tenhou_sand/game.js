@@ -19,6 +19,12 @@ export class Game {
         this.FIELD_WIDTH  = this.SCREEN_WIDTH  / this.TILE_SIZE
         this.FIELD_HEIGHT = this.SCREEN_HEIGHT / this.TILE_SIZE
 
+        this.hand_hold_time = 30;
+        this.hand_release_time = 30;
+        this.hand = [null,null,null,null,null,null,null,null,null,null,null,null,null,null]
+        this.shanten_text = ''
+        this.hand_lock = false
+
         this.field = []
         for(let y = 0 ; y < this.FIELD_HEIGHT ; y++){
             this.field[y] = []
@@ -63,37 +69,40 @@ export class Game {
                 }
             }
         }
-        this.field_wall[4][1] = true
-        this.field_wall[5][2] = true
-        this.field_wall[5][3] = true
-        this.field_wall[6][4] = true
-        this.field_wall[6][5] = true
-        this.field_wall[6][6] = true
-        this.field_wall[7][7] = true
-        this.field_wall[7][8] = true
-        this.field_wall[7][9] = true
-        this.field_wall[7][10] = true
+        this.field_wall[26][1] = true
+        this.field_wall[27][2] = true
+        this.field_wall[27][3] = true
+        this.field_wall[28][4] = true
+        this.field_wall[28][5] = true
+        this.field_wall[28][6] = true
+//        this.field_wall[29][7] = true
+        this.field_wall[29][8] = true
+        this.field_wall[29][9] = true
+        this.field_wall[29][10] = true
 //        this.field_wall[8][11] = true
 //        this.field_wall[5][12] = true
-        this.field_wall[7][13] = true
-        this.field_wall[7][14] = true
-        this.field_wall[7][15] = true
-        this.field_wall[7][16] = true
-        this.field_wall[6][17] = true
-        this.field_wall[6][18] = true
-        this.field_wall[6][19] = true
-        this.field_wall[5][20] = true
-        this.field_wall[5][21] = true
-        this.field_wall[4][22] = true
+        this.field_wall[29][13] = true
+        this.field_wall[29][14] = true
+        this.field_wall[29][15] = true
+//        this.field_wall[29][16] = true
+        this.field_wall[28][17] = true
+        this.field_wall[28][18] = true
+        this.field_wall[28][19] = true
+        this.field_wall[27][20] = true
+        this.field_wall[27][21] = true
+        this.field_wall[26][22] = true
 
+        for(let x = 1 ; x < 22 ; x++){
+            for(let y=4 ; y < 10 ; y++){
+                if( Math.random() < 0.2){
+                    this.field_wall[y][x] = true
+                }
+            }
+        }
 
         this.mouse_x = 100
         this.mouse_y = 100
 
-        setInterval( this.on_update.bind(this), 20 )
-        this.canvas.onmousedown = this.on_mouse_down.bind(this)
-        this.canvas.onmouseup = this.on_mouse_up.bind(this)
-        this.canvas.onmousemove = this.on_mouse_move.bind(this)
     }
 
     on_mouse_down( event ){
@@ -124,8 +133,363 @@ export class Game {
     reset(){
         console.log(this.name, this.version)
     }
+    start(){
+        setInterval( this.on_update.bind(this), 20 )
+        this.canvas.onmousedown = this.on_mouse_down.bind(this)
+        this.canvas.onmouseup = this.on_mouse_up.bind(this)
+        this.canvas.onmousemove = this.on_mouse_move.bind(this)
+    }
+
+    test(){
+        console.log('test!')
+
+        let test_hand = []
+        test_hand[0] =  new Tile( 1, 1, false )
+        test_hand[1] =  new Tile( 1, 1, false )
+        test_hand[2] =  new Tile( 1, 1, false )
+        test_hand[3] =  new Tile( 1, 2, false )
+        test_hand[4] =  new Tile( 1, 3, false )
+        test_hand[5] =  new Tile( 1, 4, false )
+        test_hand[6] =  new Tile( 1, 5, false )
+        test_hand[7] =  new Tile( 1, 6, false )
+        test_hand[8] =  new Tile( 1, 7, false )
+        test_hand[9] =  new Tile( 1, 8, false )
+        test_hand[10] = new Tile( 1, 9, false )
+        test_hand[11] = new Tile( 1, 9, false )
+        test_hand[12] = new Tile( 1, 9, false )
+        test_hand[13] = new Tile( 2, 7, false )
+
+
+        console.log( this.hand_to_string( test_hand ) )
+
+        console.log( this.calc_hand_shanten( test_hand ) )
+
+    }
+    hand_to_string( c_hand ) {
+        let str = '';
+        for( let i = 0 ; i < c_hand.length ; i++ ){
+            if( c_hand[ i ] == null ){
+                str += 'x'
+            } else {
+                str += c_hand[ i ].text
+            }
+        }
+        return str
+    }
+
+    search_next_pai_index( c_hand, c_index ){
+        c_index += 1
+        while( c_index < c_hand.length ) {
+            if( c_hand[ c_index ] != null ){
+                return c_index
+            }
+            c_index += 1
+        }
+        return -1
+    }
+    search_next_shuntsu_index( c_hand, c_index ){
+        let target_tile = c_hand[ c_index ]
+        c_index += 1
+        while( c_index < c_hand.length ) {
+            if( c_hand[ c_index ] != null ){
+                if( target_tile.color != c_hand[ c_index ].color ) {
+                    // 違う色が見つかったら終了
+                    return -1
+                }
+                if( target_tile.number + 1 == c_hand[ c_index ].number ) {
+                    // 色が同じで、数が1多いシュンツ候補が見つかった
+                    return c_index
+                }
+            }
+            c_index += 1
+        }
+        // 配列の最後に到達した
+        return -1
+    }
+
+    search_next_kanchan_index( c_hand, c_index ){
+        let target_tile = c_hand[ c_index ]
+        c_index += 1
+        while( c_index < c_hand.length ) {
+            if( c_hand[ c_index ] != null ){
+                if( target_tile.color != c_hand[ c_index ].color ) {
+                    // 違う色が見つかったら終了
+                    return -1
+                }
+                if( target_tile.number + 2 == c_hand[ c_index ].number ) {
+                    // 色が同じで、数が2多いカンチャン候補が見つかった
+                    return c_index
+                }
+            }
+            c_index += 1
+        }
+        // 配列の最後に到達した
+        return -1
+    }
+
+    search_trio( c_hand, c_trios_num, can_make_tatu, can_ignore ){
+
+        // 面子を探索する
+        //console.log( c_trios_num, this.hand_to_string( c_hand ) )
+
+        // 1番左の牌を見つける
+        let left_pai = this.search_next_pai_index( c_hand, -1 )
+
+        if( left_pai == -1) {
+            // 手牌がない
+            return c_trios_num
+        }
+
+        // アンコになるかどうか
+        let trios_num_with_anko = c_trios_num
+        let anko_2 = this.search_next_pai_index( c_hand, left_pai )
+        if( anko_2 != -1 ){
+            let anko_3 = this.search_next_pai_index( c_hand, anko_2 )
+            if(anko_3 != -1){
+                if( c_hand[ left_pai ].equals( c_hand[anko_2] ) && c_hand[ left_pai ].equals( c_hand[anko_3] ) ){
+                    // アンコ成立
+                    let next_hand = c_hand.concat()
+                    next_hand[ left_pai ] = null
+                    next_hand[ anko_2 ] = null
+                    next_hand[ anko_3 ] = null
+                    trios_num_with_anko = this.search_trio( next_hand, c_trios_num + 1, can_make_tatu, can_ignore)
+                }
+            }
+        }
+
+        // シュンツになるかどうか
+        let trios_num_with_shuntsu = c_trios_num
+        if( c_hand[ left_pai ].color != 4 ){
+            // 字牌はシュンツにならない
+            let shuntsu_2 = this.search_next_shuntsu_index( c_hand, left_pai )
+            if( shuntsu_2 != -1){
+                let shuntsu_3 = this.search_next_shuntsu_index( c_hand, shuntsu_2 )
+                if( shuntsu_3 != -1){
+                    // シュンツ成立
+                    let next_hand = c_hand.concat()
+                    next_hand[ left_pai ] = null
+                    next_hand[ shuntsu_2 ] = null
+                    next_hand[ shuntsu_3 ] = null
+                    trios_num_with_shuntsu = this.search_trio( next_hand, c_trios_num + 1, can_make_tatu, can_ignore)
+                }
+            }
+        }
+
+        // 聴牌判定のための雑事
+
+        // 既にターツ候補が決まってるなら作れない
+        let trios_num_with_tatsu = c_trios_num
+        if( can_make_tatu ){
+            // りゃんめん、ぺんちゃん待ちのターツ
+            let trios_num_with_ryanmen = c_trios_num
+            if( c_hand[ left_pai ].color != 4 ){
+                // 字牌はりゃんめんにならない
+                let ryanmen_2 = this.search_next_shuntsu_index( c_hand, left_pai )
+                if( ryanmen_2 != -1){
+                    // りゃんめん成立
+                    let next_hand = c_hand.concat()
+                    next_hand[ left_pai ] = null
+                    next_hand[ ryanmen_2 ] = null
+                    trios_num_with_ryanmen = this.search_trio( next_hand, c_trios_num + 0.3, false, can_ignore)
+                }
+            }
+
+            // かんちゃん待ちのターツ
+            let trios_num_with_kanchan = c_trios_num
+            if( c_hand[ left_pai ].color != 4 ){
+                // 字牌はりゃんめんにならない
+                let kanchan_2 = this.search_next_kanchan_index( c_hand, left_pai )
+                if( kanchan_2 != -1){
+                    // りゃんめん成立
+                    let next_hand = c_hand.concat()
+                    next_hand[ left_pai ] = null
+                    next_hand[ kanchan_2 ] = null
+                    trios_num_with_kanchan = this.search_trio( next_hand, c_trios_num + 0.2, false, can_ignore)
+                }
+            }
+
+            // トイツのターツ
+            let trios_num_with_toitsu = c_trios_num
+            let toitsu_2 = this.search_next_pai_index( c_hand, left_pai )
+            if( toitsu_2 != -1 ){
+                if( c_hand[ left_pai ].equals( c_hand[ toitsu_2 ] )){
+                    let next_hand = c_hand.concat()
+                    next_hand[ left_pai ] = null
+                    next_hand[ toitsu_2 ] = null
+                    trios_num_with_toitsu = this.search_trio( next_hand, c_trios_num + 0.1, false, can_ignore)
+                }
+            }
+            trios_num_with_tatsu = Math.max( trios_num_with_ryanmen, trios_num_with_kanchan, trios_num_with_toitsu)
+        }
+
+        // 左端の牌を使わない場合、既に無視した牌があるなら無視できない
+        let trios_num_with_no_trio = c_trios_num
+        if( can_ignore ){
+            let next_hand = c_hand.concat()
+            next_hand[ left_pai ] = null
+            trios_num_with_no_trio = this.search_trio( next_hand, c_trios_num, can_make_tatu, false )
+        }
+
+        // 成立メンツ数が最も大きかった探索結果を返す
+        return Math.max( trios_num_with_anko, trios_num_with_shuntsu, trios_num_with_no_trio, trios_num_with_tatsu)
+    }
+
+    calc_hand_shanten( c_hand ){
+        // 雀頭候補を総当りする
+
+        let max_trios_num = 0
+        for( let jantou1 = 0 ; jantou1 <= 12 ; jantou1++){
+            if( c_hand[ jantou1 ] == null ){
+                continue;
+            }
+            if( c_hand[ jantou1 ].equals( c_hand[ jantou1 + 1 ]) ){
+                if( 1 <= jantou1 && c_hand[ jantou1 - 1 ] != null && c_hand[ jantou1 ].equals( c_hand[ jantou1 - 1 ])){
+                    continue;
+                }
+                // 次の牌が等価で、前の牌が等価でない場合、雀頭の1つ目になる
+                // 前の牌が等価だと、同じ牌が3個以上並んでいた時に同じ候補を探索しないため
+                let c_hand_without_jantou = c_hand.concat()
+                c_hand_without_jantou[ jantou1 ] = null
+                c_hand_without_jantou[ jantou1 + 1 ] = null
+                let trios_num = this.search_trio( c_hand_without_jantou, 0, true, true )
+                max_trios_num = Math.max( trios_num, max_trios_num )
+                //console.log( '雀頭', trios_num, this.hand_to_string( c_hand_without_jantou ) )
+                continue;
+            }
+        }
+        if( max_trios_num == 4) {
+            return '天和';
+        }
+        if( max_trios_num > 3) {
+            return 'ダブル立直';
+        }
+
+        // 雀頭が無い場合
+        let trios_num_without_jantou = this.search_trio( c_hand, 0, false, false )
+        if( trios_num_without_jantou == 4) {
+            return 'ダブル立直(単騎待ち)';
+        }
+
+        // 七対子チェック
+        let pair_num = 0
+        for(let i = 0 ; i < c_hand.length - 1 ; i++){
+            if( c_hand[ i ].equals( c_hand[ i + 1 ])){
+                pair_num += 1
+                while( i < c_hand.length - 1 && c_hand[ i ].equals( c_hand[ i + 1 ]) ){
+                    i += 1
+                }
+            }
+        }
+        if( pair_num == 7 ){
+            return '天和(七対子)'
+        }
+        if( pair_num == 6 ){
+            return 'ダブル立直(七対子)'
+        }
+        // console.log('対子カウント',pair_num)
+        //console.log( trios_num_without_jantou, this.hand_to_string( c_hand ) )
+        return null;
+    }
 
     on_update(){
+
+        // 手牌受け皿の処理
+        if( this.hand_lock ){
+            // ロック中
+        } else if( 0 < this.hand_hold_time ){
+            this.hand_hold_time -= 1
+        }else if( 0 < this.hand_release_time ){
+            // 開放残り時間を減らす
+            this.hand_release_time -= 1
+
+
+            // 手牌受け皿を開放する
+            this.field_wall[20][5] = false
+            this.field_wall[20][6] = false
+            this.field_wall[20][7] = false
+            this.field_wall[20][8] = false
+            this.field_wall[20][9] = false
+            this.field_wall[20][10] = false
+            this.field_wall[20][11] = false
+            this.field_wall[20][12] = false
+            this.field_wall[20][13] = false
+            this.field_wall[20][14] = false
+            this.field_wall[20][15] = false
+            this.field_wall[20][16] = false
+            this.field_wall[20][17] = false
+            this.field_wall[20][18] = false
+
+        } else {
+            // 開放時間ではない場合
+
+            // フィールド上に手牌受け皿を生成する
+
+            this.field_wall[19][4] = true
+            this.field_wall[20][4] = true
+
+            this.field_wall[20][5] = true
+            this.field_wall[20][6] = true
+            this.field_wall[20][7] = true
+            this.field_wall[20][8] = true
+            this.field_wall[20][9] = true
+            this.field_wall[20][10] = true
+            this.field_wall[20][11] = true
+            this.field_wall[20][12] = true
+            this.field_wall[20][13] = true
+            this.field_wall[20][14] = true
+            this.field_wall[20][15] = true
+            this.field_wall[20][16] = true
+            this.field_wall[20][17] = true
+            this.field_wall[20][18] = true
+
+            this.field_wall[19][19] = true
+            this.field_wall[20][19] = true
+
+            if(
+                this.field[19][5] != null &&
+                this.field[19][6] != null &&
+                this.field[19][7] != null &&
+                this.field[19][8] != null &&
+                this.field[19][9] != null &&
+                this.field[19][10] != null &&
+                this.field[19][11] != null &&
+                this.field[19][12] != null &&
+                this.field[19][13] != null &&
+                this.field[19][14] != null &&
+                this.field[19][15] != null &&
+                this.field[19][16] != null &&
+                this.field[19][17] != null &&
+                this.field[19][18] != null
+            ) {
+
+
+                // 手牌をソートする
+                for(let i = 0 ; i < 14 ; i++){
+                    this.hand[i] = this.field[19][5 + i]
+                }
+                this.hand.sort( function( a, b ){
+                    if( a.color == b.color ){
+                        return a.number - b.number
+                    } else {
+                        return a.color - b.color
+                    }
+                } )
+                for(let i = 0 ; i < 14 ; i++){
+                    this.field[19][5 + i] = this.hand[i]
+                }
+                // しゃんてんすうを計算
+                let shanten = this.calc_hand_shanten( this.hand )
+                this.shanten_text = '[' + shanten + ']'
+
+                if( shanten != null){
+                    console.log( this.hand_to_string(this.hand), shanten )
+                    this.hand_lock = true
+                }
+
+                this.hand_hold_time = 1
+                this.hand_release_time = 1
+            }
+        }
 
         // 落下処理
         for(let x = 0 ; x < this.FIELD_WIDTH ; x++){
@@ -198,6 +562,14 @@ export class Game {
                 }
             }
         }
+
+        // しゃんてんテキスト
+        this.canvas2d.fillStyle = 'rgb(100,0,0)'
+        this.canvas2d.font = '16px Gothic'
+        this.canvas2d.textAlign = 'left'
+        this.canvas2d.textBaseline = 'hanging'
+        this.canvas2d.fillText( this.shanten_text , 5 * this.TILE_SIZE , 3 + 21 * this.TILE_SIZE)
+
 
     }
 }
