@@ -3,6 +3,15 @@ import {World} from './world.js';
 import {Hud} from './hud.js';
 import {InputController} from './input_controller.js'
 
+export class Template {
+    constructor(){
+    }
+    on_update(){
+    }
+    on_draw(){
+    }
+}
+
 export class Game {
 
     constructor(){
@@ -41,12 +50,15 @@ export class Game {
     }
 
     on_update(){
-        this.canvas.fillStyle = 'rgb(0,0,30)'
-        this.canvas.fillRect(0,0, this.canvas_element.width, this.canvas_element.height )
+        this.world.on_update()
+//        this.hud.on_update()
 
         this.on_draw()
     }
     on_draw(){
+
+        this.canvas.fillStyle = 'rgb(0,0,30)'
+        this.canvas.fillRect(0,0, this.canvas_element.width, this.canvas_element.height )
 
         this.world.on_draw( this.canvas )
         this.hud.on_draw( this.canvas )

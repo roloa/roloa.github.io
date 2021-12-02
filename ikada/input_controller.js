@@ -10,26 +10,67 @@ export class InputController {
 
         this.is_mouse_holding = false;
 
+        this.is_down_left = false;
+        this.is_down_right = false;
+        this.is_down_up = false;
+        this.is_down_down = false;
+        this.is_down_space = false;
+
+        this.is_mouse_down = false;
+
     }
     setup(){
-        this.game.canvas_element.onmousedown = this.on_mouse_down.bind(this)
-        this.game.canvas_element.onmouseup = this.on_mouse_up.bind(this)
-        this.game.canvas_element.onmousemove = this.on_mouse_move.bind(this)
+        this.game.canvas_element.onmousedown = this.on_mouse_down.bind(this);
+        this.game.canvas_element.onmouseup = this.on_mouse_up.bind(this);
+        this.game.canvas_element.onmousemove = this.on_mouse_move.bind(this);
+        this.game.canvas_element.onwheel = this.on_wheel.bind(this);
 
-        document.addEventListener('keydown', this.on_key_down);
-        document.addEventListener('keyup', this.on_key_up);
+        document.addEventListener('keydown', this.on_key_down.bind(this));
+        document.addEventListener('keyup', this.on_key_up.bind(this));
     }
     on_key_down(e) {
         if(!e.repeat){
             // リピートは捨てる
-            console.log('key_down', e.key);
-    	   return false;
+            console.log('key_down', e.code);
+            if( e.code == 'Space'){
+                this.is_down_space = true;
+            } else if( e.code == 'KeyA'){
+                this.is_down_left = true;
+            } else if( e.code == 'KeyD'){
+                this.is_down_right = true;
+            } else if( e.code == 'KeyS'){
+                this.is_down_down = true;
+            } else if( e.code == 'KeyW'){
+                this.is_down_up = true;
+            }
+
+            return false;
         }
     }
 
     on_key_up(e) {
-        console.log('key_up', e.key);
+//        console.log('key_up', e.key);
+
+        if( e.code == 'Space'){
+            this.is_down_space = false;
+        } else if( e.code == 'KeyA'){
+            this.is_down_left = false;
+        } else if( e.code == 'KeyD'){
+            this.is_down_right = false;
+        } else if( e.code == 'KeyS'){
+            this.is_down_down = false;
+        } else if( e.code == 'KeyW'){
+            this.is_down_up = false;
+        }
+
+
     	return false;
+    }
+
+    on_wheel( event ){
+        console.log('wheel', event.deltaY);
+    	return false;
+
     }
 
     on_mouse_down( event ){
