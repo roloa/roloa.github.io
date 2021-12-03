@@ -1,0 +1,1178 @@
+
+
+export class Control {
+
+    constructor(){
+
+        this.game = null
+    }
+
+    init( new_game ){
+        this.game = new_game
+
+        document.getElementById('button_pause').onclick = function(){
+            this.game.is_paused = !this.game.is_paused;
+        }.bind(this)
+
+        document.getElementById('button_lock').onclick = function(){
+            if( this.game.hand_lock ){
+                this.game.hand_lock = false
+                this.game.release_time = 15
+                this.game.shanten_text = ''
+            } else {
+                this.game.hand_lock = true
+                this.game.shanten_text = '[手牌ロック中]'
+                this.game.hand_hold_time = 15
+            }
+        }.bind(this)
+
+        document.getElementById('button_put_136').onclick = function(){
+            this.game.place_136()
+        }.bind(this)
+
+        document.getElementById('button_put_man').onclick = function(){
+            this.game.place_manzu()
+        }.bind(this)
+        document.getElementById('button_put_red_five').onclick = function(){
+            this.game.place_red_five_pin()
+        }.bind(this)
+        document.getElementById('button_put_ton').onclick = function(){
+            this.game.place_ton()
+        }.bind(this)
+
+        document.getElementById('button_put_pei10').onclick = function(){
+            this.game.place_pei10()
+        }.bind(this)
+
+        document.getElementById('button_pai_shuffle').onclick = function(){
+            this.game.shuffle_field()
+        }.bind(this)
+
+        document.getElementById('button_pai_clear').onclick = function(){
+            this.game.clear_pai()
+        }.bind(this)
+
+        document.getElementById('button_wall_reset').onclick = function(){
+            this.game.reset_wall()
+        }.bind(this)
+
+        document.getElementById('button_wall_clear').onclick = function(){
+            this.game.clear_wall()
+        }.bind(this)
+
+        // デフォルトチェックボックス設定の読み込み
+        this.game.setting_lock_on_richi = document.getElementById('check_lock_on_richi').checked
+        this.game.setting_lock_on_tenhou = document.getElementById('check_lock_on_tenhou').checked
+        this.game.setting_lock_not_allow_seven_pairs =  document.getElementById('check_lock_not_allow_seven_pairs').checked
+        this.game.setting_slow_mode = document.getElementById('check_slow_mode').checked
+        this.game.setting_sort_hand = document.getElementById('check_sort_hand').checked
+
+        document.getElementById('check_lock_on_richi').onclick = function(e){
+            this.game.setting_lock_on_richi = document.getElementById('check_lock_on_richi').checked
+        }.bind(this)
+
+        document.getElementById('check_lock_on_tenhou').onclick = function(e){
+            this.game.setting_lock_on_tenhou = document.getElementById('check_lock_on_tenhou').checked
+        }.bind(this)
+
+        document.getElementById('check_lock_not_allow_seven_pairs').onclick = function(e){
+            this.game.setting_lock_not_allow_seven_pairs =  document.getElementById('check_lock_not_allow_seven_pairs').checked
+        }.bind(this)
+
+        document.getElementById('check_slow_mode').onclick = function(e){
+            this.game.setting_slow_mode = document.getElementById('check_slow_mode').checked
+        }.bind(this)
+
+        document.getElementById('check_sort_hand').onclick = function(e){
+            this.game.setting_sort_hand = document.getElementById('check_sort_hand').checked
+        }.bind(this)
+
+
+
+    }
+
+
+
+
+}
+
+import {Entity} from './entity.js';
+
+export class DropItem extends Entity {
+
+    static IMAGE_LIST = [
+        'tree_ryuuboku.png',
+        'alohashirt_gray.png',
+        'junk_kikai.png',
+    ];
+
+    constructor( game ){
+
+        super( game );
+
+        this.name = 'unknown item';
+
+        this.x = 0;
+        this.y = 0;
+
+        let image_number = Math.floor( Math.random() * 3 );
+        let image_name = DropItem.IMAGE_LIST[ image_number ];
+        this.image = this.game.image_library.get_image( image_name );
+
+    }
+
+    on_update(){
+        super.on_update();
+
+        if( this.is_in_sea ) {
+            this.vx = -1;
+        }
+
+    }
+
+    on_draw( canvas ){
+
+        canvas.strokeStyle = 'rgb(200,200,200)'
+        canvas.strokeRect( this.x - 8, this.y - 16, 16, 16)
+
+        canvas.drawImage( this.image ,this.x - 8, this.y - 16, 16, 16)
+
+    }
+}
+
+//import {Entity} from './entity.js';
+import {ShipBlock} from './ship_block.js';
+
+export class Entity {
+    constructor( game ){
+        this.name = 'noname_entity';
+
+        this.game = game;
+
+        this.x = 0;
+        this.y = 0;
+        this.vx = 0;
+        this.vy = 0;
+
+        this.is_alive = true;
+
+        this.is_landing = false;
+        this.is_in_sea = false;
+
+    }
+
+    on_update(){
+
+        this.vy += 0.5
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if( 1 < this.vy ){
+            this.is_landing = false;
+        }
+
+        // 船との当たり判定
+        // 船から見たローカル座標
+        let local_x_in_ship = this.x + (this.game.world.ship.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_y_in_ship = this.y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+
+        // 触れているブロックの座標
+        let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
+        let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
+        if( 0 <= block_x && block_x < this.game.world.ship.block_array.length &&
+            0 <= block_y && block_y < this.game.world.ship.block_array[0].length){
+            if( local_y_in_ship % ShipBlock.BLOCK_SIZE < 8 && // 床の厚さ
+                this.game.world.ship.block_array[block_x][block_y] != null &&
+                this.game.world.ship.block_array[block_x][block_y].is_floor
+            ){
+                // 着地判定を得る
+                this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
+                this.vy = 0;
+                this.is_landing = true;
+            }
+        }
+        // 海との当たり判定
+        if( 16 <= this.y ){
+                //this.y = 0
+                this.vy -= 1;
+                this.vy *= 0.8;
+                this.is_landing = false;
+                this.is_in_sea = true;
+        } else {
+            // 海の中にいない
+            this.is_in_sea = false;
+        }
+
+    }
+
+    on_draw( canvas ){
+
+        canvas.strokeStyle = 'rgb(200,0,0)'
+        canvas.strokeRect( this.x - 16, this.y - 32, 32, 32)
+
+    }
+}
+
+import {World} from './world.js';
+import {Hud} from './hud.js';
+import {InputController} from './input_controller.js'
+import {ImageLibrary} from './image_library.js'
+import {Inventory} from './inventory.js'
+
+
+
+export class Template {
+    constructor( game ){
+        this.game = game;
+    }
+    on_update(){
+
+    }
+    on_draw( canvas ){
+
+    }
+}
+
+export class Game {
+
+    static PROC_TIME_X = 40;
+    static PROC_TIME_Y = 40;
+    static PROC_TIME_SPACING = 20;
+    static PROC_TIME_COLOR = 'rgb(222,222,222)';
+    static PROC_TIME_FONT = 'bold 12px monospace';
+
+
+    constructor(){
+        this.name = 'ikada';
+        this.version = '0.1';
+
+
+        this.display_canvas_element = document.getElementById('my_canvas');
+        this.display_canvas = this.display_canvas_element.getContext('2d');
+
+        this.SCREEN_WIDTH = 960;
+        this.SCREEN_HEIGHT = 600;
+        this.SCREEN_WIDTH_HALF = this.SCREEN_WIDTH / 2;
+        this.SCREEN_HEIGHT_HALF = this.SCREEN_HEIGHT / 2;
+
+        //this.buffer_canvas_element = document.createElement("canvas");
+        this.buffer_canvas_element = document.getElementById('my_buffer_canvas');
+
+        this.buffer_canvas_element.width = this.SCREEN_WIDTH;
+        this.buffer_canvas_element.height = this.SCREEN_HEIGHT;
+        // this.buffer_canvas_element.hidden = true;
+        this.buffer_canvas = this.buffer_canvas_element.getContext('2d')
+
+        this.active_canvas = this.display_canvas;
+        this.inactive_canvas = this.buffer_canvas;
+
+        this.is_use_buffer = false;
+
+        this.performance_count = 0;
+        this.update_process_time = 0;
+        this.draw_process_time = 0;
+
+        this.input_controller = new InputController( this );
+        this.hud = new Hud( this );
+        this.world = new World( this );
+        this.image_library = new ImageLibrary( this );
+
+    }
+
+    reset(){
+        console.log('game reset!')
+        console.log(this.name, this.version)
+    }
+    start(){
+
+        this.image_library.load_images();
+
+        this.input_controller.setup()
+        setInterval( this.on_update.bind(this), 20 )
+    }
+
+
+    test(){
+        console.log('game test!')
+    }
+
+    on_update(){
+
+        performance.mark('on_update_start')
+
+        this.input_controller.on_update();
+        this.world.on_update();
+        this.hud.on_update();
+
+        this.on_draw();
+
+        performance.mark('on_update_end')
+        performance.measure('update', 'on_update_start', 'on_update_end')
+        performance.measure('draw', 'on_draw_start', 'on_draw_end')
+        if( 100 < this.performance_count){
+            this.performance_count = 0;
+
+            let sum = 0;
+            let result = null;
+            result = performance.getEntriesByName('update')
+            sum = 0;
+            for( let i = 0 ; i < result.length ; i++ ){
+                sum += result[i].duration;
+            }
+            this.update_process_time = Math.floor(sum * 10);
+
+            result = performance.getEntriesByName('draw')
+            sum = 0;
+            for( let i = 0 ; i < result.length ; i++ ){
+                sum += result[i].duration;
+            }
+            this.draw_process_time = Math.floor(sum * 10);
+
+            //console.log( 'update',  );
+            performance.clearMeasures();
+        } else {
+            this.performance_count += 1;
+        }
+
+    }
+    draw_parformance( canvas ){
+        canvas.fillStyle = Game.PROC_TIME_COLOR;
+        canvas.font = Game.PROC_TIME_FONT;
+        canvas.fillText( ' All: ' + this.update_process_time + '[us]' ,
+        Game.PROC_TIME_X ,Game.PROC_TIME_Y + Game.PROC_TIME_SPACING * 0);
+        canvas.fillText( 'Draw: ' + this.draw_process_time + '[us]' ,
+        Game.PROC_TIME_X ,Game.PROC_TIME_Y + Game.PROC_TIME_SPACING * 1);
+    }
+    on_draw(){
+        performance.mark('on_draw_start')
+
+        if( this.is_use_buffer ){
+            this.inactive_canvas.fillStyle = 'rgb(0,0,30)';
+            this.inactive_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
+
+            this.world.on_draw( this.inactive_canvas );
+            this.hud.on_draw( this.inactive_canvas );
+
+            this.draw_parformance( this.inactive_canvas )
+
+            this.inactive_canvas.visible = true;
+            this.active_canvas.visible = false;
+
+            let swap = this.inactive_canvas;
+            this.inactive_canvas = this.active_canvas ;
+            this.active_canvas = swap;
+        } else {
+
+            this.display_canvas.fillStyle = 'rgb(0,0,30)';
+            this.display_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
+
+            this.world.on_draw( this.display_canvas );
+            this.hud.on_draw( this.display_canvas );
+
+            this.draw_parformance( this.display_canvas );
+        }
+        performance.mark('on_draw_end')
+    }
+
+}
+
+import {HudMenu} from './hud_menu.js';
+
+import {ItemSlot} from './item_slot.js';
+
+export class Hud {
+    constructor( game ){
+        this.name = 'hud';
+        this.game = game
+
+        this.hud_menu = new HudMenu( game )
+        this.item_slot = new ItemSlot( game )
+
+    }
+
+    on_update(){
+        this.hud_menu.on_update()
+        this.item_slot.on_update()
+    }
+
+    on_draw( canvas ){
+
+        // メニュー画面
+        this.hud_menu.on_draw( canvas );
+        // メニューアイコン
+
+        // アイテムスロットを描く
+        this.item_slot.on_draw( canvas );
+
+    }
+}
+
+import {MenuUpgrade} from './menu_upgrade.js'
+
+
+export class HudMenu {
+
+    static MENU_WIDTH =  700;
+    static MENU_HEIGHT = 400;
+    static MENU_MARGIN_TOP =  100;
+    static MENU_MARGIN_LEFT = 130;
+    static MENU_ICON_SIZE = 50;
+    static MENU_ICON_MARGIN_LEFT = 130;
+    static MENU_ICON_MARGIN_TOP = 25;
+    static MENU_ICON_SPACING = 10;
+
+    constructor( game ){
+        this.game = game
+        this.is_menu_open = false;
+        this.is_menu_open_keep_press = false;
+
+        this.menu_list = []
+        this.menu_list[0] = new MenuUpgrade( game )
+
+        this.menu_list_cursor = 0
+
+    }
+    on_update(){
+
+        if( this.is_menu_open ){
+            // メニューが開いている時
+            if( this.game.input_controller.is_pressed_key['KeyZ'] ){
+                    this.is_menu_open = false;
+            }
+            if( this.game.input_controller.is_pressed_key['KeyQ'] ){
+                if( -1 < this.menu_list_cursor ){
+                    this.menu_list_cursor -= 1;
+                }
+            }
+            if( this.game.input_controller.is_pressed_key['KeyE'] ){
+                if( this.menu_list_cursor < 4 ){
+                    this.menu_list_cursor += 1;
+                }
+            }
+        } else {
+            // メニューが閉じている時
+            if( this.game.input_controller.is_pressed_key['KeyZ'] ){
+                    this.is_menu_open = true;
+            }
+        }
+
+
+    }
+    on_draw( canvas ){
+
+        if( this.is_menu_open ){
+
+            // メニューの画面
+            canvas.save()
+            canvas.translate( HudMenu.MENU_MARGIN_LEFT, HudMenu.MENU_MARGIN_TOP )
+            canvas.fillStyle = 'rgb(200,200,200)';
+            canvas.fillRect( 0, 0, HudMenu.MENU_WIDTH, HudMenu.MENU_HEIGHT );
+
+            if( this.menu_list[ this.menu_list_cursor ] ) {
+                this.menu_list[ this.menu_list_cursor ].on_draw( canvas );
+            }
+
+            canvas.restore()
+            // 閉じるボタン
+
+            if( this.menu_list_cursor == -1 ){
+                canvas.strokeStyle = 'rgb(250,0,0)';
+            } else {
+                canvas.strokeStyle = 'rgb(200,200,200)';
+            }
+            canvas.strokeRect(
+                HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+                HudMenu.MENU_ICON_MARGIN_TOP,
+                HudMenu.MENU_ICON_SIZE,
+                HudMenu.MENU_ICON_SIZE );
+
+            // メニューのアイコン
+            for( let i = 0 ; i < 4 ; i++ ){
+                if( i == this.menu_list_cursor ){
+                    canvas.strokeStyle = 'rgb(250,0,0)';
+                } else {
+                    canvas.strokeStyle = 'rgb(200,200,200)';
+                }
+                canvas.strokeRect(
+                    HudMenu.MENU_ICON_MARGIN_LEFT + i * (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+                    HudMenu.MENU_ICON_MARGIN_TOP,
+                    HudMenu.MENU_ICON_SIZE,
+                    HudMenu.MENU_ICON_SIZE );
+            }
+        }
+
+    }
+}
+
+export class ImageLibrary {
+
+    static IMAGE_FILE_NAME_LIST = [
+        'tree_ryuuboku.png',
+        'alohashirt_gray.png',
+        'junk_kikai.png',
+        'mushi_mushitoriami.png',
+        'text_mu.png'
+    ]
+
+    constructor( game ){
+        this.game = game;
+
+        this.image_list = []
+
+    }
+
+    get_image( name ){
+        return this.image_list[ name ];
+    }
+
+    load_images(){
+
+        for( let i = 0 ; i < ImageLibrary.IMAGE_FILE_NAME_LIST.length ; i++ ) {
+            let new_image = new Image();
+            new_image.src = './img/' + ImageLibrary.IMAGE_FILE_NAME_LIST[ i ];
+            this.image_list[ ImageLibrary.IMAGE_FILE_NAME_LIST[ i ] ] = new_image;
+        }
+
+    }
+
+
+}
+
+
+export class InputController {
+
+    constructor( game ){
+        this.game = game;
+
+        this.mouse_x = 100;
+        this.mouse_y = 100;
+
+        this.is_mouse_holding = false;
+
+        this.is_down_left = false;
+        this.is_down_right = false;
+        this.is_down_up = false;
+        this.is_down_down = false;
+        this.is_down_space = false;
+
+
+        this.is_mouse_down = false;
+
+        this.is_wheel_up = false;
+        this.is_wheel_down = false;
+        this.is_wheel_up_buffer = false;
+        this.is_wheel_down_buffer = false;
+
+        this.is_enable_any_key_input = true;
+        this.is_down_key = []
+        this.is_pressed_key = []
+        this.is_pressed_key_buffer = []
+
+
+    }
+    setup(){
+        this.game.display_canvas_element.onmousedown = this.on_mouse_down.bind(this);
+        this.game.display_canvas_element.onmouseup = this.on_mouse_up.bind(this);
+        this.game.display_canvas_element.onmousemove = this.on_mouse_move.bind(this);
+        this.game.display_canvas_element.onwheel = this.on_wheel.bind(this);
+
+        document.addEventListener('keydown', this.on_key_down.bind(this));
+        document.addEventListener('keyup', this.on_key_up.bind(this));
+    }
+
+    on_update(){
+        this.is_pressed_key = this.is_pressed_key_buffer;
+        this.is_pressed_key_buffer = []
+
+        this.is_wheel_up = this.is_wheel_up_buffer;
+        this.is_wheel_down = this.is_wheel_down_buffer;
+        this.is_wheel_up_buffer = false;
+        this.is_wheel_down_buffer = false;
+
+    }
+
+
+    on_key_down(e) {
+        if(!e.repeat){
+            // リピートは捨てる
+            //console.log('key_down', e.key);
+
+            if( this.is_enable_any_key_input){
+                this.is_down_key[ e.code ] = true;
+                this.is_pressed_key_buffer[ e.code ] = true ;
+            }
+
+            if( e.code == 'Space'){
+                this.is_down_space = true;
+            } else if( e.code == 'KeyA'){
+                this.is_down_left = true;
+            } else if( e.code == 'KeyD'){
+                this.is_down_right = true;
+            } else if( e.code == 'KeyS'){
+                this.is_down_down = true;
+            } else if( e.code == 'KeyW'){
+                this.is_down_up = true;
+            }
+
+            return false;
+        }
+    }
+
+    on_key_up(e) {
+//        console.log('key_up', e.key);
+
+        if( this.is_enable_any_key_input){
+            this.is_down_key[ e.code ] = false;
+        }
+
+        if( e.code == 'Space'){
+            this.is_down_space = false;
+        } else if( e.code == 'KeyA'){
+            this.is_down_left = false;
+        } else if( e.code == 'KeyD'){
+            this.is_down_right = false;
+        } else if( e.code == 'KeyS'){
+            this.is_down_down = false;
+        } else if( e.code == 'KeyW'){
+            this.is_down_up = false;
+        }
+
+
+    	return false;
+    }
+
+    on_wheel( event ){
+//        console.log('wheel', event.deltaY);
+        if( 0 < event.deltaY ){
+            this.is_wheel_down_buffer = true;
+        }
+        if( event.deltaY < 0 ){
+            this.is_wheel_up_buffer = true;
+        }
+    	return false;
+
+    }
+
+    on_mouse_down( event ){
+        let bcr = this.game.display_canvas_element.getBoundingClientRect();
+        this.mouse_x = event.clientX -  bcr.x;
+        this.mouse_y = event.clientY -  bcr.y;
+        this.is_mouse_holding = true;
+        console.log('mouse_down', this.mouse_x, this.mouse_y);
+        return false;
+    }
+
+    on_mouse_up( event ){
+        let bcr = this.game.display_canvas_element.getBoundingClientRect();
+        this.mouse_x = event.clientX -  bcr.x;
+        this.mouse_y = event.clientY -  bcr.y;
+        this.is_mouse_holding = false;
+        console.log('mouse_up', this.mouse_x, this.mouse_y);
+        return false;
+    }
+    on_mouse_move( event ) {
+        let bcr = this.game.display_canvas_element.getBoundingClientRect();
+        this.mouse_x = event.clientX -  bcr.x;
+        this.mouse_y = event.clientY -  bcr.y;
+        return false;
+    }
+
+}
+
+
+export class Inventory {
+
+    static ITEM_SLOT_COUNT = 9;
+
+    constructor( game ){
+        this.game = game;
+
+        this.item_slot = []
+        for( let i = 0 ; i < ITEM_SLOT_COUNT ; i++ ){
+            this.item_slot[0] = null;
+        }
+
+        // this.item_slot[0] = new CatchNet();
+
+        this.item_slot_cursor = 0;
+
+    }
+    on_update(){
+
+
+    }
+    on_draw(){
+
+    }
+}
+
+
+export class ItemSlot {
+
+    static ITEM_SLOT_COUNT = 9;
+
+    constructor( game ){
+        this.game = game;
+
+        this.itemslot_margin_bottom = 40;
+        this.itemslot_size = 50;
+        this.itemslot_spacing = 10;
+        this.itemslot_count = 9;
+        this.itemslot_start_x = 99;
+        this.itemslot_start_y = 99;
+        this.calc_itemslot_coodinate()
+
+
+        this.item_slot = []
+        for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
+            this.item_slot[0] = null;
+        }
+
+        // this.item_slot[0] = new CatchNet();
+
+        this.item_slot_cursor = 0;
+
+    }
+
+    calc_itemslot_coodinate(){
+        // アイテムスロットの描画位置を再計算する
+        this.itemslot_start_y = this.game.SCREEN_HEIGHT - this.itemslot_margin_bottom - this.itemslot_size;
+        this.itemslot_start_x = (this.game.SCREEN_WIDTH / 2) - ((this.itemslot_size + this.itemslot_spacing) * this.itemslot_count / 2);
+    }
+
+    on_update(){
+
+        if( this.game.input_controller.is_wheel_up ){
+            this.item_slot_cursor -= 1;
+            if( this.item_slot_cursor < 0){
+                this.item_slot_cursor = ItemSlot.ITEM_SLOT_COUNT - 1;
+            }
+        }
+        if( this.game.input_controller.is_wheel_down ){
+            this.item_slot_cursor += 1;
+            if( ItemSlot.ITEM_SLOT_COUNT <= this.item_slot_cursor){
+                this.item_slot_cursor = 0;
+            }
+        }
+
+
+    }
+    on_draw( canvas ){
+        for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
+
+            if( slot_no == this.item_slot_cursor ){
+                // 選択中のスロット
+                canvas.strokeStyle = 'rgb(222,30,30)'
+                canvas.strokeRect(
+                    this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
+                    this.itemslot_start_y,
+                    this.itemslot_size,
+                    this.itemslot_size )
+
+            } else {
+                // 選択してないスロット
+                canvas.strokeStyle = 'rgb(222,222,222)'
+                canvas.strokeRect(
+                    this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
+                    this.itemslot_start_y,
+                    this.itemslot_size,
+                    this.itemslot_size )
+            }
+        }
+    }
+}
+
+import {Game} from './game.js';
+
+var game = new Game();
+
+window.mygame = game;
+
+//document.getElementById('app_version').innerHTML = game.version
+
+
+game.reset();
+game.test();
+game.start();
+
+
+export class MenuUpgrade {
+
+    static TITLE_X = 100;
+    static TITLE_Y = 40;
+    static TITLE_COLOR = 'rgb(20,20,20)';
+    static TITLE_FONT = 'bold 32px monospace'
+
+    static LIST_X = 20;
+    static LIST_Y = 60;
+    static LIST_WIDTH = 300;
+    static LIST_HEIGHT = 320;
+
+    static LIST_TEXT_MARGIN_LEFT = 24;
+    static LIST_TEXT_MARGIN_TOP = 30;
+    static LIST_TEXT_FONT = 'bold 20px monospace';
+    static LIST_TEXT_COLOR = 'rgb(240,240,240)';
+    static LIST_TEXT_COLOR_DISABLE = 'rgb(100,100,100)'
+    static LIST_TEXT_HEIGHT = 30;
+
+    static DESC_TEXT_X = 340;
+    static DESC_TEXT_Y = 60;
+    static DESC_TEXT_FONT = 'bold 18px monospace';
+    static DESC_TEXT_COLOR = 'rgb(20,20,20)';
+    static DESC_TEXT_COLOR_GREEN = 'rgb(20,200,20)';
+    static DESC_TEXT_COLOR_RED = 'rgb(200,20,20)';
+    static DESC_TEXT_HEIGHT = 28;
+
+    static UPGRADE_BUTTON_X = 400;
+    static UPGRADE_BUTTON_Y = 330;
+    static UPGRADE_BUTTON_HEIGHT = 50;
+    static UPGRADE_BUTTON_WIDTH =  200;
+    static UPGRADE_BUTTON_COLOR = 'rgb(160,160,160)';
+    static UPGRADE_BUTTON_TEXT_COLOR = 'rgb(20,20,20)';
+    static UPGRADE_BUTTON_FONT = 'bold 24px monospace';
+    static UPGRADE_BUTTON_TEXT_Y = 32;
+    static UPGRADE_BUTTON_TEXT_X = 45;
+
+
+
+
+    constructor( game ){
+        this.game = game;
+
+        this.upgrade_list = []
+        this.upgrade_list[0] = 'グライダー Lv1'
+        this.upgrade_list[1] = '乾燥棚'
+        this.upgrade_list[2] = 'ほげほげほげほげほげ'
+        this.upgrade_list[3] = '12345678901234567890'
+
+    }
+    on_update(){
+
+    }
+    on_draw( canvas ){
+
+        // タイトルを印字
+        canvas.fillStyle = MenuUpgrade.TITLE_COLOR;
+        canvas.font = MenuUpgrade.TITLE_FONT
+        canvas.fillText( 'アップグレード Upgrade' ,
+            MenuUpgrade.TITLE_X ,MenuUpgrade.TITLE_Y);
+
+        // アプグレリスト
+        canvas.fillStyle = 'rgb(20,20,20)';
+        canvas.fillRect( MenuUpgrade.LIST_X, MenuUpgrade.LIST_Y, MenuUpgrade.LIST_WIDTH, MenuUpgrade.LIST_HEIGHT　);
+
+        for( let i = 0 ; i < 10 ; i++ ){
+            if( this.upgrade_list[ i ] ){
+                canvas.fillStyle = MenuUpgrade.LIST_TEXT_COLOR;
+                canvas.font = MenuUpgrade.LIST_TEXT_FONT;
+                canvas.fillText( this.upgrade_list[ i ] ,
+                    MenuUpgrade.LIST_X + MenuUpgrade.LIST_TEXT_MARGIN_LEFT,
+                    MenuUpgrade.LIST_Y + MenuUpgrade.LIST_TEXT_MARGIN_TOP + MenuUpgrade.LIST_TEXT_HEIGHT * i);
+            }
+        }
+        // アプグレ説明文など
+        canvas.font = MenuUpgrade.DESC_TEXT_FONT;
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR;
+        canvas.fillText( '・アップグレード名' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 1);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR;
+        canvas.fillText( '  グライダーを強化します。' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 2);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR;
+        canvas.fillText( '  上昇力がさらにアップします。' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 3);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR;
+        canvas.fillText( '  (説明文3)' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 4);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR;
+        canvas.fillText( '・必要資材' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 5);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR_GREEN;
+        canvas.fillText( '  資材1 ....   7 / (  42 )' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 6);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR_RED;
+        canvas.fillText( '  資材2 ....   7 / ( 3  )' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 7);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR_RED;
+        canvas.fillText( '  資材3 ....   7 / ( 3  )' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 8);
+
+        canvas.fillStyle = MenuUpgrade.DESC_TEXT_COLOR_RED;
+        canvas.fillText( '  資材4 ....   7 / ( 3  )' ,
+        MenuUpgrade.DESC_TEXT_X,
+        MenuUpgrade.DESC_TEXT_Y + MenuUpgrade.DESC_TEXT_HEIGHT * 9);
+
+        // アップグレードボタン
+        canvas.fillStyle = MenuUpgrade.UPGRADE_BUTTON_COLOR;
+        canvas.fillRect( MenuUpgrade.UPGRADE_BUTTON_X, MenuUpgrade.UPGRADE_BUTTON_Y, MenuUpgrade.UPGRADE_BUTTON_WIDTH, MenuUpgrade.UPGRADE_BUTTON_HEIGHT )
+        canvas.fillStyle = MenuUpgrade.UPGRADE_BUTTON_TEXT_COLOR;
+        canvas.font = MenuUpgrade.UPGRADE_BUTTON_FONT;
+        canvas.fillText(
+            '実行! (X)',
+            MenuUpgrade.UPGRADE_BUTTON_X + MenuUpgrade.UPGRADE_BUTTON_TEXT_X,
+            MenuUpgrade.UPGRADE_BUTTON_Y + MenuUpgrade.UPGRADE_BUTTON_TEXT_Y
+        );
+
+    }
+}
+
+import {Entity} from './entity.js';
+
+export class Player extends Entity {
+    constructor( game ){
+
+        super( game );
+
+        this.name = 'player';
+
+        this.x = 0
+        this.y = -60
+
+    }
+
+    on_update(){
+        super.on_update();
+        //console.log(this.game.input_controller.is_down_right)
+        if( this.game.input_controller.is_down_right ){
+            this.x += 2
+        }
+        if( this.game.input_controller.is_down_left ){
+            this.x -= 2
+        }
+        if( this.game.input_controller.is_down_up ){
+            if( this.is_landing || this.is_in_sea ){
+                this.vy = -8;
+                this.is_landing = false;
+
+            }
+        }
+
+
+    }
+
+    on_draw( canvas ){
+
+        canvas.strokeStyle = 'rgb(200,0,200)'
+        canvas.strokeRect( this.x - 16, this.y - 32, 32, 32)
+
+    }
+}
+
+//import {ShipBlock} from './ship_block.js';
+
+export class ShipBlock {
+
+    static BLOCK_RADIUS = 16
+    static BLOCK_SIZE = ShipBlock.BLOCK_RADIUS + ShipBlock.BLOCK_RADIUS
+
+    constructor(){
+
+        this.is_floor = false
+
+    }
+
+    on_update(){
+
+    }
+    on_draw( canvas ){
+        // canvas.strokeStyle = 'rgb(200,0,0)'
+        // canvas.beginPath()
+        // canvas.moveTo(-ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
+        // canvas.lineTo( ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
+        // canvas.stroke()
+        // canvas.beginPath()
+        // canvas.moveTo( ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
+        // canvas.lineTo(-ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
+        // canvas.stroke()
+    }
+
+}
+
+import {ShipBlock} from './ship_block.js';
+
+export class ShipFloor extends ShipBlock{
+
+    constructor(){
+        super()
+
+        this.is_floor = true;
+
+    }
+
+    on_update(){
+
+    }
+    on_draw( canvas ){
+        canvas.fillStyle = 'rgb(200,100,0)';
+
+        canvas.fillRect( -ShipBlock.BLOCK_RADIUS, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_SIZE, ShipBlock.BLOCK_SIZE);
+    }
+
+}
+
+import {ShipBlock} from './ship_block.js';
+import {ShipFloor} from './ship_floor.js';
+
+export class Ship {
+
+    constructor( world ){
+
+        this.world = world;
+
+        // 船を構成するブロックを並べた2次元配列。
+        // 必要に応じて拡張する
+        this.block_array = []
+        for( let x = 0 ; x < 7 ; x++ ){
+            this.block_array[x] = [];
+            for( let y = 0 ; y < 7 ; y++ ){
+                this.block_array[x][y] = new ShipBlock();
+            }
+        }
+        this.ship_offset_x = 3
+        this.ship_offset_y = 6
+
+        this.block_array[1][6] = new ShipFloor()
+        this.block_array[2][6] = new ShipFloor()
+        this.block_array[3][6] = new ShipFloor()
+        this.block_array[4][6] = new ShipFloor()
+        this.block_array[5][6] = new ShipFloor()
+
+        this.block = new ShipBlock()
+
+    }
+
+    on_update(){
+
+    }
+
+    on_draw( canvas ){
+
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                canvas.save()
+                canvas.translate(
+                    (-this.ship_offset_x + x) * ShipBlock.BLOCK_SIZE,
+                    (-this.ship_offset_y + y) * ShipBlock.BLOCK_SIZE)
+                this.block_array[x][y].on_draw( canvas );
+
+                canvas.restore()
+            }
+        }
+
+        this.block.on_draw( canvas );
+    }
+
+}
+
+
+export class ToolItem {
+
+    constructor( game ){
+
+        this.game = game;
+
+        this.image = this.game.image_library.get_image( 'text_mu.png' );
+
+    }
+    
+    on_click( cursor_x, cursor_y, player_x, player_y ){
+        console.log('default ToolItem onclick!')
+    }
+
+    on_update(){
+
+    }
+    on_draw(){
+
+    }
+}
+
+import {Entity} from './entity.js';
+import {Player} from './player.js';
+import {Ship} from './ship.js';
+import {DropItem} from './dropitem.js';
+
+export class World {
+    constructor( game ){
+        this.name = 'world';
+        this.game = game;
+
+        this.camera = {}
+        this.camera.x = 0
+        this.camera.y = 0
+        this.camera.zoom = 1.0
+
+        this.entity_list = []
+
+        this.player = new Player( this.game )
+        this.ship = new Ship( this.game )
+
+    }
+
+    on_update(){
+
+        // カメラ操作？
+        if(  this.game.input_controller.is_down_key['i']){
+            this.camera.y -= 1;
+        }
+
+        if( Math.random() < 0.01) {
+            let new_item = new DropItem( this.game )
+            new_item.x = 300
+            this.entity_list.push( new_item )
+        }
+
+        for( let i = 0 ; i < this.entity_list.length ; i++ ){
+            this.entity_list[i].on_update( );
+        }
+
+        this.player.on_update()
+
+    }
+    //
+    on_draw( canvas ){
+
+        canvas.save();
+        // カメラの視点に移動
+        canvas.translate( -this.camera.x , -this.camera.y);
+        // 画面の中心
+        canvas.translate( this.game.SCREEN_WIDTH_HALF, this.game.SCREEN_HEIGHT_HALF );
+
+        // 拡大指定
+        // TODO
+        //
+        this.ship.on_draw( canvas );
+        this.player.on_draw( canvas );
+
+        for( let i = 0 ; i < this.entity_list.length ; i++ ){
+            this.entity_list[i].on_draw( canvas );
+        }
+        // 海面
+        canvas.strokeStyle = 'rgb(0,100,200)'
+        canvas.beginPath()
+        canvas.moveTo(-500,0)
+        canvas.lineTo( 500,0)
+        canvas.stroke()
+
+
+        //
+        canvas.restore();
+
+    }
+}

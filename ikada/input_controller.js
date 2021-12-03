@@ -119,7 +119,7 @@ export class InputController {
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         this.is_mouse_holding = true;
-        console.log('mouse_down', this.mouse_x, this.mouse_y);
+//        console.log('mouse_down', this.mouse_x, this.mouse_y);
         return false;
     }
 
@@ -128,7 +128,7 @@ export class InputController {
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         this.is_mouse_holding = false;
-        console.log('mouse_up', this.mouse_x, this.mouse_y);
+//        console.log('mouse_up', this.mouse_x, this.mouse_y);
         return false;
     }
     on_mouse_move( event ) {

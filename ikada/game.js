@@ -63,6 +63,7 @@ export class Game {
         this.world = new World( this );
         this.image_library = new ImageLibrary( this );
 
+        this.interbal_handle = 0;
     }
 
     reset(){
@@ -74,7 +75,7 @@ export class Game {
         this.image_library.load_images();
 
         this.input_controller.setup()
-        setInterval( this.on_update.bind(this), 20 )
+        this.interbal_handle = setInterval( this.on_update.bind(this), 20 )
     }
 
 
@@ -83,43 +84,48 @@ export class Game {
     }
 
     on_update(){
+        try {
+            performance.mark('on_update_start')
 
-        performance.mark('on_update_start')
+            this.input_controller.on_update();
+            this.world.on_update();
+            this.hud.on_update();
 
-        this.input_controller.on_update();
-        this.world.on_update();
-        this.hud.on_update();
+            this.on_draw();
 
-        this.on_draw();
+            performance.mark('on_update_end')
+            performance.measure('update', 'on_update_start', 'on_update_end')
+            performance.measure('draw', 'on_draw_start', 'on_draw_end')
+            if( 100 < this.performance_count){
+                this.performance_count = 0;
 
-        performance.mark('on_update_end')
-        performance.measure('update', 'on_update_start', 'on_update_end')
-        performance.measure('draw', 'on_draw_start', 'on_draw_end')
-        if( 100 < this.performance_count){
-            this.performance_count = 0;
+                let sum = 0;
+                let result = null;
+                result = performance.getEntriesByName('update')
+                sum = 0;
+                for( let i = 0 ; i < result.length ; i++ ){
+                    sum += result[i].duration;
+                }
+                this.update_process_time = Math.floor(sum * 10);
 
-            let sum = 0;
-            let result = null;
-            result = performance.getEntriesByName('update')
-            sum = 0;
-            for( let i = 0 ; i < result.length ; i++ ){
-                sum += result[i].duration;
+                result = performance.getEntriesByName('draw')
+                sum = 0;
+                for( let i = 0 ; i < result.length ; i++ ){
+                    sum += result[i].duration;
+                }
+                this.draw_process_time = Math.floor(sum * 10);
+
+                //console.log( 'update',  );
+                performance.clearMeasures();
+            } else {
+                this.performance_count += 1;
             }
-            this.update_process_time = Math.floor(sum * 10);
-
-            result = performance.getEntriesByName('draw')
-            sum = 0;
-            for( let i = 0 ; i < result.length ; i++ ){
-                sum += result[i].duration;
-            }
-            this.draw_process_time = Math.floor(sum * 10);
-
-            //console.log( 'update',  );
-            performance.clearMeasures();
-        } else {
-            this.performance_count += 1;
+        } catch ( e ) {
+            // なんかエラーが起きたら、ゲーム動作を止める
+            clearInterval( this.interbal_handle );
+            console.log('game halted on error!');
+            throw e;
         }
-
     }
     draw_parformance( canvas ){
         canvas.fillStyle = Game.PROC_TIME_COLOR;
