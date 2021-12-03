@@ -18,6 +18,10 @@ export class InputController {
 
         this.is_mouse_down = false;
 
+        this.is_enable_any_key_input = true;
+        this.is_down_key = []
+
+
     }
     setup(){
         this.game.canvas_element.onmousedown = this.on_mouse_down.bind(this);
@@ -32,6 +36,11 @@ export class InputController {
         if(!e.repeat){
             // リピートは捨てる
             console.log('key_down', e.code);
+
+            if( this.is_enable_any_key_input){
+                this.is_down_key[ e.key ] = true;
+            }
+
             if( e.code == 'Space'){
                 this.is_down_space = true;
             } else if( e.code == 'KeyA'){
@@ -50,6 +59,10 @@ export class InputController {
 
     on_key_up(e) {
 //        console.log('key_up', e.key);
+
+        if( this.is_enable_any_key_input){
+            this.is_down_key[ e.key ] = false;
+        }
 
         if( e.code == 'Space'){
             this.is_down_space = false;

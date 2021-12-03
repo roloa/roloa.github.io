@@ -13,7 +13,10 @@ export class Entity {
         this.vx = 0;
         this.vy = 0;
 
+        this.is_alive = true;
+
         this.is_landing = false;
+        this.is_in_sea = false;
 
     }
 
@@ -37,7 +40,8 @@ export class Entity {
         let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
         if( 0 <= block_x && block_x < this.world.ship.block_array.length &&
             0 <= block_y && block_y < this.world.ship.block_array[0].length){
-            if( this.world.ship.block_array[block_x][block_y] != null &&
+            if( local_y_in_ship % ShipBlock.BLOCK_SIZE < 8 && // 床の厚さ
+                this.world.ship.block_array[block_x][block_y] != null &&
                 this.world.ship.block_array[block_x][block_y].is_floor
             ){
                 // 着地判定を得る
@@ -47,9 +51,15 @@ export class Entity {
             }
         }
         // 海との当たり判定
-        if( 0 <= this.y ){
+        if( 16 <= this.y ){
                 //this.y = 0
-                this.vy -= 1
+                this.vy -= 1;
+                this.vy *= 0.8;
+                this.is_landing = false;
+                this.is_in_sea = true;
+        } else {
+            // 海の中にいない
+            this.is_in_sea = false;
         }
 
     }
