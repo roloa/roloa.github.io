@@ -1,5 +1,6 @@
 
 import {MenuUpgrade} from './menu_upgrade.js'
+import {MenuInventory} from './menu_inventory.js'
 
 
 export class HudMenu {
@@ -20,6 +21,7 @@ export class HudMenu {
 
         this.menu_list = []
         this.menu_list[0] = new MenuUpgrade( game )
+        this.menu_list[1] = new MenuInventory( game )
 
         this.menu_list_cursor = 0
 
