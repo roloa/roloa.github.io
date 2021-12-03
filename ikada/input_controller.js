@@ -32,10 +32,10 @@ export class InputController {
 
     }
     setup(){
-        this.game.canvas_element.onmousedown = this.on_mouse_down.bind(this);
-        this.game.canvas_element.onmouseup = this.on_mouse_up.bind(this);
-        this.game.canvas_element.onmousemove = this.on_mouse_move.bind(this);
-        this.game.canvas_element.onwheel = this.on_wheel.bind(this);
+        this.game.display_canvas_element.onmousedown = this.on_mouse_down.bind(this);
+        this.game.display_canvas_element.onmouseup = this.on_mouse_up.bind(this);
+        this.game.display_canvas_element.onmousemove = this.on_mouse_move.bind(this);
+        this.game.display_canvas_element.onwheel = this.on_wheel.bind(this);
 
         document.addEventListener('keydown', this.on_key_down.bind(this));
         document.addEventListener('keyup', this.on_key_up.bind(this));
@@ -115,7 +115,7 @@ export class InputController {
     }
 
     on_mouse_down( event ){
-        let bcr = this.game.canvas_element.getBoundingClientRect();
+        let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         this.is_mouse_holding = true;
@@ -124,7 +124,7 @@ export class InputController {
     }
 
     on_mouse_up( event ){
-        let bcr = this.game.canvas_element.getBoundingClientRect();
+        let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         this.is_mouse_holding = false;
@@ -132,7 +132,7 @@ export class InputController {
         return false;
     }
     on_mouse_move( event ) {
-        let bcr = this.game.canvas_element.getBoundingClientRect();
+        let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         return false;

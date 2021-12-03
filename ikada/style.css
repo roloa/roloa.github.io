@@ -15,6 +15,11 @@ body{
 #game_container{
     display: flex;
 }
+
+#game_container_2{
+    display: flex;
+}
+
 #canvas_container{
     margin: 10px
 }
