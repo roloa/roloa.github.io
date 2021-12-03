@@ -1,4 +1,5 @@
 
+import {HudMenu} from './hud_menu.js';
 
 export class Hud {
     constructor( game ){
@@ -12,6 +13,9 @@ export class Hud {
         this.itemslot_start_x = 99;
         this.itemslot_start_y = 99;
         this.calc_itemslot_coodinate()
+
+        this.hud_menu = new HudMenu( game )
+
     }
 
     calc_itemslot_coodinate(){
@@ -21,14 +25,17 @@ export class Hud {
     }
 
     on_update(){
-
+        this.hud_menu.on_update()
     }
 
     on_draw( canvas ){
 
-        canvas.strokeStyle = 'rgb(222,222,222)'
+        // メニュー画面
+        this.hud_menu.on_draw( canvas );
+        // メニューアイコン
 
         // アイテムスロットを描く
+        canvas.strokeStyle = 'rgb(222,222,222)'
         for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
             canvas.strokeRect(
                 this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),

@@ -4,11 +4,14 @@ import {Hud} from './hud.js';
 import {InputController} from './input_controller.js'
 
 export class Template {
-    constructor(){
+    constructor( game ){
+        this.game = game;
     }
     on_update(){
+
     }
     on_draw(){
+
     }
 }
 
@@ -50,18 +53,19 @@ export class Game {
     }
 
     on_update(){
-        this.world.on_update()
-//        this.hud.on_update()
+        this.input_controller.on_update();
+        this.world.on_update();
+        this.hud.on_update();
 
-        this.on_draw()
+        this.on_draw();
     }
     on_draw(){
 
-        this.canvas.fillStyle = 'rgb(0,0,30)'
-        this.canvas.fillRect(0,0, this.canvas_element.width, this.canvas_element.height )
+        this.canvas.fillStyle = 'rgb(0,0,30)';
+        this.canvas.fillRect(0,0, this.canvas_element.width, this.canvas_element.height );
 
-        this.world.on_draw( this.canvas )
-        this.hud.on_draw( this.canvas )
+        this.world.on_draw( this.canvas );
+        this.hud.on_draw( this.canvas );
 
     }
 

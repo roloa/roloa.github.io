@@ -16,10 +16,13 @@ export class InputController {
         this.is_down_down = false;
         this.is_down_space = false;
 
+
         this.is_mouse_down = false;
 
         this.is_enable_any_key_input = true;
         this.is_down_key = []
+        this.is_pressed_key = []
+        this.is_pressed_key_buffer = []
 
 
     }
@@ -32,13 +35,21 @@ export class InputController {
         document.addEventListener('keydown', this.on_key_down.bind(this));
         document.addEventListener('keyup', this.on_key_up.bind(this));
     }
+
+    on_update(){
+        this.is_pressed_key = this.is_pressed_key_buffer;
+        this.is_pressed_key_buffer = []
+    }
+
+
     on_key_down(e) {
         if(!e.repeat){
             // リピートは捨てる
-            console.log('key_down', e.code);
+            //console.log('key_down', e.key);
 
             if( this.is_enable_any_key_input){
-                this.is_down_key[ e.key ] = true;
+                this.is_down_key[ e.code ] = true;
+                this.is_pressed_key_buffer[ e.code ] = true ;
             }
 
             if( e.code == 'Space'){
@@ -61,7 +72,7 @@ export class InputController {
 //        console.log('key_up', e.key);
 
         if( this.is_enable_any_key_input){
-            this.is_down_key[ e.key ] = false;
+            this.is_down_key[ e.code ] = false;
         }
 
         if( e.code == 'Space'){
