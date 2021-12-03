@@ -16,8 +16,8 @@ export class World {
 
         this.entity_list = []
 
-        this.player = new Player( this )
-        this.ship = new Ship( this )
+        this.player = new Player( this.game )
+        this.ship = new Ship( this.game )
 
     }
 
@@ -29,7 +29,7 @@ export class World {
         }
 
         if( Math.random() < 0.01) {
-            let new_item = new DropItem( this )
+            let new_item = new DropItem( this.game )
             new_item.x = 300
             this.entity_list.push( new_item )
         }

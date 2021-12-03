@@ -2,9 +2,9 @@
 import {Entity} from './entity.js';
 
 export class Player extends Entity {
-    constructor( world ){
+    constructor( game ){
 
-        super( world );
+        super( game );
 
         this.name = 'player';
 
@@ -15,14 +15,14 @@ export class Player extends Entity {
 
     on_update(){
         super.on_update();
-        //console.log(this.world.game.input_controller.is_down_right)
-        if( this.world.game.input_controller.is_down_right ){
+        //console.log(this.game.input_controller.is_down_right)
+        if( this.game.input_controller.is_down_right ){
             this.x += 2
         }
-        if( this.world.game.input_controller.is_down_left ){
+        if( this.game.input_controller.is_down_left ){
             this.x -= 2
         }
-        if( this.world.game.input_controller.is_down_up ){
+        if( this.game.input_controller.is_down_up ){
             if( this.is_landing || this.is_in_sea ){
                 this.vy = -8;
                 this.is_landing = false;

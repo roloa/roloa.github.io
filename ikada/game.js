@@ -2,6 +2,7 @@
 import {World} from './world.js';
 import {Hud} from './hud.js';
 import {InputController} from './input_controller.js'
+import {ImageLibrary} from './image_library.js'
 
 export class Template {
     constructor( game ){
@@ -34,6 +35,7 @@ export class Game {
         this.input_controller = new InputController( this );
         this.hud = new Hud( this );
         this.world = new World( this );
+        this.image_library = new ImageLibrary( this );
 
     }
 
@@ -43,6 +45,9 @@ export class Game {
         console.log(this.name, this.version)
     }
     start(){
+
+        this.image_library.load_images();
+
         this.input_controller.setup()
         setInterval( this.on_update.bind(this), 20 )
     }
