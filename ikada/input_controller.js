@@ -19,6 +19,11 @@ export class InputController {
 
         this.is_mouse_down = false;
 
+        this.is_wheel_up = false;
+        this.is_wheel_down = false;
+        this.is_wheel_up_buffer = false;
+        this.is_wheel_down_buffer = false;
+
         this.is_enable_any_key_input = true;
         this.is_down_key = []
         this.is_pressed_key = []
@@ -39,6 +44,12 @@ export class InputController {
     on_update(){
         this.is_pressed_key = this.is_pressed_key_buffer;
         this.is_pressed_key_buffer = []
+
+        this.is_wheel_up = this.is_wheel_up_buffer;
+        this.is_wheel_down = this.is_wheel_down_buffer;
+        this.is_wheel_up_buffer = false;
+        this.is_wheel_down_buffer = false;
+
     }
 
 
@@ -92,7 +103,13 @@ export class InputController {
     }
 
     on_wheel( event ){
-        console.log('wheel', event.deltaY);
+//        console.log('wheel', event.deltaY);
+        if( 0 < event.deltaY ){
+            this.is_wheel_down_buffer = true;
+        }
+        if( event.deltaY < 0 ){
+            this.is_wheel_up_buffer = true;
+        }
     	return false;
 
     }

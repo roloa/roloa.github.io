@@ -5,7 +5,8 @@ export class ImageLibrary {
         'tree_ryuuboku.png',
         'alohashirt_gray.png',
         'junk_kikai.png',
-        'mushi_mushitoriami.png'
+        'mushi_mushitoriami.png',
+        'text_mu.png'
     ]
 
     constructor( game ){

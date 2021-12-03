@@ -3,6 +3,9 @@ import {World} from './world.js';
 import {Hud} from './hud.js';
 import {InputController} from './input_controller.js'
 import {ImageLibrary} from './image_library.js'
+import {Inventory} from './inventory.js'
+
+
 
 export class Template {
     constructor( game ){
@@ -11,7 +14,7 @@ export class Template {
     on_update(){
 
     }
-    on_draw(){
+    on_draw( canvas ){
 
     }
 }
