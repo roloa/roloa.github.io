@@ -15,7 +15,7 @@ export class Player extends Entity {
 
     on_update(){
         super.on_update();
-        //console.log(this.game.input_controller.is_down_right)
+        // WASDで移動
         if( this.game.input_controller.is_down_right ){
             this.x += 2
         }
@@ -30,6 +30,7 @@ export class Player extends Entity {
             }
         }
 
+        // マウスクリックでアイテムスロット
 
     }
 

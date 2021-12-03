@@ -16,15 +16,17 @@ export class ShipBlock {
 
     }
     on_draw( canvas ){
-        // canvas.strokeStyle = 'rgb(200,0,0)'
-        // canvas.beginPath()
-        // canvas.moveTo(-ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
-        // canvas.lineTo( ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
-        // canvas.stroke()
-        // canvas.beginPath()
-        // canvas.moveTo( ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
-        // canvas.lineTo(-ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
-        // canvas.stroke()
+        if( true ){
+            canvas.strokeStyle = 'rgb(200,0,0)'
+            canvas.beginPath()
+            canvas.moveTo(-ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
+            canvas.lineTo( ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
+            canvas.stroke()
+            canvas.beginPath()
+            canvas.moveTo( ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
+            canvas.lineTo(-ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
+            canvas.stroke()
+        }
     }
 
 }

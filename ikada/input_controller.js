@@ -18,6 +18,8 @@ export class InputController {
 
 
         this.is_mouse_down = false;
+        this.is_mouse_press = false;
+        this.is_mouse_press_buffer = false;
 
         this.is_wheel_up = false;
         this.is_wheel_down = false;
@@ -50,6 +52,8 @@ export class InputController {
         this.is_wheel_up_buffer = false;
         this.is_wheel_down_buffer = false;
 
+        this.is_mouse_press = this.is_mouse_press_buffer;
+        this.is_mouse_press_buffer = false;
     }
 
 
@@ -118,8 +122,9 @@ export class InputController {
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
-        this.is_mouse_holding = true;
 //        console.log('mouse_down', this.mouse_x, this.mouse_y);
+        this.is_mouse_down = true;
+        this.is_mouse_press_buffer = true;
         return false;
     }
 
@@ -127,8 +132,8 @@ export class InputController {
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
-        this.is_mouse_holding = false;
 //        console.log('mouse_up', this.mouse_x, this.mouse_y);
+        this.is_mouse_down = false;
         return false;
     }
     on_mouse_move( event ) {
