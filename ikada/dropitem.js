@@ -4,9 +4,9 @@ import {Entity} from './entity.js';
 export class DropItem extends Entity {
 
     static IMAGE_LIST = [
-        'tree_ryuuboku.png',
-        'alohashirt_gray.png',
-        'junk_kikai.png',
+        './img/illustya/tree_ryuuboku.png',
+        './img/illustya/alohashirt_gray.png',
+        './img/illustya/junk_kikai.png',
     ];
 
     constructor( game ){

@@ -1,12 +1,9 @@
 
+import {Illustya} from './illustya_filename.js';
+
 export class ImageLibrary {
 
     static IMAGE_FILE_NAME_LIST = [
-        'tree_ryuuboku.png',
-        'alohashirt_gray.png',
-        'junk_kikai.png',
-        'mushi_mushitoriami.png',
-        'text_mu.png'
     ]
 
     constructor( game ){
@@ -27,7 +24,17 @@ export class ImageLibrary {
             new_image.src = './img/' + ImageLibrary.IMAGE_FILE_NAME_LIST[ i ];
             this.image_list[ ImageLibrary.IMAGE_FILE_NAME_LIST[ i ] ] = new_image;
         }
+        this.load_illustya();
 
+    }
+    load_illustya(){
+        for( let i = 0 ; i < Illustya.FILE_NAME_LIST.length ; i++ ) {
+            if( Illustya.FILE_NAME_LIST[ i ] ){
+                let new_image = new Image();
+                new_image.src = Illustya.FILE_NAME_LIST[ i ];
+                this.image_list[ Illustya.FILE_NAME_LIST[ i ] ] = new_image;
+            }
+        }
     }
 
 
