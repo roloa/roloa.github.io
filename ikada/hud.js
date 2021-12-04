@@ -1,6 +1,6 @@
 
 import {HudMenu} from './hud_menu.js';
-
+import {HudLog} from './hud_log.js';
 import {ItemSlot} from './item_slot.js';
 
 export class Hud {
@@ -10,7 +10,7 @@ export class Hud {
 
         this.hud_menu = new HudMenu( game )
         this.item_slot = new ItemSlot( game )
-
+        this.hud_log = new HudLog( game )
     }
 
     on_update(){
@@ -19,6 +19,9 @@ export class Hud {
     }
 
     on_draw( canvas ){
+
+        // メッセージログ
+        this.hud_log.on_draw( canvas );
 
         // メニュー画面
         this.hud_menu.on_draw( canvas );

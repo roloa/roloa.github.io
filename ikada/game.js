@@ -75,7 +75,7 @@ export class Game {
     }
     start(){
 
-
+        this.log('welcome, drifter.');
         this.input_controller.setup()
         this.interbal_handle = setInterval( this.on_update.bind(this), 20 )
     }
@@ -85,6 +85,9 @@ export class Game {
         console.log('game test!')
     }
 
+    log( message ){
+        this.hud.hud_log.push_log( message );
+    }
     on_update(){
         try {
             performance.mark('on_update_start')
