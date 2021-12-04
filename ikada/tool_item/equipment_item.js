@@ -21,6 +21,10 @@ export class EquipmentItem extends ToolItem {
         this.riseup_power = 0;
         // 空中での移動力補正
         this.midair_speed = 0;
+
+        //
+        this.fall_speed = 1;
+        
         // 水中での移動力補正
         this.underwater_speed = 0;
 

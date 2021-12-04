@@ -29,19 +29,20 @@ export class Inventory {
         new_item = new EquipmentItem( game );
         new_item.set_image( './img/illustya/feather_red.png' );
         new_item.equip_part = EquipmentItem.EQUIP_WING;
-        new_item.midair_speed = 10;
+        new_item.midair_speed = 2;
+        new_item.fall_speed = 0.8;
         this.tool_item_inventory[3] = new_item;
 
         new_item = new EquipmentItem( game );
         new_item.set_image( './img/illustya/snorkel_goggle.png' );
         new_item.equip_part = EquipmentItem.EQUIP_GOGGLE;
-        new_item.underwater_speed = 5;
+        new_item.underwater_speed = 1;
         this.tool_item_inventory[4] = new_item;
 
         new_item = new EquipmentItem( game );
         new_item.set_image( './img/illustya/snorkel_fin.png' );
         new_item.equip_part = EquipmentItem.EQUIP_FIN;
-        new_item.underwater_speed = 10;
+        new_item.underwater_speed = 1;
         this.tool_item_inventory[5] = new_item;
 
 

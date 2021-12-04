@@ -1,6 +1,7 @@
 
 export class Illustya {
   static FILE_NAME_LIST = [
+  './img/illustya/cooking_agodashi.png',
   './img/illustya/junk_kikai.png',
   './img/illustya/food_fish_kirimi_red.png',
   './img/illustya/snorkel_goods.png',

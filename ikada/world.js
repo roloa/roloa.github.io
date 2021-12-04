@@ -25,7 +25,21 @@ export class World {
     on_update(){
 
         // カメラ操作？
-        if(  this.game.input_controller.is_down_key['i']){
+        if(  this.game.input_controller.is_down_key['KeyI']){
+            this.camera.y -= 1;
+        }
+        // カメラ移動
+        // TODO 簡易
+        if( this.camera.x < this.player.x - 100 ){
+            this.camera.x += 1;
+        }
+        if( this.player.x + 100 < this.camera.x ){
+            this.camera.x -= 1;
+        }
+        if( this.camera.y < this.player.y - 100 ){
+            this.camera.y += 1;
+        }
+        if( this.player.y + 100 < this.camera.y ){
             this.camera.y -= 1;
         }
 
