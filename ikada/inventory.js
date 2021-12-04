@@ -1,20 +1,22 @@
 
 
-export class Inventory {
+import {CatchNet} from './tool_item/catch_net.js';
 
-    static ITEM_SLOT_COUNT = 9;
+export class Inventory {
 
     constructor( game ){
         this.game = game;
 
-        this.item_slot = []
-        for( let i = 0 ; i < ITEM_SLOT_COUNT ; i++ ){
-            this.item_slot[0] = null;
+        this.item_inventory_size = 32;
+
+        this.tool_item_inventory = []
+        for( let i = 0 ; i < this.item_inventory_size ; i++ ){
+            this.tool_item_inventory[ i ] = null;
         }
 
-        // this.item_slot[0] = new CatchNet();
+        this.tool_item_inventory[0] = new CatchNet( game );
 
-        this.item_slot_cursor = 0;
+
 
     }
     on_update(){

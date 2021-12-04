@@ -58,10 +58,13 @@ export class Game {
         this.update_process_time = 0;
         this.draw_process_time = 0;
 
+        this.image_library = new ImageLibrary( this );
+        this.image_library.load_images();
+
         this.input_controller = new InputController( this );
         this.hud = new Hud( this );
         this.world = new World( this );
-        this.image_library = new ImageLibrary( this );
+        this.inventory = new Inventory( this );
 
         this.interbal_handle = 0;
     }
@@ -72,7 +75,6 @@ export class Game {
     }
     start(){
 
-        this.image_library.load_images();
 
         this.input_controller.setup()
         this.interbal_handle = setInterval( this.on_update.bind(this), 20 )

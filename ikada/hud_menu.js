@@ -43,6 +43,9 @@ export class HudMenu {
                     this.menu_list_cursor += 1;
                 }
             }
+            // メニューの操作
+            this.menu_list[ this.menu_list_cursor ].on_update();
+
         } else {
             // メニューが閉じている時
             if( this.game.input_controller.is_pressed_key['KeyZ'] ){
