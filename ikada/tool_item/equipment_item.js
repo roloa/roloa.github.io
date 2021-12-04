@@ -8,6 +8,7 @@ export class EquipmentItem extends ToolItem {
     static EQUIP_WING = 2
     static EQUIP_GOGGLE = 3
     static EQUIP_FIN = 4
+    static EQUIP_MAX = 5
 
     constructor( game ){
         super( game )

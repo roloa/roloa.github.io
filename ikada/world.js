@@ -3,6 +3,7 @@ import {Entity} from './entity.js';
 import {Player} from './player.js';
 import {Ship} from './ship.js';
 import {DropItem} from './dropitem.js';
+import {EffectWind} from './effect_wind.js';
 
 export class World {
     constructor( game ){
@@ -33,6 +34,13 @@ export class World {
             new_item.x = 300
             this.entity_list.push( new_item )
         }
+        if( Math.random() < 0.01) {
+            let new_entity = new EffectWind( this.game )
+            new_entity.x = 300
+            new_entity.y = -100 - Math.random() * 100;
+            this.entity_list.push( new_entity )
+        }
+
 
         for( let i = 0 ; i < this.entity_list.length ; i++ ){
             this.entity_list[i].on_update( );

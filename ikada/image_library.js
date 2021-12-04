@@ -4,6 +4,7 @@ import {Illustya} from './illustya_filename.js';
 export class ImageLibrary {
 
     static IMAGE_FILE_NAME_LIST = [
+        './img/wind_effect.png'
     ]
 
     constructor( game ){
@@ -21,7 +22,7 @@ export class ImageLibrary {
 
         for( let i = 0 ; i < ImageLibrary.IMAGE_FILE_NAME_LIST.length ; i++ ) {
             let new_image = new Image();
-            new_image.src = './img/' + ImageLibrary.IMAGE_FILE_NAME_LIST[ i ];
+            new_image.src = ImageLibrary.IMAGE_FILE_NAME_LIST[ i ];
             this.image_list[ ImageLibrary.IMAGE_FILE_NAME_LIST[ i ] ] = new_image;
         }
         this.load_illustya();

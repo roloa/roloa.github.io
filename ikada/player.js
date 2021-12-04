@@ -1,6 +1,8 @@
 
 import {Entity} from './entity.js';
 import {ShipBlock} from './ship_block.js';
+import {EquipmentItem} from './tool_item/equipment_item.js';
+
 
 export class Player extends Entity {
     constructor( game ){
@@ -14,41 +16,62 @@ export class Player extends Entity {
 
         this.vx = 0;
         this.vy = 0;
+
+        this.width = 32;
+        this.width_half = this.width / 2;
+        this.height = 32;
+
         this.is_landing = false;
         this.is_in_sea = false;
 
 
         // 装備関係
         this.equip_list = []
+        this.clear_equip_status()
+    }
+
+    clear_equip_status(){
+        for( var i = 0 ; i < EquipmentItem.EQUIP_MAX ; i++){
+            this.equip_list[i] = null;
+        }
+        // 装備をすべて外し、装備によるステータス上昇を取り消す
+
         // 風を受けた時の上昇力
         this.riseup_power = 0;
         // 空中での移動力補正
         this.midair_speed = 0;
         // 水中での移動力補正
         this.underwater_speed = 0;
-
-    }
-
-    clear_equipped_Status(){
-        this.equip_list = []
-        // 装備をすべて外し、装備によるステータス上昇を取り消す
     }
     equip_item( new_equip ){
         // 装備する
-        // 装備部位が重複したら装備せずにfalseを返す
-        if( this.equip_list[ new_equip.equip_part ] ){
+        if( this.equip_list[ new_equip.equip_part ] == null){
+            // 装備がカラの場合
+            this.equip_list[ new_equip.equip_part ] = new_equip;
+
+            // ステータス上昇を適用する
+            // 装備部位
+            // 風を受けた時の上昇力
+            this.riseup_power += new_equip.riseup_power;
+            // 空中での移動力補正
+            this.midair_speed += new_equip.midair_speed;
+            // 水中での移動力補正
+            this.underwater_speed += new_equip.underwater_speed ;
+
+        } else {
+            // 装備部位が重複したら装備せずにfalseを返す
             return false;
         }
-        this.equip_list[ new_equip.equip_part ] = new_equip;
+        return true;
+    }
+    hit_wind( wind ){
+        if( this.riseup_power <= 0 ){
+            // 上昇力がなければ風に押されるだけ
+            this.vx = wind.vx * 0.5;
+        } else {
+            this.vy = -this.riseup_power;
+        }
 
-        // ステータス上昇を適用する
-        // 装備部位
-        // 風を受けた時の上昇力
-        this.riseup_power += new_equip.riseup_power;
-        // 空中での移動力補正
-        this.midair_speed += new_equip.midair_speed;
-        // 水中での移動力補正
-        this.underwater_speed += new_equip.underwater_speed ;
 
     }
 
@@ -124,7 +147,7 @@ export class Player extends Entity {
     on_draw( canvas ){
 
         canvas.strokeStyle = 'rgb(200,0,200)'
-        canvas.strokeRect( this.x - 16, this.y - 32, 32, 32)
+        canvas.strokeRect( this.x - this.width_half, this.y - this.height, this.width, this.height)
 
     }
 }

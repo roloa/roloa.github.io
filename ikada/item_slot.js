@@ -36,9 +36,12 @@ export class ItemSlot {
 
     refresh(){
         // 装備アイテムの再適用などを行う
+
+        this.game.world.player.clear_equip_status()
         for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
             if( this.item_slot[i] instanceof EquipmentItem ){
-                this.is_equipped_slot[i] = true;
+                let is_equip_success = this.game.world.player.equip_item( this.item_slot[i] );
+                this.is_equipped_slot[i] = is_equip_success;
             } else {
                 this.is_equipped_slot[i] = false;
             }
