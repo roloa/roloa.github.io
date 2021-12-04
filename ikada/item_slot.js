@@ -1,4 +1,6 @@
 
+import {CatchNet} from './tool_item/catch_net.js';
+import {FishKirimi} from './tool_item/fish_kirimi.js';
 
 export class ItemSlot {
 
@@ -21,7 +23,8 @@ export class ItemSlot {
             this.item_slot[0] = null;
         }
 
-        // this.item_slot[0] = new CatchNet();
+        this.item_slot[1] = new CatchNet( game );
+        this.item_slot[2] = new FishKirimi( game );
 
         this.item_slot_cursor = 0;
 
@@ -53,6 +56,18 @@ export class ItemSlot {
     on_draw( canvas ){
         for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
 
+            // アイテムの画像
+            if( this.item_slot[ slot_no ] ){
+                canvas.drawImage(
+                    this.item_slot[ slot_no ].image,
+                    this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
+                    this.itemslot_start_y,
+                    this.itemslot_size,
+                    this.itemslot_size )
+
+            }
+
+
             if( slot_no == this.item_slot_cursor ){
                 // 選択中のスロット
                 canvas.strokeStyle = 'rgb(222,30,30)'
@@ -61,7 +76,6 @@ export class ItemSlot {
                     this.itemslot_start_y,
                     this.itemslot_size,
                     this.itemslot_size )
-
             } else {
                 // 選択してないスロット
                 canvas.strokeStyle = 'rgb(222,222,222)'

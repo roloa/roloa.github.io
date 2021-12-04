@@ -44,7 +44,44 @@ export class MenuInventory {
             }
         }
 
+        // 1-9の数字キーで対応するアイテムスロットと中身を入れ替える
+        if( this.game.input_controller.is_pressed_key['Digit1'] ){
+            this.swap_item_slot(0)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit2'] ){
+            this.swap_item_slot(1)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit3'] ){
+            this.swap_item_slot(2)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit4'] ){
+            this.swap_item_slot(3)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit5'] ){
+            this.swap_item_slot(4)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit6'] ){
+            this.swap_item_slot(5)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit7'] ){
+            this.swap_item_slot(6)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit8'] ){
+            this.swap_item_slot(7)
+        }
+        if( this.game.input_controller.is_pressed_key['Digit9'] ){
+            this.swap_item_slot(8)
+        }
+
+
     }
+
+    swap_item_slot( slot_no ){
+        let swap = this.game.hud.item_slot.item_slot[ slot_no ];
+        this.game.hud.item_slot.item_slot[ slot_no ] = this.game.inventory.tool_item_inventory[ this.cursor_index ];
+        this.game.inventory.tool_item_inventory[ this.cursor_index ] = swap;
+    }
+
     on_draw( canvas ){
 
         // タイトルを印字
