@@ -6,8 +6,12 @@ export class ToolItem {
 
         this.game = game;
 
-        this.image = this.game.image_library.get_image( 'text_mu.png' );
+        this.image = this.game.image_library.get_image( './img/illustya/text_mu.png' );
 
+    }
+
+    set_image( file_name ){
+        this.image = this.game.image_library.get_image( file_name )
     }
 
     on_click( cursor_x, cursor_y, player_x, player_y ){

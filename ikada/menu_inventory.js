@@ -80,6 +80,7 @@ export class MenuInventory {
         let swap = this.game.hud.item_slot.item_slot[ slot_no ];
         this.game.hud.item_slot.item_slot[ slot_no ] = this.game.inventory.tool_item_inventory[ this.cursor_index ];
         this.game.inventory.tool_item_inventory[ this.cursor_index ] = swap;
+        this.game.hud.item_slot.refresh()
     }
 
     on_draw( canvas ){

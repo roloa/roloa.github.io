@@ -1,6 +1,7 @@
 
 import {CatchNet} from './tool_item/catch_net.js';
 import {FishKirimi} from './tool_item/fish_kirimi.js';
+import {EquipmentItem} from './tool_item/equipment_item.js';
 
 export class ItemSlot {
 
@@ -19,8 +20,10 @@ export class ItemSlot {
 
 
         this.item_slot = []
+        this.is_equipped_slot = []
         for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
-            this.item_slot[0] = null;
+            this.item_slot[i] = null;
+            this.is_equipped_slot[i] = false;
         }
 
         this.item_slot[1] = new CatchNet( game );
@@ -28,6 +31,22 @@ export class ItemSlot {
 
         this.item_slot_cursor = 0;
 
+
+    }
+
+    refresh(){
+        // 装備アイテムの再適用などを行う
+        for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
+            if( this.item_slot[i] instanceof EquipmentItem ){
+                this.is_equipped_slot[i] = true;
+            } else {
+                this.is_equipped_slot[i] = false;
+            }
+        }
+    }
+
+    get_active_item(){
+        return this.item_slot[ this.item_slot_cursor ];
     }
 
     calc_itemslot_coodinate(){
@@ -71,6 +90,14 @@ export class ItemSlot {
             if( slot_no == this.item_slot_cursor ){
                 // 選択中のスロット
                 canvas.strokeStyle = 'rgb(222,30,30)'
+                canvas.strokeRect(
+                    this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
+                    this.itemslot_start_y,
+                    this.itemslot_size,
+                    this.itemslot_size )
+            } else if( this.is_equipped_slot[ slot_no ] ){
+                // 装備中のスロット
+                canvas.strokeStyle = 'rgb(20,250,20)'
                 canvas.strokeRect(
                     this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
                     this.itemslot_start_y,
