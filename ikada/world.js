@@ -55,9 +55,15 @@ export class World {
             this.entity_list.push( new_entity )
         }
 
-
+        // TODO エンティティリストのnullを取り除く作業
         for( let i = 0 ; i < this.entity_list.length ; i++ ){
-            this.entity_list[i].on_update( );
+            if( this.entity_list[i] ){
+                this.entity_list[i].on_update( );
+                if( !this.entity_list[i].is_alive ){
+                    // エンティティが死んでいるなら取り除く
+                    this.entity_list[i] = null;
+                }
+            }
         }
 
         this.player.on_update()
@@ -79,7 +85,9 @@ export class World {
         this.player.on_draw( canvas );
 
         for( let i = 0 ; i < this.entity_list.length ; i++ ){
-            this.entity_list[i].on_draw( canvas );
+            if( this.entity_list[i] ){
+                this.entity_list[i].on_draw( canvas );
+            }
         }
         // 海面
         canvas.strokeStyle = 'rgb(0,100,200)'

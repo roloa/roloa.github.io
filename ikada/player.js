@@ -78,6 +78,12 @@ export class Player extends Entity {
         }
     }
 
+    hit_drop_item( new_item ){
+        // アイテムスロットの後側から入る場所を探す
+        return this.game.hud.item_slot.put_pickup_item( new_item )
+
+    }
+
     on_update(){
         super.on_update();
 

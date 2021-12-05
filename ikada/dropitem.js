@@ -23,7 +23,7 @@ export class DropItem extends Entity {
         this.vy = 0;
         this.is_landing = false;
         this.is_in_sea = false;
-
+        
 
         let image_number = Math.floor( Math.random() * 3 );
         let image_name = DropItem.IMAGE_LIST[ image_number ];
@@ -40,6 +40,21 @@ export class DropItem extends Entity {
 
         if( 1 < this.vy ){
             this.is_landing = false;
+        }
+
+        // プレイヤーとの当たり判定
+        let player = this.game.world.player;
+        if( player.x - 16 < this.x && this.x < player.x + 16 &&
+            player.y - 32 < this.y && this.y < player.y + 0
+        ){
+            let picked = player.hit_drop_item( this );
+            if( picked ) {
+                this.is_alive = false;
+            }
+        }
+
+        if( this.x < -300 ){
+            this.is_alive = false;
         }
 
         // 船との当たり判定
@@ -63,7 +78,7 @@ export class DropItem extends Entity {
             }
         }
         // 海との当たり判定
-        if( 16 <= this.y ){
+        if( 0 <= this.y ){
                 //this.y = 0
                 this.vy -= 1;
                 this.vy *= 0.8;
@@ -83,9 +98,9 @@ export class DropItem extends Entity {
     on_draw( canvas ){
 
         canvas.strokeStyle = 'rgb(200,200,200)'
-        canvas.strokeRect( this.x - 8, this.y - 16, 16, 16)
+        canvas.strokeRect( this.x - 16, this.y - 16, 32, 32)
 
-        canvas.drawImage( this.image ,this.x - 8, this.y - 16, 16, 16)
+        canvas.drawImage( this.image ,this.x - 16, this.y - 16, 32 , 32)
 
     }
 }

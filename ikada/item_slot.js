@@ -51,6 +51,17 @@ export class ItemSlot {
     get_active_item(){
         return this.item_slot[ this.item_slot_cursor ];
     }
+    put_pickup_item( new_item ){
+        // アイテムスロットの後側から入る場所を探す
+        for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
+            if( this.item_slot[ i ] == null ){
+                this.item_slot[ i ] = new_item;
+                return true;
+            }
+        }
+        // 入る場所が無かったらfalseを返す
+        return false;
+    }
 
     calc_itemslot_coodinate(){
         // アイテムスロットの描画位置を再計算する

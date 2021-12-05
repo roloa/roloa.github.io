@@ -25,6 +25,11 @@ export class EffectWind extends Entity {
             player.hit_wind( this );
         }
 
+        // 消滅判定
+        if( this.x < -300 ){
+            this.is_alive = false;
+        }
+
     }
     on_draw( canvas ){
         canvas.strokeStyle = 'rgb(200,0,0)'
