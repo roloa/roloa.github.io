@@ -4,6 +4,7 @@ import {Hud} from './hud.js';
 import {InputController} from './input_controller.js'
 import {ImageLibrary} from './image_library.js'
 import {Inventory} from './inventory.js'
+import {Materials} from './materials.js'
 
 
 
@@ -65,6 +66,7 @@ export class Game {
         this.hud = new Hud( this );
         this.world = new World( this );
         this.inventory = new Inventory( this );
+        this.materials = new Materials( this );
 
         this.interbal_handle = 0;
     }

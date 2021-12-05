@@ -1,6 +1,7 @@
 
 import {Entity} from './entity.js';
 import {ShipBlock} from './ship_block.js';
+import {ResourceItem} from './tool_item/resource_item.js';
 
 export class DropItem extends Entity {
 
@@ -23,11 +24,28 @@ export class DropItem extends Entity {
         this.vy = 0;
         this.is_landing = false;
         this.is_in_sea = false;
-        
 
-        let image_number = Math.floor( Math.random() * 3 );
-        let image_name = DropItem.IMAGE_LIST[ image_number ];
-        this.image = this.game.image_library.get_image( image_name );
+        this.item_to_pickup = new ResourceItem( this.game );
+
+
+        let item_type = Math.floor( Math.random() * 3 );
+        if( item_type == 0 ){
+            // 木
+            this.image = this.game.image_library.get_image( 'tree_ryuuboku' );
+            this.item_to_pickup.set_image( 'tree_ryuuboku' );
+            this.item_to_pickup.add_material( 'wood', 5);
+        } else if( item_type == 1 ){
+            // 機械
+            this.image = this.game.image_library.get_image( 'junk_kikai' );
+            this.item_to_pickup.set_image( 'junk_kikai' );
+            this.item_to_pickup.add_material( 'mech_parts', 2);
+            this.item_to_pickup.add_material( 'metal', 3);
+        } else if( item_type == 2 ){
+            // シャツ
+            this.image = this.game.image_library.get_image( 'alohashirt_gray' );
+            this.item_to_pickup.set_image( 'alohashirt_gray' );
+            this.item_to_pickup.add_material( 'cloth', 3);
+        }
 
     }
 
