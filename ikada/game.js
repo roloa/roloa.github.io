@@ -63,8 +63,8 @@ export class Game {
         this.image_library.load_images();
 
         this.input_controller = new InputController( this );
-        this.hud = new Hud( this );
         this.world = new World( this );
+        this.hud = new Hud( this );
         this.inventory = new Inventory( this );
         this.materials = new Materials( this );
 

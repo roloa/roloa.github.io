@@ -17,6 +17,17 @@ export class Player extends Entity {
         this.vx = 0;
         this.vy = 0;
 
+        this.hp = 80;
+        this.max_hp = 100;
+        this.sp = 50;
+        this.max_sp = 100;
+        this.happiness = 70;
+        this.max_happiness = 100;
+        this.hunger = 30;
+        this.max_hunger = 100;
+        this.thirst = 50;
+        this.max_thirst = 100;
+
         this.width = 32;
         this.width_half = this.width / 2;
         this.height = 32;
