@@ -20,14 +20,17 @@ export class World {
         this.cursor_x = 0;
         this.cursor_y = 0;
 
-        this.entity_list = []
+        this.entity_list = [];
+        this.enemy_list = [];
 
         this.player = new Player( this.game )
         this.ship = new Ship( this.game )
 
-        this.entity_list.push( new EnemyFish( this.game ) )
+        this.push_enemy( new EnemyFish( this.game ) )
     }
-
+    push_enemy( new_entity ){
+        this.enemy_list.push( new_entity )
+    }
     push_entity( new_entity ){
         this.entity_list.push( new_entity )
     }
@@ -76,6 +79,17 @@ export class World {
             }
         }
 
+        // 敵エンティティリストは別管理
+        for( let i = 0 ; i < this.enemy_list.length ; i++ ){
+            if( this.enemy_list[i] ){
+                this.enemy_list[i].on_update( );
+                if( !this.enemy_list[i].is_alive ){
+                    // エンティティが死んでいるなら取り除く
+                    this.enemy_list[i] = null;
+                }
+            }
+        }
+
         // マウスカーソルの位置
         this.cursor_x = this.game.input_controller.mouse_x + this.camera.x - this.game.SCREEN_WIDTH_HALF;
         this.cursor_y = this.game.input_controller.mouse_y + this.camera.y - this.game.SCREEN_HEIGHT_HALF;
@@ -101,6 +115,11 @@ export class World {
         for( let i = 0 ; i < this.entity_list.length ; i++ ){
             if( this.entity_list[i] ){
                 this.entity_list[i].on_draw( canvas );
+            }
+        }
+        for( let i = 0 ; i < this.enemy_list.length ; i++ ){
+            if( this.enemy_list[i] ){
+                this.enemy_list[i].on_draw( canvas );
             }
         }
         // 海面

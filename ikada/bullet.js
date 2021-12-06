@@ -15,12 +15,20 @@ export class Bullet extends Entity {
 
     }
     on_update(){
+        super.on_update();
+
         this.x += this.vx;
         this.y += this.vy;
         this.vy += this.gravity;
 
-        super.on_update();
-
+        // 敵との当たり判定
+        for( let enemy of this.game.world.enemy_list){
+            let is_hit = enemy.test_hit_bullet( this );
+            if( is_hit ){
+                this.is_alive = false;
+                break;
+            }
+        }
     }
     on_draw( canvas ){
         canvas.strokeStyle = 'rgb(250,250,20)';

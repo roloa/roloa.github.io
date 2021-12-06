@@ -11,6 +11,16 @@ export class EnemyFish extends Entity {
         this.width = 128;
         this.height = 128;
     }
+
+    test_hit_bullet( bullet ){
+        if( this.x < bullet.x && bullet.x < this.x + this.width &&
+            this.y < bullet.y && bullet.y < this.y + this.height ){
+            // 弾に当たった
+            return true;
+        }
+        return false;
+    }
+
     on_update(){
         this.x -= 1;
     }

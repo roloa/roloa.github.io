@@ -7,6 +7,7 @@ export class Bow extends ToolItem {
 
     constructor( game ){
         super( game )
+        this.game = game;
 
         this.image = this.game.image_library.get_image( 'yumiya_bowgun' );
 
@@ -17,7 +18,7 @@ export class Bow extends ToolItem {
 
         let vec = this.game.world.player.get_vector_to_cursor();
 
-        let arrow = new Bullet();
+        let arrow = new Bullet( this.game );
         arrow.x = this.game.world.player.x + vec.x * 30;
         arrow.y = this.game.world.player.y + vec.y * 30 - 16 ;
         arrow.vx = vec.x * 10;
