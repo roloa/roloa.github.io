@@ -26,7 +26,6 @@ export class World {
         this.player = new Player( this.game )
         this.ship = new Ship( this.game )
 
-        this.push_enemy( new EnemyFish( this.game ) )
     }
     push_enemy( new_entity ){
         this.enemy_list.push( new_entity )
@@ -61,6 +60,8 @@ export class World {
             this.camera.y += (this.player.y - this.camera.y ) * 0.05;
         }
 
+
+        // いろいろ自然わき
         if( Math.random() < 0.001) {
             let new_item = new DropItem( this.game )
             new_item.x = 300
@@ -71,6 +72,13 @@ export class World {
             new_entity.x = 300
             new_entity.y = -100 - Math.random() * 100;
             this.entity_list.push( new_entity )
+        }
+        if( Math.random() < 0.01) {
+            let new_enemy = new EnemyFish( this.game );
+            new_enemy.x = 500;
+            new_enemy.y = 500;
+
+            this.push_enemy( new_enemy );
         }
 
         // TODO エンティティリストのnullを取り除く作業

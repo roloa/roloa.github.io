@@ -11,6 +11,7 @@ export class Player extends Entity {
 
         this.name = 'player';
         this.image = this.game.image_library.get_image('cooking_agodashi');
+        this.image_ghost = this.game.image_library.get_image('yurei_youngwoman3_sad');
         this.x = 0
         this.y = -60
 
@@ -27,6 +28,11 @@ export class Player extends Entity {
         this.max_hunger = 100;
         this.thirst = 50;
         this.max_thirst = 100;
+
+        this.hit_invincible_timer = 0;
+        this.is_ghost = 0;
+        this.ghost_timer_max = 500;
+        this.ghost_timer = 0;
 
         this.width = 32;
         this.width_half = this.width / 2;
@@ -104,6 +110,19 @@ export class Player extends Entity {
 
     }
 
+    hit_damage( damage_amount, knockback_vec, attacker ){
+        // 無敵時間
+        if( 0 < this.hit_invincible_timer ){
+            return false;
+        }
+        this.hp -= damage_amount;
+        this.vx = knockback_vec.x;
+        this.vy = knockback_vec.y;
+        this.hit_invincible_timer = 50;
+
+        return true;
+    }
+
     on_update(){
         super.on_update();
 
@@ -111,7 +130,16 @@ export class Player extends Entity {
         this.x += this.vx;
         this.y += this.vy;
 
-        if( this.is_flying ){
+        if ( this.is_ghost ) {
+            // 死んでリスポン待ちの幽霊
+            this.ghost_timer -= 1;
+            this.hp = (1-(this.ghost_timer / this.ghost_timer_max)) * this.max_hp;
+            if( this.ghost_timer <= 0 ){
+                this.is_ghost = false;
+            }
+            // 以降の処理は飛ばしちゃう？
+            //return;
+        } else if( this.is_flying ){
             // 飛行中
             this.vy += 0.5
             if( 0 < this.vy ){
@@ -162,8 +190,20 @@ export class Player extends Entity {
             this.is_diving = false;
         }
 
-
-
+        // 無敵時間タイマーを減らす
+        if( 0 < this.hit_invincible_timer ){
+            this.hit_invincible_timer -= 1;
+        }
+        // 死亡判定
+        if( this.hp <= 0 ){
+            this.hp = 1;
+            this.is_ghost = true;
+            this.ghost_timer = this.ghost_timer_max;
+            this.x = 0;
+            this.y = -20;
+            this.vx = 0;
+            this.vy = 0;
+        }
 
         // マウスクリックでアイテムスロット使用
         if( this.game.input_controller.is_mouse_press ) {
@@ -288,7 +328,14 @@ export class Player extends Entity {
 
         canvas.strokeStyle = 'rgb(200,0,200)'
         canvas.strokeRect( this.x - this.width_half, this.y - this.height, this.width, this.height)
-        canvas.drawImage( this.image, this.x - this.width_half, this.y - this.height, this.width, this.height )
+
+        if( this.is_ghost ){
+            canvas.drawImage( this.image_ghost, this.x - this.width_half, this.y - this.height, this.width, this.height )
+        } else {
+            canvas.drawImage( this.image, this.x - this.width_half, this.y - this.height, this.width, this.height )
+        }
+
+
 
     }
 }

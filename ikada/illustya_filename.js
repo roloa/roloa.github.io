@@ -36,6 +36,7 @@ export class Illustya {
   './img/illustya/feather_red.png',
   './img/illustya/mark_face_laugh.png',
   './img/illustya/war_trident.png',
+  './img/illustya/yurei_youngwoman3_sad.png',
   './img/illustya/text_mu.png',
   './img/illustya/fish_tobiuo2.png',
   './img/illustya/wasyoku_yakizakana.png',
