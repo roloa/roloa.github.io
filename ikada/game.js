@@ -8,8 +8,9 @@ import {Materials} from './materials.js'
 
 
 
-export class Template {
+export class Template extends Object {
     constructor( game ){
+        super( game );
         this.game = game;
     }
     on_update(){
@@ -145,6 +146,7 @@ export class Game {
     on_draw(){
         performance.mark('on_draw_start')
 
+
         if( this.is_use_buffer ){
             this.inactive_canvas.fillStyle = 'rgb(0,0,30)';
             this.inactive_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
@@ -161,6 +163,8 @@ export class Game {
             this.inactive_canvas = this.active_canvas ;
             this.active_canvas = swap;
         } else {
+            // グラフィックコンテキストの初期化
+            this.display_canvas.lineWidth = 2;
 
             this.display_canvas.fillStyle = 'rgb(0,0,30)';
             this.display_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );

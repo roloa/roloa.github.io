@@ -1,7 +1,9 @@
 #!/bin/bash -e
 
-cd ./img/illustya_src/
-mogrify -path ../illustya/ -resize 64x64 *.png
+cd ./img/illustya_src/64/
+mogrify -path ../../illustya/ -resize 64x64 *.png
+cd ../256/
+mogrify -path ../../illustya/ -resize 256x256 *.png
 
-cd ../../
+cd ../../../
 python make_illustya_filename_js.py > illustya_filename.js

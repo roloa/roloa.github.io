@@ -18,6 +18,12 @@ export class Entity {
 
     on_update(){
 
+        // 消滅判定
+        if( this.x < -1000 || 1000 < this.x || this.y < -1000 || 1000 < this.y ){
+            this.is_alive = false;
+        }
+
+
     }
 
     on_draw( canvas ){

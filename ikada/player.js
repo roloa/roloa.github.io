@@ -41,6 +41,15 @@ export class Player extends Entity {
         this.clear_equip_status()
     }
 
+    get_vector_to_cursor(){
+        // プレイヤーからカーソルの向きの長さ1のベクトルを返す
+        let vecx = this.game.world.cursor_x - this.x;
+        let vecy = this.game.world.cursor_y - this.y;
+        let length = Math.sqrt( (vecx * vecx) + (vecy * vecy) );
+        vecx = vecx / length;
+        vecy = vecy / length;
+        return {x: vecx, y: vecy};
+    }
     clear_equip_status(){
         for( var i = 0 ; i < EquipmentItem.EQUIP_MAX ; i++){
             this.equip_list[i] = null;
@@ -152,6 +161,9 @@ export class Player extends Entity {
             this.is_in_sea = false;
             this.is_diving = false;
         }
+
+
+
 
         // マウスクリックでアイテムスロット使用
         if( this.game.input_controller.is_mouse_press ) {

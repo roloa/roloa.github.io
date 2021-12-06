@@ -2,6 +2,8 @@
 import {CatchNet} from './tool_item/catch_net.js';
 import {FishKirimi} from './tool_item/fish_kirimi.js';
 import {EquipmentItem} from './tool_item/equipment_item.js';
+import {Bow} from './tool_item/bow.js';
+
 
 export class ItemSlot {
 
@@ -26,12 +28,46 @@ export class ItemSlot {
             this.is_equipped_slot[i] = false;
         }
 
-        this.item_slot[1] = new CatchNet( game );
-        this.item_slot[2] = new FishKirimi( game );
+        this.get_test_item();
 
         this.item_slot_cursor = 0;
 
 
+    }
+
+    get_test_item(){
+
+        //this.item_slot[1] = new CatchNet( game );
+        this.item_slot[1] = new Bow( this.game );
+        this.item_slot[2] = new FishKirimi( this.game );
+
+        let new_item = null;
+        new_item = new EquipmentItem( this.game );
+        new_item.set_image( './img/illustya/rain_kasa_red.png' );
+        new_item.equip_part = EquipmentItem.EQUIP_GLIDER;
+        new_item.riseup_power = 10;
+        this.item_slot[3] = new_item;
+
+        new_item = new EquipmentItem( this.game );
+        new_item.set_image( './img/illustya/feather_red.png' );
+        new_item.equip_part = EquipmentItem.EQUIP_WING;
+        new_item.midair_speed = 2;
+        new_item.fall_speed = 0.8;
+        this.item_slot[4] = new_item;
+
+        new_item = new EquipmentItem( this.game );
+        new_item.set_image( './img/illustya/snorkel_goggle.png' );
+        new_item.equip_part = EquipmentItem.EQUIP_GOGGLE;
+        new_item.underwater_speed = 1;
+        this.item_slot[5] = new_item;
+
+        new_item = new EquipmentItem( this.game );
+        new_item.set_image( './img/illustya/snorkel_fin.png' );
+        new_item.equip_part = EquipmentItem.EQUIP_FIN;
+        new_item.underwater_speed = 1;
+        this.item_slot[6] = new_item;
+
+        this.refresh()
     }
 
     refresh(){

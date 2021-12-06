@@ -4,6 +4,7 @@ import {Player} from './player.js';
 import {Ship} from './ship.js';
 import {DropItem} from './dropitem.js';
 import {EffectWind} from './effect_wind.js';
+import {EnemyFish} from './enemy_fish.js';
 
 export class World {
     constructor( game ){
@@ -15,11 +16,20 @@ export class World {
         this.camera.y = 0
         this.camera.zoom = 1.0
 
+        // ワールド内座標におけるマウスカーソルの座標
+        this.cursor_x = 0;
+        this.cursor_y = 0;
+
         this.entity_list = []
 
         this.player = new Player( this.game )
         this.ship = new Ship( this.game )
 
+        this.entity_list.push( new EnemyFish( this.game ) )
+    }
+
+    push_entity( new_entity ){
+        this.entity_list.push( new_entity )
     }
 
     on_update(){
@@ -66,6 +76,10 @@ export class World {
             }
         }
 
+        // マウスカーソルの位置
+        this.cursor_x = this.game.input_controller.mouse_x + this.camera.x - this.game.SCREEN_WIDTH_HALF;
+        this.cursor_y = this.game.input_controller.mouse_y + this.camera.y - this.game.SCREEN_HEIGHT_HALF;
+
         this.player.on_update()
 
     }
@@ -96,6 +110,9 @@ export class World {
         canvas.lineTo( 500,0)
         canvas.stroke()
 
+        // マウスカーソル
+        canvas.strokeStyle = 'rgb(250,20,20)'
+        canvas.strokeRect( this.cursor_x - 10, this.cursor_y - 10, 20, 20)
 
         //
         canvas.restore();
