@@ -58,13 +58,13 @@ export class ItemSlot {
         new_item = new EquipmentItem( this.game );
         new_item.set_image( './img/illustya/snorkel_goggle.png' );
         new_item.equip_part = EquipmentItem.EQUIP_GOGGLE;
-        new_item.underwater_speed = 1;
+        new_item.underwater_speed = 0.1;
         this.item_slot[5] = new_item;
 
         new_item = new EquipmentItem( this.game );
         new_item.set_image( './img/illustya/snorkel_fin.png' );
         new_item.equip_part = EquipmentItem.EQUIP_FIN;
-        new_item.underwater_speed = 1;
+        new_item.underwater_speed = 0.1;
         this.item_slot[6] = new_item;
 
         this.refresh()

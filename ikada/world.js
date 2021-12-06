@@ -38,25 +38,30 @@ export class World {
     on_update(){
 
         // カメラ操作？
-        if(  this.game.input_controller.is_down_key['KeyI']){
-            this.camera.y -= 1;
+        if( this.game.input_controller.is_down_key['ShiftLeft']){
+            if( this.game.input_controller.is_wheel_up ){
+                this.camera.zoom += 0.1;
+            } else if( this.game.input_controller.is_wheel_down ){
+                this.camera.zoom -= 0.1;
+            }
+
         }
         // カメラ移動
         // TODO 簡易
-        if( this.camera.x < this.player.x - 100 ){
-            this.camera.x += 1;
+        if( this.camera.x + 50 < this.player.x ){
+            this.camera.x += (this.player.x - this.camera.x ) * 0.05;
         }
-        if( this.player.x + 100 < this.camera.x ){
-            this.camera.x -= 1;
+        if( this.player.x < this.camera.x - 50 ){
+            this.camera.x += (this.player.x - this.camera.x ) * 0.05;
         }
-        if( this.camera.y < this.player.y - 100 ){
-            this.camera.y += 1;
+        if( this.camera.y < this.player.y - 50 ){
+            this.camera.y += (this.player.y - this.camera.y ) * 0.05;
         }
-        if( this.player.y + 100 < this.camera.y ){
-            this.camera.y -= 1;
+        if( this.player.y + 50 < this.camera.y ){
+            this.camera.y += (this.player.y - this.camera.y ) * 0.05;
         }
 
-        if( Math.random() < 0.01) {
+        if( Math.random() < 0.001) {
             let new_item = new DropItem( this.game )
             new_item.x = 300
             this.entity_list.push( new_item )
@@ -91,8 +96,8 @@ export class World {
         }
 
         // マウスカーソルの位置
-        this.cursor_x = this.game.input_controller.mouse_x + this.camera.x - this.game.SCREEN_WIDTH_HALF;
-        this.cursor_y = this.game.input_controller.mouse_y + this.camera.y - this.game.SCREEN_HEIGHT_HALF;
+        this.cursor_x = (this.game.input_controller.mouse_x - this.game.SCREEN_WIDTH_HALF)  / this.camera.zoom + this.camera.x ;
+        this.cursor_y = (this.game.input_controller.mouse_y - this.game.SCREEN_HEIGHT_HALF) / this.camera.zoom + this.camera.y ;
 
         this.player.on_update()
 
@@ -101,12 +106,20 @@ export class World {
     on_draw( canvas ){
 
         canvas.save();
-        // カメラの視点に移動
-        canvas.translate( -this.camera.x , -this.camera.y);
+
         // 画面の中心
         canvas.translate( this.game.SCREEN_WIDTH_HALF, this.game.SCREEN_HEIGHT_HALF );
 
         // 拡大指定
+        canvas.scale( this.camera.zoom, this.camera.zoom );
+
+        // カメラの視点に移動
+        canvas.translate( -this.camera.x , -this.camera.y);
+
+
+
+
+
         // TODO
         //
         this.ship.on_draw( canvas );
