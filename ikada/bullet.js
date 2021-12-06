@@ -23,6 +23,9 @@ export class Bullet extends Entity {
 
         // 敵との当たり判定
         for( let enemy of this.game.world.enemy_list){
+            if( enemy == null ){
+                continue;
+            }
             let is_hit = enemy.test_hit_bullet( this );
             if( is_hit ){
                 this.is_alive = false;
