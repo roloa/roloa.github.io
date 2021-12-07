@@ -207,9 +207,7 @@ export class Player extends Entity {
 
         // マウスクリックでアイテムスロット使用
         if( this.game.input_controller.is_mouse_press ) {
-            if( this.game.hud.item_slot.get_active_item() ){
-                this.game.hud.item_slot.get_active_item().on_click();
-            }
+            this.game.hud.item_slot.activate_item();
         }
     }
 

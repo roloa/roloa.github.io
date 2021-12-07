@@ -84,9 +84,19 @@ export class ItemSlot {
         }
     }
 
-    get_active_item(){
-        return this.item_slot[ this.item_slot_cursor ];
+    activate_item( cursor_x, cursor_y ){
+        ;
+        if( this.item_slot[ this.item_slot_cursor ] ){
+            this.item_slot[ this.item_slot_cursor ].on_click( cursor_x, cursor_y );
+            if( this.item_slot[ this.item_slot_cursor ].is_consumed ) {
+                this.item_slot[ this.item_slot_cursor ] = null;
+            }
+        }
+
     }
+    // get_active_item(){
+    //     return this.item_slot[ this.item_slot_cursor ];
+    // }
     put_pickup_item( new_item ){
         // アイテムスロットの後側から入る場所を探す
         for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){

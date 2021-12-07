@@ -13,6 +13,7 @@ export class MenuMaterial {
     static TEXT_FONT = 'bold 18px monospace';
     static TEXT_COLOR = 'rgb(20,20,20)';
     static TEXT_HEIGHT = 28;
+    static TEXT_X_COUNT = 200;
 
     constructor( game ){
         this.game = game;
@@ -46,6 +47,10 @@ export class MenuMaterial {
             if(true){
                 canvas.fillText( this.game.materials.name_list[material_id] ,
                 MenuMaterial.TEXT_X,
+                MenuMaterial.TEXT_Y + MenuMaterial.TEXT_HEIGHT * row);
+
+                canvas.fillText( this.game.materials.list[material_id] ,
+                MenuMaterial.TEXT_X_COUNT,
                 MenuMaterial.TEXT_Y + MenuMaterial.TEXT_HEIGHT * row);
             }
             row += 1;

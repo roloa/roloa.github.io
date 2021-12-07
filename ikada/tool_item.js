@@ -8,6 +8,9 @@ export class ToolItem {
 
         this.image = this.game.image_library.get_image( './img/illustya/text_mu.png' );
 
+        // 消費されたかどうか
+        this.is_consumed = false;
+
     }
 
     set_image( file_name ){
