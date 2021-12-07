@@ -128,6 +128,10 @@ export class Game {
             } else {
                 this.performance_count += 1;
             }
+            if( this.input_controller.is_pressed_key['KeyP'] ){
+                console.log('game stop!');
+                throw new Exception();
+            }
         } catch ( e ) {
             // なんかエラーが起きたら、ゲーム動作を止める
             clearInterval( this.interbal_handle );

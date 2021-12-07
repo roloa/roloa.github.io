@@ -1,4 +1,5 @@
 
+import {Upgrades} from './upgrades.js'
 
 export class MenuUpgrade {
 
@@ -18,6 +19,9 @@ export class MenuUpgrade {
     static LIST_TEXT_COLOR = 'rgb(240,240,240)';
     static LIST_TEXT_COLOR_DISABLE = 'rgb(100,100,100)'
     static LIST_TEXT_HEIGHT = 30;
+
+    static LIST_CURSOR_COLOR = 'rgb(20,150,20)';
+    static LIST_CURSOR_ADJUST = 6;
 
     static DESC_TEXT_X = 340;
     static DESC_TEXT_Y = 60;
@@ -49,9 +53,17 @@ export class MenuUpgrade {
         this.upgrade_list[2] = 'ほげほげほげほげほげ'
         this.upgrade_list[3] = '12345678901234567890'
 
+        this.upgrade_cursor = 0;
+        this.upgrade_scroll = 0;
     }
     on_update(){
 
+        if( this.game.input_controller.is_pressed_key['KeyW'] ){
+            this.upgrade_cursor -= 1
+        }
+        if( this.game.input_controller.is_pressed_key['KeyS'] ){
+            this.upgrade_cursor += 1
+        }
     }
     on_draw( canvas ){
 
@@ -66,6 +78,14 @@ export class MenuUpgrade {
         canvas.fillRect( MenuUpgrade.LIST_X, MenuUpgrade.LIST_Y, MenuUpgrade.LIST_WIDTH, MenuUpgrade.LIST_HEIGHT　);
 
         for( let i = 0 ; i < 10 ; i++ ){
+            // カーソル
+            if( i == this.upgrade_cursor ){
+                canvas.fillStyle = MenuUpgrade.LIST_CURSOR_COLOR;
+                canvas.fillRect( MenuUpgrade.LIST_X ,
+                MenuUpgrade.LIST_Y + MenuUpgrade.LIST_TEXT_MARGIN_TOP + MenuUpgrade.LIST_CURSOR_ADJUST +
+                MenuUpgrade.LIST_TEXT_HEIGHT * i ,
+                MenuUpgrade.LIST_WIDTH, - MenuUpgrade.LIST_TEXT_HEIGHT );
+            }
             if( this.upgrade_list[ i ] ){
                 canvas.fillStyle = MenuUpgrade.LIST_TEXT_COLOR;
                 canvas.font = MenuUpgrade.LIST_TEXT_FONT;
