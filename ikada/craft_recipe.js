@@ -18,9 +18,9 @@ export class CraftRecipe extends Object {
 
         new_recipe = {};
         new_recipe.description_list = [
-            'クラフト説明文1',
-            'クラフト説明文2'];
-        new_recipe.material_list = ['wood', 'metal'];
+            '遠距離武器です。',
+            '矢を使います。'];
+        new_recipe.material_list = ['wood', 'cloth'];
         new_recipe.material_count_list = [3, 1];
         new_recipe.result_func = function( game ){
             return new Bow( game );
