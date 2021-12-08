@@ -1,11 +1,8 @@
 
 import {Illustya} from './illustya_filename.js';
+import {ImgFileName} from './img_file_name.js';
 
 export class ImageLibrary {
-
-    static IMAGE_FILE_NAME_LIST = [
-        './img/wind_effect.png'
-    ]
 
     constructor( game ){
         this.game = game;
@@ -20,10 +17,16 @@ export class ImageLibrary {
 
     load_images(){
 
-        for( let i = 0 ; i < ImageLibrary.IMAGE_FILE_NAME_LIST.length ; i++ ) {
+        for( let i = 0 ; i < ImgFileName.FILE_NAME_LIST.length ; i++ ) {
             let new_image = new Image();
-            new_image.src = ImageLibrary.IMAGE_FILE_NAME_LIST[ i ];
-            this.image_list[ ImageLibrary.IMAGE_FILE_NAME_LIST[ i ] ] = new_image;
+            new_image.src = ImgFileName.FILE_NAME_LIST[ i ];
+            this.image_list[ ImgFileName.FILE_NAME_LIST[ i ] ] = new_image;
+
+            // フルパスじゃない拡張子抜きのファイル名でも入れておく
+            let simple_name = ImgFileName.FILE_NAME_LIST[ i ];
+            simple_name = simple_name.replace('./img/', '');
+            simple_name = simple_name.replace('.png', '');
+            this.image_list[ simple_name ] = new_image;
         }
         this.load_illustya();
 

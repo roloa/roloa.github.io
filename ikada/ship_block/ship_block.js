@@ -6,26 +6,18 @@ export class ShipBlock {
     static BLOCK_RADIUS = 16
     static BLOCK_SIZE = ShipBlock.BLOCK_RADIUS + ShipBlock.BLOCK_RADIUS
 
-    constructor(){
-
+    constructor( game ){
+        this.game = game;
         this.is_floor = false
-
+        this.image = null;
     }
 
     on_update(){
 
     }
     on_draw( canvas ){
-        if( true ){
-            canvas.strokeStyle = 'rgb(200,0,0)'
-            canvas.beginPath()
-            canvas.moveTo(-ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
-            canvas.lineTo( ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
-            canvas.stroke()
-            canvas.beginPath()
-            canvas.moveTo( ShipBlock.BLOCK_RADIUS,-ShipBlock.BLOCK_RADIUS)
-            canvas.lineTo(-ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS)
-            canvas.stroke()
+        if( this.image != null ) {
+            canvas.drawImage( this.image, -ShipBlock.BLOCK_RADIUS, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_SIZE, ShipBlock.BLOCK_SIZE);
         }
     }
 

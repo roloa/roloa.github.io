@@ -1,6 +1,6 @@
 
 import {Entity} from './entity.js';
-import {ShipBlock} from './ship_block.js';
+import {ShipBlock} from './ship_block/ship_block.js';
 import {ResourceItem} from './tool_item/resource_item.js';
 
 export class DropItem extends Entity {
