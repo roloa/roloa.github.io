@@ -1,7 +1,7 @@
 
 
 import {ToolItem} from './ToolItem.js';
-import {Bullet} from '/Bullet.js';
+import {Bullet} from '../entity/Bullet.js';
 
 export class Bow extends ToolItem {
 

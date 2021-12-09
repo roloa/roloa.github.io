@@ -1,7 +1,7 @@
 
 import {Entity} from './Entity.js';
-import {ShipBlock} from './ship_block/ShipBlock.js';
-import {ResourceItem} from './tool_item/ResourceItem.js';
+import {ShipBlock} from '../ship_block/ShipBlock.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
 
 export class DropItem extends Entity {
 

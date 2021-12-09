@@ -1,7 +1,7 @@
 
 
 import {ToolItem} from './ToolItem.js';
-import {ShipBlock} from '/ship_block/ShipBlock.js';
+import {ShipBlock} from '../ship_block/ShipBlock.js';
 
 export class BuildBlock extends ToolItem {
 

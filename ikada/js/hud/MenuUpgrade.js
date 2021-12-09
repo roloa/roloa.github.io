@@ -1,5 +1,4 @@
 
-import {Upgrades} from './Upgrades.js'
 
 export class MenuUpgrade {
 

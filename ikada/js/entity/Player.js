@@ -1,7 +1,7 @@
 
 import {Entity} from './Entity.js';
-import {ShipBlock} from './ship_block/ShipBlock.js';
-import {EquipmentItem} from './tool_item/EquipmentItem.js';
+import {ShipBlock} from '../ship_block/ShipBlock.js';
+import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 
 
 export class Player extends Entity {

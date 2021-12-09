@@ -1,10 +1,10 @@
 
-import {Entity} from './Entity.js';
-import {Player} from './Player.js';
+import {Entity} from './entity/Entity.js';
+import {Player} from './entity/Player.js';
 import {Ship} from './Ship.js';
-import {DropItem} from './DropItem.js';
-import {EffectWind} from './EffectWind.js';
-import {EnemyFish} from './EnemyFish.js';
+import {DropItem} from './entity/DropItem.js';
+import {EffectWind} from './entity/EffectWind.js';
+import {EnemyFish} from './entity/EnemyFish.js';
 
 export class World {
     constructor( game ){

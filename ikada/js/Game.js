@@ -1,6 +1,6 @@
 
 import {World} from './World.js';
-import {Hud} from './Hud.js';
+import {Hud} from './hud/Hud.js';
 import {InputController} from './InputController.js'
 import {ImageLibrary} from './ImageLibrary.js'
 import {Inventory} from './Inventory.js'
