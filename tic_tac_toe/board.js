@@ -57,9 +57,20 @@ export class Board {
                     if( this.board[ cell_x ][ cell_y ][ cell_lo_x ][ cell_lo_y ] != null){
                         if( this.board[ cell_x ][ cell_y ][ cell_lo_x ][ cell_lo_y ].in_loop ){
                             // ループ上の量子マークを選べたら
+                            // 選んだ量子マークの対を劣勢にして、連鎖確定を呼ぶ
                             this.confirm_state_reset();
                             this.board[ cell_lo_x ][ cell_lo_y ][ cell_x ][ cell_y ].confirm_state = -1;
                             this.confirm_chain( cell_x, cell_y, cell_lo_x, cell_lo_y);
+
+                            if( this.is_overrapping_loop ){
+                                // 重複ループの場合、選ばなかったほうにも連鎖確定を呼び、それをもう一度劣勢に設定する
+                                this.confirm_chain( cell_lo_x, cell_lo_y, cell_x, cell_y );
+                                this.board[ cell_lo_x ][ cell_lo_y ][ cell_x ][ cell_y ].confirm_state = -1;
+                                this.is_overrap_g_x = cell_lo_x;
+                                this.is_overrap_g_y = cell_lo_y;
+                                this.is_overrap_lo_x = cell_x;
+                                this.is_overrap_lo_y = cell_y;
+                            }
                             this.loop_select_state = 1;
                         }
                     }
@@ -95,16 +106,31 @@ export class Board {
             if( this.loop_select_state == 1 ){
                 // 量子マークを確定し、グローバルボードに書き込む
                 this.confirm_quantum();
+
+                // 重複だった場合は、
+                if( this.is_overrapping_loop ){
+                    let opponent_teban = 1;
+                    if( this.teban == 1){
+                        opponent_teban = 2;
+                    }
+                    this.global_board[this.is_overrap_g_x][this.is_overrap_g_y] = {mark: opponent_teban, count: this.turn_count-1};
+                }
+                this.is_overrapping_loop = false;
                 this.loop_select_state = 0;
                 this.is_selecting_loop = false;
             }
         } else {
             if( this.select_state == 2 ){
 
-
                 if( this.board[ this.selected_x ][ this.selected_y ][ this.kari_mark_x ][ this.kari_mark_y ] != null ){
                     // 既に量子マークがある組み合わせの位置に置こうとした場合
+                    this.board[ this.selected_x ][ this.selected_y ][ this.kari_mark_x ][ this.kari_mark_y ].in_loop = true;
+                    this.board[ this.kari_mark_x ][ this.kari_mark_y ][ this.selected_x ][ this.selected_y ].in_loop = true;
 
+                    this.is_overrapping_loop = true;
+                    this.is_selecting_loop = true;
+                    this.loop_select_state = 0;
+                    this.loop_path = null;
                 } else {
                     // それ以外の通常の配置
                     // 量子マークの配置を確定する
@@ -158,7 +184,8 @@ export class Board {
                     }
                 }
             }
-        }    }
+        }
+    }
     confirm_chain( g_x, g_y, lo_x, lo_y){
         // 指定された量子マークを優勢にする
         this.board[g_x][g_y][lo_x][lo_y].confirm_state = 1;
@@ -358,6 +385,29 @@ export class Board {
                                 }
                             }
                         }
+                        // 重複ループ時の仮置き
+                        if( this.is_overrapping_loop ){
+                            if( (this.selected_x == g_x && this.selected_y == g_y &&
+                                this.kari_mark_x == lo_x && this.kari_mark_y == lo_y) ||
+                                (this.kari_mark_x == g_x && this.kari_mark_y == g_y &&
+                                this.selected_x == lo_x && this.selected_y == lo_y)
+                            ){
+                                let opponent_teban = 1;
+                                if( this.teban == 1){
+                                    opponent_teban = 2;
+                                }
+                                let overlap_confirm_state = 1;
+                                if( this.board[g_x][g_y][lo_x][lo_y].confirm_state == 1){
+                                    overlap_confirm_state = -1
+                                }
+                                if( 10 < this.game.anime_count){
+
+                                    this.drawMark( canvas, draw_x , draw_y, 40, opponent_teban, this.turn_count - 1, overlap_confirm_state );
+                                }
+                            }
+                        }
+
+
 
                     }
                 }
