@@ -17,6 +17,7 @@ export class Illustya {
   './img/illustya/snorkel_fin.png',
   './img/illustya/fish_salmon.png',
   './img/illustya/snorkel_goggle.png',
+  './img/illustya/fishing_lure.png',
   './img/illustya/fish_pirarucu2.png',
   './img/illustya/tsuyu_mark09_ame.png',
   './img/illustya/fish_maguro2.png',
@@ -24,6 +25,7 @@ export class Illustya {
   './img/illustya/fish_hokke.png',
   './img/illustya/fishing_tsurizao_nobezao.png',
   './img/illustya/mushi_mushitoriami.png',
+  './img/illustya/wasyoku_himono.png',
   './img/illustya/denryoku_mark.png',
   './img/illustya/rain_kasa_red.png',
   './img/illustya/fish_sakana_sanma.png',
@@ -35,6 +37,7 @@ export class Illustya {
   './img/illustya/shinkai_chouchinankou.png',
   './img/illustya/feather_red.png',
   './img/illustya/mark_face_laugh.png',
+  './img/illustya/takibi_dai.png',
   './img/illustya/war_trident.png',
   './img/illustya/yurei_youngwoman3_sad.png',
   './img/illustya/text_mu.png',
@@ -42,6 +45,7 @@ export class Illustya {
   './img/illustya/wasyoku_yakizakana.png',
   './img/illustya/boomerang.png',
   './img/illustya/fish_minokasago.png',
+  './img/illustya/takibi_dai_fire.png',
   './img/illustya/fish_maguro.png',
   ]
 }

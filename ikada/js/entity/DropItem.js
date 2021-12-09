@@ -25,8 +25,19 @@ export class DropItem extends Entity {
         this.is_landing = false;
         this.is_in_sea = false;
 
-        this.item_to_pickup = new ResourceItem( this.game );
+        this.item_to_pickup = null;
 
+
+
+    }
+    set_tool_item( new_item ){
+        // 自身に引数のツールアイテムを設定する
+        this.item_to_pickup = new_item;
+        this.image = new_item.image;
+    }
+    generate_drifting_item(){
+        // 自身に漂流物を生成する
+        this.item_to_pickup = new ResourceItem( this.game );
 
         let item_type = Math.floor( Math.random() * 3 );
         if( item_type == 0 ){

@@ -37,6 +37,7 @@ export class Player extends Entity {
         this.width = 32;
         this.width_half = this.width / 2;
         this.height = 32;
+        this.height_half = this.height / 2;
 
         this.is_landing = false;
         this.is_in_sea = false;

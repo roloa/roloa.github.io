@@ -5,6 +5,7 @@ import {Ship} from './Ship.js';
 import {DropItem} from './entity/DropItem.js';
 import {EffectWind} from './entity/EffectWind.js';
 import {EnemyFish} from './entity/EnemyFish.js';
+import {FishingLure} from './entity/FishingLure.js';
 
 export class World {
     constructor( game ){
@@ -25,6 +26,7 @@ export class World {
 
         this.player = new Player( this.game )
         this.ship = new Ship( this.game )
+        this.lure = new FishingLure( this.game );
 
     }
     push_enemy( new_entity ){
@@ -65,6 +67,7 @@ export class World {
         if( Math.random() < 0.001) {
             let new_item = new DropItem( this.game )
             new_item.x = 300
+            new_item.generate_drifting_item();
             this.entity_list.push( new_item )
         }
         if( Math.random() < 0.01) {
@@ -107,7 +110,9 @@ export class World {
         this.cursor_x = (this.game.input_controller.mouse_x - this.game.SCREEN_WIDTH_HALF)  / this.camera.zoom + this.camera.x ;
         this.cursor_y = (this.game.input_controller.mouse_y - this.game.SCREEN_HEIGHT_HALF) / this.camera.zoom + this.camera.y ;
 
+        // 常在オブジェクトの処理
         this.player.on_update()
+        this.lure.on_update();
 
     }
     //
@@ -132,6 +137,7 @@ export class World {
         //
         this.ship.on_draw( canvas );
         this.player.on_draw( canvas );
+        this.lure.on_draw( canvas );
 
         for( let i = 0 ; i < this.entity_list.length ; i++ ){
             if( this.entity_list[i] ){
