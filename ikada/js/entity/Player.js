@@ -72,6 +72,15 @@ export class Player extends Entity {
         // 水中での移動力補正
         this.underwater_speed = 0;
     }
+    mod_hunger( d ){
+        this.hunger += d;
+        if( this.hunger < 0 ){
+            this.hunger = 0;
+        }
+        if( this.max_hunger < this.hunger ){
+            this.hunger = this.max_hunger;
+        }
+    }
     equip_item( new_equip ){
         // 装備する
         if( this.equip_list[ new_equip.equip_part ] == null){

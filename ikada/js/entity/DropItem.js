@@ -74,7 +74,7 @@ export class DropItem extends Entity {
         // プレイヤーとの当たり判定
         let player = this.game.world.player;
         if( player.x - 16 < this.x && this.x < player.x + 16 &&
-            player.y - 32 < this.y && this.y < player.y + 0
+            player.y - 32 < this.y && this.y < player.y + 8
         ){
             let picked = player.hit_drop_item( this );
             if( picked ) {
@@ -127,7 +127,7 @@ export class DropItem extends Entity {
     on_draw( canvas ){
 
         canvas.strokeStyle = 'rgb(200,200,200)'
-        canvas.strokeRect( this.x - 16, this.y - 16, 32, 32)
+        //canvas.strokeRect( this.x - 16, this.y - 16, 32, 32)
 
         canvas.drawImage( this.image ,this.x - 16, this.y - 16, 32 , 32)
 

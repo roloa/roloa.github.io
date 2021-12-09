@@ -12,7 +12,11 @@ export class FishKirimi extends ToolItem {
     }
 
     on_click( cursor_x, cursor_y, player_x, player_y ){
-        console.log('kirimi onclick!')
+        // 満腹度を回復させる
+        this.game.world.player.mod_hunger( 25 );
+
+        this.is_consumed = true;
+
     }
 
 }
