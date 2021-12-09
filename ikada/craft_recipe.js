@@ -1,6 +1,8 @@
 
 import {Bow} from '/tool_item/bow.js';
 
+import {BuildBlock} from '/tool_item/build_block.js'
+import {ShipFloor} from './ship_block/ship_floor.js';
 
 export class CraftRecipe extends Object {
     constructor( game ){
@@ -28,6 +30,24 @@ export class CraftRecipe extends Object {
         new_recipe.sample_item = new_recipe.result_func( this.game );
         new_recipe.image = new_recipe.sample_item.image;
         new_recipe.icon_mini_text = 'Lv1';
+
+        this.recipe_list.push( new_recipe );
+
+        new_recipe = {};
+        new_recipe.description_list = [
+            '船の床ブロックです。',
+            '使用して配置できます。'];
+        new_recipe.material_list = ['wood'];
+        new_recipe.material_count_list = [10];
+        new_recipe.result_func = function( game ){
+            let result = new BuildBlock( game );
+            let block = new ShipFloor( game );
+            result.set_ship_block( block );
+            return result;
+        }
+        new_recipe.sample_item = new_recipe.result_func( this.game );
+        new_recipe.image = new_recipe.sample_item.image;
+        new_recipe.icon_mini_text = 'F';
 
         this.recipe_list.push( new_recipe );
 
