@@ -26,12 +26,32 @@ export class OkeyButton {
 
         ]
     }
+    on_click(){
+        let m_x = this.game.input_controller.mouse_x;
+        let m_y = this.game.input_controller.mouse_y;
 
+        return (
+        this.hit_rect( m_x, m_y, OkeyButton.LD_X, OkeyButton.LD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ) ||
+        this.hit_rect( m_x, m_y, OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ) ||
+        this.hit_rect( m_x, m_y, OkeyButton.LU_X, OkeyButton.LU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ) ||
+        this.hit_rect( m_x, m_y, OkeyButton.RU_X, OkeyButton.RU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ))
+    }
+    hit_rect( test_x, test_y, x, y, w, h ){
+        return x < test_x && test_x < x + w && y < test_y && test_y < y + h
+    }
     on_draw( canvas ){
-        canvas.strokeStyle = 'rgb(0,0,0)'
-        canvas.strokeRect( OkeyButton.LD_X, OkeyButton.LD_Y, OkeyButton.HEIGHT, OkeyButton.WIDTH )
-        canvas.strokeRect( OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.HEIGHT, OkeyButton.WIDTH )
-        canvas.strokeRect( OkeyButton.LU_X, OkeyButton.LU_Y, OkeyButton.HEIGHT, OkeyButton.WIDTH )
-        canvas.strokeRect( OkeyButton.RU_X, OkeyButton.RU_Y, OkeyButton.HEIGHT, OkeyButton.WIDTH )
+        canvas.strokeStyle = 'rgb(250,250,250)'
+        canvas.fillStyle = 'rgb(20,20,20)'
+        canvas.lineWidth = 5
+
+        canvas.fillRect( OkeyButton.LD_X, OkeyButton.LD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+        canvas.fillRect( OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+        canvas.fillRect( OkeyButton.LU_X, OkeyButton.LU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+        canvas.fillRect( OkeyButton.RU_X, OkeyButton.RU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+
+        canvas.strokeRect( OkeyButton.LD_X, OkeyButton.LD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+        canvas.strokeRect( OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+        canvas.strokeRect( OkeyButton.LU_X, OkeyButton.LU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+        canvas.strokeRect( OkeyButton.RU_X, OkeyButton.RU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
     }
 }

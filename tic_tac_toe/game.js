@@ -43,6 +43,8 @@ export class Game {
         this.okey_button = new OkeyButton( this );
 
         this.interval_handle = 0;
+
+        this.anime_count = 0;
     }
 
     reset(){
@@ -61,9 +63,20 @@ export class Game {
 
     on_update(){
         try {
+            this.anime_count += 1
+            if( 50 < this.anime_count){
+                this.anime_count = 0;
+            }
+
             this.input_controller.on_update();
 
-            this.board.on_update();
+            if( this.input_controller.is_mouse_press ){
+                if( this.okey_button.on_click() ){
+                    this.board.okey_button();
+                } else {
+                    this.board.on_click();
+                }
+            }
             this.on_draw();
 
         } catch ( e ) {
