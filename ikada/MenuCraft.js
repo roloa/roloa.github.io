@@ -50,6 +50,7 @@ export class MenuCraft {
     }
     on_update(){
 
+        // カーソル移動
         // TODO 範囲外
         if( this.game.input_controller.is_pressed_key['KeyD'] ){
             this.cursor_index += 1;
@@ -67,6 +68,17 @@ export class MenuCraft {
                 this.cursor_index += MenuCraft.LIST_X_COUNT;
             }
         }
+
+        // クラフト実行
+        if( this.game.input_controller.is_pressed_key['KeyX'] ){
+            if( this.craft_recipe.recipe_list[ this.cursor_index ] ){
+                // カーソル位置にレシピが存在する
+
+                // アイテムを入手
+                this.game.hud.item_slot.put_pickup_item( this.craft_recipe.recipe_list[ this.cursor_index ].result_func( this.game) )
+            }
+        }
+
     }
     on_draw( canvas ){
 
@@ -103,55 +115,50 @@ export class MenuCraft {
 
     }
 
+        if( this.craft_recipe.recipe_list[ this.cursor_index ] ){
+            // アプグレ説明文など
+            canvas.font = MenuCraft.DESC_TEXT_FONT;
 
-        // アプグレ説明文など
-        canvas.font = MenuCraft.DESC_TEXT_FONT;
+            canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
+            canvas.fillText( this.craft_recipe.recipe_list[ this.cursor_index ].sample_item.name ,
+            MenuCraft.DESC_TEXT_X,
+            MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
 
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
-        canvas.fillText( '・アップグレード名' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
+            // クラフト説明
+            canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
+            canvas.fillText( this.craft_recipe.recipe_list[ this.cursor_index ].description_list[0],
+            MenuCraft.DESC_TEXT_X,
+            MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+            if( this.craft_recipe.recipe_list[ this.cursor_index ].description_list[1]) {
+                canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
+                canvas.fillText( this.craft_recipe.recipe_list[ this.cursor_index ].description_list[1],
+                MenuCraft.DESC_TEXT_X,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 3);
+            }
 
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
-        canvas.fillText( '  グライダーを強化します。' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+            // 必要マテリアル
+            canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
+            canvas.fillText( '・必要資材' ,
+            MenuCraft.DESC_TEXT_X,
+            MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 4);
+            for( let i = 0 ; i < this.craft_recipe.recipe_list[ this.cursor_index ].material_list.length ; i++ ){
+                let material_id = this.craft_recipe.recipe_list[ this.cursor_index ].material_list[i];
+                // 名前
+                canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
+                canvas.fillText( this.game.materials.name_list[ material_id ],
+                MenuCraft.DESC_TEXT_X,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * (5 + i));
+                // 必要
+                canvas.fillText( this.craft_recipe.recipe_list[ this.cursor_index ].material_count_list[ i ],
+                MenuCraft.DESC_TEXT_X + 150,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * (5 + i));
+                // 所持
+                canvas.fillText( this.game.materials.list[ material_id ],
+                MenuCraft.DESC_TEXT_X + 250,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * (5 + i));
 
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
-        canvas.fillText( '  上昇力がさらにアップします。' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 3);
-
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
-        canvas.fillText( '  (説明文3)' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 4);
-
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
-        canvas.fillText( '・必要資材' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 5);
-
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR_GREEN;
-        canvas.fillText( '  資材1 ....   7 / (  42 )' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 6);
-
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR_RED;
-        canvas.fillText( '  資材2 ....   7 / ( 3  )' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 7);
-
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR_RED;
-        canvas.fillText( '  資材3 ....   7 / ( 3  )' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 8);
-
-        canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR_RED;
-        canvas.fillText( '  資材4 ....   7 / ( 3  )' ,
-        MenuCraft.DESC_TEXT_X,
-        MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 9);
-
+            }
+        }
         // アップグレードボタン
         canvas.fillStyle = MenuCraft.CRAFT_BUTTON_COLOR;
         canvas.fillRect( MenuCraft.CRAFT_BUTTON_X, MenuCraft.CRAFT_BUTTON_Y, MenuCraft.CRAFT_BUTTON_WIDTH, MenuCraft.CRAFT_BUTTON_HEIGHT )

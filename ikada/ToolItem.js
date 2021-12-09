@@ -5,6 +5,7 @@ export class ToolItem {
     constructor( game ){
 
         this.game = game;
+        this.name = 'noname item'
 
         this.image = this.game.image_library.get_image( './img/illustya/text_mu.png' );
 
