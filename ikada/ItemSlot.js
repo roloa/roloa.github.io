@@ -84,10 +84,10 @@ export class ItemSlot {
         }
     }
 
-    activate_item( cursor_x, cursor_y ){
+    activate_item( cursor_x, cursor_y, player_x, player_y ){
         ;
         if( this.item_slot[ this.item_slot_cursor ] ){
-            this.item_slot[ this.item_slot_cursor ].on_click( cursor_x, cursor_y );
+            this.item_slot[ this.item_slot_cursor ].on_click( cursor_x, cursor_y, player_x, player_y );
             if( this.item_slot[ this.item_slot_cursor ].is_consumed ) {
                 this.item_slot[ this.item_slot_cursor ] = null;
             }

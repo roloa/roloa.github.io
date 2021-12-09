@@ -16,7 +16,7 @@ export class Ship {
             for( let x = 0 ; x < 9 ; x++ ){
                 this.block_array[x] = [];
                 for( let y = 0 ; y < 9 ; y++ ){
-                    this.block_array[x][y] = new ShipBlock( this.game );
+                    this.block_array[x][y] = null;
                 }
             }
             this.ship_offset_x = 5
@@ -62,13 +62,15 @@ export class Ship {
 
         for( let x = 0 ; x < this.block_array.length ; x++ ){
             for( let y = 0 ; y < this.block_array[x].length ; y++ ){
-                canvas.save()
-                canvas.translate(
-                    (-this.ship_offset_x + x) * ShipBlock.BLOCK_SIZE,
-                    (-this.ship_offset_y + y) * ShipBlock.BLOCK_SIZE)
-                this.block_array[x][y].on_draw( canvas );
+                if( this.block_array[x][y] != null ){
+                    canvas.save()
+                    canvas.translate(
+                        (-this.ship_offset_x + x) * ShipBlock.BLOCK_SIZE,
+                        (-this.ship_offset_y + y) * ShipBlock.BLOCK_SIZE)
+                    this.block_array[x][y].on_draw( canvas );
 
-                canvas.restore()
+                    canvas.restore()
+                }
             }
         }
 

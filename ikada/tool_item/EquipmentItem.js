@@ -1,6 +1,6 @@
 
 
-import {ToolItem} from '/ToolItem.js';
+import {ToolItem} from './ToolItem.js';
 
 export class EquipmentItem extends ToolItem {
 
