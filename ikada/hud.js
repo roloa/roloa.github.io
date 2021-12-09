@@ -1,8 +1,8 @@
 
-import {HudMenu} from './hud_menu.js';
-import {HudLog} from './hud_log.js';
-import {ItemSlot} from './item_slot.js';
-import {HudStatus} from './hud_status.js';
+import {HudMenu} from './HudMenu.js';
+import {HudLog} from './HudLog.js';
+import {ItemSlot} from './ItemSlot.js';
+import {HudStatus} from './HudStatus.js';
 
 
 export class Hud {

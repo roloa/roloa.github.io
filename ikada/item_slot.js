@@ -1,8 +1,8 @@
 
-import {CatchNet} from './tool_item/catch_net.js';
-import {FishKirimi} from './tool_item/fish_kirimi.js';
-import {EquipmentItem} from './tool_item/equipment_item.js';
-import {Bow} from './tool_item/bow.js';
+import {CatchNet} from './tool_item/CatchNet.js';
+import {FishKirimi} from './tool_item/FishKirimi.js';
+import {EquipmentItem} from './tool_item/EquipmentItem.js';
+import {Bow} from './tool_item/Bow.js';
 
 
 export class ItemSlot {

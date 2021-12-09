@@ -1,5 +1,5 @@
 
-import {Entity} from './entity.js';
+import {Entity} from './Entity.js';
 
 export class EnemyFish extends Entity {
     constructor( game ){
@@ -54,7 +54,7 @@ export class EnemyFish extends Entity {
 
     on_update(){
         super.on_update();
-        
+
         this.x += this.vx;
         this.y += this.vy;
         this.vx *= 0.99;

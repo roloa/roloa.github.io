@@ -1,5 +1,5 @@
 
-import {Upgrades} from './upgrades.js'
+import {Upgrades} from './Upgrades.js'
 
 export class MenuUpgrade {
 

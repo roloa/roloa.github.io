@@ -1,5 +1,5 @@
 
-import {Entity} from './entity.js';
+import {Entity} from './Entity.js';
 
 export class EffectWind extends Entity {
 

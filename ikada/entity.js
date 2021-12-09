@@ -1,6 +1,6 @@
 
 //import {Entity} from './entity.js';
-import {ShipBlock} from './ship_block/ship_block.js';
+import {ShipBlock} from './ship_block/ShipBlock.js';
 
 export class Entity {
     constructor( game ){

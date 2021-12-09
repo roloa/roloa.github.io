@@ -1,5 +1,5 @@
 
-import {Game} from './game.js';
+import {Game} from './Game.js';
 
 var game = new Game();
 

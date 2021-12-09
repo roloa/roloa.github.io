@@ -1,6 +1,6 @@
 
-import {ShipBlock} from './ship_block/ship_block.js';
-import {ShipFloor} from './ship_block/ship_floor.js';
+import {ShipBlock} from './ship_block/ShipBlock.js';
+import {ShipFloor} from './ship_block/ShipFloor.js';
 
 export class Ship {
 

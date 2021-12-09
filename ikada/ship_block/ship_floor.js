@@ -1,5 +1,5 @@
 
-import {ShipBlock} from './ship_block.js';
+import {ShipBlock} from './ShipBlock.js';
 
 export class ShipFloor extends ShipBlock{
 

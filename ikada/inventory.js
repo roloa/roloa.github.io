@@ -1,8 +1,8 @@
 
 
-import {CatchNet} from './tool_item/catch_net.js';
+import {CatchNet} from './tool_item/CatchNet.js';
 
-import {EquipmentItem} from './tool_item/equipment_item.js';
+import {EquipmentItem} from './tool_item/EquipmentItem.js';
 
 export class Inventory {
 

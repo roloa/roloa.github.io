@@ -1,6 +1,6 @@
 
 
-import {ToolItem} from '/tool_item.js';
+import {ToolItem} from '/ToolItem.js';
 
 export class ResourceItem extends ToolItem {
 

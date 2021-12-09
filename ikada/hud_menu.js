@@ -1,8 +1,8 @@
 
-import {MenuUpgrade} from './menu_upgrade.js'
-import {MenuInventory} from './menu_inventory.js'
-import {MenuCraft} from './menu_craft.js'
-import {MenuMaterial} from './menu_material.js'
+import {MenuUpgrade} from './MenuUpgrade.js'
+import {MenuInventory} from './MenuInventory.js'
+import {MenuCraft} from './MenuCraft.js'
+import {MenuMaterial} from './MenuMaterial.js'
 
 
 export class HudMenu {

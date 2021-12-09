@@ -1,6 +1,4 @@
 
-//import {ShipBlock} from './ship_block.js';
-
 export class ShipBlock {
 
     static BLOCK_RADIUS = 16

@@ -1,10 +1,10 @@
 
-import {World} from './world.js';
-import {Hud} from './hud.js';
-import {InputController} from './input_controller.js'
-import {ImageLibrary} from './image_library.js'
-import {Inventory} from './inventory.js'
-import {Materials} from './materials.js'
+import {World} from './World.js';
+import {Hud} from './Hud.js';
+import {InputController} from './InputController.js'
+import {ImageLibrary} from './ImageLibrary.js'
+import {Inventory} from './Inventory.js'
+import {Materials} from './Materials.js'
 
 
 

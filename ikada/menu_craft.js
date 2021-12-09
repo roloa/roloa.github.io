@@ -1,5 +1,5 @@
 
-import {CraftRecipe} from './craft_recipe.js'
+import {CraftRecipe} from './CraftRecipe.js'
 
 export class MenuCraft {
 

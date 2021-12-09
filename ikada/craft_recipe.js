@@ -1,8 +1,8 @@
 
-import {Bow} from '/tool_item/bow.js';
+import {Bow} from '/tool_item/Bow.js';
 
-import {BuildBlock} from '/tool_item/build_block.js'
-import {ShipFloor} from './ship_block/ship_floor.js';
+import {BuildBlock} from '/tool_item/BuildBlock.js'
+import {ShipFloor} from './ship_block/ShipFloor.js';
 
 export class CraftRecipe extends Object {
     constructor( game ){

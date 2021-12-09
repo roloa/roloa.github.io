@@ -1,6 +1,6 @@
 
 
-import {ToolItem} from '/tool_item.js';
+import {ToolItem} from '/ToolItem.js';
 
 export class EquipmentItem extends ToolItem {
 
@@ -24,7 +24,7 @@ export class EquipmentItem extends ToolItem {
 
         //
         this.fall_speed = 1;
-        
+
         // 水中での移動力補正
         this.underwater_speed = 0;
 
