@@ -8,7 +8,6 @@ export class Board {
             [null, null, null],
             [null, null, null],
             [null, null, null]
-
         ]
     }
     on_update(){
@@ -29,17 +28,45 @@ export class Board {
         canvas.lineTo( x2, y2);
         canvas.stroke();
     }
+    drawBatsu( canvas, x, y, size, text ){
+        canvas.lineWidth = 12;
+        canvas.strokeStyle = 'rgb(100,150,250)';
+        this.draw_line( canvas, x, y, x + size, y + size );
+        this.draw_line( canvas, x + size, y, x, y + size );
+        canvas.fillStyle = 'rgb(20,20,20)';
+        canvas.fillText( text, x + size * 0.5, y + size * 0.5 );
+    }
+    drawMaru( canvas, x, y, size, text){
+        canvas.lineWidth = 10;
+        canvas.strokeStyle = 'rgb(250,100,50)';
+        canvas.beginPath();
+        canvas.arc( x + size * 0.5, y + size * 0.5 , size * 0.5, 0, Math.PI*2);
+        canvas.fillStyle = 'rgb(250,250,250)';
+        canvas.fillText( text, x + size * 0.5, y + size * 0.5 );
+        canvas.stroke();
+
+    }
     on_draw( canvas ){
         canvas.save();
         canvas.translate(175,75);
+
+        canvas.lineWidth = 3;
+        canvas.strokeStyle = 'rgb(150,150,150)';
 
         this.draw_line(canvas, 150, 0, 150, 450);
         this.draw_line(canvas, 300, 0, 300, 450);
 
         this.draw_line(canvas,   0, 150, 450, 150);
         this.draw_line(canvas,   0, 300, 450, 300);
-
         canvas.strokeRect(0,0,450,450)
+
+        canvas.fillStyle = 'rgb(20,20,20)';
+        canvas.font = 'bold 20px monospace';
+        canvas.textAlign = 'center'
+        canvas.textBaseline = 'middle'
+
+        this.drawBatsu( canvas, 10, 10, 30, 7 );
+        this.drawMaru( canvas, 10, 60, 30, 7 );
 
         canvas.restore();
     }

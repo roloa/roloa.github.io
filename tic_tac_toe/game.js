@@ -1,6 +1,7 @@
 
 import {InputController} from './input_controller.js'
 import {Board} from './board.js'
+import {OkeyButton} from './okey_button.js';
 
 export class Template {
     constructor( game ){
@@ -39,6 +40,8 @@ export class Game {
         this.input_controller = new InputController( this );
         this.board = new Board( this );
 
+        this.okey_button = new OkeyButton( this );
+
         this.interval_handle = 0;
     }
 
@@ -72,10 +75,11 @@ export class Game {
     }
     on_draw(){
 
-            this.display_canvas.fillStyle = 'rgb(100,100,100)';
+            this.display_canvas.fillStyle = 'rgb(50,50,50)';
             this.display_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
 
             this.board.on_draw( this.display_canvas );
+            this.okey_button.on_draw( this.display_canvas );
 
     }
 
