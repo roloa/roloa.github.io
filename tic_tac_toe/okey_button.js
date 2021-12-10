@@ -30,19 +30,29 @@ export class OkeyButton {
         let m_x = this.game.input_controller.mouse_x;
         let m_y = this.game.input_controller.mouse_y;
 
-        return (
+        let hit = (
         this.hit_rect( m_x, m_y, OkeyButton.LD_X, OkeyButton.LD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ) ||
         this.hit_rect( m_x, m_y, OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ) ||
         this.hit_rect( m_x, m_y, OkeyButton.LU_X, OkeyButton.LU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ) ||
         this.hit_rect( m_x, m_y, OkeyButton.RU_X, OkeyButton.RU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT ))
+
+        if( hit ){
+            this.pressed_timer = 15;
+        }
+        return hit;
     }
     hit_rect( test_x, test_y, x, y, w, h ){
         return x < test_x && test_x < x + w && y < test_y && test_y < y + h
     }
     on_draw( canvas ){
-        canvas.strokeStyle = 'rgb(250,250,250)'
-        canvas.fillStyle = 'rgb(20,20,20)'
+        canvas.strokeStyle = 'rgb(0,0,0)'
+        canvas.fillStyle = 'rgb(200,200,200)'
         canvas.lineWidth = 5
+
+        if( 0 < this.pressed_timer ){
+            this.pressed_timer -= 1;
+            canvas.fillStyle = 'rgb(100,100,100)'
+        }
 
         canvas.fillRect( OkeyButton.LD_X, OkeyButton.LD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
         canvas.fillRect( OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
@@ -53,5 +63,31 @@ export class OkeyButton {
         canvas.strokeRect( OkeyButton.RD_X, OkeyButton.RD_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
         canvas.strokeRect( OkeyButton.LU_X, OkeyButton.LU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
         canvas.strokeRect( OkeyButton.RU_X, OkeyButton.RU_Y, OkeyButton.WIDTH, OkeyButton.HEIGHT )
+
+        canvas.fillStyle = 'rgb(50,50,50)';
+        canvas.font = 'bold 40px monospace';
+        canvas.textAlign = 'center'
+        canvas.textBaseline = 'middle'
+        canvas.save();
+        canvas.translate( OkeyButton.LD_X + OkeyButton.WIDTH * 0.5, OkeyButton.LD_Y + OkeyButton.HEIGHT * 0.5 );
+        canvas.fillText('ok!', 0, 0 )
+        canvas.restore();
+
+        canvas.save();
+        canvas.translate( OkeyButton.RD_X + OkeyButton.WIDTH * 0.5, OkeyButton.RD_Y + OkeyButton.HEIGHT * 0.5 );
+        canvas.fillText('ok!', 0, 0 )
+        canvas.restore();
+
+        canvas.save();
+        canvas.translate( OkeyButton.LU_X + OkeyButton.WIDTH * 0.5, OkeyButton.LU_Y + OkeyButton.HEIGHT * 0.5 );
+        canvas.rotate( Math.PI )
+        canvas.fillText('ok!', 0, 0 )
+        canvas.restore();
+
+        canvas.save();
+        canvas.translate( OkeyButton.RU_X + OkeyButton.WIDTH * 0.5, OkeyButton.RU_Y + OkeyButton.HEIGHT * 0.5 );
+        canvas.rotate( Math.PI )
+        canvas.fillText('ok!', 0, 0 )
+        canvas.restore();
     }
 }

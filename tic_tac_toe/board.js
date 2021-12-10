@@ -4,6 +4,10 @@ export class Board {
     constructor( game ){
         this.game = game;
 
+        this.reset();
+
+    }
+    reset(){
         this.board = []
         for(let g_x = 0 ; g_x < 3 ; g_x++){
             this.board[g_x] = [];
@@ -33,12 +37,21 @@ export class Board {
         this.kari_mark_x = 0;
         this.kari_mark_y = 0;
 
-
+        this.batsu_line_count = 0;
+        this.maru_line_count = 0;
+        this.is_game_finished = false;
+        this.is_draw_game = false;
+        this.force_put_confirmed_mark = false;
         this.is_selecting_loop = false;
         this.is_overrapping_loop = false;
         this.loop_select_state = 0;
+
     }
     on_click(){
+
+        if ( this.is_game_finished ){
+            return false;
+        }
 
         let local_x = this.game.input_controller.mouse_x - 175;
         let local_y = this.game.input_controller.mouse_y - 75;
@@ -48,7 +61,10 @@ export class Board {
             console.log(cell_x, cell_y)
             if( this.global_board[ cell_x ][ cell_y ] == null){
                 // グローバルボードがまだ未確定の位置
-                if( this.is_selecting_loop ){
+
+                if( this.force_put_confirmed_mark ) {
+                    this.global_board[ cell_x ][ cell_y ] = {mark: this.teban, count: this.turn_count, in_loop: false, confirm_state: 0};
+                } else if( this.is_selecting_loop ){
                     // ループ発生時の手番
                     let cell_lo_x = Math.floor( (local_x % 150) / 50 );
                     let cell_lo_y = Math.floor( (local_y % 150) / 50 );
@@ -102,7 +118,9 @@ export class Board {
     }
     okey_button(){
         console.log('okey!')
-        if( this.is_selecting_loop ){
+        if( this.is_game_finished ){
+            this.reset();
+        } else if( this.is_selecting_loop ){
             if( this.loop_select_state == 1 ){
                 // 量子マークを確定し、グローバルボードに書き込む
                 this.confirm_quantum();
@@ -163,6 +181,62 @@ export class Board {
 
                 this.turn_count += 1;
                 this.select_state = 0;
+            }
+        }
+        // ゲーム終了チェック
+        this.check_game_finished();
+
+    }
+
+    check_game_finished(){
+        // 列の成立をチェックする
+        this.check_line( this.global_board[0][0], this.global_board[0][1], this.global_board[0][2] );
+        this.check_line( this.global_board[1][0], this.global_board[1][1], this.global_board[1][2] );
+        this.check_line( this.global_board[2][0], this.global_board[2][1], this.global_board[2][2] );
+
+        this.check_line( this.global_board[0][0], this.global_board[1][0], this.global_board[2][0] );
+        this.check_line( this.global_board[0][1], this.global_board[1][1], this.global_board[2][1] );
+        this.check_line( this.global_board[0][2], this.global_board[1][2], this.global_board[2][2] );
+
+        this.check_line( this.global_board[0][0], this.global_board[1][1], this.global_board[2][2] );
+        this.check_line( this.global_board[0][2], this.global_board[1][1], this.global_board[2][0] );
+
+        if( 0 < this.maru_line_count || 0 < this.batsu_line_count ){
+            this.is_game_finished = true;
+            return;
+        }
+
+        // グローバルボードの残りが1マスしかない
+        let sum = 0;
+        for( let x = 0 ; x < 3 ; x++){
+            for( let y = 0 ; y < 3 ; y++){
+                if( this.global_board[x][y] != null ){
+                    sum += 1;
+                }
+            }
+        }
+        if( sum == 8 ){
+            this.force_put_confirmed_mark = true;
+        } else if( sum == 9 ){
+            // ラインが出来てなくて9マス埋まってるので、引き分け
+            this.is_game_finished = true
+            this.is_draw_game = true;
+        }
+
+
+    }
+    check_line( mark1, mark2, mark3){
+        if( mark1 == null || mark2 == null || mark3 == null ){
+            return false;
+        }
+        if( mark1.mark == mark2.mark && mark2.mark == mark3.mark ){
+            mark1.is_lined_up = true;
+            mark2.is_lined_up = true;
+            mark3.is_lined_up = true;
+            if( mark1.mark == 1 ){
+                this.maru_line_count = Math.max( mark1.count, mark2.count, mark3.count );
+            } else {
+                this.batsu_line_count = Math.max( mark1.count, mark2.count, mark3.count );
             }
         }
     }
@@ -280,24 +354,30 @@ export class Board {
         canvas.lineTo( x2, y2);
         canvas.stroke();
     }
-    drawBatsu( canvas, x, y, size, text, confirm ){
-        canvas.lineWidth = 12;
+    drawBatsu( canvas, x, y, size, text, confirm, is_lined_up ){
+        canvas.lineWidth = size / 3;
         if( confirm == -1){
             canvas.strokeStyle = 'rgb(30,30,60)';
         } else {
             canvas.strokeStyle = 'rgb(100,150,250)';
+        }
+        if( is_lined_up ){
+            canvas.strokeStyle = 'rgb(50,250,50)';
         }
         this.draw_line( canvas, x, y, x + size, y + size );
         this.draw_line( canvas, x + size, y, x, y + size );
         canvas.fillStyle = 'rgb(20,20,20)';
         canvas.fillText( text, x + size * 0.5, y + size * 0.5 );
     }
-    drawMaru( canvas, x, y, size, text, confirm){
-        canvas.lineWidth = 10;
+    drawMaru( canvas, x, y, size, text, confirm, is_lined_up){
+        canvas.lineWidth = size / 4;
         if( confirm == -1){
             canvas.strokeStyle = 'rgb(80,30,30)';
         } else {
             canvas.strokeStyle = 'rgb(250,100,50)';
+        }
+        if( is_lined_up ){
+            canvas.strokeStyle = 'rgb(50,250,50)';
         }
         canvas.beginPath();
         canvas.arc( x + size * 0.5, y + size * 0.5 , size * 0.5, 0, Math.PI*2);
@@ -305,16 +385,47 @@ export class Board {
         canvas.fillText( text, x + size * 0.5, y + size * 0.5 );
         canvas.stroke();
     }
-    drawMark(canvas, x, y, size, mark, text, confirm){
+    drawMark(canvas, x, y, size, mark, text, confirm, is_lined_up){
+        if( confirm == 1 && 25 < this.game.anime_count ){
+            x -= 10;
+            y -= 10;
+            size += 20;
+        }
         if( mark == 1){
-            this.drawMaru( canvas, x, y, size, text, confirm );
+            this.drawMaru( canvas, x, y, size, text, confirm, is_lined_up );
         } else {
-            this.drawBatsu( canvas, x, y, size, text, confirm );
+            this.drawBatsu( canvas, x, y, size, text, confirm, is_lined_up );
         }
     }
     on_draw( canvas ){
         canvas.save();
         canvas.translate(175,75);
+
+
+        // 量子マークのペアを示す線
+        for(let g_y = 0 ; g_y < 3 ; g_y++){
+            for(let g_x = 0 ; g_x < 3 ; g_x++){
+
+                for(let lo_y = 0 ; lo_y < 3 ; lo_y++){
+                    for(let lo_x = 0 ; lo_x < 3 ; lo_x++){
+                        // 既存の量子マーク
+                        if( this.board[g_x][g_y][lo_x][lo_y] != null ){
+                            let draw_x1 = g_x * 150 + lo_x * 50 + 25;
+                            let draw_y1 = g_y * 150 + lo_y * 50 + 25;
+                            let draw_x2 = lo_x * 150 + g_x * 50 + 25;
+                            let draw_y2 = lo_y * 150 + g_y * 50 + 25;
+
+                            canvas.lineWidth = 7;
+                            canvas.strokeStyle = 'rgb(30,30,30)';
+                            if( this.board[g_x][g_y][lo_x][lo_y].in_loop ){
+                                canvas.strokeStyle = 'rgb(50,100,50)';
+                            }
+                            this.draw_line( canvas, draw_x1, draw_y1, draw_x2, draw_y2 )
+                        }
+                    }
+                }
+            }
+        }
 
         canvas.lineWidth = 3;
         canvas.strokeStyle = 'rgb(150,150,150)';
@@ -338,18 +449,24 @@ export class Board {
 
                 // グローバルボードに確定済みのマークがあるなら、それを大きく表示する
                 if( this.global_board[g_x][g_y] != null){
-                    this.drawMark( canvas, g_x * 150 + 10, g_y * 150 + 10, 130, this.global_board[g_x][g_y].mark, this.global_board[g_x][g_y].count, 1 );
+                    this.drawMark( canvas, g_x * 150 + 30, g_y * 150 + 30, 90, this.global_board[g_x][g_y].mark, this.global_board[g_x][g_y].count, 0, this.global_board[g_x][g_y].is_lined_up );
                     continue;
                 }
                 // 選択の枠線
                 if( g_x == this.selected_x && g_y == this.selected_y ){
-                    if( this.select_state == 1 ){
+                    if( this.select_state == 1 || this.select_state == 2 ){
                         canvas.lineWidth = 3;
-                        canvas.strokeStyle = 'rgb(250,0,0)';
+                        canvas.strokeStyle = 'rgb(0,250,0)';
                         canvas.strokeRect( g_x * 150, g_y * 150, 150, 150 )
                     }
                 }
-
+                if( g_x == this.kari_mark_x && g_y == this.kari_mark_y ){
+                    if( this.select_state == 2 ){
+                        canvas.lineWidth = 3;
+                        canvas.strokeStyle = 'rgb(0,250,0)';
+                        canvas.strokeRect( g_x * 150, g_y * 150, 150, 150 )
+                    }
+                }
 
                 // ローカルボードの処理
                 for(let lo_y = 0 ; lo_y < 3 ; lo_y++){
@@ -358,20 +475,24 @@ export class Board {
                         let draw_y = g_y * 150 + lo_y * 50 + 5;
                         //this.drawBatsu( canvas, draw_x , draw_y, 40, 7 );
 
+
+
                         // 既存の量子マーク
                         if( this.board[g_x][g_y][lo_x][lo_y] != null ){
-                            this.drawMark( canvas, draw_x , draw_y, 40, this.board[g_x][g_y][lo_x][lo_y].mark, this.board[g_x][g_y][lo_x][lo_y].count, this.board[g_x][g_y][lo_x][lo_y].confirm_state );
 
                             // ループ経路を強調
                             if( this.is_selecting_loop ) {
-                                if( this.board[g_x][g_y][lo_x][lo_y].in_loop ){
+                                if( this.board[g_x][g_y][lo_x][lo_y].in_loop && 10 < this.game.anime_count){
                                     canvas.lineWidth = 3;
                                     canvas.strokeStyle = 'rgb(0,250,0)';
                                     canvas.strokeRect( draw_x-5, draw_y-5, 50, 50 );
                                 }
                             }
-                        }
 
+                            this.drawMark( canvas, draw_x , draw_y, 40, this.board[g_x][g_y][lo_x][lo_y].mark, this.board[g_x][g_y][lo_x][lo_y].count, this.board[g_x][g_y][lo_x][lo_y].confirm_state, false );
+
+
+                        }
 
                         // 仮置き量子マーク
                         if( this.select_state == 2 ){
@@ -381,7 +502,7 @@ export class Board {
                                 this.selected_x == lo_x && this.selected_y == lo_y)
                             ){
                                 if( 10 < this.game.anime_count){
-                                    this.drawMark( canvas, draw_x , draw_y, 40, this.teban, this.turn_count );
+                                    this.drawMark( canvas, draw_x , draw_y, 40, this.teban, this.turn_count, false );
                                 }
                             }
                         }
@@ -414,32 +535,72 @@ export class Board {
 
             }
         }
+
+        canvas.save()
+        canvas.translate( 225, 460)
+        this.draw_message( canvas );
+        canvas.restore()
+        canvas.translate( 225, -10)
+        canvas.rotate( Math.PI )
+        this.draw_message( canvas );
+
+        canvas.restore();
+    }
+    draw_message( canvas ){
         // 手番状況を表示する
         canvas.fillStyle = 'rgb(250,250,250)';
         canvas.font = 'bold 32px monospace';
         canvas.textAlign = 'center'
         canvas.textBaseline = 'top'
-        if( this.is_selecting_loop ){
+        if( this.is_game_finished ){
+            if( this.is_draw_game  ){
+                canvas.fillStyle = 'rgb(250,250,250)';
+                canvas.fillText('引き分けです。' ,0, 0)
+            } else if( this.maru_line_count == 0){
+                canvas.fillStyle = 'rgb(100,100,250)';
+                canvas.fillText('×の完全勝利です。' ,0, 0)
+            } else if( this.batsu_line_count == 0){
+                canvas.fillStyle = 'rgb(250,100,100)';
+                canvas.fillText('○の完全勝利です。' ,0, 0)
+            } else {
+                if( this.maru_line_count < this.batsu_line_count){
+                    canvas.fillStyle = 'rgb(250,100,100)';
+                    canvas.fillText('○の判定勝ちです。' ,0, 0)
+                } else {
+                    if( this.maru_line_count < this.batsu_line_count){
+                        canvas.fillStyle = 'rgb(100,100,250)';
+                        canvas.fillText('×の判定勝ちです。' ,0, 0)
+                    }
+                }
+            }
 
+        } else if( this.force_put_confirmed_mark ){
             if( this.teban == 1 ){
                 canvas.fillStyle = 'rgb(250,100,100)';
-                canvas.fillText('ループ発生！○プレイヤーが始点を決めてください。' ,225, 460)
+                canvas.fillText('盤面がいっぱいなので、○を直接置くことが出来ます。' ,0, 0)
+            } else {
+                // ×プレイヤーには盤面が8個埋まった状態で手番は来ないはず
+                canvas.fillStyle = 'rgb(100,100,250)';
+                canvas.fillText('盤面がいっぱいなので、×を直接置くことが出来ます。' ,0, 0)
+            }
+        } else if( this.is_selecting_loop ){
+            if( this.teban == 1 ){
+                canvas.fillStyle = 'rgb(250,100,100)';
+                canvas.fillText('ループ発生！○プレイヤーが始点を決めてください。' ,0, 0)
             } else {
                 canvas.fillStyle = 'rgb(100,100,250)';
-                canvas.fillText('ループ発生！×プレイヤーが始点を決めてください。' ,225, 460)
+                canvas.fillText('ループ発生！×プレイヤーが始点を決めてください。' ,0, 0)
             }
 
         } else {
             if( this.teban == 1 ){
                 canvas.fillStyle = 'rgb(250,100,100)';
-                canvas.fillText('○の手番です。2箇所に○を置いてください。' ,225, 460)
+                canvas.fillText('○の手番です。2箇所に○を置いてください。' ,0, 0)
             } else {
                 canvas.fillStyle = 'rgb(100,100,250)';
-                canvas.fillText('×の手番です。2箇所に×を置いてください。' ,225, 460)
+                canvas.fillText('×の手番です。2箇所に×を置いてください。' ,0, 0)
             }
         }
 
-
-        canvas.restore();
     }
 }
