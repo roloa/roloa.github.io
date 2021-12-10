@@ -3,6 +3,9 @@ import {Bow} from '../tool_item/Bow.js';
 
 import {BuildBlock} from '../tool_item/BuildBlock.js'
 import {ShipFloor} from '../ship_block/ShipFloor.js';
+import {FirePlace} from '../ship_block/FirePlace.js';
+
+// import {} from '../ship_block/.js';
 
 export class CraftRecipe extends Object {
     constructor( game ){
@@ -30,7 +33,6 @@ export class CraftRecipe extends Object {
         new_recipe.sample_item = new_recipe.result_func( this.game );
         new_recipe.image = new_recipe.sample_item.image;
         new_recipe.icon_mini_text = 'Lv1';
-
         this.recipe_list.push( new_recipe );
 
         new_recipe = {};
@@ -48,7 +50,23 @@ export class CraftRecipe extends Object {
         new_recipe.sample_item = new_recipe.result_func( this.game );
         new_recipe.image = new_recipe.sample_item.image;
         new_recipe.icon_mini_text = 'F';
+        this.recipe_list.push( new_recipe );
 
+        new_recipe = {};
+        new_recipe.description_list = [
+            '船に設置する焚き火です。',
+            '配置して、生の食材を調理できます。'];
+        new_recipe.material_list = ['wood'];
+        new_recipe.material_count_list = [10];
+        new_recipe.result_func = function( game ){
+            let result = new BuildBlock( game );
+            let block = new FirePlace( game );
+            result.set_ship_block( block );
+            return result;
+        }
+        new_recipe.sample_item = new_recipe.result_func( this.game );
+        new_recipe.image = new_recipe.sample_item.image;
+        new_recipe.icon_mini_text = 'F';
         this.recipe_list.push( new_recipe );
 
 
