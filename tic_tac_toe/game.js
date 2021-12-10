@@ -79,6 +79,10 @@ export class Game {
                 }
             }
             this.on_draw();
+
+            if( this.input_controller.is_down_key['KeyZ']){
+                document.getElementById('message').innerHTML = 'hoge!';
+            }
         } catch ( e ) {
             // なんかエラーが起きたら、ゲーム動作を止める
             clearInterval( this.interval_handle );
