@@ -53,6 +53,7 @@ export class Game {
     }
     start(){
 
+        document.getElementById('message').innerHTML = '';
         this.input_controller.setup()
         this.interval_handle = setInterval( this.on_update.bind(this), 20 )
     }
@@ -78,11 +79,12 @@ export class Game {
                 }
             }
             this.on_draw();
-
         } catch ( e ) {
             // なんかエラーが起きたら、ゲーム動作を止める
             clearInterval( this.interval_handle );
             console.log('game halted on error!');
+            document.getElementById('message').innerHTML = e;
+
             throw e;
         }
     }
