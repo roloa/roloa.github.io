@@ -567,10 +567,8 @@ export class Board {
                     canvas.fillStyle = 'rgb(250,100,100)';
                     canvas.fillText('○の判定勝ちです。' ,0, 0)
                 } else {
-                    if( this.maru_line_count < this.batsu_line_count){
-                        canvas.fillStyle = 'rgb(100,100,250)';
-                        canvas.fillText('×の判定勝ちです。' ,0, 0)
-                    }
+                    canvas.fillStyle = 'rgb(100,100,250)';
+                    canvas.fillText('×の判定勝ちです。' ,0, 0)
                 }
             }
 
