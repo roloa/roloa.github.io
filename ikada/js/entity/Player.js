@@ -215,13 +215,25 @@ export class Player extends Entity {
             this.vy = 0;
         }
 
-        // マウスクリックでアイテムスロット使用
+        // マウスクリック
+
         if( this.game.input_controller.is_mouse_press ) {
-            this.game.hud.item_slot.activate_item(
-                this.game.world.cursor_x, this.game.world.cursor_y, this.x, this.y );
+            this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
         }
     }
+    on_click( cursor_x, cursor_y ){
+        // 船の設備へのインタラクトを試みる
+        let block = this.game.world.ship.get_ship_block( cursor_x, cursor_y );
+        if( block ){
+            if( block.on_interact() ){
+                // インタラクトに成功した場合、処理終了
+                return;
+            }
+        }
+        // アイテムスロット使用
+        this.game.hud.item_slot.activate_item( cursor_x, cursor_y, this.x, this.y );
 
+    }
     control_land(){
         // WASDで移動
         if( this.game.input_controller.is_down_right ){

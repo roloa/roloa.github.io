@@ -95,9 +95,12 @@ export class ItemSlot {
         }
 
     }
-    // get_active_item(){
-    //     return this.item_slot[ this.item_slot_cursor ];
-    // }
+    get_active_item(){
+         return this.item_slot[ this.item_slot_cursor ];
+    }
+    delete_active_item(){
+         this.item_slot[ this.item_slot_cursor ] = null;
+    }
     put_pickup_item( new_item ){
         // アイテムスロットの後側から入る場所を探す
         for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){

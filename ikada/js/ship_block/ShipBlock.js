@@ -9,7 +9,9 @@ export class ShipBlock {
         this.is_floor = false
         this.image = null;
     }
-
+    on_interact(){
+        return false;
+    }
     on_update(){
 
     }

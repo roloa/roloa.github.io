@@ -53,7 +53,18 @@ export class Ship {
         }
 
     }
+    get_ship_block( x_in_world, y_in_world ){
+        let local_x_in_ship = x_in_world + (this.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_y_in_ship = y_in_world + (this.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
 
+        // 触れているブロックの座標
+        let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
+        let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
+        if( 0 <= block_x && block_x < this.block_array.length &&
+            0 <= block_y && block_y < this.block_array[0].length){
+                return this.block_array[ block_x ][ block_y ];
+        }
+    }
     on_update(){
 
     }

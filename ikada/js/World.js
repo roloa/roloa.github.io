@@ -32,8 +32,10 @@ export class World {
     push_enemy( new_entity ){
         this.enemy_list.push( new_entity )
     }
-    push_entity( new_entity ){
-        this.entity_list.push( new_entity )
+    give_drop_item_player( new_drop_item ){
+        new_drop_item.x = this.game.world.player.x
+        new_drop_item.y = this.game.world.player.y - 48;
+        this.entity_list.push( new_drop_item )
     }
 
     on_update(){
