@@ -5,6 +5,7 @@ import {InputController} from './InputController.js'
 import {ImageLibrary} from './ImageLibrary.js'
 import {Inventory} from './Inventory.js'
 import {Materials} from './Materials.js'
+import {TitleScreen} from './TitleScreen.js'
 
 
 
@@ -69,6 +70,9 @@ export class Game {
         this.inventory = new Inventory( this );
         this.materials = new Materials( this );
 
+        this.is_there_title = true;
+        this.title_screen = new TitleScreen( this );
+
         this.interbal_handle = 0;
     }
 
@@ -96,9 +100,13 @@ export class Game {
             performance.mark('on_update_start')
 
             this.input_controller.on_update();
-            this.world.on_update();
-            this.hud.on_update();
 
+            if( this.is_there_title ){
+                this.title_screen.on_update();
+            } else {
+                this.world.on_update();
+                this.hud.on_update();
+            }
             this.on_draw();
 
             performance.mark('on_update_end')
@@ -152,20 +160,20 @@ export class Game {
 
 
         if( this.is_use_buffer ){
-            this.inactive_canvas.fillStyle = 'rgb(0,0,30)';
-            this.inactive_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
-
-            this.world.on_draw( this.inactive_canvas );
-            this.hud.on_draw( this.inactive_canvas );
-
-            this.draw_parformance( this.inactive_canvas )
-
-            this.inactive_canvas.visible = true;
-            this.active_canvas.visible = false;
-
-            let swap = this.inactive_canvas;
-            this.inactive_canvas = this.active_canvas ;
-            this.active_canvas = swap;
+            // this.inactive_canvas.fillStyle = 'rgb(0,0,30)';
+            // this.inactive_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
+            //
+            // this.world.on_draw( this.inactive_canvas );
+            // this.hud.on_draw( this.inactive_canvas );
+            //
+            // this.draw_parformance( this.inactive_canvas )
+            //
+            // this.inactive_canvas.visible = true;
+            // this.active_canvas.visible = false;
+            //
+            // let swap = this.inactive_canvas;
+            // this.inactive_canvas = this.active_canvas ;
+            // this.active_canvas = swap;
         } else {
             // グラフィックコンテキストの初期化
             this.display_canvas.lineWidth = 2;
@@ -176,7 +184,12 @@ export class Game {
             this.world.on_draw( this.display_canvas );
             this.hud.on_draw( this.display_canvas );
 
+            if( this.is_there_title ){
+                this.title_screen.on_draw( this.display_canvas );
+            }
+
             this.draw_parformance( this.display_canvas );
+
         }
         performance.mark('on_draw_end')
     }

@@ -13,7 +13,7 @@ export class World {
         this.game = game;
 
         this.camera = {}
-        this.camera.x = 0
+        this.camera.x = 1000
         this.camera.y = 0
         this.camera.zoom = 1.0
 
@@ -154,8 +154,8 @@ export class World {
         // 海面
         canvas.strokeStyle = 'rgb(0,100,200)'
         canvas.beginPath()
-        canvas.moveTo(-500,0)
-        canvas.lineTo( 500,0)
+        canvas.moveTo(this.camera.x - 500,0)
+        canvas.lineTo(this.camera.x + 500,0)
         canvas.stroke()
 
         // マウスカーソル
