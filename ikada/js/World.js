@@ -32,6 +32,9 @@ export class World {
     push_enemy( new_entity ){
         this.enemy_list.push( new_entity )
     }
+    push_entity( new_entity ){
+        this.entity_list.push( new_entity )
+    }
     give_tool_item_player( new_tool_item ){
         let new_drop_item = new DropItem( this.game );
         new_drop_item.set_tool_item( new_tool_item );

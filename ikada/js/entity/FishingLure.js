@@ -42,11 +42,7 @@ export class FishingLure extends Entity {
                     this.is_working = false;
 
                     // 釣った魚をプレイヤーの位置に生成
-                    let new_item = new DropItem( this.game )
-                    new_item.x = this.game.world.player.x
-                    new_item.y = this.game.world.player.y - 48;
-                    new_item.set_tool_item( new FishKirimi( this.game ) );
-                    this.game.world.push_entity( new_item )
+                    this.game.world.give_tool_item_player( new FishKirimi( this.game ) );
                 }
             } else {
                 this.vy += 0.5
