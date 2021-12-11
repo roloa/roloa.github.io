@@ -33,5 +33,12 @@ export class BuildBlock extends ToolItem {
             }
         }
     }
-
+    save_data(){
+        let data = super.save_data();
+        data.ship_block = this.ship_block.save_data();
+        return data;
+    }
+    load_data( data ){
+        this.set_ship_block( this.game.save_data_manager.deserialize_block( data.ship_block ));
+    }
 }
