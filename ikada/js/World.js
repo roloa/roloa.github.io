@@ -32,7 +32,9 @@ export class World {
     push_enemy( new_entity ){
         this.enemy_list.push( new_entity )
     }
-    give_drop_item_player( new_drop_item ){
+    give_tool_item_player( new_tool_item ){
+        let new_drop_item = new DropItem( this.game );
+        new_drop_item.set_tool_item( new_tool_item );
         new_drop_item.x = this.game.world.player.x
         new_drop_item.y = this.game.world.player.y - 48;
         this.entity_list.push( new_drop_item )
@@ -126,7 +128,8 @@ export class World {
         this.cursor_y = (this.game.input_controller.mouse_y - this.game.SCREEN_HEIGHT_HALF) / this.camera.zoom + this.camera.y ;
 
         // 常在オブジェクトの処理
-        this.player.on_update()
+        this.ship.on_update();
+        this.player.on_update();
         this.lure.on_update();
 
     }

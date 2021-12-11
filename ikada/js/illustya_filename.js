@@ -23,6 +23,7 @@ export class Illustya {
   './img/illustya/fish_maguro2.png',
   './img/illustya/alohashirt_gray.png',
   './img/illustya/fish_hokke.png',
+  './img/illustya/tonkachi.png',
   './img/illustya/fishing_tsurizao_nobezao.png',
   './img/illustya/mushi_mushitoriami.png',
   './img/illustya/wasyoku_himono.png',

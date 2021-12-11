@@ -1,4 +1,6 @@
 
+import {BuildBlock} from '../tool_item/BuildBlock.js'
+
 export class ShipBlock {
 
     static BLOCK_RADIUS = 16
@@ -8,8 +10,17 @@ export class ShipBlock {
         this.game = game;
         this.is_floor = false
         this.image = null;
+        this.is_removed = false;
     }
     on_interact(){
+        // プレイヤーがハンマーを構えているなら、自壊してアイテム化する
+        let item = this.game.hud.item_slot.get_active_item();
+        if( item && item.is_hammer ){
+            this.is_removed = true;
+            let new_item = new BuildBlock( this.game );
+            new_item.set_ship_block( this );
+            this.game.world.give_tool_item_player( new_item );
+        }
         return false;
     }
     on_update(){

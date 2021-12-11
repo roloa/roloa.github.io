@@ -28,6 +28,7 @@ export class BuildBlock extends ToolItem {
         if( 0 <= block_x && block_x < this.game.world.ship.block_array.length &&
             0 <= block_y && block_y < this.game.world.ship.block_array[0].length){
             if( this.game.world.ship.block_array[block_x][block_y] == null ){
+                this.ship_block.is_removed = false;
                 this.game.world.ship.block_array[block_x][block_y] = this.ship_block;
                 this.is_consumed = true;
             }

@@ -4,8 +4,10 @@ import {Bow} from '../tool_item/Bow.js';
 import {BuildBlock} from '../tool_item/BuildBlock.js'
 import {ShipFloor} from '../ship_block/ShipFloor.js';
 import {FirePlace} from '../ship_block/FirePlace.js';
+import {DeconstructHammer} from '../tool_item/DeconstructHammer.js';
 
 // import {} from '../ship_block/.js';
+// import {} from '../tool_item/.js';
 
 export class CraftRecipe extends Object {
     constructor( game ){
@@ -29,6 +31,20 @@ export class CraftRecipe extends Object {
         new_recipe.material_count_list = [3, 1];
         new_recipe.result_func = function( game ){
             return new Bow( game );
+        }
+        new_recipe.sample_item = new_recipe.result_func( this.game );
+        new_recipe.image = new_recipe.sample_item.image;
+        new_recipe.icon_mini_text = 'Lv1';
+        this.recipe_list.push( new_recipe );
+
+        new_recipe = {};
+        new_recipe.description_list = [
+            '撤去ハンマー',
+            ''];
+        new_recipe.material_list = ['wood', 'metal'];
+        new_recipe.material_count_list = [3, 3];
+        new_recipe.result_func = function( game ){
+            return new DeconstructHammer( game );
         }
         new_recipe.sample_item = new_recipe.result_func( this.game );
         new_recipe.image = new_recipe.sample_item.image;
@@ -68,6 +84,7 @@ export class CraftRecipe extends Object {
         new_recipe.image = new_recipe.sample_item.image;
         new_recipe.icon_mini_text = 'F';
         this.recipe_list.push( new_recipe );
+
 
 
     }

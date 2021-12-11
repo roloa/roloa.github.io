@@ -15,11 +15,15 @@ export class FirePlace extends ShipBlock{
 
     on_interact(){
         console.log('onclick fire!');
+
+        if( super.on_interact() ){
+            // 親クラスの方でインタラクトイベントを消化したら、何もしない
+            return true;
+        }
+
         if( this.food ){
             // 調理結果をプレイヤーの位置に生成
-            let new_item = new DropItem( this.game )
-            new_item.set_tool_item( this.food.get_cooked_item() );
-            this.game.world.give_drop_item_player( new_item );
+            this.game.world.give_tool_item_player( this.food.get_cooked_item() );
             this.food = null;
             return true;
         } else {

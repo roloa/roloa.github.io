@@ -66,7 +66,18 @@ export class Ship {
         }
     }
     on_update(){
-
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                if( this.block_array[x][y] != null ){
+                    // ブロックごとの処理
+                    if( this.block_array[x][y].is_removed ){
+                        this.block_array[x][y] = null;
+                    } else {
+                        
+                    }
+                }
+            }
+        }
     }
 
     on_draw( canvas ){
