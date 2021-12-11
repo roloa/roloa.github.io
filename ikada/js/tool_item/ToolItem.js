@@ -21,5 +21,12 @@ export class ToolItem {
     on_click( cursor_x, cursor_y, player_x, player_y ){
         console.log('default ToolItem onclick!')
     }
-
+    save_data(){
+        let data = {};
+        data.class_name = this.constructor.name;
+        return data;
+    }
+    load_data( data ){
+        
+    }
 }

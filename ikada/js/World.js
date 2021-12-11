@@ -40,6 +40,19 @@ export class World {
 
     on_update(){
 
+        // セーブテスト
+        if( this.game.input_controller.is_pressed_key['KeyI']){
+            this.game.log('セーブします。');
+            this.game.save_data_manager.save_game();
+            this.game.log('セーブしました。');
+        }
+        if( this.game.input_controller.is_pressed_key['KeyO']){
+            this.game.log('ロードします。');
+            this.game.save_data_manager.load_game();
+            this.game.log('ロードしました。');
+
+        }
+
         // カメラ操作？
         if( this.game.input_controller.is_down_key['ShiftLeft']){
             if( this.game.input_controller.is_wheel_up ){

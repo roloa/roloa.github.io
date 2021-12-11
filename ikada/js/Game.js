@@ -6,6 +6,7 @@ import {ImageLibrary} from './ImageLibrary.js'
 import {Inventory} from './Inventory.js'
 import {Materials} from './Materials.js'
 import {TitleScreen} from './TitleScreen.js'
+import {SaveDataManager} from './SaveDataManager.js'
 
 
 
@@ -69,6 +70,7 @@ export class Game {
         this.hud = new Hud( this );
         this.inventory = new Inventory( this );
         this.materials = new Materials( this );
+        this.save_data_manager = new SaveDataManager( this );
 
         this.is_there_title = true;
         this.title_screen = new TitleScreen( this );

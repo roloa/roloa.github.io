@@ -178,4 +178,21 @@ export class ItemSlot {
             }
         }
     }
+    load_data( item_slot_data ){
+        for( let i = 0 ; i < this.itemslot_count ; i++ ){
+            this.item_slot[i] = this.game.save_data_manager.deserialize_item( item_slot_data[i] )
+        }
+        this.refresh();
+    }
+    save_data(){
+        let item_slot_data = [];
+        for( let i = 0 ; i < this.itemslot_count ; i++ ){
+            if( this.item_slot[i] ){
+                item_slot_data.push( this.item_slot[i].save_data() )
+            } else {
+                item_slot_data.push( null )
+            }
+        }
+        return item_slot_data;
+    }
 }
