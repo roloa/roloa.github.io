@@ -87,4 +87,34 @@ export class Ship {
 
     }
 
+    load_data( data ){
+        this.ship_offset_x = data.ship_offset_x;
+        this.ship_offset_y = data.ship_offset_y;
+        this.block_array = []
+        for( let x = 0 ; x < data.block_array.length ; x++ ){
+            this.block_array[x] = [];
+            for( let y = 0 ; y < data.block_array[x].length ; y++ ){
+                this.block_array[x][y] =
+                this.game.save_data_manager.deserialize_block( data.block_array[x][y] )
+            }
+        }
+    }
+    save_data(){
+        let data = {}
+        data.ship_offset_x = this.ship_offset_x;
+        data.ship_offset_y = this.ship_offset_y;
+        data.block_array = []
+
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            data.block_array[x] = [];
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                if( this.block_array[x][y] != null ){
+                    data.block_array[x][y] = this.block_array[x][y].save_data();
+                } else {
+                    data.block_array[x][y] = null;
+                }
+            }
+        }
+        return data;
+    }
 }

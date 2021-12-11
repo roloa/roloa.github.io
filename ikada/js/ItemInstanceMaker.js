@@ -39,3 +39,4 @@ export class ItemInstanceMaker {
         return new ToolItem( this.game );
     }
 }
+

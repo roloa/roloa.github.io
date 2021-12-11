@@ -20,5 +20,12 @@ export class ShipBlock {
             canvas.drawImage( this.image, -ShipBlock.BLOCK_RADIUS, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_SIZE, ShipBlock.BLOCK_SIZE);
         }
     }
+    save_data(){
+        let data = {};
+        data.class_name = this.constructor.name;
+        return data;
+    }
+    load_data( data ){
 
+    }
 }
