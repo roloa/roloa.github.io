@@ -5,6 +5,7 @@ import {Ship} from './Ship.js';
 import {DropItem} from './entity/DropItem.js';
 import {EffectWind} from './entity/EffectWind.js';
 import {EnemyFish} from './entity/EnemyFish.js';
+import {EnemyBird} from './entity/EnemyBird.js';
 import {FishingLure} from './entity/FishingLure.js';
 
 export class World {
@@ -28,6 +29,15 @@ export class World {
         this.ship = new Ship( this.game )
         this.lure = new FishingLure( this.game );
 
+    }
+    count_enemy(){
+        let count = 0;
+        for( let enemy of this.enemy_list ){
+            if( enemy != null ){
+                count++;
+            }
+        }
+        return count;
     }
     push_enemy( new_entity ){
         this.enemy_list.push( new_entity )
@@ -97,12 +107,22 @@ export class World {
             this.entity_list.push( new_entity )
         }
         if( Math.random() < 0.01) {
-            let new_enemy = new EnemyFish( this.game );
-            new_enemy.x = 500;
-            new_enemy.y = 500;
-
-            this.push_enemy( new_enemy );
+            if( this.count_enemy() < 10 ){
+                let new_enemy = new EnemyFish( this.game );
+                new_enemy.x = 500;
+                new_enemy.y = 500;
+                this.push_enemy( new_enemy );
+            }
         }
+        if( Math.random() < 0.01) {
+            if( this.count_enemy() < 10 ){
+                let new_enemy = new EnemyBird( this.game );
+                new_enemy.x = 500;
+                new_enemy.y = -300;
+                this.push_enemy( new_enemy );
+            }
+        }
+
 
         // TODO エンティティリストのnullを取り除く作業
         for( let i = 0 ; i < this.entity_list.length ; i++ ){
