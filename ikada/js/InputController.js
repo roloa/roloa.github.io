@@ -41,6 +41,8 @@ export class InputController {
 
         document.addEventListener('keydown', this.on_key_down.bind(this));
         document.addEventListener('keyup', this.on_key_up.bind(this));
+        // document.addEventListener('keypress', function(){return false;});
+
     }
 
     on_update(){
@@ -79,12 +81,12 @@ export class InputController {
                 this.is_down_up = true;
             }
 
-            return false;
         }
+        e.preventDefault();
+        return false;
     }
 
     on_key_up(e) {
-//        console.log('key_up', e.key);
 
         if( this.is_enable_any_key_input){
             this.is_down_key[ e.code ] = false;
@@ -102,7 +104,7 @@ export class InputController {
             this.is_down_up = false;
         }
 
-
+        e.preventDefault();
     	return false;
     }
 
