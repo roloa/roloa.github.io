@@ -82,6 +82,9 @@ export class InputController {
             }
 
         }
+        if( e.code == 'F5' ){
+            return false;
+        }
         e.preventDefault();
         return false;
     }
