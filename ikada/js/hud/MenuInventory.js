@@ -72,7 +72,9 @@ export class MenuInventory {
         if( this.game.input_controller.is_pressed_key['Digit9'] ){
             this.swap_item_slot(8)
         }
-
+        if( this.game.input_controller.is_pressed_key['Enter'] || this.game.input_controller.is_pressed_key['Space'] ){
+            this.swap_item_slot( this.game.hud.item_slot.item_slot_cursor )
+        }
 
     }
 

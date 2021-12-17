@@ -3,16 +3,17 @@
 export class HudLog {
 
     static MARGIN_TOP   = 50;
-    static MARGIN_RIGHT = 50;
+    static MARGIN_RIGHT = 10;
     static FONT = 'bold 16px monospace'
     static TEXT_COLOR = 'rgb(200,200,200)';
     static TEXT_HEIGHT = 20;
+    static LOG_ROWS = 27;
 
     constructor( game ){
         this.game = game;
 
         this.message_log = []
-        for( let i = 0 ; i < 20 ; i++ ){
+        for( let i = 0 ; i < HudLog.LOG_ROWS ; i++ ){
             this.message_log[ i ] = '~';
         }
 
@@ -28,7 +29,7 @@ export class HudLog {
         canvas.fillStyle = HudLog.TEXT_COLOR;
         canvas.textAlign = 'end';
         canvas.font = HudLog.FONT;
-        for( let i = 0 ; i < 20 ; i++ ){
+        for( let i = 0 ; i < HudLog.LOG_ROWS ; i++ ){
             canvas.fillText( this.message_log[ i ] ,
             this.game.SCREEN_WIDTH - HudLog.MARGIN_RIGHT,
             HudLog.MARGIN_TOP + i * HudLog.TEXT_HEIGHT);

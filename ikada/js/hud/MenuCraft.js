@@ -70,7 +70,8 @@ export class MenuCraft {
         }
 
         // クラフト実行
-        if( this.game.input_controller.is_pressed_key['KeyX'] ){
+        if( this.game.input_controller.is_pressed_key['KeyX'] || this.game.input_controller.is_pressed_key['Enter'] ||
+            this.game.input_controller.is_pressed_key['Space'] ){
             if( this.craft_recipe.recipe_list[ this.cursor_index ] ){
                 // カーソル位置にレシピが存在する
                 let recipe = this.craft_recipe.recipe_list[ this.cursor_index ]
