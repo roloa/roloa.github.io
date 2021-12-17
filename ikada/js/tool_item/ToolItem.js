@@ -9,6 +9,9 @@ export class ToolItem {
 
         this.image = this.game.image_library.get_image( './img/illustya/text_mu.png' );
 
+        // デフォルトの料理時間
+        this.cooking_finish_time = 500;
+
         // 消費されたかどうか
         this.is_consumed = false;
 

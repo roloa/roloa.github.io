@@ -10,6 +10,7 @@ export class FirePlace extends ShipBlock{
         this.is_floor = true;
         this.image = this.game.image_library.get_image('takibi_dai_fire');
         this.food = null;
+        this.cooking_count = 0;
 
     }
 
@@ -23,7 +24,7 @@ export class FirePlace extends ShipBlock{
 
         if( this.food ){
             // 調理結果をプレイヤーの位置に生成
-            this.game.world.give_tool_item_player( this.food.get_cooked_item() );
+            this.game.world.give_tool_item_player( this.food );
             this.food = null;
             return true;
         } else {
@@ -31,6 +32,7 @@ export class FirePlace extends ShipBlock{
             if( item && item.get_cooked_item ) {
                 this.food = item;
                 this.game.hud.item_slot.delete_active_item();
+                this.cooking_count = 0;
                 return true;
             }
         }
@@ -38,7 +40,20 @@ export class FirePlace extends ShipBlock{
     }
 
     on_update(){
-
+        if( this.food != null && this.food.get_cooked_item ){
+            //
+            this.cooking_count += 1;
+            if( this.food.cooking_finish_time < this.cooking_count ){
+                this.food = this.food.get_cooked_item();
+                this.cooking_count = 0;
+            }
+        }
     }
+    on_draw( canvas ){
+        super.on_draw( canvas );
 
+        if( this.food != null ) {
+            canvas.drawImage( this.food.get_image(), -ShipBlock.BLOCK_RADIUS * 0.5, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS);
+        }
+    }
 }

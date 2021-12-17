@@ -73,7 +73,7 @@ export class Ship {
                     if( this.block_array[x][y].is_removed ){
                         this.block_array[x][y] = null;
                     } else {
-                        
+                        this.block_array[x][y].on_update();
                     }
                 }
             }
