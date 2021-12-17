@@ -19,6 +19,8 @@ export class FishRod extends ToolItem {
         } else {
             // 針を投げる
             this.game.world.lure.is_working = true;
+            this.game.world.lure.is_fish_hitting = false;
+
 
             let vec = this.game.world.player.get_vector_to_cursor();
 

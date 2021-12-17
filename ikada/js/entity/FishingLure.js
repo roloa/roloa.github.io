@@ -22,6 +22,8 @@ export class FishingLure extends Entity {
 
         this.is_working = false;
         this.is_rewinding = false;
+        this.is_fish_hitting = false;
+        this.fish_hit_timer = 0;
 
         this.image = this.game.image_library.get_image( 'fishing_lure' );
 
@@ -40,6 +42,7 @@ export class FishingLure extends Entity {
                     this.y = this.game.world.player.y;
                     this.is_rewinding = false;
                     this.is_working = false;
+                    this.is_fish_hitting = false;
 
                     // 釣った魚をプレイヤーの位置に生成
                     this.game.world.give_tool_item_player( new FishKirimi( this.game ) );
@@ -49,21 +52,29 @@ export class FishingLure extends Entity {
                 this.x += this.vx;
                 this.y += this.vy;
 
-                if( 1 < this.vy ){
-                    this.is_landing = false;
-                }
-
                 // 海との当たり判定
                 if( 0 <= this.y ){
-                        //this.y = 0
-                        this.vy -= 1;
-                        this.vy *= 0.8;
-                        this.vx *= 0.9;
-                        this.is_landing = false;
-                        this.is_in_sea = true;
+                    //this.y = 0
+                    this.vy -= 1;
+                    this.vy *= 0.8;
+                    this.vx *= 0.9;
+
+                    if( Math.random() < 0.005 ){
+                        this.is_fish_hitting = true;
+                        this.vy += 6;
+                        this.fish_hit_timer = 300;
+                    }
+                    if( this.is_fish_hitting ){
+                        if( this.y <= 20 && this.vy <= 1 ){
+                            this.vy += 6;
+                        }
+                        this.fish_hit_timer -= 1;
+                        if( this.fish_hit_timer <= 0 ) {
+                            this.is_fish_hitting = false;
+                        }
+                    }
                 } else {
                     // 海の中にいない
-                    this.is_in_sea = false;
                 }
             }
         }

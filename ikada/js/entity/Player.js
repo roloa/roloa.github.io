@@ -130,7 +130,7 @@ export class Player extends Entity {
         if ( this.is_ghost ) {
             // 死んでリスポン待ちの幽霊
             this.ghost_timer -= 1;
-            this.hp = (1-(this.ghost_timer / this.ghost_timer_max)) * this.max_hp;
+            this.health.hp = (1-(this.ghost_timer / this.ghost_timer_max)) * this.health.max_hp;
             if( this.ghost_timer <= 0 ){
                 this.is_ghost = false;
             }
@@ -199,6 +199,8 @@ export class Player extends Entity {
         // 死亡判定
         if( this.health.hp <= 0 ){
             this.health.hp = 1;
+            this.health.hunger = 20;
+            this.health.thirst = 20;
             this.is_ghost = true;
             this.ghost_timer = this.ghost_timer_max;
             this.x = 0;
