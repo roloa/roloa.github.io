@@ -5,6 +5,7 @@ import {EquipmentItem} from './tool_item/EquipmentItem.js'
 import {CatchNet} from './tool_item/CatchNet.js'
 import {ToolItem} from './tool_item/ToolItem.js'
 import {CookedFish} from './tool_item/CookedFish.js'
+import {DistillBottle} from './tool_item/DistillBottle.js'
 import {BuildBlock} from './tool_item/BuildBlock.js'
 import {DeconstructHammer} from './tool_item/DeconstructHammer.js'
 import {FishKirimi} from './tool_item/FishKirimi.js'
@@ -30,6 +31,8 @@ export class ItemInstanceMaker {
             return new ToolItem( this.game );
         } else if( item_data.class_name == 'CookedFish' ){
             return new CookedFish( this.game );
+        } else if( item_data.class_name == 'DistillBottle' ){
+            return new DistillBottle( this.game );
         } else if( item_data.class_name == 'BuildBlock' ){
             return new BuildBlock( this.game );
         } else if( item_data.class_name == 'DeconstructHammer' ){

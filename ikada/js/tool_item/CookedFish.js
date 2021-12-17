@@ -13,7 +13,7 @@ export class CookedFish extends ToolItem {
 
     on_click( cursor_x, cursor_y, player_x, player_y ){
         // 満腹度を回復させる
-        this.game.world.player.mod_hunger( 50 );
+        this.game.world.player.health.mod_hunger( 50 );
 
         this.is_consumed = true;
 

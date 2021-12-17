@@ -53,23 +53,23 @@ export class HudStatus {
 
         canvas.fillStyle = 'rgb(200,50,20)';
         canvas.drawImage( this.icon_hp, HudStatus.ICON_X, 0 * HudStatus.STATUS_HEIGHT, 24, 24 );
-        this.draw_guage( canvas, 0, this.player.hp / this.player.max_hp )
+        this.draw_guage( canvas, 0, this.player.health.hp / this.player.health.max_hp )
 
         canvas.fillStyle = 'rgb(250,250,20)';
         canvas.drawImage( this.icon_sp, HudStatus.ICON_X, 1 * HudStatus.STATUS_HEIGHT, 24, 24 );
-        this.draw_guage( canvas, 1, this.player.sp / this.player.max_sp )
+        this.draw_guage( canvas, 1, this.player.health.sp / this.player.health.max_sp )
 
         canvas.fillStyle = 'rgb(50,250,120)';
         canvas.drawImage( this.icon_happiness, HudStatus.ICON_X, 2 * HudStatus.STATUS_HEIGHT, 24, 24 );
-        this.draw_guage( canvas, 2, this.player.happiness / this.player.max_happiness )
+        this.draw_guage( canvas, 2, this.player.health.happiness / this.player.health.max_happiness )
 
         canvas.fillStyle = 'rgb(200,150,50)';
         canvas.drawImage( this.icon_hunger, HudStatus.ICON_X, 3 * HudStatus.STATUS_HEIGHT, 24, 24 );
-        this.draw_guage( canvas, 3, this.player.hunger / this.player.max_hunger )
+        this.draw_guage( canvas, 3, this.player.health.hunger / this.player.health.max_hunger )
 
         canvas.fillStyle = 'rgb(20,200,200)';
         canvas.drawImage( this.icon_thirst, HudStatus.ICON_X, 4 * HudStatus.STATUS_HEIGHT, 24, 24 );
-        this.draw_guage( canvas, 4, this.player.thirst / this.player.max_thirst )
+        this.draw_guage( canvas, 4, this.player.health.thirst / this.player.health.max_thirst )
 
         canvas.restore();
     }

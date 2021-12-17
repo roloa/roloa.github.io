@@ -142,7 +142,7 @@ export class ItemSlot {
             // アイテムの画像
             if( this.item_slot[ slot_no ] ){
                 canvas.drawImage(
-                    this.item_slot[ slot_no ].image,
+                    this.item_slot[ slot_no ].get_image(),
                     this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
                     this.itemslot_start_y,
                     this.itemslot_size,

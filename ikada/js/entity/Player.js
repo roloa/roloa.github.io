@@ -3,6 +3,8 @@ import {Entity} from './Entity.js';
 import {ShipBlock} from '../ship_block/ShipBlock.js';
 import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 
+import {PlayerHealth} from './PlayerHealth.js';
+
 
 export class Player extends Entity {
     constructor( game ){
@@ -18,16 +20,7 @@ export class Player extends Entity {
         this.vx = 0;
         this.vy = 0;
 
-        this.hp = 80;
-        this.max_hp = 100;
-        this.sp = 50;
-        this.max_sp = 100;
-        this.happiness = 70;
-        this.max_happiness = 100;
-        this.hunger = 30;
-        this.max_hunger = 100;
-        this.thirst = 50;
-        this.max_thirst = 100;
+        this.health = new PlayerHealth( this.game );
 
         this.hit_invincible_timer = 0;
         this.is_ghost = 0;
@@ -41,7 +34,6 @@ export class Player extends Entity {
 
         this.is_landing = false;
         this.is_in_sea = false;
-
 
         // 装備関係
         this.equip_list = []
@@ -72,15 +64,7 @@ export class Player extends Entity {
         // 水中での移動力補正
         this.underwater_speed = 0;
     }
-    mod_hunger( d ){
-        this.hunger += d;
-        if( this.hunger < 0 ){
-            this.hunger = 0;
-        }
-        if( this.max_hunger < this.hunger ){
-            this.hunger = this.max_hunger;
-        }
-    }
+
     equip_item( new_equip ){
         // 装備する
         if( this.equip_list[ new_equip.equip_part ] == null){
@@ -125,7 +109,7 @@ export class Player extends Entity {
         if( 0 < this.hit_invincible_timer ){
             return false;
         }
-        this.hp -= damage_amount;
+        this.health.mod_hp( damage_amount );
         this.vx = knockback_vec.x;
         this.vy = knockback_vec.y;
         this.hit_invincible_timer = 50;
@@ -139,6 +123,9 @@ export class Player extends Entity {
         // 物理法則
         this.x += this.vx;
         this.y += this.vy;
+
+        // ステータスの変動
+
 
         if ( this.is_ghost ) {
             // 死んでリスポン待ちの幽霊
@@ -174,10 +161,12 @@ export class Player extends Entity {
             // それ以外
             this.vy += 0.5;
             this.vy *= 0.99;
-
+            this.update_land();
             this.hittest_ship();
             this.control_land();
         }
+
+
 
         if( 1 < this.vy ){
             this.is_landing = false;
@@ -185,7 +174,7 @@ export class Player extends Entity {
 
         // 海との当たり判定
         if( 16 <= this.y ){
-            if( !this.is_diving ){
+            if( !this.is_diving && 24 <= this.y){
                 // 潜水中でない場合は浮かぶ
                 this.vy -= 1;
                 this.vy *= 0.8;
@@ -194,6 +183,9 @@ export class Player extends Entity {
             this.is_in_sea = true;
             this.is_flying = false;
             this.is_falling = false;
+
+            // スタミナ消費
+            this.health.mod_sp( -0.3, true )
         } else {
             // 海の中にいない
             this.is_in_sea = false;
@@ -205,8 +197,8 @@ export class Player extends Entity {
             this.hit_invincible_timer -= 1;
         }
         // 死亡判定
-        if( this.hp <= 0 ){
-            this.hp = 1;
+        if( this.health.hp <= 0 ){
+            this.health.hp = 1;
             this.is_ghost = true;
             this.ghost_timer = this.ghost_timer_max;
             this.x = 0;
@@ -232,6 +224,24 @@ export class Player extends Entity {
         }
         // アイテムスロット使用
         this.game.hud.item_slot.activate_item( cursor_x, cursor_y, this.x, this.y );
+
+    }
+    update_land(){
+        this.health.mod_hunger( -0.01 );
+        this.health.mod_thirst( -0.01 );
+
+        if( 0 < this.health.hunger && 0 < this.health.thirst){
+            // 健康な状態
+            this.health.mod_sp( 0.1 );
+        } else {
+            // 水か栄養どちらかがゼロ
+            if( this.health.hunger <= 0 ){
+                this.health.mod_sp( -0.1, true );
+            }
+            if( this.health.thirst <= 0 ){
+                this.health.mod_sp( -0.1, true );
+            }
+        }
 
     }
     control_land(){
