@@ -13,23 +13,8 @@ export class FishRod extends ToolItem {
 
     on_click( cursor_x, cursor_y, player_x, player_y ){
 
-        if( this.game.world.lure.is_working ){
-            this.game.world.lure.is_rewinding = true;
+        this.game.world.lure.on_click_rod( cursor_x, cursor_y, player_x, player_y )
 
-        } else {
-            // 針を投げる
-            this.game.world.lure.is_working = true;
-            this.game.world.lure.is_fish_hitting = false;
-
-
-            let vec = this.game.world.player.get_vector_to_cursor();
-
-            this.game.world.lure.vx = vec.x * 7;
-            this.game.world.lure.vy = vec.y * 7;
-
-            this.game.world.lure.x = player_x + vec.x * 10;
-            this.game.world.lure.y = player_y - 16 + vec.y * 10;
-        }
 
     }
 

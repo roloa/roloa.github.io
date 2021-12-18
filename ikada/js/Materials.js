@@ -20,6 +20,9 @@ export class Materials {
     get_material( material_id ){
         return this.list[ material_id ];
     }
+    get_material_name( material_id ){
+        return this.name_list[ material_id ];
+    }
     put_material( material_id , count ){
         this.list[ material_id ] += count;
     }

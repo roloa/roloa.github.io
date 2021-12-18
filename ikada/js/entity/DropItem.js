@@ -35,30 +35,6 @@ export class DropItem extends Entity {
         this.item_to_pickup = new_item;
         this.image = new_item.image;
     }
-    generate_drifting_item(){
-        // 自身に漂流物を生成する
-        this.item_to_pickup = new ResourceItem( this.game );
-
-        let item_type = Math.floor( Math.random() * 3 );
-        if( item_type == 0 ){
-            // 木
-            this.image = this.game.image_library.get_image( 'tree_ryuuboku' );
-            this.item_to_pickup.set_image( 'tree_ryuuboku' );
-            this.item_to_pickup.add_material( 'wood', 5);
-        } else if( item_type == 1 ){
-            // 機械
-            this.image = this.game.image_library.get_image( 'junk_kikai' );
-            this.item_to_pickup.set_image( 'junk_kikai' );
-            this.item_to_pickup.add_material( 'mech_parts', 2);
-            this.item_to_pickup.add_material( 'metal', 3);
-        } else if( item_type == 2 ){
-            // シャツ
-            this.image = this.game.image_library.get_image( 'alohashirt_gray' );
-            this.item_to_pickup.set_image( 'alohashirt_gray' );
-            this.item_to_pickup.add_material( 'cloth', 3);
-        }
-
-    }
 
     on_update(){
         super.on_update();

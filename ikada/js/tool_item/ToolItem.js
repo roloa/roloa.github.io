@@ -9,6 +9,8 @@ export class ToolItem {
 
         this.image = this.game.image_library.get_image( './img/illustya/text_mu.png' );
 
+        this.saving_data = {}
+
         // デフォルトの料理時間
         this.cooking_finish_time = 500;
 
@@ -19,6 +21,7 @@ export class ToolItem {
 
     set_image( file_name ){
         this.image = this.game.image_library.get_image( file_name )
+        this.saving_data.image_name = file_name;
     }
     get_image(){
         return this.image;
@@ -30,9 +33,14 @@ export class ToolItem {
     save_data(){
         let data = {};
         data.class_name = this.constructor.name;
+        data.saving_data_serial = JSON.stringify( this.saving_data );
+
         return data;
     }
     load_data( data ){
-
+        this.saving_data = JSON.parse( data.saving_data_serial );
+        if( this.saving_data.image_name ){
+            this.set_image( this.saving_data.image_name )
+        }
     }
 }

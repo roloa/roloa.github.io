@@ -7,6 +7,7 @@ import {EffectWind} from './entity/EffectWind.js';
 import {EnemyFish} from './entity/EnemyFish.js';
 import {EnemyBird} from './entity/EnemyBird.js';
 import {FishingLure} from './entity/FishingLure.js';
+import {ResourceItem} from './tool_item/ResourceItem.js';
 
 export class World {
     constructor( game ){
@@ -97,7 +98,9 @@ export class World {
         if( Math.random() < 0.001) {
             let new_item = new DropItem( this.game )
             new_item.x = 300
-            new_item.generate_drifting_item();
+            let new_tool_item = new ResourceItem( this.game );
+            new_tool_item.generate_drifting_item();
+            new_item.set_tool_item( new_tool_item );
             this.entity_list.push( new_item )
         }
         if( Math.random() < 0.01) {
