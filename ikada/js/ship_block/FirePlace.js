@@ -56,4 +56,17 @@ export class FirePlace extends ShipBlock{
             canvas.drawImage( this.food.get_image(), -ShipBlock.BLOCK_RADIUS * 0.5, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_RADIUS);
         }
     }
+
+    save_data(){
+        let data = super.save_data();
+        if( this.food != null ){
+            data.food = this.food.save_data()
+        }
+        return data;
+    }
+    load_data( data ){
+        if( data.food ){
+            this.food = this.game.save_data_manager.deserialize_item( data.food );
+        }
+    }
 }
