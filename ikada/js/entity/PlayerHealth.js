@@ -24,11 +24,14 @@ export class PlayerHealth {
         // スタミナの自然回復
         // スタミナを回復した分空腹や口渇が進む
         let stamina_regen = 0.1
-        let regened = stamina_regen - this.mod_sp( stamina_regen );
-        if( 0 < regened ){
-            this.mod_hunger( -regened );
-            this.mod_thirst( -regened );
-        }
+        let stamina_over = this.mod_sp( stamina_regen );
+        // スタミナを回復した
+        this.mod_hunger( (stamina_regen - stamina_over) * 0.1 );
+        this.mod_thirst( (stamina_regen - stamina_over) * 0.2 );
+
+        let hp_over = this.mod_hp( stamina_over * 0.1 )
+        this.mod_happiness( hp_over )
+
         // 常時、ごくわずかに空腹と口渇が進む
         // 空腹か口渇がゼロの場合、SPにダメージを受け、
         // それもなくなったら、HPにダメージを受け続ける
@@ -72,6 +75,16 @@ export class PlayerHealth {
             this.sp = this.max_sp;
         }
         return ret;
+    }
+    consume_sp( cost ){
+        // スタミナを消費
+        // mod_spと違って、消費する量を正の値で与えて、
+        // 消費できた場合はtrueを、足りなかった場合は消費せずにfalseを返す
+        if( cost <= this.sp ){
+            this.sp -= cost;
+            return true;
+        }
+        return false;
     }
     mod_happiness( d ){
         let ret = 0;

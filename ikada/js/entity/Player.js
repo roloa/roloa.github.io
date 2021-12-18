@@ -246,11 +246,17 @@ export class Player extends Entity {
         // ジャンプ　海面でも小さくジャンプできる
         if( this.game.input_controller.is_down_up ){
             if( this.is_landing ){
-                this.vy = -8;
-                this.is_landing = false;
+                if( this.health.consume_sp( 10 ) ){
+                    this.vy = -8;
+                    this.is_landing = false;
+                }
+
             } else if( this.is_in_sea ){
-                this.vy = -5;
-                this.is_in_sea = false;
+                if( this.health.consume_sp( 10 ) ){
+                    this.vy = -5;
+                    this.is_in_sea = false;
+                }
+
             }
         }
         // 下入力
