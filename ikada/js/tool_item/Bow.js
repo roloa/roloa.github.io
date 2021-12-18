@@ -11,6 +11,7 @@ export class Bow extends ToolItem {
         this.saving_data.item_name = 'クロスボウ'
 
         this.image = this.game.image_library.get_image( 'yumiya_bowgun' );
+        // this.image = this.game.image_library.get_image( 'yumiya' );
 
     }
 

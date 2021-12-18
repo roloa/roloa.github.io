@@ -6,6 +6,8 @@ import {ShipFloor} from '../ship_block/ShipFloor.js';
 import {FirePlace} from '../ship_block/FirePlace.js';
 import {DeconstructHammer} from '../tool_item/DeconstructHammer.js';
 import {DistillBottle} from '../tool_item/DistillBottle.js';
+import {FishRod} from '../tool_item/FishRod.js';
+import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 
 
 // import {} from '../tool_item/.js';
