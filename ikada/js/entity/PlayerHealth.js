@@ -26,8 +26,8 @@ export class PlayerHealth {
         let stamina_regen = 0.1
         let stamina_over = this.mod_sp( stamina_regen );
         // スタミナを回復した
-        this.mod_hunger( (stamina_regen - stamina_over) * 0.1 );
-        this.mod_thirst( (stamina_regen - stamina_over) * 0.2 );
+        this.mod_hunger( -(stamina_regen - stamina_over) * 0.1 );
+        this.mod_thirst( -(stamina_regen - stamina_over) * 0.2 );
 
         let hp_over = this.mod_hp( stamina_over * 0.1 )
         this.mod_happiness( hp_over )
