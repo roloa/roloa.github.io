@@ -1,5 +1,6 @@
 
 import {ShipBlock} from './ship_block/ShipBlock.js'
+import {BotHome} from './ship_block/BotHome.js'
 import {ShipFloor} from './ship_block/ShipFloor.js'
 import {FirePlace} from './ship_block/FirePlace.js'
 
@@ -13,6 +14,8 @@ export class BlockInstanceMaker {
             return null;
         } else if( block_data.class_name == 'ShipBlock' ){
             return new ShipBlock( this.game );
+        } else if( block_data.class_name == 'BotHome' ){
+            return new BotHome( this.game );
         } else if( block_data.class_name == 'ShipFloor' ){
             return new ShipFloor( this.game );
         } else if( block_data.class_name == 'FirePlace' ){

@@ -13,6 +13,8 @@ export class Bullet extends Entity {
         this.line_x = 10;
         this.line_y = 10;
 
+        this.life_time = 200;
+
     }
     on_update(){
         super.on_update();
@@ -31,6 +33,12 @@ export class Bullet extends Entity {
                 this.is_alive = false;
                 break;
             }
+        }
+        // 寿命
+        if( 0 < this.life_time ){
+            this.life_time -= 1;
+        } else {
+            this.is_alive = false;
         }
     }
     on_draw( canvas ){
