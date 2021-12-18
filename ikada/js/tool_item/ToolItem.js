@@ -5,11 +5,12 @@ export class ToolItem {
     constructor( game ){
 
         this.game = game;
-        this.name = 'noname item'
 
         this.image = this.game.image_library.get_image( './img/illustya/text_mu.png' );
 
         this.saving_data = {}
+
+        this.saving_data.item_name = 'noname item'
 
         // デフォルトの料理時間
         this.cooking_finish_time = 500;
@@ -26,7 +27,9 @@ export class ToolItem {
     get_image(){
         return this.image;
     }
-
+    get_name(){
+        return this.saving_data.item_name;
+    }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         console.log('default ToolItem onclick!')
     }

@@ -20,29 +20,46 @@ export class CraftRecipe extends Object {
         this.setup();
 
     }
-
+    add_recipe(
+        description_list,
+        material_list,
+        material_count_list,
+        result_func,
+        icon_mini_text
+    ){
+        let new_recipe = {};
+        new_recipe.description_list = description_list;
+        new_recipe.material_list = material_list;
+        new_recipe.material_count_list = material_count_list;
+        new_recipe.result_func = result_func
+        new_recipe.sample_item = new_recipe.result_func( this.game );
+        new_recipe.image = new_recipe.sample_item.image;
+        new_recipe.icon_mini_text = icon_mini_text;
+        this.recipe_list.push( new_recipe );
+    }
     setup(){
 
         let new_recipe = null;
 
-        new_recipe = {};
-        new_recipe.description_list = [
-            '遠距離武器です。',
-            ''];
-        new_recipe.material_list = ['wood', 'cloth'];
-        new_recipe.material_count_list = [3, 1];
-        new_recipe.result_func = function( game ){
-            return new Bow( game );
-        }
-        new_recipe.sample_item = new_recipe.result_func( this.game );
-        new_recipe.image = new_recipe.sample_item.image;
-        new_recipe.icon_mini_text = 'Lv1';
-        this.recipe_list.push( new_recipe );
+        this.add_recipe(
+            ['遠距離武器です。',''],
+            ['wood', 'cloth'],
+            [3, 1],
+            function( game ){ return new Bow( game ); },
+            'Lv1'
+        );
+
+        this.add_recipe(
+            ['遠距離武器です。',''],
+            ['wood', 'cloth'],
+            [3, 1],
+            function( game ){ return new Bow( game ); },
+            'Lv1'
+        );
 
         new_recipe = {};
         new_recipe.description_list = [
-            '撤去ハンマー',
-            '船のブロックを撤去できます。'];
+            '撤去ハンマー', '船のブロックを撤去できます。'];
         new_recipe.material_list = ['wood', 'metal'];
         new_recipe.material_count_list = [3, 3];
         new_recipe.result_func = function( game ){

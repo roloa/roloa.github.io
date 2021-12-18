@@ -10,6 +10,8 @@ export class DistillBottle extends ToolItem {
         this.image = this.game.image_library.get_image( 'science_senjoubin_empty');
         this.image_filled = this.game.image_library.get_image( 'science_senjoubin');
 
+        this.saving_data.item_name = '蒸留ボトル';
+
         this.saving_data.is_filled = false;
     }
     get_cooked_item(){

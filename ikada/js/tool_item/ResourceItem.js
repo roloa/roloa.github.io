@@ -10,6 +10,8 @@ export class ResourceItem extends ToolItem {
         this.saving_data.materials_id = [];
         this.saving_data.materials_count = [];
 
+        this.saving_data.item_name = 'noname resource';
+
     }
 
     add_material( m_id, m_count){
@@ -31,16 +33,16 @@ export class ResourceItem extends ToolItem {
 
         let item_type = Math.floor( Math.random() * 3 );
         if( item_type == 0 ){
-            // 木
+            this.saving_data.item_name = '流木';
             this.set_image( 'tree_ryuuboku' );
             this.add_material( 'wood', 5);
         } else if( item_type == 1 ){
-            // 機械
+            this.saving_data.item_name = '壊れた機械';
             this.set_image( 'junk_kikai' );
             this.add_material( 'mech_parts', 2);
             this.add_material( 'metal', 3);
         } else if( item_type == 2 ){
-            // シャツ
+            this.saving_data.item_name = '古着';
             this.set_image( 'alohashirt_gray' );
             this.add_material( 'cloth', 3);
         }

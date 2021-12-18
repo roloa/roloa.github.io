@@ -8,6 +8,7 @@ export class FishRod extends ToolItem {
         super( game )
 
         this.image = this.game.image_library.get_image( 'fishing_tsurizao_nobezao' );
+        this.saving_data.item_name = '釣り竿';
 
     }
 

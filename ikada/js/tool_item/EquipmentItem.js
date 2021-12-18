@@ -15,6 +15,8 @@ export class EquipmentItem extends ToolItem {
 
         //this.image = this.game.image_library.get_image( './img/illustya/mushi_mushitoriami.png' );
 
+        this.saving_data.item_name = 'noname equip';
+
         // TODO move to saving_data
         // 装備部位
         this.equip_part = 0;

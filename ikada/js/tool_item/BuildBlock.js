@@ -10,6 +10,8 @@ export class BuildBlock extends ToolItem {
 
         //this.image = this.game.image_library.get_image( './img/illustya/food_fish_kirimi_red.png');
         this.ship_block = null;
+        this.saving_data.item_name = '船の建材';
+
     }
     set_ship_block( new_ship_block ){
         this.ship_block = new_ship_block;

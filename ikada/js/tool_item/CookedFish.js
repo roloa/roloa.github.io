@@ -8,6 +8,7 @@ export class CookedFish extends ToolItem {
         super( game )
 
         this.image = this.game.image_library.get_image( 'wasyoku_yakizakana' );
+        this.saving_data.item_name = '焼き魚';
 
     }
 

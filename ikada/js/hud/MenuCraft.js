@@ -113,35 +113,35 @@ export class MenuCraft {
         canvas.fillStyle = 'rgb(20,20,20)';
 //        canvas.fillRect( MenuCraft.LIST_X, MenuCraft.LIST_Y, MenuCraft.LIST_WIDTH, MenuCraft.LIST_HEIGHT　);
 
-    // インベントリのアイテムリスト
-    for( let i = 0 ; i < 25 ; i++ ){
-        if( this.cursor_index == i ){
-            canvas.strokeStyle = MenuCraft.LIST_ICON_FRAME_COLOR_SELECTED;
-        } else {
-            canvas.strokeStyle = MenuCraft.LIST_ICON_FRAME_COLOR;
-        }
-        let x = i % MenuCraft.LIST_X_COUNT;
-        let y = Math.floor( i / MenuCraft.LIST_X_COUNT);
-        let frame_x = MenuCraft.LIST_X + x * (MenuCraft.LIST_ICON_SIZE + MenuCraft.LIST_SPACING);
-        let frame_y = MenuCraft.LIST_Y + y * (MenuCraft.LIST_ICON_SIZE + MenuCraft.LIST_SPACING);
-
-        if( this.craft_recipe.recipe_list[ i ] ){
-            if( this.craft_recipe.recipe_list[ i ].image ) {
-                canvas.drawImage( this.craft_recipe.recipe_list[ i ].image ,
-                frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+        // インベントリのアイテムリスト
+        for( let i = 0 ; i < 25 ; i++ ){
+            if( this.cursor_index == i ){
+                canvas.strokeStyle = MenuCraft.LIST_ICON_FRAME_COLOR_SELECTED;
+            } else {
+                canvas.strokeStyle = MenuCraft.LIST_ICON_FRAME_COLOR;
             }
+            let x = i % MenuCraft.LIST_X_COUNT;
+            let y = Math.floor( i / MenuCraft.LIST_X_COUNT);
+            let frame_x = MenuCraft.LIST_X + x * (MenuCraft.LIST_ICON_SIZE + MenuCraft.LIST_SPACING);
+            let frame_y = MenuCraft.LIST_Y + y * (MenuCraft.LIST_ICON_SIZE + MenuCraft.LIST_SPACING);
+
+            if( this.craft_recipe.recipe_list[ i ] ){
+                if( this.craft_recipe.recipe_list[ i ].image ) {
+                    canvas.drawImage( this.craft_recipe.recipe_list[ i ].image ,
+                    frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+                }
+            }
+            canvas.strokeRect( frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+
+
         }
-        canvas.strokeRect( frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
-
-
-    }
 
         if( this.craft_recipe.recipe_list[ this.cursor_index ] ){
             // アプグレ説明文など
             canvas.font = MenuCraft.DESC_TEXT_FONT;
 
             canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
-            canvas.fillText( this.craft_recipe.recipe_list[ this.cursor_index ].sample_item.name ,
+            canvas.fillText( this.craft_recipe.recipe_list[ this.cursor_index ].sample_item.get_name() ,
             MenuCraft.DESC_TEXT_X,
             MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
 

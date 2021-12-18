@@ -8,6 +8,7 @@ export class Bow extends ToolItem {
     constructor( game ){
         super( game )
         this.game = game;
+        this.saving_data.item_name = 'クロスボウ'
 
         this.image = this.game.image_library.get_image( 'yumiya_bowgun' );
 
