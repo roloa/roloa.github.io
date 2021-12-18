@@ -1,15 +1,15 @@
 
 import {Enemy} from './Enemy.js';
 
-export class EnemyBird extends Enemy {
+export class Kamome extends Enemy {
     constructor( game ){
         super( game );
         this.game = game;
 
         this.image = this.game.image_library.get_image( 'bird_kamome' )
 
-        this.width = 128;
-        this.height = 128;
+        this.width = 64;
+        this.height = 40;
         this.width_half = this.width * 0.5;
         this.height_half = this.height * 0.5;
         this.max_hp = 100;
@@ -37,7 +37,7 @@ export class EnemyBird extends Enemy {
             // 弾を撃つ
         } else {
             // 平常時
-            this.vx = -1;
+            this.vx = -3;
         }
 
         // プレイヤーとの当たり判定

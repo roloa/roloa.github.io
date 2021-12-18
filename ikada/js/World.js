@@ -6,6 +6,8 @@ import {DropItem} from './entity/DropItem.js';
 import {EffectWind} from './entity/EffectWind.js';
 import {EnemyFish} from './entity/EnemyFish.js';
 import {EnemyBird} from './entity/EnemyBird.js';
+import {Kamome} from './entity/Kamome.js';
+import {Tobiuo} from './entity/Tobiuo.js';
 import {FishingLure} from './entity/FishingLure.js';
 import {ResourceItem} from './tool_item/ResourceItem.js';
 
@@ -110,18 +112,18 @@ export class World {
             this.entity_list.push( new_entity )
         }
         if( Math.random() < 0.01) {
-            if( this.count_enemy() < 10 ){
-                let new_enemy = new EnemyFish( this.game );
+            if( this.count_enemy() < 3 ){
+                let new_enemy = new Tobiuo( this.game );
                 new_enemy.x = 500;
-                new_enemy.y = 500;
+                new_enemy.y = 200;
                 this.push_enemy( new_enemy );
             }
         }
         if( Math.random() < 0.01) {
-            if( this.count_enemy() < 10 ){
-                let new_enemy = new EnemyBird( this.game );
+            if( this.count_enemy() < 3 ){
+                let new_enemy = new Kamome( this.game );
                 new_enemy.x = 500;
-                new_enemy.y = -300;
+                new_enemy.y = -200;
                 this.push_enemy( new_enemy );
             }
         }
