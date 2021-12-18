@@ -16,8 +16,13 @@ export class FishKirimi extends ToolItem {
     }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         // 満腹度を回復させる
-        this.game.world.player.health.mod_hunger( 25 );
-        this.game.world.player.health.mod_thirst( 5 );
+        let leftover = this.game.world.player.health.mod_hunger( 25 );
+        leftover += this.game.world.player.health.mod_thirst( 5 );
+
+        if( 10 < leftover ){
+            this.game.materials.put_material( 'leftover', Math.floor( leftover / 9 ) )
+        }
+        this.game.materials.put_material( 'bone', Math.floor( Math.random() * 1.5 + 1 ) )
 
         this.is_consumed = true;
 

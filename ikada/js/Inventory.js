@@ -1,6 +1,7 @@
 
 
 import {CatchNet} from './tool_item/CatchNet.js';
+import {FishKirimi} from './tool_item/FishKirimi.js';
 
 import {EquipmentItem} from './tool_item/EquipmentItem.js';
 
@@ -44,6 +45,13 @@ export class Inventory {
         new_item.equip_part = EquipmentItem.EQUIP_FIN;
         new_item.underwater_speed = 1;
         this.tool_item_inventory[5] = new_item;
+
+        new_item = new FishKirimi( game );
+        this.tool_item_inventory[8] = new_item;
+        new_item = new FishKirimi( game );
+        this.tool_item_inventory[9] = new_item;
+        new_item = new FishKirimi( game );
+        this.tool_item_inventory[10] = new_item;
 
 
 

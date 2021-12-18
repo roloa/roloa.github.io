@@ -22,11 +22,6 @@ export class ResourceItem extends ToolItem {
         for( let i = 0 ; i < this.saving_data.materials_id.length ; i++ ){
             //this.game.log(this.materials_id[i] + ' x ' + this.materials_count[i] );
             this.game.materials.put_material( this.saving_data.materials_id[i], this.saving_data.materials_count[i] );
-            this.game.log('マテリアルを入手:')
-            for( let i = 0 ; i < this.saving_data.materials_id.length ; i++ ){
-                this.game.log( this.game.materials.get_material_name(this.saving_data.materials_id[i]) + " x " +
-                this.saving_data.materials_count[i] + " (" + this.game.materials.get_material(this.saving_data.materials_id[i]) + ")");
-            }
         }
         this.is_consumed = true;
     }

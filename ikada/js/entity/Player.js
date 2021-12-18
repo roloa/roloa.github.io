@@ -125,7 +125,7 @@ export class Player extends Entity {
         this.y += this.vy;
 
         // ステータスの変動
-
+        this.health.always_process();
 
         if ( this.is_ghost ) {
             // 死んでリスポン待ちの幽霊
@@ -228,22 +228,9 @@ export class Player extends Entity {
         this.game.hud.item_slot.activate_item( cursor_x, cursor_y, this.x, this.y );
 
     }
-    update_land(){
-        this.health.mod_hunger( -0.01 );
-        this.health.mod_thirst( -0.01 );
 
-        if( 0 < this.health.hunger && 0 < this.health.thirst){
-            // 健康な状態
-            this.health.mod_sp( 0.1 );
-        } else {
-            // 水か栄養どちらかがゼロ
-            if( this.health.hunger <= 0 ){
-                this.health.mod_sp( -0.1, true );
-            }
-            if( this.health.thirst <= 0 ){
-                this.health.mod_sp( -0.1, true );
-            }
-        }
+    update_land(){
+
 
     }
     control_land(){
