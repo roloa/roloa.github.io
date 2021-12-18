@@ -9,6 +9,7 @@ import {DistillBottle} from '../tool_item/DistillBottle.js';
 import {FishRod} from '../tool_item/FishRod.js';
 import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 import {Spear} from '../tool_item/Spear.js';
+import {Oar} from '../tool_item/Oar.js';
 
 
 // import {} from '../tool_item/.js';
@@ -24,6 +25,14 @@ export class CraftRecipe extends Object {
     setup(){
 
         let new_recipe = null;
+
+        this.add_recipe(
+            ['舟を漕げば、より多くの素材が流れてきます。'],
+            ['wood'],
+            [3],
+            function( game ){ return new Oar( game ); },
+            'Lv1'
+        );
 
         this.add_recipe(
             ['魚釣りができます。','海に浮いているものを引き揚げることも出来ます。'],

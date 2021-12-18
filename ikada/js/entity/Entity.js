@@ -13,10 +13,16 @@ export class Entity {
 
         this.is_alive = true;
 
-
+        this.is_on_ship = false;
     }
 
     on_update(){
+
+        // 舟の速度によって逆行する
+        if( !this.is_on_ship ){
+            this.x -= this.game.world.ship.velocity;
+        }
+
 
         // 消滅判定
         if( this.x < -1000 || 1000 < this.x || this.y < -1000 || 1000 < this.y ){

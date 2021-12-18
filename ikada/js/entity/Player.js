@@ -349,6 +349,7 @@ export class Player extends Entity {
                 this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
                 this.vy = 0;
                 this.is_landing = true;
+                this.is_on_ship = true;
             }
         }
     }

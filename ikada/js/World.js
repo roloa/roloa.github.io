@@ -3,13 +3,8 @@ import {Entity} from './entity/Entity.js';
 import {Player} from './entity/Player.js';
 import {Ship} from './Ship.js';
 import {DropItem} from './entity/DropItem.js';
-import {EffectWind} from './entity/EffectWind.js';
-import {EnemyFish} from './entity/EnemyFish.js';
-import {EnemyBird} from './entity/EnemyBird.js';
-import {Kamome} from './entity/Kamome.js';
-import {Tobiuo} from './entity/Tobiuo.js';
 import {FishingLure} from './entity/FishingLure.js';
-import {ResourceItem} from './tool_item/ResourceItem.js';
+import {WorldSpawner} from './WorldSpawner.js';
 
 export class World {
     constructor( game ){
@@ -28,9 +23,11 @@ export class World {
         this.entity_list = [];
         this.enemy_list = [];
 
-        this.player = new Player( this.game )
-        this.ship = new Ship( this.game )
+        this.player = new Player( this.game );
+        this.ship = new Ship( this.game );
         this.lure = new FishingLure( this.game );
+
+        this.world_spawner = new WorldSpawner( this.game, this );
 
     }
     count_enemy(){
@@ -95,38 +92,7 @@ export class World {
             this.camera.y += (this.player.y - this.camera.y ) * 0.05;
         }
 
-
-        // いろいろ自然わき
-        if( Math.random() < 0.001) {
-            let new_item = new DropItem( this.game )
-            new_item.x = 300
-            let new_tool_item = new ResourceItem( this.game );
-            new_tool_item.generate_drifting_item();
-            new_item.set_tool_item( new_tool_item );
-            this.entity_list.push( new_item )
-        }
-        if( Math.random() < 0.01) {
-            let new_entity = new EffectWind( this.game )
-            new_entity.x = 300
-            new_entity.y = -100 - Math.random() * 100;
-            this.entity_list.push( new_entity )
-        }
-        if( Math.random() < 0.01) {
-            if( this.count_enemy() < 3 ){
-                let new_enemy = new Tobiuo( this.game );
-                new_enemy.x = 500;
-                new_enemy.y = 200;
-                this.push_enemy( new_enemy );
-            }
-        }
-        if( Math.random() < 0.01) {
-            if( this.count_enemy() < 3 ){
-                let new_enemy = new Kamome( this.game );
-                new_enemy.x = 500;
-                new_enemy.y = -200;
-                this.push_enemy( new_enemy );
-            }
-        }
+        this.world_spawner.on_update();
 
 
         // TODO エンティティリストのnullを取り除く作業

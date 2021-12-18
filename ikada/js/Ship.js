@@ -11,6 +11,13 @@ export class Ship {
         // 船を構成するブロックを並べた2次元配列。
         // 必要に応じて拡張する
         this.block_array = []
+        this.init_block_array();
+
+        this.velocity = 0;
+
+    }
+
+    init_block_array(){
         if( true ) {
             // デバッグ用初期配置
             for( let x = 0 ; x < 9 ; x++ ){
@@ -66,6 +73,9 @@ export class Ship {
         }
     }
     on_update(){
+
+        this.velocity *= 0.95;
+
         for( let x = 0 ; x < this.block_array.length ; x++ ){
             for( let y = 0 ; y < this.block_array[x].length ; y++ ){
                 if( this.block_array[x][y] != null ){
@@ -78,6 +88,9 @@ export class Ship {
                 }
             }
         }
+    }
+    on_oar(){
+        this.velocity = 3;
     }
 
     on_draw( canvas ){

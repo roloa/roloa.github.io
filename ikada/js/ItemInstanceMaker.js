@@ -11,6 +11,7 @@ import {BuildBlock} from './tool_item/BuildBlock.js'
 import {FoodItem} from './tool_item/FoodItem.js'
 import {ItemBoomerang} from './tool_item/ItemBoomerang.js'
 import {Arrow} from './tool_item/Arrow.js'
+import {Oar} from './tool_item/Oar.js'
 import {DeconstructHammer} from './tool_item/DeconstructHammer.js'
 import {FishKirimi} from './tool_item/FishKirimi.js'
 import {Bow} from './tool_item/Bow.js'
@@ -47,6 +48,8 @@ export class ItemInstanceMaker {
             return new ItemBoomerang( this.game );
         } else if( item_data.class_name == 'Arrow' ){
             return new Arrow( this.game );
+        } else if( item_data.class_name == 'Oar' ){
+            return new Oar( this.game );
         } else if( item_data.class_name == 'DeconstructHammer' ){
             return new DeconstructHammer( this.game );
         } else if( item_data.class_name == 'FishKirimi' ){
