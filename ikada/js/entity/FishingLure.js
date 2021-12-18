@@ -38,12 +38,28 @@ export class FishingLure extends Entity {
         }
         return new FishKirimi( this.game );
     }
+    catch_drop_item(){
+        // ドロップアイテムをキャッチする
+        for( let entity of this.game.world.entity_list ){
+            if( entity && entity instanceof DropItem ){
+                if( entity.x - 32 < this.x && this.x < entity.x + 32 &&
+                    entity.y - 32 < this.y && this.y < entity.y + 32
+                ){
+                    this.hit_item = entity.item_to_pickup;
+                    entity.is_alive = false;
+                    break;
+                }
+            }
+        }
+    }
     on_click_rod( cursor_x, cursor_y, player_x, player_y ){
         if( this.is_working ){
             if( !this.is_rewinding ){
                 // 巻取り中に巻き取るのを防止
                 if( this.is_fish_hitting ){
                     this.hit_item = this.generate_hit_item();
+                } else {
+                    this.catch_drop_item();
                 }
                 this.is_rewinding = true;
             }
