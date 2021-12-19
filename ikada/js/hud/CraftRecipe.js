@@ -16,6 +16,8 @@ import {DryLack} from '../ship_block/DryLack.js';
 import {ShipFrame} from '../ship_block/ShipFrame.js';
 import {WaterPlace} from '../ship_block/WaterPlace.js';
 import {ShipFarm} from '../ship_block/ShipFarm.js';
+import {VictoryRocket} from '../ship_block/VictoryRocket.js';
+
 
 // import {} from '../tool_item/.js';
 // import {} from '../ship_block/.js';
@@ -30,6 +32,14 @@ export class CraftRecipe extends Object {
     setup(){
 
         let new_recipe = null;
+
+        this.add_recipe(
+            ['ヴィクトリーロケット。','これを設置して作動させたら*勝利*です。'],
+            ['bone'],
+            [99],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new VictoryRocket( game ) ); },
+            ''
+        );
 
         this.add_recipe(
             ['舟の骨組みです。','床と違って上に乗れません。'],

@@ -75,6 +75,8 @@ export class Game {
         this.is_there_title = true;
         this.title_screen = new TitleScreen( this );
 
+        this.movie_playing = null;
+
         this.interbal_handle = 0;
     }
 
@@ -112,12 +114,15 @@ export class Game {
 
             this.input_controller.on_update();
 
-            if( this.is_there_title ){
+            if( this.movie_playing != null ){
+                this.movie_playing.on_update();
+            } else if( this.is_there_title ){
                 this.title_screen.on_update();
             } else {
                 this.world.on_update();
                 this.hud.on_update();
             }
+
             this.on_draw();
 
             performance.mark('on_update_end')
@@ -194,7 +199,11 @@ export class Game {
             this.display_canvas.fillStyle = 'rgb(0,0,30)';
             this.display_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
 
-            this.world.on_draw( this.display_canvas );
+            if( this.movie_playing != null ){
+                this.movie_playing.on_draw( this.display_canvas );
+            } else {
+                this.world.on_draw( this.display_canvas );
+            }
             this.hud.on_draw( this.display_canvas );
 
             if( this.is_there_title ){
