@@ -11,6 +11,11 @@ import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 import {Spear} from '../tool_item/Spear.js';
 import {Oar} from '../tool_item/Oar.js';
 
+import {DroneHome} from '../ship_block/DroneHome.js';
+import {DryLack} from '../ship_block/DryLack.js';
+import {ShipFrame} from '../ship_block/ShipFrame.js';
+import {WaterPlace} from '../ship_block/WaterPlace.js';
+import {ShipFarm} from '../ship_block/ShipFarm.js';
 
 // import {} from '../tool_item/.js';
 // import {} from '../ship_block/.js';
@@ -25,6 +30,46 @@ export class CraftRecipe extends Object {
     setup(){
 
         let new_recipe = null;
+
+        this.add_recipe(
+            ['舟の骨組みです。','床と違って上に乗れません。'],
+            ['wood'],
+            [1],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFrame( game ) ); },
+            ''
+        );
+
+        this.add_recipe(
+            ['食材を乾燥させます。'],
+            ['wood', 'cloth'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new DryLack( game ) ); },
+            ''
+        );
+
+        this.add_recipe(
+            ['1機のドローンを放出・維持する基地です。'],
+            ['metal', 'plastic','mech_parts'],
+            [5, 5, 10],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new DroneHome( game ) ); },
+            ''
+        );
+
+        this.add_recipe(
+            ['水飲み場です。 時間経過で飲み水がたまります。'],
+            ['metal', 'plastic'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace( game ) ); },
+            ''
+        );
+
+        this.add_recipe(
+            ['作物を育てます。'],
+            ['leftover', 'wood'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarm( game ) ); },
+            ''
+        );
 
         this.add_recipe(
             ['舟を漕げば、より多くの素材が流れてきます。'],

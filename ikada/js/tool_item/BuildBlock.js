@@ -16,7 +16,7 @@ export class BuildBlock extends ToolItem {
     set_ship_block( new_ship_block ){
         this.ship_block = new_ship_block;
         this.image = this.ship_block.image;
-
+        return this; // レシピ記述を便利に！
     }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         console.log('block onclick!')
