@@ -31,7 +31,7 @@ export class ResourceItem extends ToolItem {
     generate_drifting_item(){
         // 自身に漂流物を生成する
 
-        let item_type = Math.floor( Math.random() * 3 );
+        let item_type = Math.floor( Math.random() * 4 );
         if( item_type == 0 ){
             this.saving_data.item_name = '流木';
             this.set_image( 'tree_ryuuboku' );
@@ -45,6 +45,10 @@ export class ResourceItem extends ToolItem {
             this.saving_data.item_name = '古着';
             this.set_image( 'alohashirt_gray' );
             this.add_material( 'cloth', 3);
+        } else if( item_type == 3 ){
+            this.saving_data.item_name = 'ペットボトル';
+            this.set_image( 'gomi_petbottle' );
+            this.add_material( 'plastic', 3);
         }
 
     }

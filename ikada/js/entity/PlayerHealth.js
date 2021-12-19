@@ -13,9 +13,9 @@ export class PlayerHealth {
         this.max_sp = 100;
         this.happiness = 70;
         this.max_happiness = 100;
-        this.hunger = 30;
+        this.hunger = 50;
         this.max_hunger = 100;
-        this.thirst = 70;
+        this.thirst = 50;
         this.max_thirst = 100;
     }
 
@@ -125,4 +125,30 @@ export class PlayerHealth {
         return ret;
     }
 
+    load_data( data ){
+        this.hp = data.hp;
+        this.max_hp = data.max_hp;
+        this.sp = data.sp;
+        this.max_sp = data.max_sp;
+        this.happiness = data.happiness;
+        this.max_happiness = data.max_happiness;
+        this.hunger = data.hunger;
+        this.max_hunger = data.max_hunger;
+        this.thirst = data.thirst;
+        this.max_thirst = data.max_thirst;
+    }
+    save_data(){
+        let data = {};
+        data.hp = this.hp;
+        data.max_hp = this.max_hp;
+        data.sp = this.sp;
+        data.max_sp = this.max_sp;
+        data.happiness = this.happiness;
+        data.max_happiness = this.max_happiness;
+        data.hunger = this.hunger;
+        data.max_hunger = this.max_hunger;
+        data.thirst = this.thirst;
+        data.max_thirst = this.max_thirst;
+        return data;
+    }
 }

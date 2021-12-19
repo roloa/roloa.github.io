@@ -19,8 +19,10 @@ export class SaveDataManager {
         data.hoge = 'fuga';
         data.deleted = false;
         data.item_slot = this.game.hud.item_slot.save_data();
+        data.inventory = this.game.inventory.save_data();
         data.ship = this.game.world.ship.save_data();
         data.materials = this.game.materials.save_data();
+        data.player_health = this.game.world.player.health.save_data();
         console.log( 'save' );
         console.log( data );
         localStorage.setItem('save_data_1', JSON.stringify(data));
@@ -42,8 +44,10 @@ export class SaveDataManager {
             }
 
             this.game.hud.item_slot.load_data( data.item_slot );
+            this.game.inventory.load_data( data.inventory );
             this.game.world.ship.load_data( data.ship );
             this.game.materials.load_data( data.materials );
+            this.game.world.player.health.load_data( data.player_health );
 
             console.log( 'load' );
             console.log( data );

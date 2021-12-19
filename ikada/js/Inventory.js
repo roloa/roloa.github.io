@@ -66,4 +66,21 @@ export class Inventory {
         new_item = new FishKirimi( game );
         this.tool_item_inventory[10] = new_item;
     }
+
+    load_data( item_slot_data ){
+        for( let i = 0 ; i < this.item_inventory_size ; i++ ){
+            this.tool_item_inventory[i] = this.game.save_data_manager.deserialize_item( item_slot_data[i] )
+        }
+    }
+    save_data(){
+        let item_slot_data = [];
+        for( let i = 0 ; i < this.item_inventory_size ; i++ ){
+            if( this.tool_item_inventory[i] ){
+                item_slot_data.push( this.tool_item_inventory[i].save_data() )
+            } else {
+                item_slot_data.push( null )
+            }
+        }
+        return item_slot_data;
+    }
 }

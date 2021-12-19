@@ -147,14 +147,16 @@ export class Game {
             } else {
                 this.performance_count += 1;
             }
-            if( this.input_controller.is_pressed_key['KeyP'] ){
-                console.log('game stop!');
-                throw new Exception();
-            }
         } catch ( e ) {
             // なんかエラーが起きたら、ゲーム動作を止める
             clearInterval( this.interbal_handle );
             console.log('game halted on error!');
+
+            // ダメ元でエラーメッセージを画面に表示
+            this.display_canvas.fillStyle = Game.PROC_TIME_COLOR;
+            this.display_canvas.font = Game.PROC_TIME_FONT;
+            this.display_canvas.fillText( 'エラー発生: ' + e ,
+            200 ,200);
             throw e;
         }
     }

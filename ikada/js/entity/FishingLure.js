@@ -112,11 +112,7 @@ export class FishingLure extends Entity {
                     this.vy *= 0.8;
                     this.vx *= 0.9;
 
-                    if( Math.random() < 0.005 ){
-                        this.is_fish_hitting = true;
-                        this.vy += 6;
-                        this.fish_hit_timer = 300;
-                    }
+
                     if( this.is_fish_hitting ){
                         if( this.y <= 20 && this.vy <= 1 ){
                             this.vy += 6;
@@ -125,6 +121,12 @@ export class FishingLure extends Entity {
                         if( this.fish_hit_timer <= 0 ) {
                             this.is_fish_hitting = false;
                         }
+                    } else {
+                        if( Math.random() < 0.005 ){
+                            this.is_fish_hitting = true;
+                            this.vy += 6;
+                            this.fish_hit_timer = 200;
+                        }                        
                     }
                 } else {
                     // 海の中にいない

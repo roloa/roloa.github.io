@@ -58,7 +58,7 @@ export class CraftRecipe extends Object {
         this.add_recipe(
             ['水飲み場です。 時間経過で飲み水がたまります。'],
             ['metal', 'plastic'],
-            [5, 5],
+            [10, 5],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace( game ) ); },
             ''
         );
@@ -121,7 +121,7 @@ export class CraftRecipe extends Object {
             '蒸留ボトル',
             '焚き火にかけることで飲み水を得られます。'];
         new_recipe.material_list = [ 'plastic' ];
-        new_recipe.material_count_list = [10];
+        new_recipe.material_count_list = [3];
         new_recipe.result_func = function( game ){
             return new DistillBottle( game );
         }

@@ -49,7 +49,7 @@ export class MenuMaterial {
 
         let row = 0;
         for( let material_id in this.game.materials.name_list ){
-            if(true){
+            if( 0 < this.game.materials.list[material_id] ){
                 canvas.fillText( this.game.materials.name_list[material_id] ,
                 MenuMaterial.TEXT_X,
                 MenuMaterial.TEXT_Y + MenuMaterial.TEXT_HEIGHT * row);

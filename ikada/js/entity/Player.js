@@ -161,9 +161,12 @@ export class Player extends Entity {
             // それ以外
             this.vy += 0.5;
             this.vy *= 0.99;
+
             this.update_land();
             this.hittest_ship();
-            this.control_land();
+            if( !this.game.hud.hud_menu.is_menu_open ){
+                this.control_land();
+            }
         }
 
 
@@ -214,10 +217,12 @@ export class Player extends Entity {
         }
 
         // マウスクリック
-
-        if( this.game.input_controller.is_mouse_press ) {
-            this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
+        if( !this.game.hud.hud_menu.is_menu_open ){
+            if( this.game.input_controller.is_mouse_press ) {
+                this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
+            }
         }
+
     }
     on_click( cursor_x, cursor_y ){
         // 船の設備へのインタラクトを試みる
