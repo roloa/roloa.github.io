@@ -185,7 +185,11 @@ export class Player extends Entity {
             this.is_falling = false;
 
             // スタミナ消費
-            this.health.mod_sp( -0.3, true )
+            if( !this.health.consume_sp( 0.3 ) ){
+                // 足りない場合はHPが減っていく
+                this.health.mod_hp( -0.1 );
+            }
+
         } else {
             // 海の中にいない
             this.is_in_sea = false;
@@ -253,11 +257,15 @@ export class Player extends Entity {
                     }
 
                 } else if( this.is_in_sea ){
-                    if( this.health.consume_sp( 3 ) ){
+                    if( this.health.consume_sp( 10 ) ){
+                        this.vy = -8;
+                        this.is_in_sea = false;
+                    } else {
+                        // 足りない場合はhpを消費
+                        this.health.mod_hp( -3 );
                         this.vy = -8;
                         this.is_in_sea = false;
                     }
-
                 }
             }
         }
