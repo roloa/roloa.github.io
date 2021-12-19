@@ -3,7 +3,7 @@ import {Game} from './Game.js';
 
 var game = new Game();
 
-window.mygame = game;
+window.game = game;
 
 //document.getElementById('app_version').innerHTML = game.version
 
