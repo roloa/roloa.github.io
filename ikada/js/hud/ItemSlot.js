@@ -78,6 +78,15 @@ export class ItemSlot {
         // 入る場所が無かったらfalseを返す
         return false;
     }
+    has_empty_space(){
+        // アイテムスロットがいっぱいならfalse
+        for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
+            if( this.item_slot[ i ] == null ){
+                return true;
+            }
+        }
+        return false;
+    }
 
     calc_itemslot_coodinate(){
         // アイテムスロットの描画位置を再計算する

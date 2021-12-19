@@ -79,14 +79,18 @@ export class MenuCraft {
             if( this.craft_recipe.recipe_list[ this.cursor_index ] ){
                 // カーソル位置にレシピが存在する
                 let recipe = this.craft_recipe.recipe_list[ this.cursor_index ]
-                if( this.take_recipe_materials( recipe ) ){
-                    // マテリアルが十分にあり、消費できた
-                    // アイテムを入手
-                    this.game.hud.item_slot.put_pickup_item( recipe.result_func( this.game) )
+                if( this.game.hud.item_slot.has_empty_space() ){
+                    if( this.take_recipe_materials( recipe ) ){
+                        // マテリアルが十分にあり、消費できた
+                        // アイテムを入手
+                        this.game.hud.item_slot.put_pickup_item( recipe.result_func( this.game) )
 
-                    this.game.log('クラフトしました。')
+                        this.game.log('クラフトしました。')
+                    } else {
+                        this.game.log('マテリアルが足りません。')
+                    }
                 } else {
-                    this.game.log('マテリアルが足りません。')
+                    this.game.log('アイテムスロットがいっぱいです。')
                 }
             }
         }
@@ -95,16 +99,27 @@ export class MenuCraft {
     take_recipe_materials( recipe ){
         // レシピの材料マテリアルが足りているかを調べ
         // 足りている場合は必要数を消費してtrueを返す
-        for( let i = 0 ; i < recipe.material_list.length ; i++ ){
-            if( this.game.materials.get_material( recipe.material_list[i] ) < recipe.material_count_list[i] ){
-                return false;
-            }
+        if ( !this.check_recipe_materials( recipe ) ){
+            return false;
         }
         for( let i = 0 ; i < recipe.material_list.length ; i++ ){
             this.game.materials.take_material( recipe.material_list[i], recipe.material_count_list[i] );
         }
         return true;
     }
+    check_recipe_materials( recipe ){
+        // レシピの材料マテリアルが足りているかを調べ
+        // 足りている場合は必要数を消費してtrueを返す
+        for( let i = 0 ; i < recipe.material_list.length ; i++ ){
+            if( this.game.materials.get_material( recipe.material_list[i] ) < recipe.material_count_list[i] ){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
     on_draw( canvas ){
 
         // タイトルを印字
