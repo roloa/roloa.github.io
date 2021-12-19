@@ -15,12 +15,6 @@ export class FirePlace extends ShipBlock{
     }
 
     on_interact(){
-        console.log('onclick fire!');
-
-        if( super.on_interact() ){
-            // 親クラスの方でインタラクトイベントを消化したら、何もしない
-            return true;
-        }
 
         if( this.food ){
             // 調理結果をプレイヤーの位置に生成
@@ -65,6 +59,7 @@ export class FirePlace extends ShipBlock{
         return data;
     }
     load_data( data ){
+        super.save_data( data );
         if( data.food ){
             this.food = this.game.save_data_manager.deserialize_item( data.food );
         }

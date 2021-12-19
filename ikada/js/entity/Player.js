@@ -219,7 +219,7 @@ export class Player extends Entity {
         // 船の設備へのインタラクトを試みる
         let block = this.game.world.ship.get_ship_block( cursor_x, cursor_y );
         if( block ){
-            if( block.on_interact() ){
+            if( block.on_click() ){
                 // インタラクトに成功した場合、処理終了
                 return;
             }

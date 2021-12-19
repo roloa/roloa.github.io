@@ -2,6 +2,7 @@
 
 import {ToolItem} from './ToolItem.js';
 import {CookedFish} from './CookedFish.js';
+import {DriedFish} from './DriedFish.js';
 
 export class FishKirimi extends ToolItem {
 
@@ -14,6 +15,9 @@ export class FishKirimi extends ToolItem {
     }
     get_cooked_item(){
         return new CookedFish( this.game );
+    }
+    get_dried_item(){
+        return new DriedFish( this.game );
     }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         // 満腹度を回復させる
