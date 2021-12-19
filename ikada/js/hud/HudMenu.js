@@ -100,6 +100,14 @@ export class HudMenu {
                     HudMenu.MENU_ICON_MARGIN_TOP,
                     HudMenu.MENU_ICON_SIZE,
                     HudMenu.MENU_ICON_SIZE );
+                if( this.menu_list[ i ] != null ){
+                    canvas.drawImage( this.menu_list[ i ].get_menu_icon(),
+                        HudMenu.MENU_ICON_MARGIN_LEFT + i * (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+                        HudMenu.MENU_ICON_MARGIN_TOP,
+                        HudMenu.MENU_ICON_SIZE,
+                        HudMenu.MENU_ICON_SIZE
+                    );
+                }
             }
         }
 

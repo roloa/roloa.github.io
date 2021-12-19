@@ -47,6 +47,10 @@ export class MenuCraft {
 
         this.cursor_index = 0;
         this.list_scroll = 0;
+        this.menu_icon = this.game.image_library.get_image( 'kids_mokkou_kyoushitsu_boy' );
+    }
+    get_menu_icon(){
+        return this.menu_icon;
     }
     on_update(){
 

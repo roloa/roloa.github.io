@@ -8,6 +8,10 @@ export class TitleScreen extends Object {
     on_update(){
         if( this.game.input_controller.is_down_key['KeyX'] ) {
             this.game.is_there_title = false;
+
+            // this.game.log('ロードします。');
+            this.game.save_data_manager.load_game();
+
         }
     }
     on_draw( canvas ){

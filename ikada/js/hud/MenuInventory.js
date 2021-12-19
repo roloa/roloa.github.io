@@ -22,6 +22,10 @@ export class MenuInventory {
 
         this.cursor_index = 0;
 
+        this.menu_icon = this.game.image_library.get_image( 'kaizoku_takarabako' );
+    }
+    get_menu_icon(){
+        return this.menu_icon;
     }
     on_update(){
 

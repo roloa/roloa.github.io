@@ -17,8 +17,21 @@ export class Inventory {
             this.tool_item_inventory[ i ] = null;
         }
 
-        this.tool_item_inventory[0] = new CatchNet( game );
+        //this.tool_item_inventory[0] = new CatchNet( game );
 
+
+
+
+
+    }
+    on_update(){
+
+
+    }
+    on_draw(){
+
+    }
+    cheat(){
         // テスト用の装備品
         let new_item = null;
         new_item = new EquipmentItem( game );
@@ -52,15 +65,5 @@ export class Inventory {
         this.tool_item_inventory[9] = new_item;
         new_item = new FishKirimi( game );
         this.tool_item_inventory[10] = new_item;
-
-
-
-    }
-    on_update(){
-
-
-    }
-    on_draw(){
-
     }
 }

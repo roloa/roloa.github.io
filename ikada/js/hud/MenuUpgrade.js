@@ -54,7 +54,12 @@ export class MenuUpgrade {
 
         this.upgrade_cursor = 0;
         this.upgrade_scroll = 0;
+        this.menu_icon = this.game.image_library.get_image( 'text_mu' );
     }
+    get_menu_icon(){
+        return this.menu_icon;
+    }
+
     on_update(){
 
         if( this.game.input_controller.is_pressed_key['KeyW'] ){

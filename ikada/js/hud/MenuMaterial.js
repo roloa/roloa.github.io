@@ -19,7 +19,12 @@ export class MenuMaterial {
         this.game = game;
 
         this.cursor_index = 0;
+        this.menu_icon = this.game.image_library.get_image( 'kouji_shizai_okiba' );
     }
+    get_menu_icon(){
+        return this.menu_icon;
+    }
+
     on_update(){
 
         // TODO 範囲外

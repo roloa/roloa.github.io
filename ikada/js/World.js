@@ -5,6 +5,7 @@ import {Ship} from './Ship.js';
 import {DropItem} from './entity/DropItem.js';
 import {FishingLure} from './entity/FishingLure.js';
 import {WorldSpawner} from './WorldSpawner.js';
+import {ResourceItem} from './tool_item/ResourceItem.js';
 
 export class World {
     constructor( game ){
@@ -29,7 +30,31 @@ export class World {
 
         this.world_spawner = new WorldSpawner( this.game, this );
 
+        this.newgame_gift();
     }
+
+    newgame_gift(){
+        // 新規ゲーム開始時に支給されるアイテム
+        let new_item = new DropItem( this.game )
+        new_item.x = -32
+        new_item.y = -100;
+        let new_tool_item = new ResourceItem( this.game );
+        new_tool_item.saving_data.item_name = '流木';
+        new_tool_item.set_image( 'tree_ryuuboku' );
+        new_tool_item.add_material( 'wood', 5);
+        new_item.set_tool_item( new_tool_item );
+        this.entity_list.push( new_item )
+        new_item = new DropItem( this.game )
+        new_item.x = 32
+        new_item.y = -150;
+        new_tool_item = new ResourceItem( this.game );
+        new_tool_item.saving_data.item_name = '古着';
+        new_tool_item.set_image( 'alohashirt_gray' );
+        new_tool_item.add_material( 'cloth', 3);
+        new_item.set_tool_item( new_tool_item );
+        this.entity_list.push( new_item )
+    }
+
     count_enemy(){
         let count = 0;
         for( let enemy of this.enemy_list ){
@@ -65,7 +90,6 @@ export class World {
             this.game.log('ロードします。');
             this.game.save_data_manager.load_game();
             this.game.log('ロードしました。');
-
         }
 
         // カメラ操作？

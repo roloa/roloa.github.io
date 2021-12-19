@@ -19,7 +19,7 @@ export class Materials {
         // this.name_list[ '' ] = '';
 
         for( let material_id in this.name_list ){
-            this.list[ material_id ] = 20;
+            this.list[ material_id ] = 0;
         }
     }
     get_material( material_id ){
@@ -49,5 +49,10 @@ export class Materials {
         materials_data.list = this.list;
 
         return materials_data;
+    }
+    cheat(){
+        for( let material_id in this.name_list ){
+            this.list[ material_id ] = 99;
+        }
     }
 }
