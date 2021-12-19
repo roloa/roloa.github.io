@@ -85,6 +85,15 @@ export class Game {
     start(){
 
         this.log('welcome, drifter.');
+        this.log('-----');
+        this.log('主な操作(仮)');
+        this.log('WASD: 移動、ジャンプ');
+        this.log('マウスクリック: アイテムを使う');
+        this.log('マウスホイール: アイテムスロットを選ぶ');
+        this.log('Tabキー: メニューを開く');
+        this.log('Q,E: メニューのタブ移動');
+        this.log('X,スペース,エンター: メニューの決定');
+        this.log('-----');
         this.input_controller.setup()
         this.interbal_handle = setInterval( this.on_update.bind(this), 20 )
     }
