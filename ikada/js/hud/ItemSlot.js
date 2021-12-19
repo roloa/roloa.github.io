@@ -5,6 +5,9 @@ import {FishRod} from '../tool_item/FishRod.js';
 import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 import {Bow} from '../tool_item/Bow.js';
 
+import {BuildBlock} from '../tool_item/BuildBlock.js';
+import {VictoryRocket} from '../ship_block/VictoryRocket.js';
+
 
 export class ItemSlot {
 
@@ -29,7 +32,8 @@ export class ItemSlot {
             this.is_equipped_slot[i] = false;
         }
 
-        //this.item_slot[1] = new FishRod( this.game );
+        this.item_slot[1] = new FishRod( this.game );
+        this.item_slot[2] = new BuildBlock( game ).set_ship_block( new VictoryRocket( game ));
 
         this.item_slot_cursor = 0;
 
