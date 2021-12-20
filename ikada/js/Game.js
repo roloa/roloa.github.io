@@ -25,9 +25,9 @@ export class Template extends Object {
 
 export class Game {
 
-    static PROC_TIME_X = 40;
-    static PROC_TIME_Y = 40;
-    static PROC_TIME_SPACING = 20;
+    static PROC_TIME_X = 10;
+    static PROC_TIME_Y = 10;
+    static PROC_TIME_SPACING = 12;
     static PROC_TIME_COLOR = 'rgb(222,222,222)';
     static PROC_TIME_FONT = 'bold 12px monospace';
 
