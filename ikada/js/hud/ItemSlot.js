@@ -32,12 +32,11 @@ export class ItemSlot {
             this.is_equipped_slot[i] = false;
         }
 
-        this.item_slot[1] = new FishRod( this.game );
-        this.item_slot[2] = new BuildBlock( game ).set_ship_block( new VictoryRocket( game ));
+        // this.item_slot[1] = new FishRod( this.game );
+        // this.item_slot[2] = new BuildBlock( game ).set_ship_block( new VictoryRocket( game ));
 
         this.item_slot_cursor = 0;
-
-
+        this.is_mouse_holding = false;
     }
 
 
@@ -97,38 +96,117 @@ export class ItemSlot {
         this.itemslot_start_y = this.game.SCREEN_HEIGHT - this.itemslot_margin_bottom - this.itemslot_size;
         this.itemslot_start_x = (this.game.SCREEN_WIDTH / 2) - ((this.itemslot_size + this.itemslot_spacing) * this.itemslot_count / 2);
     }
-
+    is_menu_open(){
+        return this.game.hud.hud_menu.is_menu_open;
+    }
     on_update(){
 
         if( this.game.input_controller.is_wheel_up ){
+            this.is_mouse_holding = false;
             this.item_slot_cursor -= 1;
             if( this.item_slot_cursor < 0){
                 this.item_slot_cursor = ItemSlot.ITEM_SLOT_COUNT - 1;
             }
         }
         if( this.game.input_controller.is_wheel_down ){
+            this.is_mouse_holding = false;
             this.item_slot_cursor += 1;
             if( ItemSlot.ITEM_SLOT_COUNT <= this.item_slot_cursor){
                 this.item_slot_cursor = 0;
             }
         }
 
+        if( this.game.input_controller.is_pressed_key['Digit1'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 0;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit2'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 1;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit3'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 2;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit4'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 3;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit5'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 4;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit6'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 5;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit7'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 6;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit8'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 7;
+        }
+        if( this.game.input_controller.is_pressed_key['Digit9'] ){
+            this.is_mouse_holding = false;
+            this.item_slot_cursor = 8;
+        }
+
+        if( this.game.input_controller.is_mouse_press ){
+            let m_y = this.game.input_controller.mouse_y;
+            let m_x = this.game.input_controller.mouse_x;
+            if( this.itemslot_start_y < m_y && m_y < this.itemslot_start_y + this.itemslot_size ){
+                for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
+                    let frame_x = this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing)
+                    if( frame_x < m_x && m_x < frame_x + this.itemslot_size ){
+
+                        if( this.is_menu_open() ){
+                            if( this.is_mouse_holding ){
+                                // アイテムを持ってる場合、マウスカーソル位置と交換する
+                                let swap = this.item_slot[ slot_no ];
+                                this.item_slot[ slot_no ] = this.item_slot[ this.item_slot_cursor ];
+                                this.item_slot[ this.item_slot_cursor ] = swap;
+                                this.is_mouse_holding = false;
+                            } else {
+                                // メニューインベントリがアイテムを持ってる場合、交換する
+                                if( 0 <= this.game.hud.hud_menu.menu_inventory.mouse_holding_index ){
+                                    let swap = this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ];
+                                    this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ] = this.item_slot[ slot_no ];
+                                    this.item_slot[ slot_no ] = swap;
+                                    this.game.hud.hud_menu.menu_inventory.mouse_holding_index = -1;
+                                } else {
+                                    if( this.item_slot[ slot_no ] != null ){
+                                        this.is_mouse_holding = true;
+                                    }
+                                }
+                            }
+                        } else {
+                            this.is_mouse_holding = false;
+                        }
+                        this.item_slot_cursor = slot_no;
+                    }
+                }
+            }
+        }
 
     }
     on_draw( canvas ){
         for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
 
             // アイテムの画像
-            if( this.item_slot[ slot_no ] ){
-                canvas.drawImage(
-                    this.item_slot[ slot_no ].get_image(),
-                    this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
-                    this.itemslot_start_y,
-                    this.itemslot_size,
-                    this.itemslot_size )
 
+            if( !(slot_no == this.item_slot_cursor && this.is_mouse_holding) ){
+                if( this.item_slot[ slot_no ] ){
+                    canvas.drawImage(
+                        this.item_slot[ slot_no ].get_image(),
+                        this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
+                        this.itemslot_start_y,
+                        this.itemslot_size,
+                        this.itemslot_size )
+
+                }
             }
-
 
             if( slot_no == this.item_slot_cursor ){
                 // 選択中のスロット
@@ -154,6 +232,16 @@ export class ItemSlot {
                     this.itemslot_start_y,
                     this.itemslot_size,
                     this.itemslot_size )
+            }
+        }
+
+        // マウスでつかんでいるアイテム
+        if( this.is_mouse_holding ){
+            if( this.item_slot[ this.item_slot_cursor ] != null ) {
+                canvas.drawImage( this.item_slot[ this.item_slot_cursor ].get_image() ,
+                this.game.input_controller.mouse_x ,
+                this.game.input_controller.mouse_y ,
+                this.itemslot_size, this.itemslot_size );
             }
         }
     }
