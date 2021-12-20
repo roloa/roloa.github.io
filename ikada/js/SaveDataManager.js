@@ -14,7 +14,7 @@ export class SaveDataManager {
         data.deleted = true;
         localStorage.setItem('save_data_1', JSON.stringify(data));
     }
-    save_game(){
+    save_game( save_name ){
         let data = {};
         data.hoge = 'fuga';
         data.deleted = false;
@@ -25,21 +25,19 @@ export class SaveDataManager {
         data.player_health = this.game.world.player.health.save_data();
         console.log( 'save' );
         console.log( data );
-        localStorage.setItem('save_data_1', JSON.stringify(data));
+        localStorage.setItem( save_name , JSON.stringify(data));
     }
-    load_game(){
+    load_game( save_name ){
 
         try {
-            let load_data = localStorage.getItem('save_data_1')
+            let load_data = localStorage.getItem( save_name )
             if( load_data == null ){
                 this.game.log('セーブデータがありません。');
-                this.game.log('新規データで開始します。');
                 return false;
             }
             let data = JSON.parse( load_data );
             if( data.deleted == true ){
                 this.game.log('セーブデータが消去済みです。');
-                this.game.log('新規データで開始します。');
                 return false;
             }
 

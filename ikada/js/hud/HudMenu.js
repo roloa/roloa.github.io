@@ -3,6 +3,7 @@ import {MenuUpgrade} from './MenuUpgrade.js'
 import {MenuInventory} from './MenuInventory.js'
 import {MenuCraft} from './MenuCraft.js'
 import {MenuMaterial} from './MenuMaterial.js'
+import {MenuConfig} from './MenuConfig.js'
 
 
 export class HudMenu {
@@ -25,7 +26,7 @@ export class HudMenu {
         this.menu_list[0] = new MenuInventory( game )
         this.menu_list[1] = new MenuCraft( game )
         this.menu_list[2] = new MenuMaterial( game )
-        this.menu_list[3] = new MenuUpgrade( game )
+        this.menu_list[3] = new MenuConfig( game )
 
         this.menu_list_cursor = 0
 
@@ -43,7 +44,7 @@ export class HudMenu {
                 }
             }
             if( this.game.input_controller.is_pressed_key['KeyE'] ){
-                if( this.menu_list_cursor < 4 ){
+                if( this.menu_list_cursor < this.menu_list.length - 1 ){
                     this.menu_list_cursor += 1;
                 }
             }

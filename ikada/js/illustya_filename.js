@@ -62,6 +62,7 @@ export class Illustya {
   './img/illustya/food_tebasaki.png',
   './img/illustya/quadcopter_drone.png',
   './img/illustya/petbottle_juice.png',
+  './img/illustya/haguruma.png',
   './img/illustya/youkai_suzaku.png',
   './img/illustya/small_star6_orange.png',
   './img/illustya/fish_mola2.png',

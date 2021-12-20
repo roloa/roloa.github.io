@@ -30,6 +30,9 @@ export class World {
 
         this.world_spawner = new WorldSpawner( this.game, this );
 
+        this.auto_save_timer_max = 50 * 180; // 3min
+        this.auto_save_timer = this.auto_save_timer_max ;
+
         this.newgame_gift();
     }
 
@@ -80,17 +83,15 @@ export class World {
 
     on_update(){
 
-        // セーブテスト
-        if( this.game.input_controller.is_pressed_key['KeyI']){
-            this.game.log('セーブします。');
-            this.game.save_data_manager.save_game();
-            this.game.log('セーブしました。');
+        // オートセーブ
+        if( 0 < this.auto_save_timer ){
+            this.auto_save_timer -= 1;
+        } else {
+            this.auto_save_timer = this.auto_save_timer_max;
+            this.game.save_data_manager.save_game('save_data_auto')
+            this.game.log('オートセーブしました。')
         }
-        if( this.game.input_controller.is_pressed_key['KeyO']){
-            this.game.log('ロードします。');
-            this.game.save_data_manager.load_game();
-            this.game.log('ロードしました。');
-        }
+
 
         // カメラ操作？
         if( this.game.input_controller.is_down_key['ShiftLeft']){
