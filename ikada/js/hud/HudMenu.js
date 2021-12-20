@@ -24,7 +24,7 @@ export class HudMenu {
 
         this.menu_list = []
         this.menu_inventory = new MenuInventory( game )
-        this.menu_list[0] = this.menu_inventory; 
+        this.menu_list[0] = this.menu_inventory;
         this.menu_list[1] = new MenuCraft( game )
         this.menu_list[2] = new MenuMaterial( game )
         this.menu_list[3] = new MenuConfig( game )
@@ -49,6 +49,21 @@ export class HudMenu {
                     this.menu_list_cursor += 1;
                 }
             }
+            // マウス操作
+            if( this.game.input_controller.is_mouse_press ){
+                if( this.game.input_controller.is_mouse_press ){
+                    // 閉じるボタン
+                    if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
+                        this.is_menu_open = false;
+                    }
+                    for( let i = 0 ; i < this.menu_list.length ; i++){
+                        if( this.hittest_menu_tabs( i, this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
+                            this.menu_list_cursor = i;
+                            break;
+                        }
+                    }
+                }
+            }
             // メニューの操作
             if( this.menu_list[ this.menu_list_cursor ] ) {
                 this.menu_list[ this.menu_list_cursor ].on_update();
@@ -56,13 +71,46 @@ export class HudMenu {
         } else {
             // メニューが閉じている時
             if( this.game.input_controller.is_pressed_key['KeyZ'] || this.game.input_controller.is_pressed_key['Tab'] ){
+                this.is_menu_open = true;
+            }
+            // マウス操作
+            if( this.game.input_controller.is_mouse_press ){
+                if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
                     this.is_menu_open = true;
+                }
             }
         }
 
 
     }
+    hittest_menu_open_button( mouse_x, mouse_y ){
+        let frame_x = HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING);
+        return (
+            frame_x < mouse_x && mouse_x < frame_x + HudMenu.MENU_ICON_SIZE &&
+            HudMenu.MENU_ICON_MARGIN_TOP < mouse_y &&
+            mouse_y < HudMenu.MENU_ICON_MARGIN_TOP + HudMenu.MENU_ICON_SIZE )
+    }
+    hittest_menu_tabs( index, mouse_x, mouse_y ){
+        let frame_x = HudMenu.MENU_ICON_MARGIN_LEFT + index * (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING);
+        return (
+            frame_x < mouse_x && mouse_x < frame_x + HudMenu.MENU_ICON_SIZE &&
+            HudMenu.MENU_ICON_MARGIN_TOP < mouse_y &&
+            mouse_y < HudMenu.MENU_ICON_MARGIN_TOP + HudMenu.MENU_ICON_SIZE )
+    }
+
     on_draw( canvas ){
+
+
+        if( this.menu_list_cursor == -1 ){
+            canvas.strokeStyle = 'rgb(250,0,0)';
+        } else {
+            canvas.strokeStyle = 'rgb(200,200,200)';
+        }
+        canvas.strokeRect(
+            HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+            HudMenu.MENU_ICON_MARGIN_TOP,
+            HudMenu.MENU_ICON_SIZE,
+            HudMenu.MENU_ICON_SIZE );
 
         if( this.is_menu_open ){
 
@@ -78,17 +126,6 @@ export class HudMenu {
 
             canvas.restore()
             // 閉じるボタン
-
-            if( this.menu_list_cursor == -1 ){
-                canvas.strokeStyle = 'rgb(250,0,0)';
-            } else {
-                canvas.strokeStyle = 'rgb(200,200,200)';
-            }
-            canvas.strokeRect(
-                HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
-                HudMenu.MENU_ICON_MARGIN_TOP,
-                HudMenu.MENU_ICON_SIZE,
-                HudMenu.MENU_ICON_SIZE );
 
             // メニューのアイコン
             for( let i = 0 ; i < 4 ; i++ ){
