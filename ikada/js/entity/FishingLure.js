@@ -1,7 +1,7 @@
 
 import {Entity} from './Entity.js';
 import {DropItem} from './DropItem.js';
-import {FishKirimi} from '../tool_item/FishKirimi.js';
+import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
 import {ResourceItem} from '../tool_item/ResourceItem.js';
 
 export class FishingLure extends Entity {
@@ -126,7 +126,7 @@ export class FishingLure extends Entity {
                             this.is_fish_hitting = true;
                             this.vy += 6;
                             this.fish_hit_timer = 200;
-                        }                        
+                        }
                     }
                 } else {
                     // 海の中にいない

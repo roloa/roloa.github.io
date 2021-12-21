@@ -1,7 +1,7 @@
 
 
 import {CatchNet} from './tool_item/CatchNet.js';
-import {FishKirimi} from './tool_item/FishKirimi.js';
+import {FishKirimi} from './tool_item/d_foods/FishKirimi.js';
 
 import {EquipmentItem} from './tool_item/EquipmentItem.js';
 

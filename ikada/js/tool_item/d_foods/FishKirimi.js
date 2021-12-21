@@ -1,6 +1,6 @@
 
 
-import {ToolItem} from './ToolItem.js';
+import {ToolItem} from '../ToolItem.js';
 import {CookedFish} from './CookedFish.js';
 import {DriedFish} from './DriedFish.js';
 

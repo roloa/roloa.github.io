@@ -1,6 +1,6 @@
 
 import {ShipBlock} from './ShipBlock.js';
-import {VeggieTomato} from '../tool_item/VeggieTomato.js';
+import {VeggieTomato} from '../tool_item/d_foods/VeggieTomato.js';
 
 
 export class ShipFarm extends ShipBlock {

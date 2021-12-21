@@ -1,5 +1,5 @@
 
-import {ToolItem} from './ToolItem.js';
+import {ToolItem} from '../ToolItem.js';
 
 // TODO
 export class FoodItem extends ToolItem {

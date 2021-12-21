@@ -3,16 +3,30 @@
 
 import glob
 
-filename_list = glob.glob('./js/tool_item/*.js')
+folder_list = []
+
+for folder_path in glob.glob('./js/tool_item/d_*'):
+    folder_list.append( folder_path.replace( './js/tool_item/','' ) )
+
 classname_list = []
+path_list = []
+
+filename_list = glob.glob('./js/tool_item/**/*.js', recursive=True)
+
 
 for filename in filename_list:
-    classname = filename.replace('./js/tool_item/','').replace('.js','')
+    path = filename.replace('./js/tool_item/','').replace('.js','')
+    path_list.append( path )
+
+    classname = path
+    for folder_name in folder_list:
+        classname = classname.replace( folder_name + '/' ,'')
+
     classname_list.append( classname )
 
 print()
-for classname in classname_list:
-    print( "import {%s} from './tool_item/%s.js'" % ( classname, classname ) )
+for i in range(len(classname_list)):
+    print( "import {%s} from './tool_item/%s.js'" % ( classname_list[i], path_list[i] ) )
 
 print()
 
