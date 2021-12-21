@@ -7,6 +7,7 @@ import {Inventory} from './Inventory.js'
 import {Materials} from './Materials.js'
 import {TitleScreen} from './TitleScreen.js'
 import {SaveDataManager} from './SaveDataManager.js'
+import {HudVirtualInput} from './hud/HudVirtualInput.js';
 
 
 
@@ -76,6 +77,8 @@ export class Game {
         this.title_screen = new TitleScreen( this );
 
         this.movie_playing = null;
+        this.hud_virtual_input = new HudVirtualInput( this );
+
 
         this.interbal_handle = 0;
     }
@@ -113,6 +116,7 @@ export class Game {
             performance.mark('on_update_start')
 
             this.input_controller.on_update();
+            this.hud_virtual_input.on_update()
 
             if( this.movie_playing != null ){
                 this.movie_playing.on_update();
@@ -205,6 +209,9 @@ export class Game {
                 this.world.on_draw( this.display_canvas );
             }
             this.hud.on_draw( this.display_canvas );
+            // 仮想入力キーボード
+            this.hud_virtual_input.on_draw( this.display_canvas );
+
 
             if( this.is_there_title ){
                 this.title_screen.on_draw( this.display_canvas );

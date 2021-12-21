@@ -14,7 +14,6 @@ export class Hud {
         this.item_slot = new ItemSlot( game )
         this.hud_log = new HudLog( game )
         this.hud_status = new HudStatus( game );
-
     }
 
     on_update(){
@@ -27,11 +26,8 @@ export class Hud {
 
         // メッセージログ
         this.hud_log.on_draw( canvas );
-
         // メニュー画面
         this.hud_menu.on_draw( canvas );
-        // メニューアイコン
-
         // アイテムスロットを描く
         this.item_slot.on_draw( canvas );
         // ステータス

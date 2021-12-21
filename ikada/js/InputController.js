@@ -93,6 +93,45 @@ export class InputController {
         this.is_buffer_esc = false;
 
     }
+    get_down_left(){
+        return this.is_down_left;
+    }
+    get_down_right(){
+        return this.is_down_right;
+    }
+    get_down_up(){
+        return this.is_down_up;
+    }
+    get_down_down(){
+        return this.is_down_down;
+    }
+    get_down_space(){
+        return this.is_down_space;
+    }
+    get_press_left(){
+        return this.is_press_left;
+    }
+    get_press_right(){
+        return this.is_press_right;
+    }
+    get_press_up(){
+        return this.is_press_up;
+    }
+    get_press_down(){
+        return this.is_press_down;
+    }
+    get_press_space(){
+        return this.is_press_space;
+    }
+    get_press_enter(){
+        return this.is_press_enter;
+    }
+    get_press_tab(){
+        return this.is_press_tab;
+    }
+    get_press_esc(){
+        return this.is_press_esc;
+    }
 
 
     on_key_down(e) {
