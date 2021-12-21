@@ -34,6 +34,8 @@ export class Illustya {
   './img/illustya/bird_kamome.png',
   './img/illustya/fantasy_peryton.png',
   './img/illustya/snorkel_goggle.png',
+  './img/illustya/arrow_color12_play_flip.png',
+  './img/illustya/arrow_color12_play.png',
   './img/illustya/science_senjoubin_empty.png',
   './img/illustya/fishing_lure.png',
   './img/illustya/small_star7_yellow.png',
