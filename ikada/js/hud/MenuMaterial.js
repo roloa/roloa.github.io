@@ -28,10 +28,10 @@ export class MenuMaterial {
     on_update(){
 
         // TODO 範囲外
-        if( this.game.input_controller.is_pressed_key['KeyD'] ){
+        if( this.game.input_controller.is_press_down ){
             this.cursor_index += 1;
         }
-        if( this.game.input_controller.is_pressed_key['KeyA'] ){
+        if( this.game.input_controller.is_press_up ){
             this.cursor_index -= 1;
         }
     }

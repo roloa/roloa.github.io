@@ -57,22 +57,22 @@ export class MenuCraft {
     on_update(){
 
         // カーソル移動
-        if( this.game.input_controller.is_pressed_key['KeyD'] ){
+        if( this.game.input_controller.is_press_right ){
             if( this.cursor_index < MenuCraft.LIST_COUNT - 1 ){
                 this.cursor_index += 1;
             }
         }
-        if( this.game.input_controller.is_pressed_key['KeyA'] ){
+        if( this.game.input_controller.is_press_left ){
             if( 0 < this.cursor_index ){
                 this.cursor_index -= 1;
             }
         }
-        if( this.game.input_controller.is_pressed_key['KeyW'] ){
+        if( this.game.input_controller.is_press_up ){
             if( MenuCraft.LIST_X_COUNT <= this.cursor_index ){
                 this.cursor_index -= MenuCraft.LIST_X_COUNT;
             }
         }
-        if( this.game.input_controller.is_pressed_key['KeyS'] ){
+        if( this.game.input_controller.is_press_down ){
             if( MenuCraft.LIST_X_COUNT + this.cursor_index < MenuCraft.LIST_COUNT  ){
                 this.cursor_index += MenuCraft.LIST_X_COUNT;
             }
@@ -85,8 +85,8 @@ export class MenuCraft {
         }
 
         // クラフト実行
-        if( this.game.input_controller.is_pressed_key['KeyX'] || this.game.input_controller.is_pressed_key['Enter'] ||
-            this.game.input_controller.is_pressed_key['Space'] ){
+        if( this.game.input_controller.is_press_enter ||
+            this.game.input_controller.is_press_space ){
             if( this.craft_recipe.recipe_list[ this.cursor_index ] ){
                 // カーソル位置にレシピが存在する
                 let recipe = this.craft_recipe.recipe_list[ this.cursor_index ]

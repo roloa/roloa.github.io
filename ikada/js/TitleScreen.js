@@ -28,17 +28,17 @@ export class TitleScreen extends Object {
         this.data_item_count = 4;
     }
     on_update(){
-        if( this.game.input_controller.is_pressed_key['KeyX'] || this.game.input_controller.is_pressed_key['Enter'] ||
-            this.game.input_controller.is_pressed_key['Space'] ) {
+        if( this.game.input_controller.is_press_enter ||
+            this.game.input_controller.is_press_space ) {
             // this.game.log('ロードします。');
             this.select_menu( this.savedata_cursor );
         }
-        if( this.game.input_controller.is_pressed_key['KeyW'] ) {
+        if( this.game.input_controller.is_press_up ) {
             if( 0 < this.savedata_cursor ){
                 this.savedata_cursor -= 1;
             }
         }
-        if( this.game.input_controller.is_pressed_key['KeyS'] ) {
+        if( this.game.input_controller.is_press_down ) {
             if( this.savedata_cursor < this.data_item_count - 1){
                 this.savedata_cursor += 1;
             }

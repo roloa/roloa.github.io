@@ -62,10 +62,10 @@ export class MenuUpgrade {
 
     on_update(){
 
-        if( this.game.input_controller.is_pressed_key['KeyW'] ){
+        if( this.game.input_controller.is_pressed_up ){
             this.upgrade_cursor -= 1
         }
-        if( this.game.input_controller.is_pressed_key['KeyS'] ){
+        if( this.game.input_controller.is_pressed_down ){
             this.upgrade_cursor += 1
         }
     }

@@ -98,7 +98,8 @@ export class InputController {
     on_key_down(e) {
         if(!e.repeat){
             // リピートは捨てる
-            console.log('key_down', e.code);
+
+            //console.log('key_down', e.code);
 
             if( this.is_enable_any_key_input){
                 this.is_down_key[ e.code ] = true;
