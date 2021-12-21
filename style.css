@@ -13,6 +13,10 @@ h1{
 	
 }
 
+li{
+  padding: 4px;
+  font: bold 20px monospace;
+}
 a:link { color: #AAF; }
 a:visited { color: #FAF; }
 a:hover { color: #AAF; }
