@@ -59,6 +59,7 @@ export class InputController {
         this.is_wheel_down_buffer = false;
 
         this.active_touch = null;
+        this.auto_virtual_input_enable = true;
 
         this.is_enable_any_key_input = true;
         this.is_down_key = []
@@ -290,6 +291,17 @@ export class InputController {
             this.mouse_y = event.changedTouches[0].pageY -  bcr.y;
             this.is_mouse_down = true;
             this.is_mouse_press_buffer = true;
+        }
+        if( this.auto_virtual_input_enable ){
+            this.auto_virtual_input_enable = false;
+            this.game.log('***** 注意 *****');
+            this.game.log('スマホ/タブレットは*非推奨*です。');
+            this.game.log('一応、仮想キーはありますが、');
+            this.game.log('同時タップが未実装だし、');
+            this.game.log('PC向けのアクションをスマホでやるのは');
+            this.game.log('無謀だと思います。');
+            this.game.log('**************');
+            this.game.hud_virtual_input.is_enable = true;
         }
         event.preventDefault();
         return false;
