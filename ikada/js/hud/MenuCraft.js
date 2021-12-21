@@ -1,5 +1,6 @@
 
-import {CraftRecipe} from './CraftRecipe.js'
+import {CraftRecipe} from '../recipes/CraftRecipe.js'
+import {HudMenu} from './HudMenu.js'
 
 export class MenuCraft {
 
@@ -35,7 +36,8 @@ export class MenuCraft {
     static LIST_ICON_SIZE = 50;
     static LIST_SPACING = 10;
     static LIST_X_COUNT = 5;
-    static LIST_Y_COUNT = 7;
+    static LIST_Y_COUNT = 5;
+    static LIST_COUNT = MenuCraft.LIST_X_COUNT * MenuCraft.LIST_Y_COUNT;
     static LIST_ICON_FRAME_COLOR = 'rgb(20,20,20)';
     static LIST_ICON_FRAME_COLOR_SELECTED = 'rgb(200,20,20)';
 
@@ -55,22 +57,31 @@ export class MenuCraft {
     on_update(){
 
         // カーソル移動
-        // TODO 範囲外
         if( this.game.input_controller.is_pressed_key['KeyD'] ){
-            this.cursor_index += 1;
+            if( this.cursor_index < MenuCraft.LIST_COUNT - 1 ){
+                this.cursor_index += 1;
+            }
         }
         if( this.game.input_controller.is_pressed_key['KeyA'] ){
-            this.cursor_index -= 1;
+            if( 0 < this.cursor_index ){
+                this.cursor_index -= 1;
+            }
         }
         if( this.game.input_controller.is_pressed_key['KeyW'] ){
-            if( MenuCraft.LIST_X_COUNT < this.cursor_index ){
+            if( MenuCraft.LIST_X_COUNT <= this.cursor_index ){
                 this.cursor_index -= MenuCraft.LIST_X_COUNT;
             }
         }
         if( this.game.input_controller.is_pressed_key['KeyS'] ){
-            if( MenuCraft.LIST_X_COUNT + this.cursor_index < 25  ){
+            if( MenuCraft.LIST_X_COUNT + this.cursor_index < MenuCraft.LIST_COUNT  ){
                 this.cursor_index += MenuCraft.LIST_X_COUNT;
             }
+        }
+        // マウス操作
+        if( this.game.input_controller.is_mouse_press ) {
+            this.on_click(
+                this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT,
+                this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP );
         }
 
         // クラフト実行
@@ -117,7 +128,19 @@ export class MenuCraft {
         }
         return true;
     }
-
+    on_click( mouse_x, mouse_y ){
+        for( let i = 0 ; i < MenuCraft.LIST_COUNT ; i++){
+            let x = i % MenuCraft.LIST_X_COUNT;
+            let y = Math.floor( i / MenuCraft.LIST_X_COUNT);
+            let frame_x = MenuCraft.LIST_X + x * (MenuCraft.LIST_ICON_SIZE + MenuCraft.LIST_SPACING);
+            let frame_y = MenuCraft.LIST_Y + y * (MenuCraft.LIST_ICON_SIZE + MenuCraft.LIST_SPACING);
+            if( frame_x < mouse_x && mouse_x < frame_x + MenuCraft.LIST_ICON_SIZE &&
+                frame_y < mouse_y && mouse_y < frame_y + MenuCraft.LIST_ICON_SIZE ){
+                    this.cursor_index = i;
+                    break;
+            }
+        }
+    }
 
 
     on_draw( canvas ){
@@ -133,7 +156,7 @@ export class MenuCraft {
 //        canvas.fillRect( MenuCraft.LIST_X, MenuCraft.LIST_Y, MenuCraft.LIST_WIDTH, MenuCraft.LIST_HEIGHT　);
 
         // インベントリのアイテムリスト
-        for( let i = 0 ; i < 25 ; i++ ){
+        for( let i = 0 ; i < MenuCraft.LIST_COUNT ; i++ ){
             if( this.cursor_index == i ){
                 canvas.strokeStyle = MenuCraft.LIST_ICON_FRAME_COLOR_SELECTED;
             } else {
