@@ -81,17 +81,17 @@ export class MenuConfig {
 
     on_update(){
 
-        if( this.game.input_controller.is_press_up ){
+        if( this.game.input_controller.get_press_up() ){
             if( 0 < this.config_cursor ){
                 this.config_cursor -= 1;
             }
         }
-        if( this.game.input_controller.is_press_down ){
+        if( this.game.input_controller.get_press_down() ){
             if( this.config_cursor < this.config_list.length - 1){
                 this.config_cursor += 1;
             }
         }
-        if( this.game.input_controller.is_press_enter || this.game.input_controller.is_press_space ){
+        if( this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space() ){
             this.function_list[ this.config_cursor ]();
         }
     }

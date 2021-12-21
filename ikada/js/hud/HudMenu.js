@@ -36,7 +36,7 @@ export class HudMenu {
 
         if( this.is_menu_open ){
             // メニューが開いている時
-            if( this.game.input_controller.is_press_tab ){
+            if( this.game.input_controller.get_press_tab() || this.game.input_controller.get_press_esc()){
                     this.is_menu_open = false;
             }
             if( this.game.input_controller.is_pressed_key['KeyQ'] ){
@@ -70,7 +70,7 @@ export class HudMenu {
             }
         } else {
             // メニューが閉じている時
-            if( this.game.input_controller.is_press_tab ){
+            if( this.game.input_controller.get_press_tab() ){
                 this.is_menu_open = true;
             }
             // マウス操作

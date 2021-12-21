@@ -34,18 +34,18 @@ export class MenuInventory {
 
         // カーソル操作
         // TODO 範囲外
-        if( this.game.input_controller.is_press_right ){
+        if( this.game.input_controller.get_press_right() ){
             this.cursor_index += 1;
         }
-        if( this.game.input_controller.is_press_left ){
+        if( this.game.input_controller.get_press_left() ){
             this.cursor_index -= 1;
         }
-        if( this.game.input_controller.is_press_up ){
+        if( this.game.input_controller.get_press_up() ){
             if( MenuInventory.LIST_X_COUNT < this.cursor_index ){
                 this.cursor_index -= MenuInventory.LIST_X_COUNT;
             }
         }
-        if( this.game.input_controller.is_press_down ){
+        if( this.game.input_controller.get_press_down() ){
             if( MenuInventory.LIST_X_COUNT + this.cursor_index < 25  ){
                 this.cursor_index += MenuInventory.LIST_X_COUNT;
             }
@@ -88,7 +88,7 @@ export class MenuInventory {
             this.mouse_holding_index = -1;
             this.swap_item_slot(8)
         }
-        if( this.game.input_controller.is_press_enter || this.game.input_controller.is_press_space ){
+        if( this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space() ){
             this.mouse_holding_index = -1;
             this.swap_item_slot( this.game.hud.item_slot.item_slot_cursor )
         }

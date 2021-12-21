@@ -244,16 +244,16 @@ export class Player extends Entity {
     }
     control_land(){
         // WASDで移動
-        if( this.game.input_controller.is_down_right ){
+        if( this.game.input_controller.get_down_right() ){
             this.vx += 2
         }
-        if( this.game.input_controller.is_down_left ){
+        if( this.game.input_controller.get_down_left() ){
             this.vx -= 2
         }
         this.vx *= 0.5;
 
         // ジャンプ　海面でも小さくジャンプできる
-        if( this.game.input_controller.is_down_up ){
+        if( this.game.input_controller.get_down_up() ){
             if( -1 < this.vy ){
                 if( this.is_landing ){
                     if( this.health.consume_sp( 3 ) ){
@@ -275,7 +275,7 @@ export class Player extends Entity {
             }
         }
         // 下入力
-        if( this.game.input_controller.is_down_down ){
+        if( this.game.input_controller.get_down_down() ){
             // TODO 床すりぬけ
 
             if( this.is_in_sea ){
@@ -294,16 +294,16 @@ export class Player extends Entity {
 
     control_midair(){
         // WASDで移動
-        if( this.game.input_controller.is_down_right ){
+        if( this.game.input_controller.get_down_right() ){
             this.vx += 1 + this.midair_speed
         }
-        if( this.game.input_controller.is_down_left ){
+        if( this.game.input_controller.get_down_left() ){
             this.vx -= 1 + this.midair_speed
         }
         this.vx *= 0.5;
 
         // 急降下
-        if( this.game.input_controller.is_down_down ){
+        if( this.game.input_controller.get_down_down() ){
             this.is_flying = false;
             this.is_falling = true;
         }
@@ -311,16 +311,16 @@ export class Player extends Entity {
 
     control_falling(){
         // WASDで移動
-        if( this.game.input_controller.is_down_right ){
+        if( this.game.input_controller.get_down_right() ){
             this.vx += 1 + this.midair_speed
         }
-        if( this.game.input_controller.is_down_left ){
+        if( this.game.input_controller.get_down_left() ){
             this.vx -= 1 + this.midair_speed
         }
         this.vx *= 0.5;
 
         // 急降下を解除して飛行状態に
-        if( this.game.input_controller.is_down_up ){
+        if( this.game.input_controller.get_down_up() ){
             this.is_flying = true;
             this.is_falling = false;
         }
@@ -328,16 +328,16 @@ export class Player extends Entity {
 
     control_diving(){
         // WASDで移動
-        if( this.game.input_controller.is_down_right ){
+        if( this.game.input_controller.get_down_right() ){
             this.vx += 1 + this.underwater_speed;
         }
-        if( this.game.input_controller.is_down_left ){
+        if( this.game.input_controller.get_down_left() ){
             this.vx -= 1 + this.underwater_speed;
         }
-        if( this.game.input_controller.is_down_up ){
+        if( this.game.input_controller.get_down_up() ){
             this.vy -= 1 + this.underwater_speed;
         }
-        if( this.game.input_controller.is_down_down ){
+        if( this.game.input_controller.get_down_down() ){
             this.vy += 1 + this.underwater_speed;
         }
 
