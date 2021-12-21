@@ -29,7 +29,22 @@ export class ImageLibrary {
             this.image_list[ simple_name ] = new_image;
         }
         this.load_illustya();
+        this.load_maked_player();
+    }
+    load_maked_player(){
+        this.saved_character_image = localStorage.getItem('character_image')
+        if( this.saved_character_image == null ){
+            // セーブがなければ、デフォルトを入れとく
+            this.player_image = this.game.image_library.get_image('cooking_agodashi');
+            return;
+        }
 
+        this.saved_image = new Image();
+        this.saved_image.src = this.saved_character_image
+        this.player_image = this.saved_image;
+    }
+    get_player_image(){
+        return this.player_image;
     }
     load_illustya(){
         for( let i = 0 ; i < Illustya.FILE_NAME_LIST.length ; i++ ) {

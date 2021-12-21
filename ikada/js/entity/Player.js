@@ -12,7 +12,7 @@ export class Player extends Entity {
         super( game );
 
         this.name = 'player';
-        this.image = this.game.image_library.get_image('cooking_agodashi');
+        this.image = this.game.image_library.get_player_image();
         this.image_ghost = this.game.image_library.get_image('yurei_youngwoman3_sad');
         this.x = 0
         this.y = -60
