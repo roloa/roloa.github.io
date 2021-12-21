@@ -16,6 +16,23 @@ export class InputController {
         this.is_down_down = false;
         this.is_down_space = false;
 
+        this.is_press_left = false;
+        this.is_press_right = false;
+        this.is_press_up = false;
+        this.is_press_down = false;
+        this.is_press_space = false;
+        this.is_press_enter = false;
+        this.is_press_tab = false;
+        this.is_press_esc = false;
+
+        this.is_buffer_left = false;
+        this.is_buffer_right = false;
+        this.is_buffer_up = false;
+        this.is_buffer_down = false;
+        this.is_buffer_space = false;
+        this.is_buffer_enter = false;
+        this.is_buffer_tab = false;
+        this.is_buffer_esc = false;
 
         this.is_mouse_down = false;
         this.is_mouse_press = false;
@@ -56,13 +73,32 @@ export class InputController {
 
         this.is_mouse_press = this.is_mouse_press_buffer;
         this.is_mouse_press_buffer = false;
+
+        this.is_press_left = this.is_buffer_left;
+        this.is_press_right = this.is_buffer_right;
+        this.is_press_up = this.is_buffer_up;
+        this.is_press_down = this.is_buffer_down;
+        this.is_press_space = this.is_buffer_space;
+        this.is_press_enter = this.is_buffer_enter;
+        this.is_press_tab = this.is_buffer_tab;
+        this.is_press_esc = this.is_buffer_esc;
+
+        this.is_buffer_left = false;
+        this.is_buffer_right = false;
+        this.is_buffer_up = false;
+        this.is_buffer_down = false;
+        this.is_buffer_space = false;
+        this.is_buffer_enter = false;
+        this.is_buffer_tab = false;
+        this.is_buffer_esc = false;
+
     }
 
 
     on_key_down(e) {
         if(!e.repeat){
             // リピートは捨てる
-            //console.log('key_down', e.code);
+            console.log('key_down', e.code);
 
             if( this.is_enable_any_key_input){
                 this.is_down_key[ e.code ] = true;
@@ -71,14 +107,25 @@ export class InputController {
 
             if( e.code == 'Space'){
                 this.is_down_space = true;
-            } else if( e.code == 'KeyA'){
+                this.is_buffer_space = true;
+            } else if( e.code == 'Escape' ){
+                this.is_buffer_esc = true;
+            } else if( e.code == 'Tab' ){
+                this.is_buffer_tab = true;
+            } else if( e.code == 'Enter' ){
+                this.is_buffer_enter = true;
+            } else if( e.code == 'KeyA' || e.code == 'ArrowLeft' ){
                 this.is_down_left = true;
-            } else if( e.code == 'KeyD'){
+                this.is_buffer_left = true;
+            } else if( e.code == 'KeyD' || e.code == 'ArrowRight' ){
                 this.is_down_right = true;
-            } else if( e.code == 'KeyS'){
+                this.is_buffer_right = true;
+            } else if( e.code == 'KeyS' || e.code == 'ArrowDown' ){
                 this.is_down_down = true;
-            } else if( e.code == 'KeyW'){
+                this.is_buffer_down = true;
+            } else if( e.code == 'KeyW' || e.code == 'ArrowUp' ){
                 this.is_down_up = true;
+                this.is_buffer_up = true;
             }
 
         }
@@ -97,13 +144,13 @@ export class InputController {
 
         if( e.code == 'Space'){
             this.is_down_space = false;
-        } else if( e.code == 'KeyA'){
+        } else if( e.code == 'KeyA' || e.code == 'ArrowLeft' ){
             this.is_down_left = false;
-        } else if( e.code == 'KeyD'){
+        } else if( e.code == 'KeyD' || e.code == 'ArrowRight' ){
             this.is_down_right = false;
-        } else if( e.code == 'KeyS'){
+        } else if( e.code == 'KeyS' || e.code == 'ArrowDown' ){
             this.is_down_down = false;
-        } else if( e.code == 'KeyW'){
+        } else if( e.code == 'KeyW' || e.code == 'ArrowUp' ){
             this.is_down_up = false;
         }
 
