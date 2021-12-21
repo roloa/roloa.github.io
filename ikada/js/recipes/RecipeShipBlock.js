@@ -60,7 +60,7 @@ export class RecipeShipBlock extends Object {
         );
 
         c_r.add_recipe( category,
-            ['1機のドローンを放出・維持する基地です。'],
+            ['1機のドローンを放出・維持する基地です。','(まだ)'],
             ['metal', 'plastic','mech_parts'],
             [5, 5, 10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new DroneHome( game ) ); },
@@ -68,7 +68,7 @@ export class RecipeShipBlock extends Object {
         );
 
         c_r.add_recipe( category,
-            ['水飲み場です。 時間経過で飲み水がたまります。'],
+            ['水飲み場です。', ' 時間経過で飲み水がたまります。'],
             ['metal', 'plastic'],
             [10, 5],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace( game ) ); },

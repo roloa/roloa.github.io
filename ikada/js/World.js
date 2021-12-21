@@ -73,6 +73,7 @@ export class World {
     push_entity( new_entity ){
         this.entity_list.push( new_entity )
     }
+
     give_tool_item_player( new_tool_item ){
         let new_drop_item = new DropItem( this.game );
         new_drop_item.set_tool_item( new_tool_item );
@@ -90,6 +91,9 @@ export class World {
             this.auto_save_timer = this.auto_save_timer_max;
             this.game.save_data_manager.save_game('save_data_auto')
             this.game.log('オートセーブしました。')
+            // オートセーブのついでに、配列を整理する
+            this.entity_list = this.entity_list.filter(v => v);
+            this.enemy_list = this.enemy_list.filter(v => v);
         }
 
 
