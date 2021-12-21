@@ -1,4 +1,5 @@
 
+import {HudMenu} from './HudMenu.js'
 
 export class MenuConfig {
 
@@ -47,21 +48,30 @@ export class MenuConfig {
         this.game = game;
 
         this.config_list = []
-        this.config_list[0] = ''
+        this.config_list[0] = '---'
         this.config_list[1] = 'オートセーブデータにセーブする'
         this.config_list[2] = 'データ[1]にセーブする'
         this.config_list[3] = 'データ[2]にセーブする'
+        this.config_list[4] = '---'
+        this.config_list[5] = '仮想キーボード(試作)'
+        this.config_list[6] = '---'
 
         this.function_list = [];
-        this.function_list[0] = function(){ this.game.log('!'); }.bind(this);
+        this.function_list[0] = function(){ }.bind(this);
         this.function_list[1] = this.save_game_auto.bind(this);
         this.function_list[2] = this.save_game_1.bind(this);
         this.function_list[3] = this.save_game_2.bind(this);
+        this.function_list[4] = function(){ }.bind(this);
+        this.function_list[5] = this.toggle_virtual_key.bind(this);
+        this.function_list[6] = function(){ }.bind(this);
         this.config_cursor = 0;
         this.config_scroll = 0;
         this.menu_icon = this.game.image_library.get_image( 'haguruma' );
     }
 
+    toggle_virtual_key(){
+        this.game.hud_virtual_input.toggle_enable();
+    }
     save_game_auto(){
         this.game.save_data_manager.save_game('save_data_auto')
         this.game.log('オートセーブにセーブしました。')
@@ -93,6 +103,27 @@ export class MenuConfig {
         }
         if( this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space() ){
             this.function_list[ this.config_cursor ]();
+        }
+
+        if( this.game.input_controller.get_mouse_press() ){
+            this.on_click(
+                this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT,
+                this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP );
+        }
+    }
+    on_click( mouse_x, mouse_y ){
+        for( let i = 0 ; i < 10 ; i++ ){
+            let frame_y = MenuConfig.LIST_Y + MenuConfig.LIST_TEXT_MARGIN_TOP + MenuConfig.LIST_CURSOR_ADJUST +
+            MenuConfig.LIST_TEXT_HEIGHT * i;
+            if( MenuConfig.LIST_X < mouse_x && mouse_x < MenuConfig.LIST_X + MenuConfig.LIST_WIDTH &&
+                frame_y - MenuConfig.LIST_TEXT_HEIGHT < mouse_y && mouse_y < frame_y
+            ){
+                if( i == this.config_cursor ){
+                    this.function_list[ this.config_cursor ]();
+                } else {
+                    this.config_cursor = i;
+                }
+            }
         }
     }
     on_draw( canvas ){

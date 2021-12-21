@@ -133,6 +133,9 @@ export class InputController {
     get_mouse_down(){
         return this.is_mouse_down && !this.is_mouse_down_consumed;
     }
+    get_mouse_press(){
+        return this.is_mouse_press; // && !this.is_mouse_press_consumed;
+    }
     get_down_left(){
         return this.is_down_left || this.is_virtual_down_left;
     }
