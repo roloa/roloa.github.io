@@ -58,6 +58,8 @@ export class InputController {
         this.is_wheel_up_buffer = false;
         this.is_wheel_down_buffer = false;
 
+        this.active_touch = null;
+
         this.is_enable_any_key_input = true;
         this.is_down_key = []
         this.is_pressed_key = []
@@ -70,6 +72,11 @@ export class InputController {
         this.game.display_canvas_element.onmouseup = this.on_mouse_up.bind(this);
         this.game.display_canvas_element.onmousemove = this.on_mouse_move.bind(this);
         this.game.display_canvas_element.onwheel = this.on_wheel.bind(this);
+
+        this.game.display_canvas_element.ontouchstart = this.on_touch_start.bind(this);
+        this.game.display_canvas_element.ontouchmove = this.on_touch_move.bind(this);
+        this.game.display_canvas_element.ontouchend = this.on_touch_end.bind(this);
+
 
         document.addEventListener('keydown', this.on_key_down.bind(this));
         document.addEventListener('keyup', this.on_key_up.bind(this));
@@ -244,6 +251,7 @@ export class InputController {
     }
 
     on_mouse_down( event ){
+        this.game.log('mouse down')
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
@@ -254,6 +262,7 @@ export class InputController {
     }
 
     on_mouse_up( event ){
+        this.game.log('mouse up')
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
@@ -262,10 +271,53 @@ export class InputController {
         return false;
     }
     on_mouse_move( event ) {
+        this.game.log('mouse move')
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         return false;
+    }
+    on_touch_start( event ){
+        this.game.log('touch start')
+        if( this.active_touch == null ){
+            // 一本指のみ対応
+            this.active_touch = event.changedTouches[0].identifier;
+            let bcr = this.game.display_canvas_element.getBoundingClientRect();
+            this.mouse_x = event.changedTouches[0].pageX -  bcr.x;
+            this.mouse_y = event.changedTouches[0].pageY -  bcr.y;
+            this.is_mouse_down = true;
+            this.is_mouse_press_buffer = true;
+        }
+        event.preventDefault();
+        return false;
+    }
+    on_touch_end( event ){
+        this.game.log('touch end')
+        for (var i = 0; i < event.changedTouches.length; i++) {
+            if (event.changedTouches[i].identifier == this.active_touch) {
+                this.active_touch = null;
+                this.is_mouse_down = false;
+                break;
+            }
+        }
+        event.preventDefault();
+
+        return false;
+    }
+    on_touch_move( event ){
+        this.game.log('touch move')
+        for (var i = 0; i < event.changedTouches.length; i++) {
+            if (event.changedTouches[i].identifier == this.active_touch) {
+                let bcr = this.game.display_canvas_element.getBoundingClientRect();
+                this.mouse_x = event.changedTouches[i].pageX -  bcr.x;
+                this.mouse_y = event.changedTouches[i].pageY -  bcr.y;
+                break;
+            }
+        }
+        event.preventDefault();
+        return false;
+    }
+    ongoingTouchIndexById(idToFind) {
     }
 
 }

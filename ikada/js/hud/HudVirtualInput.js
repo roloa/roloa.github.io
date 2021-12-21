@@ -6,7 +6,7 @@ export class HudVirtualInput {
         this.game = game;
 
         this.button_size = 120;
-        this.text_margin = 10;
+        this.text_margin = 30;
         this.calc_button_position();
     }
     calc_button_position(){
@@ -14,11 +14,11 @@ export class HudVirtualInput {
         this.down_x = 100;
         this.down_y = 400;
         this.left_x = this.down_x - this.button_size * 0.5
-        this.left_y = this.down_y - this.button_size * 0.9
+        this.left_y = this.down_y - this.button_size * 0.8
         this.right_x = this.down_x + this.button_size * 0.5
-        this.right_y = this.down_y - this.button_size * 0.9
+        this.right_y = this.down_y - this.button_size * 0.8
         this.up_x = this.down_x;
-        this.up_y = this.down_y - this.button_size * 1.8
+        this.up_y = this.down_y - this.button_size * 1.6
         this.a_x = 800;
         this.a_y = 300;
         this.b_x = this.a_x - this.button_size * 1.2;
