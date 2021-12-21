@@ -251,7 +251,7 @@ export class InputController {
     }
 
     on_mouse_down( event ){
-        this.game.log('mouse down')
+        //this.game.log('mouse down')
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
@@ -262,7 +262,7 @@ export class InputController {
     }
 
     on_mouse_up( event ){
-        this.game.log('mouse up')
+        //this.game.log('mouse up')
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
@@ -271,14 +271,14 @@ export class InputController {
         return false;
     }
     on_mouse_move( event ) {
-        this.game.log('mouse move')
+        //this.game.log('mouse move')
         let bcr = this.game.display_canvas_element.getBoundingClientRect();
         this.mouse_x = event.clientX -  bcr.x;
         this.mouse_y = event.clientY -  bcr.y;
         return false;
     }
     on_touch_start( event ){
-        this.game.log('touch start')
+        //this.game.log('touch start')
         if( this.active_touch == null ){
             // 一本指のみ対応
             this.active_touch = event.changedTouches[0].identifier;
@@ -292,7 +292,7 @@ export class InputController {
         return false;
     }
     on_touch_end( event ){
-        this.game.log('touch end')
+        //this.game.log('touch end')
         for (var i = 0; i < event.changedTouches.length; i++) {
             if (event.changedTouches[i].identifier == this.active_touch) {
                 this.active_touch = null;
@@ -305,7 +305,7 @@ export class InputController {
         return false;
     }
     on_touch_move( event ){
-        this.game.log('touch move')
+        //this.game.log('touch move')
         for (var i = 0; i < event.changedTouches.length; i++) {
             if (event.changedTouches[i].identifier == this.active_touch) {
                 let bcr = this.game.display_canvas_element.getBoundingClientRect();
