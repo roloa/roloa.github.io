@@ -34,6 +34,21 @@ export class InputController {
         this.is_buffer_tab = false;
         this.is_buffer_esc = false;
 
+        this.is_virtual_down_left = false;
+        this.is_virtual_down_right = false;
+        this.is_virtual_down_up = false;
+        this.is_virtual_down_down = false;
+        this.is_virtual_down_space = false;
+
+        this.is_virtual_press_left = false;
+        this.is_virtual_press_right = false;
+        this.is_virtual_press_up = false;
+        this.is_virtual_press_down = false;
+        this.is_virtual_press_space = false;
+        this.is_virtual_press_enter = false;
+        this.is_virtual_press_tab = false;
+        this.is_virtual_press_esc = false;
+
         this.is_mouse_down = false;
         this.is_mouse_press = false;
         this.is_mouse_press_buffer = false;
@@ -73,6 +88,7 @@ export class InputController {
 
         this.is_mouse_press = this.is_mouse_press_buffer;
         this.is_mouse_press_buffer = false;
+        this.is_mouse_down_consumed = false;
 
         this.is_press_left = this.is_buffer_left;
         this.is_press_right = this.is_buffer_right;
@@ -92,45 +108,62 @@ export class InputController {
         this.is_buffer_tab = false;
         this.is_buffer_esc = false;
 
+        this.is_virtual_down_left = false;
+        this.is_virtual_down_right = false;
+        this.is_virtual_down_up = false;
+        this.is_virtual_down_down = false;
+        this.is_virtual_down_space = false;
+
+        this.is_virtual_press_left = false;
+        this.is_virtual_press_right = false;
+        this.is_virtual_press_up = false;
+        this.is_virtual_press_down = false;
+        this.is_virtual_press_space = false;
+        this.is_virtual_press_enter = false;
+        this.is_virtual_press_tab = false;
+        this.is_virtual_press_esc = false;
+    }
+    get_mouse_down(){
+        return this.is_mouse_down && !this.is_mouse_down_consumed;
     }
     get_down_left(){
-        return this.is_down_left;
+        return this.is_down_left || this.is_virtual_down_left;
     }
     get_down_right(){
-        return this.is_down_right;
+        return this.is_down_right || this.is_virtual_down_right;
     }
     get_down_up(){
-        return this.is_down_up;
+        return this.is_down_up || this.is_virtual_down_up;
     }
     get_down_down(){
-        return this.is_down_down;
+        return this.is_down_down || this.is_virtual_down_down;
     }
     get_down_space(){
-        return this.is_down_space;
+        return this.is_down_space || this.is_virtual_down_space;
     }
     get_press_left(){
-        return this.is_press_left;
+        return this.is_press_left || this.is_virtual_press_left;
     }
     get_press_right(){
-        return this.is_press_right;
+        return this.is_press_right || this.is_virtual_press_right;
     }
     get_press_up(){
-        return this.is_press_up;
+        return this.is_press_up || this.is_virtual_press_up;
     }
     get_press_down(){
-        return this.is_press_down;
+        return this.is_press_down || this.is_virtual_press_down;
     }
     get_press_space(){
-        return this.is_press_space;
+        return this.is_press_space || this.is_virtual_press_space;
     }
     get_press_enter(){
-        return this.is_press_enter;
+        return this.is_press_enter || this.is_virtual_press_enter;
     }
     get_press_tab(){
-        return this.is_press_tab;
+        return this.is_press_tab || this.is_virtual_press_tab;
     }
     get_press_esc(){
-        return this.is_press_esc;
+        return this.is_press_esc || this.is_virtual_press_esc;
     }
 
 

@@ -5,52 +5,82 @@ export class HudVirtualInput {
     constructor( game ){
         this.game = game;
 
-        this.button_size = 80;
+        this.button_size = 120;
         this.text_margin = 10;
         this.calc_button_position();
     }
     calc_button_position(){
         // 下キーの位置が基準になる
-        this.down_x = 50;
+        this.down_x = 100;
         this.down_y = 400;
         this.left_x = this.down_x - this.button_size * 0.5
-        this.left_y = this.down_y - this.button_size
+        this.left_y = this.down_y - this.button_size * 0.9
         this.right_x = this.down_x + this.button_size * 0.5
-        this.right_y = this.down_y - this.button_size
+        this.right_y = this.down_y - this.button_size * 0.9
         this.up_x = this.down_x;
-        this.up_y = this.down_y - this.button_size * 2
-        this.a_x = 850;
-        this.a_y = 340;
+        this.up_y = this.down_y - this.button_size * 1.8
+        this.a_x = 800;
+        this.a_y = 300;
         this.b_x = this.a_x - this.button_size * 1.2;
-        this.b_y = this.a_y;
+        this.b_y = this.a_y + this.button_size * 0.2;
     }
     on_update(){
-        if( this.game.input_controller.is_mouse_down ){
+
+        if( this.game.input_controller.is_mouse_press ){
             let mouse_x = this.game.input_controller.mouse_x;
             let mouse_y = this.game.input_controller.mouse_y;
             if( this.hit_test_button( mouse_x, mouse_y, this.down_x, this.down_y, this.button_size ) ){
-                this.is_down_down = true;
-                this.is_buffer_down = true;
+                this.game.input_controller.is_virtual_press_down = true;
+                this.game.input_controller.is_mouse_press = false;
             }
             if( this.hit_test_button( mouse_x, mouse_y, this.up_x, this.up_y, this.button_size ) ){
-                this.is_down_up = true;
-                this.is_buffer_up = true;
+                this.game.input_controller.is_virtual_press_up = true;
+                this.game.input_controller.is_mouse_press = false;
             }
             if( this.hit_test_button( mouse_x, mouse_y, this.left_x, this.left_y, this.button_size ) ){
-                this.is_down_left = true;
-                this.is_buffer_left = true;
+                this.game.input_controller.is_virtual_press_left = true;
+                this.game.input_controller.is_mouse_press = false;
             }
             if( this.hit_test_button( mouse_x, mouse_y, this.right_x, this.right_y, this.button_size ) ){
-                this.is_down_right = true;
-                this.is_buffer_right = true;
+                this.game.input_controller.is_virtual_press_right = true;
+                this.game.input_controller.is_mouse_press = false;
             }
             if( this.hit_test_button( mouse_x, mouse_y, this.a_x, this.a_y, this.button_size ) ){
-
+                this.game.input_controller.is_virtual_press_space = true;
+                this.game.input_controller.is_mouse_press = false;
             }
             if( this.hit_test_button( mouse_x, mouse_y, this.b_x, this.b_y, this.button_size ) ){
-
+                this.game.input_controller.is_virtual_press_esc = true;
+                this.game.input_controller.is_mouse_press = false;
             }
-
+        }
+        if( this.game.input_controller.get_mouse_down() ){
+            let mouse_x = this.game.input_controller.mouse_x;
+            let mouse_y = this.game.input_controller.mouse_y;
+            if( this.hit_test_button( mouse_x, mouse_y, this.down_x, this.down_y, this.button_size ) ){
+                this.game.input_controller.is_virtual_down_down = true;
+                this.game.input_controller.is_mouse_down_consumed = true;
+            }
+            if( this.hit_test_button( mouse_x, mouse_y, this.up_x, this.up_y, this.button_size ) ){
+                this.game.input_controller.is_virtual_down_up = true;
+                this.game.input_controller.is_mouse_down_consumed = true;
+            }
+            if( this.hit_test_button( mouse_x, mouse_y, this.left_x, this.left_y, this.button_size ) ){
+                this.game.input_controller.is_virtual_down_left = true;
+                this.game.input_controller.is_mouse_down_consumed = true;
+            }
+            if( this.hit_test_button( mouse_x, mouse_y, this.right_x, this.right_y, this.button_size ) ){
+                this.game.input_controller.is_virtual_down_right = true;
+                this.game.input_controller.is_mouse_down_consumed = true;
+            }
+            if( this.hit_test_button( mouse_x, mouse_y, this.a_x, this.a_y, this.button_size ) ){
+                this.game.input_controller.is_virtual_down_space = true;
+                this.game.input_controller.is_mouse_down_consumed = true;
+            }
+            if( this.hit_test_button( mouse_x, mouse_y, this.b_x, this.b_y, this.button_size ) ){
+                this.game.input_controller.is_virtual_down_esc = true;
+                this.game.input_controller.is_mouse_down_consumed = true;
+            }
         }
     }
     hit_test_button( mouse_x, mouse_y, button_x, button_y, button_size ){
