@@ -49,6 +49,7 @@ export class Illustya {
   './img/illustya/kaizoku_takarabako.png',
   './img/illustya/kaden_wifi_router.png',
   './img/illustya/piman_greenpepper.png',
+  './img/illustya/gomi_poribaketsu_close.png',
   './img/illustya/fantasy_griffon.png',
   './img/illustya/fish_hokke.png',
   './img/illustya/pet_robot_cat.png',

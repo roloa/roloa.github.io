@@ -9,7 +9,7 @@ export class MenuInventory {
     static TITLE_FONT = 'bold 32px monospace'
 
     static LIST_X = 20;
-    static LIST_Y = 60;
+    static LIST_Y = 80;
     static LIST_ICON_SIZE = 50;
     static LIST_SPACING = 10;
     static LIST_X_COUNT = 10;
@@ -17,6 +17,8 @@ export class MenuInventory {
     static LIST_ICON_FRAME_COLOR = 'rgb(20,20,20)';
     static LIST_ICON_FRAME_COLOR_SELECTED = 'rgb(200,20,20)';
 
+    static TRASH_X = 560;
+    static TRASH_Y = 20;
 
     constructor( game ){
         this.game = game;
@@ -26,6 +28,8 @@ export class MenuInventory {
         this.menu_icon = this.game.image_library.get_image( 'kaizoku_takarabako' );
 
         this.mouse_holding_index = -1;
+        this.trashed_item = null;
+        this.trash_icon = this.game.image_library.get_image('gomi_poribaketsu_close')
     }
     get_menu_icon(){
         return this.menu_icon;
@@ -110,6 +114,49 @@ export class MenuInventory {
                         break;
                 }
             }
+            // ゴミ箱
+            if( MenuInventory.TRASH_X < m_x && m_x < MenuInventory.TRASH_X + MenuInventory.LIST_ICON_SIZE &&
+                MenuInventory.TRASH_Y < m_y && m_y < MenuInventory.TRASH_Y + MenuInventory.LIST_ICON_SIZE
+            ){
+
+                if ( this.mouse_holding_index < 0){
+                    // アイテムを持ってない場合
+                    if( this.game.hud.item_slot.is_mouse_holding ){
+                        // アイテムスロットがアイテムを持っている場合
+                        // それをゴミ箱に入れる
+                        this.trashed_item = this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ];
+                        this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ] = null;
+                        this.game.hud.item_slot.is_mouse_holding = false;
+                    } else {
+                        // ゴミ箱のアイテムをアイテムスロットに送ろうとする
+                        if( this.trashed_item != null ){
+                            if ( this.game.hud.item_slot.put_pickup_item( this.trashed_item ) ){
+                                this.trashed_item = null;
+                            } else {
+                                this.game.log('アイテムスロットに空きを作ってください。');
+                            }
+                        } else {
+                            // 空のゴミ箱をクリックした
+                            this.game.log('それはゴミ箱スロットです。')
+                            this.game.log('いらないアイテムを置いて消去できます。')
+                            this.game.log('間違ったものを捨てた場合、次のゴミを捨てるまでは、')
+                            this.game.log('クリックすることで取り戻せます。')
+                        }
+                    }
+                } else {
+                    // アイテムを持っている場合、ゴミ箱に入れる
+                    this.trashed_item = this.game.inventory.tool_item_inventory[ this.mouse_holding_index ];
+                    this.game.inventory.tool_item_inventory[ this.mouse_holding_index ] = null;
+                    this.mouse_holding_index = -1;
+                }
+                // 即消しの草案？
+                // if( 0 <= this.mouse_holding_index ){
+                //     this.game.inventory.tool_item_inventory[ this.mouse_holding_index ] = null;
+                // }
+                // if( this.game.hud.item_slot.is_mouse_holding ){
+                //     this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ] = null;
+                // }
+            }
         }
     }
 
@@ -177,6 +224,18 @@ export class MenuInventory {
 
 
         }
+
+        // ゴミ箱
+        if( this.trashed_item != null ){
+            canvas.drawImage( this.trashed_item.image,
+            MenuInventory.TRASH_X, MenuInventory.TRASH_Y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE);
+        } else {
+            canvas.drawImage( this.trash_icon,
+            MenuInventory.TRASH_X, MenuInventory.TRASH_Y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE);
+
+        }
+        canvas.strokeRect( MenuInventory.TRASH_X, MenuInventory.TRASH_Y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE );
+
         // マウスでつかんでいるアイテム
         if( 0 <= this.mouse_holding_index ){
             canvas.drawImage( this.game.inventory.tool_item_inventory[ this.mouse_holding_index ].image ,
