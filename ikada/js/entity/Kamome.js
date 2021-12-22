@@ -17,8 +17,12 @@ export class Kamome extends Enemy {
 
         this.vx = 0;
         this.vy = 0;
-        this.dash_speed = 2;
+        this.dash_speed = 0.1;
         this.is_angry = false;
+
+        this.is_preparing_jump = false;
+        this.preparing_jump_minimum_time = 50;
+        this.preparing_jump_timer = 0;
 
         this.showing_hp_timer = 0;
 
@@ -29,10 +33,32 @@ export class Kamome extends Enemy {
         // 怒っている場合
         if( this.is_angry ){
 
-            // プレイヤーの方に向かう
-            let vec = this.get_vector_to_player();
-            this.vx = vec.x * this.dash_speed;
-            this.vy = vec.y * this.dash_speed;
+
+            if( this.is_preparing_jump){
+                // 助走をつけようとする状態
+                // プレイヤーとは反対側に進む
+                let vec = this.get_vector_to_player_with_bias(0, 64);
+                this.vx += -vec.x * this.dash_speed;
+                this.vy += -(vec.y - 0.1) * this.dash_speed;
+                if( Math.random() < 0.1 ){
+                    if( 40000 < this.get_distance_p2_to_player()){
+                        this.is_preparing_jump = false;
+                    }
+                }
+            } else {
+                // プレイヤーの方に向かう
+                let vec = this.get_vector_to_player_with_bias(0, 0)
+                this.vx += vec.x * this.dash_speed;
+                this.vy += vec.y * this.dash_speed;
+                if( Math.random() < 0.01){
+                        this.is_preparing_jump = true;
+                }
+            }
+            if( 0 < this.y ){
+                // 海につっこんだ
+                this.vy -= 2;
+                this.is_preparing_jump = true;
+            }
 
             // 弾を撃つ
         } else {

@@ -101,6 +101,13 @@ export class ItemSlot {
     }
     on_update(){
 
+        // スロット内アイテムのアップデート処理
+        for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
+            if( this.item_slot[ i ] != null ){
+                this.item_slot[ i ].on_update();
+            }
+        }
+
         if( this.game.input_controller.is_wheel_up ){
             this.is_mouse_holding = false;
             this.item_slot_cursor -= 1;

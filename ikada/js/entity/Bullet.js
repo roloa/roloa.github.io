@@ -1,5 +1,6 @@
 
 import {Entity} from './Entity.js';
+import {DamageNumber} from './particle/DamageNumber.js';
 
 export class Bullet extends Entity {
     constructor( game ){
@@ -14,7 +15,8 @@ export class Bullet extends Entity {
         this.line_y = 10;
 
         this.life_time = 200;
-
+        this.knock_back_rate = 0.2;
+        
     }
     on_update(){
         super.on_update();
@@ -31,6 +33,12 @@ export class Bullet extends Entity {
             let is_hit = enemy.test_hit_bullet( this );
             if( is_hit ){
                 this.is_alive = false;
+                // ダメージ数字を出す
+                let damage_number = new DamageNumber( this.game );
+                damage_number.x = this.x;
+                damage_number.y = this.y;
+                damage_number.number = this.damage;
+                this.game.world.push_entity( damage_number );
                 break;
             }
         }

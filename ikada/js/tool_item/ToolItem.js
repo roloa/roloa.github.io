@@ -30,6 +30,9 @@ export class ToolItem {
     get_name(){
         return this.saving_data.item_name;
     }
+    on_update(){
+        
+    }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         console.log('default ToolItem onclick!')
     }

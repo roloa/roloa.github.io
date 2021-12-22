@@ -16,6 +16,8 @@ export class Materials {
         this.name_list[ 'plastic' ] = 'プラスチック';
         this.name_list[ 'leftover' ] = '残飯';
         this.name_list[ 'bone' ] = '骨';
+        this.name_list[ 'feather' ] = '鳥の羽根';
+        this.name_list[ 'fin' ] = '魚のヒレ';
         // this.name_list[ '' ] = '';
 
         for( let material_id in this.name_list ){

@@ -35,6 +35,8 @@ export class Player extends Entity {
         this.is_landing = false;
         this.is_in_sea = false;
 
+        this.walk_speed = 3;
+        this.walk_speed_down_rate = 0.5;
         // 装備関係
         this.equip_list = []
         this.clear_equip_status()
@@ -245,12 +247,12 @@ export class Player extends Entity {
     control_land(){
         // WASDで移動
         if( this.game.input_controller.get_down_right() ){
-            this.vx += 2
+            this.vx += this.walk_speed;
         }
         if( this.game.input_controller.get_down_left() ){
-            this.vx -= 2
+            this.vx -= this.walk_speed;
         }
-        this.vx *= 0.5;
+        this.vx *= this.walk_speed_down_rate;
 
         // ジャンプ　海面でも小さくジャンプできる
         if( this.game.input_controller.get_down_up() ){

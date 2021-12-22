@@ -31,7 +31,9 @@ export class Enemy extends Entity {
         if( this.test_hit( bullet.x, bullet.y ) ){
             // 弾に当たった
 
-            this.hp -= 12;
+            this.hp -= bullet.damage;
+            this.vx += bullet.vx * bullet.knock_back_rate;
+            this.vy += bullet.vy * bullet.knock_back_rate;
 
             this.is_angry = true;
             this.showing_hp_timer = 100;

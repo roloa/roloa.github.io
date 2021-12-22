@@ -1,9 +1,9 @@
 
-import {ToolItem} from './ToolItem.js';
+import {WeaponItem} from './WeaponItem.js';
 import {Bullet} from '../entity/Bullet.js';
 
 // TODO
-export class Spear extends ToolItem {
+export class Spear extends WeaponItem {
     constructor( game ){
         super( game );
         this.game = game;
@@ -12,9 +12,12 @@ export class Spear extends ToolItem {
         // this.image = this.game.image_library.get_image( 'war_trident' );
         this.saving_data.item_name = '槍';
 
+        this.saving_data.power = 10;
+        this.saving_data.cool_time = 10;
+
     }
 
-    on_click( cursor_x, cursor_y, player_x, player_y ){
+    on_attack( cursor_x, cursor_y, player_x, player_y ){
 
         let vec = this.game.world.player.get_vector_to_cursor();
 
@@ -27,6 +30,9 @@ export class Spear extends ToolItem {
         arrow.line_y = vec.y * 30;
         arrow.gravity = 0;
         arrow.life_time = 10;
+
+        arrow.damage = this.calc_damage();
+
         this.game.world.push_entity( arrow );
     }
 

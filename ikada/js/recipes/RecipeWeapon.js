@@ -13,18 +13,47 @@ export class RecipeWeapon extends Object {
 
 
         c_r.add_recipe( category,
-            ['遠距離武器です。',''],
+            ['遠距離武器です。','Lv1'],
             ['wood', 'cloth'],
             [3, 1],
-            function( game ){ return new Bow( game ); },
+            function( game ){
+                let new_item = new Bow( game );
+                new_item.saving_data.power = 11;
+                return new_item; },
+            'Lv1'
+        );
+        c_r.add_recipe( category,
+            ['遠距離武器です。','Lv2'],
+            ['wood', 'cloth'],
+            [3, 1],
+            function( game ){
+                let new_item = new Bow( game );
+                new_item.saving_data.power = 33;
+                return new_item; },
             'Lv1'
         );
 
         c_r.add_recipe( category,
-            ['近接武器です。',''],
+            ['近接武器です。','Lv1'],
             ['wood', 'metal'],
             [3, 1],
-            function( game ){ return new Spear( game ); },
+            function( game ){
+                let new_item = new Spear( game );
+                new_item.saving_data.power = 25;
+                return new_item;
+            },
+            'Lv1'
+        );
+
+        c_r.add_recipe( category,
+            ['近接武器です。','Lv2'],
+            ['wood', 'metal'],
+            [3, 1],
+            function( game ){
+                let new_item = new Spear( game );
+                new_item.saving_data.power = 51;
+                return new_item;
+            },
             'Lv1'
         );
     }

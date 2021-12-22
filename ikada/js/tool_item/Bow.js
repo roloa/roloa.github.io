@@ -1,9 +1,9 @@
 
 
-import {ToolItem} from './ToolItem.js';
+import {WeaponItem} from './WeaponItem.js';
 import {Bullet} from '../entity/Bullet.js';
 
-export class Bow extends ToolItem {
+export class Bow extends WeaponItem {
 
     constructor( game ){
         super( game )
@@ -15,7 +15,7 @@ export class Bow extends ToolItem {
 
     }
 
-    on_click( cursor_x, cursor_y, player_x, player_y ){
+    on_attack( cursor_x, cursor_y, player_x, player_y ){
         //console.log('kirimi onclick!')
 
         let vec = this.game.world.player.get_vector_to_cursor();
@@ -28,6 +28,7 @@ export class Bow extends ToolItem {
         arrow.line_x = vec.x * 30;
         arrow.line_y = vec.y * 30;
         arrow.gravity = 0.1;
+        arrow.damage = this.calc_damage();
         this.game.world.push_entity( arrow );
     }
 
