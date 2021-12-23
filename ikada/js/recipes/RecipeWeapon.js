@@ -30,7 +30,18 @@ export class RecipeWeapon extends Object {
                 let new_item = new Bow( game );
                 new_item.saving_data.power = 33;
                 return new_item; },
-            'Lv1'
+            'Lv2'
+        );
+
+        c_r.add_recipe( category,
+            ['遠距離武器です。','Lv5'],
+            ['wood', 'cloth'],
+            [3, 1],
+            function( game ){
+                let new_item = new Bow( game );
+                new_item.saving_data.power = 2000;
+                return new_item; },
+            'Lv5'
         );
 
         c_r.add_recipe( category,

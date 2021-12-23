@@ -27,6 +27,14 @@ export class Kamome extends Enemy {
         this.showing_hp_timer = 0;
 
     }
+
+    get_drop_tool_item(){
+        let new_tool_item = new ResourceItem( this.game );
+        new_tool_item.generate_drifting_item();
+        new_tool_item.set_image( 'tree_ryuuboku' );
+        new_tool_item.add_material( 'wood', 5);
+        return new_tool_item;
+    }
     on_update(){
         super.on_update();
 

@@ -1,5 +1,8 @@
 
 import {Entity} from './Entity.js';
+import {DropItem} from './DropItem.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
+import {DeadBody} from './particle/DeadBody.js';
 
 export class Enemy extends Entity {
     constructor( game ){
@@ -38,11 +41,44 @@ export class Enemy extends Entity {
             this.is_angry = true;
             this.showing_hp_timer = 100;
             if( this.hp <= 0) {
-                this.is_alive = false;
+                this.on_die();
             }
             return true;
         }
         return false;
+    }
+    on_die(){
+        // 生存フラグをなくす
+        this.is_alive = false;
+
+        // パーティクル生成
+        // 死体
+        this.game.world.push_entity( this.get_dead_body() );
+        // ドロップアイテム生成
+        this.game.world.push_entity( this.get_drop_item() );
+    }
+    get_dead_body(){
+        let new_dead_body = new DeadBody( this.game );
+        new_dead_body.x = this.x;
+        new_dead_body.y = this.y;
+        new_dead_body.width = this.width;
+        new_dead_body.height = this.height;
+        new_dead_body.image = this.image;
+        return new_dead_body;
+    }
+    get_drop_item(){
+        let drop_item = new DropItem( this.game )
+        drop_item.x = this.x;
+        drop_item.y = this.y;
+        drop_item.set_tool_item( this.get_drop_tool_item() );
+        return drop_item;
+    }
+    get_drop_tool_item(){
+        let new_tool_item = new ResourceItem( this.game );
+        new_tool_item.generate_drifting_item();
+        new_tool_item.set_image( 'tree_ryuuboku' );
+        new_tool_item.add_material( 'wood', 5);
+        return new_tool_item;
     }
     get_distance_p2_to_player(){
         let vecx = this.game.world.player.x - this.x;
