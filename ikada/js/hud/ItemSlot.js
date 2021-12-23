@@ -79,6 +79,7 @@ export class ItemSlot {
             }
         }
         // 入る場所が無かったらfalseを返す
+        this.refresh();
         return false;
     }
     has_empty_space(){
@@ -192,6 +193,7 @@ export class ItemSlot {
                             this.is_mouse_holding = false;
                         }
                         this.item_slot_cursor = slot_no;
+                        this.refresh();
                     }
                 }
             }

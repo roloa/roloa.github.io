@@ -20,6 +20,8 @@ export class Player extends Entity {
         this.vx = 0;
         this.vy = 0;
 
+        this.riseup_charge = 0;
+
         this.health = new PlayerHealth( this.game );
 
         this.hit_invincible_timer = 0;
@@ -62,24 +64,27 @@ export class Player extends Entity {
         // 空中での移動力補正
         this.midair_speed = 0;
         // 落下速度補正
-        this.fall_speed = 1;
+        this.fall_speed_reduce = 1;
         // 水中での移動力補正
         this.underwater_speed = 0;
+        // 環境によるスタミナ減少の軽減
+        this.stamina_reduce = 1;
+
     }
 
     equip_item( new_equip ){
         // 装備する
-        if( this.equip_list[ new_equip.equip_part ] == null){
+        if( this.equip_list[ new_equip.saving_data.equip_part ] == null){
             // 装備がカラの場合
-            this.equip_list[ new_equip.equip_part ] = new_equip;
+            this.equip_list[ new_equip.saving_data.equip_part ] = new_equip;
 
             // ステータス上昇を適用する
             // 装備部位
-            this.riseup_power += new_equip.riseup_power;
-            this.midair_speed += new_equip.midair_speed;
-            this.fall_speed *= new_equip.fall_speed;
-            this.underwater_speed += new_equip.underwater_speed ;
-
+            this.riseup_power += new_equip.saving_data.riseup_power;
+            this.midair_speed += new_equip.saving_data.midair_speed;
+            this.fall_speed_reduce *= (100 - new_equip.saving_data.fall_speed_reduce) * 0.01;
+            this.underwater_speed += new_equip.saving_data.underwater_speed ;
+            this.stamina_reduce *= (100 - new_equip.saving_data.stamina_reduce) * 0.01;
         } else {
             // 装備部位が重複したら装備せずにfalseを返す
             return false;
@@ -95,7 +100,7 @@ export class Player extends Entity {
             this.vx = wind.vx * 0.5;
         } else {
             // 上昇力がある場合は、飛行モードになって上昇する
-            this.vy = -this.riseup_power;
+            this.riseup_charge = this.riseup_power;
             this.is_flying = true;
         }
     }
@@ -140,11 +145,7 @@ export class Player extends Entity {
             //return;
         } else if( this.is_flying ){
             // 飛行中
-            this.vy += 0.5
-            if( 0 < this.vy ){
-                this.vy *= this.fall_speed;
-            }
-            this.vy *= 0.99;
+
 
             this.control_midair();
 
@@ -295,6 +296,23 @@ export class Player extends Entity {
     }
 
     control_midair(){
+
+        if( 0 < this.riseup_charge ){
+            this.riseup_charge -= 1;
+            this.vy -= 1;
+            this.vy *= 0.8;
+        } else {
+            this.vy += 0.5;
+            if( -20 < this.y ){
+                this.is_flying = false;
+            }
+        }
+
+        if( 0 < this.vy ){
+            this.vy *= 0.8;
+        }
+        this.vy *= 0.99;
+
         // WASDで移動
         if( this.game.input_controller.get_down_right() ){
             this.vx += 1 + this.midair_speed
@@ -308,7 +326,9 @@ export class Player extends Entity {
         if( this.game.input_controller.get_down_down() ){
             this.is_flying = false;
             this.is_falling = true;
+            this.riseup_charge = 0;
         }
+
     }
 
     control_falling(){

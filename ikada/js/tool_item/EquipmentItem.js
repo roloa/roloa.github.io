@@ -19,27 +19,43 @@ export class EquipmentItem extends ToolItem {
 
         // TODO move to saving_data
         // 装備部位
-        this.equip_part = 0;
+        this.saving_data.equip_part = 0;
         // 風を受けた時の上昇力
-        this.riseup_power = 0;
+        this.saving_data.riseup_power = 0;
         // 空中での移動力補正
-        this.midair_speed = 0;
+        this.saving_data.midair_speed = 0;
 
-        //
-        this.fall_speed = 1;
+        // 落下速度補正(%)
+        this.saving_data.fall_speed_reduce = 0;
 
         // 水中での移動力補正
-        this.underwater_speed = 0;
+        this.saving_data.underwater_speed = 0;
 
-        // 酸素?
-        // 水圧?
-
+        // 環境によるスタミナ減少の軽減(%)
+        this.saving_data.stamina_reduce = 0;
     }
 
 
 
     on_click( cursor_x, cursor_y, player_x, player_y ){
-        console.log('equipment onclick!')
+        // 装備のステータスをログに出す
+        this.game.log(this.saving_data.item_name);
+
+        if( 0 < this.saving_data.riseup_power ){
+            this.game.log('上昇力: ' + this.saving_data.riseup_power);
+        }
+        if( 0 < this.saving_data.midair_speed ){
+            this.game.log('空中速度: ' + this.saving_data.midair_speed);
+        }
+        if( 0 < this.saving_data.fall_speed_reduce ){
+            this.game.log('落下速度: ' + this.saving_data.fall_speed_reduce);
+        }
+        if( 0 < this.saving_data.underwater_speed ){
+            this.game.log('水中速度: ' + this.saving_data.underwater_speed);
+        }
+        if( 0 < this.saving_data.stamina_reduce ){
+            this.game.log('スタミナ減少軽減: ' + this.saving_data.stamina_reduce);
+        }
     }
 
 }

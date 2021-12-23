@@ -18,8 +18,9 @@ export class RecipeEquip extends Object {
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/rain_kasa_red.png' );
-                new_item.equip_part = EquipmentItem.EQUIP_GLIDER;
-                new_item.riseup_power = 10;
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
+                new_item.saving_data.riseup_power = 100;
+                new_item.saving_data.fall_speed_reduce = 0.3;
                 return new_item; },
             'Lv1'
         );
@@ -31,9 +32,8 @@ export class RecipeEquip extends Object {
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/feather_red.png' );
-                new_item.equip_part = EquipmentItem.EQUIP_WING;
-                new_item.midair_speed = 2;
-                new_item.fall_speed = 0.8;
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_WING;
+                new_item.saving_data.midair_speed = 2;
                 return new_item; },
             'Lv1'
         );
@@ -45,8 +45,8 @@ export class RecipeEquip extends Object {
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/snorkel_goggle.png' );
-                new_item.equip_part = EquipmentItem.EQUIP_GOGGLE;
-                new_item.underwater_speed = 1;
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_GOGGLE;
+                new_item.saving_data.underwater_speed = 0;
                 return new_item; },
             'Lv1'
         );
@@ -58,8 +58,8 @@ export class RecipeEquip extends Object {
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/snorkel_fin.png' );
-                new_item.equip_part = EquipmentItem.EQUIP_FIN;
-                new_item.underwater_speed = 1;
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_FIN;
+                new_item.saving_data.underwater_speed = 1;
                 return new_item; },
             'Lv1'
         );
