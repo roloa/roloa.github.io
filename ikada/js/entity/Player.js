@@ -298,9 +298,13 @@ export class Player extends Entity {
     control_midair(){
 
         if( 0 < this.riseup_charge ){
-            this.riseup_charge -= 1;
-            this.vy -= 1;
-            this.vy *= 0.8;
+            this.riseup_charge -= Math.abs(this.vy * 0.1);
+            this.riseup_charge -= 0.1;
+            this.vy -= 2;
+            let top_speed = this.riseup_charge * 0.1;
+            if( this.vy < -top_speed ){
+                this.vy *= 0.7;
+            }
         } else {
             this.vy += 0.5;
             if( -20 < this.y ){

@@ -14,6 +14,8 @@ export class Entity {
         this.is_alive = true;
 
         this.is_on_ship = false;
+        this.despawn_distance = 1500;
+        this.despawn_distance_ship = 500;
     }
 
     on_update(){
@@ -25,10 +27,16 @@ export class Entity {
 
 
         // 消滅判定
-        if( this.x < -1000 || 1000 < this.x || this.y < -1000 || 1000 < this.y ){
-            this.is_alive = false;
-        }
+        if( this.x < -this.despawn_distance_ship || this.despawn_distance_ship < this.x ||
+            this.y < -this.despawn_distance_ship || this.despawn_distance_ship < this.y
+        ){
+            if( this.x < this.game.world.camera.x - this.despawn_distance || this.game.world.camera.x + this.despawn_distance < this.x ||
+                this.y < this.game.world.camera.y - this.despawn_distance || this.game.world.camera.y + this.despawn_distance < this.y
+            ){
+                 this.is_alive = false;
+            }
 
+        }
 
     }
 

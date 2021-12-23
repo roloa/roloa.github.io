@@ -6,6 +6,7 @@ import {DropItem} from './entity/DropItem.js';
 import {FishingLure} from './entity/FishingLure.js';
 import {WorldSpawner} from './WorldSpawner.js';
 import {ResourceItem} from './tool_item/ResourceItem.js';
+import {EffectWind} from './entity/EffectWind.js';
 
 export class World {
     constructor( game ){
@@ -32,6 +33,12 @@ export class World {
 
         this.auto_save_timer_max = 50 * 180; // 3min
         this.auto_save_timer = this.auto_save_timer_max ;
+
+        // 風のテスト
+        let test_wind = new EffectWind( this.game );
+        test_wind.x = 500;
+        test_wind.y = -100;
+        this.push_entity( test_wind );
 
         this.newgame_gift();
     }
@@ -100,9 +107,12 @@ export class World {
         // カメラ操作？
         if( this.game.input_controller.is_down_key['ShiftLeft']){
             if( this.game.input_controller.is_wheel_up ){
-                this.camera.zoom += 0.1;
+                this.camera.zoom *= 1.1;
+
+                this.game.log('カメラ倍率:' + this.camera.zoom )
             } else if( this.game.input_controller.is_wheel_down ){
-                this.camera.zoom -= 0.1;
+                this.camera.zoom *= 0.9;
+                this.game.log('カメラ倍率:' + this.camera.zoom )
             }
 
         }
@@ -193,8 +203,8 @@ export class World {
         // 海面
         canvas.strokeStyle = 'rgb(0,100,200)'
         canvas.beginPath()
-        canvas.moveTo(this.camera.x - 500,0)
-        canvas.lineTo(this.camera.x + 500,0)
+        canvas.moveTo(this.camera.x - 1000,0)
+        canvas.lineTo(this.camera.x + 1000,0)
         canvas.stroke()
 
         // マウスカーソル

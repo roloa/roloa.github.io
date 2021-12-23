@@ -24,6 +24,32 @@ export class RecipeEquip extends Object {
                 return new_item; },
             'Lv1'
         );
+        c_r.add_recipe( category,
+            ['風を受けて空に舞い上がるための傘です。', 'Lv3'],
+            ['plastic','feather'],
+            [5, 5],
+            function( game ){
+                let new_item = new EquipmentItem( game );
+                new_item.set_image( 'tenshi_wing2' );
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
+                new_item.saving_data.riseup_power = 200;
+                new_item.saving_data.fall_speed_reduce = 0.7;
+                return new_item; },
+            'Lv5'
+        );
+        c_r.add_recipe( category,
+            ['風を受けて空に舞い上がるための傘です。', 'Lv5'],
+            ['plastic','feather'],
+            [5, 5],
+            function( game ){
+                let new_item = new EquipmentItem( game );
+                new_item.set_image( 'airplane_ornithopter' );
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
+                new_item.saving_data.riseup_power = 10000;
+                new_item.saving_data.fall_speed_reduce = 0.7;
+                return new_item; },
+            'Lv5'
+        );
 
         c_r.add_recipe( category,
             ['空中で素早く移動するための翼です。'],

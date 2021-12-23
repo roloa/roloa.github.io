@@ -14,7 +14,7 @@ export class EffectWind extends Entity {
 
     }
     on_update(){
-
+        super.on_update();
         this.x += this.vx;
 
         // プレイヤーとの当たり判定
@@ -25,10 +25,6 @@ export class EffectWind extends Entity {
             player.hit_wind( this );
         }
 
-        // 消滅判定
-        if( this.x < -300 ){
-            this.is_alive = false;
-        }
 
     }
     on_draw( canvas ){
