@@ -1,5 +1,12 @@
 
 import {Enemy} from './Enemy.js';
+import {DropItem} from './DropItem.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
+
+import {ChickenRawMoto} from '../tool_item/d_foods/ChickenRawMoto.js';
+import {ChickenRawSaki} from '../tool_item/d_foods/ChickenRawSaki.js';
+
+
 
 export class Kamome extends Enemy {
     constructor( game ){
@@ -29,11 +36,19 @@ export class Kamome extends Enemy {
     }
 
     get_drop_tool_item(){
-        let new_tool_item = new ResourceItem( this.game );
-        new_tool_item.generate_drifting_item();
-        new_tool_item.set_image( 'tree_ryuuboku' );
-        new_tool_item.add_material( 'wood', 5);
-        return new_tool_item;
+        let rand = Math.random() * 2
+        if( rand < 1){
+            let new_tool_item = new ResourceItem( this.game );
+            new_tool_item.set_image( 'feather_white' );
+            new_tool_item.add_material( 'feather',  Math.floor(Math.random() * 3) + 3 );
+            return new_tool_item;
+        } else {
+            if( Math.random() < 0.5 ){
+                return new ChickenRawMoto( this.game );
+            } else {
+                return new ChickenRawSaki( this.game );
+            }
+        }
     }
     on_update(){
         super.on_update();

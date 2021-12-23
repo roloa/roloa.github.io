@@ -16,7 +16,7 @@ export class GenericFood extends ToolItem {
     on_click( cursor_x, cursor_y, player_x, player_y ){
         // 満腹度を回復させる
         this.game.log( '養分: +' + this.saving_data.hunger_value + '%')
-        this.game.log( '水分: +' + this.saving_data.hunger_value + '%')
+        this.game.log( '水分: +' + this.saving_data.thirst_value + '%')
 
         let leftover = this.game.world.player.health.mod_hunger( this.saving_data.hunger_value );
         this.game.world.player.health.mod_thirst( this.saving_data.thirst_value );

@@ -1,5 +1,7 @@
 
 import {Enemy} from './Enemy.js';
+import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
 
 export class Tobiuo extends Enemy {
     constructor( game ){
@@ -27,6 +29,18 @@ export class Tobiuo extends Enemy {
         this.is_preparing_jump = false;
         this.preparing_jump_minimum_time = 50;
         this.preparing_jump_timer = 0;
+    }
+
+    get_drop_tool_item(){
+        let rand = Math.random() * 2
+        if( rand < 1){
+            let new_tool_item = new ResourceItem( this.game );
+            new_tool_item.set_image( 'fish_fin' );
+            new_tool_item.add_material( 'fin',  Math.floor(Math.random() * 3) + 3 );
+            return new_tool_item;
+        } else {
+            return new FishKirimi( this.game );
+        }
     }
     on_update(){
         super.on_update();

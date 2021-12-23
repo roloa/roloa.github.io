@@ -5,6 +5,6 @@ export class ImgFileName {
   './img/ship_frame.png',
   './img/ship_floor.png',
   './img/dry_lack.png',
+  './img/fish_fin.png'
   ]
 }
-
