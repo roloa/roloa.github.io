@@ -74,7 +74,7 @@ export class CraftRecipe extends Object {
         material_list,
         material_count_list,
         result_func,
-        icon_mini_text,
+        recipe_subtitle,
     ){
         let new_recipe = {};
         new_recipe.description_list = description_list;
@@ -83,7 +83,7 @@ export class CraftRecipe extends Object {
         new_recipe.result_func = result_func
         new_recipe.sample_item = new_recipe.result_func( this.game );
         new_recipe.image = new_recipe.sample_item.image;
-        new_recipe.icon_mini_text = icon_mini_text;
+        new_recipe.recipe_subtitle = recipe_subtitle;
         this.recipe_list[ category ].push( new_recipe );
     }
 

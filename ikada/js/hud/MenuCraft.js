@@ -217,6 +217,8 @@ export class MenuCraft {
 
             let recipe = this.craft_recipe.get_recipe( this.category_index, i - MenuCraft.LIST_X_COUNT );
 
+            canvas.font = 'bold 16px monospace';
+            canvas.fillStyle = 'rgb(50,50,50)';
             if( i == 0 ){
                 // 前のレシピカテゴリ
                 canvas.drawImage( this.icon_prev_category ,
@@ -239,6 +241,8 @@ export class MenuCraft {
                 if( recipe.image ) {
                     canvas.drawImage( recipe.image ,
                     frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+                    canvas.fillText( recipe.recipe_subtitle,
+                        frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
                 }
             } else {
                 // アイテムも機能もないところ
