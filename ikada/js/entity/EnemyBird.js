@@ -23,8 +23,52 @@ export class EnemyBird extends Enemy {
         this.showing_hp_timer = 0;
 
     }
+
+    generate_enemy_bird(){
+        // 鳥の敵を生成する
+        // 座標が設定済みの前提で、高度に応じたレベルの敵になる
+
+        let altitude = this.y / 32;
+
+        if( altitude > -100 ){
+            this.image = this.game.image_library.get_image( 'bird_hachidori' )
+        } else if( altitude > -200){
+            this.image = this.game.image_library.get_image( 'bird_toki_fly' )
+        } else if( altitude > -300){
+            this.image = this.game.image_library.get_image( 'bird_tonbi' )
+
+        } else if( altitude > -400){
+            this.image = this.game.image_library.get_image( 'animal_washi' )
+
+        } else if( altitude > -500){
+            this.image = this.game.image_library.get_image( 'fantasy_griffon' )
+
+        } else if( altitude > -600){
+            this.image = this.game.image_library.get_image( 'fantasy_peryton' )
+
+        } else if( altitude > -700){
+            this.image = this.game.image_library.get_image( 'fantasy_dragon_wyvern' )
+
+        } else if( altitude > -800){
+            this.image = this.game.image_library.get_image( 'fantasy_dragon' )
+
+        } else if( altitude > -900){
+            this.image = this.game.image_library.get_image( 'youkai_suzaku' )
+
+        } else if( altitude > -1000){
+            this.image = this.game.image_library.get_image( 'fantasy_ryu_doragon_asia' )
+        } else {
+            this.image = this.game.image_library.get_image( 'fantasy_ryu_doragon_asia' )
+        }
+    }
     on_update(){
         super.on_update();
+
+
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.99;
+        this.vy *= 0.99;
 
         // 怒っている場合
         if( this.is_angry ){
@@ -38,15 +82,6 @@ export class EnemyBird extends Enemy {
         } else {
             // 平常時
             this.vx = -1;
-        }
-
-        // プレイヤーとの当たり判定
-        if( this.test_hit( this.game.world.player.x, this.game.world.player.y ) ){
-            let knockback_vec = this.get_vector_to_player();
-            knockback_vec.x *= 20;
-            knockback_vec.y *= 20;
-            let damage = 10;
-            this.game.world.player.hit_damage( damage, knockback_vec, this );
         }
 
     }

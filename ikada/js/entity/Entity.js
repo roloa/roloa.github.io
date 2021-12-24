@@ -3,6 +3,9 @@
 import {ShipBlock} from '../ship_block/ShipBlock.js';
 
 export class Entity {
+
+    static DESPAWN_DISTANCE = 1500;
+
     constructor( game ){
         this.name = 'noname_entity';
 
@@ -14,7 +17,7 @@ export class Entity {
         this.is_alive = true;
 
         this.is_on_ship = false;
-        this.despawn_distance = 1500;
+        this.despawn_distance = Entity.DESPAWN_DISTANCE;
         this.despawn_distance_ship = 500;
     }
 

@@ -24,6 +24,43 @@ export class EnemyFish extends Enemy {
 
     }
 
+    generate_enemy_fish(){
+        // 鳥の敵を生成する
+        // 座標が設定済みの前提で、高度に応じたレベルの敵になる
+        let depth = this.y / 32;
+        
+        if( depth < 100 ){
+            this.image = this.game.image_library.get_image( 'fish_sakana_sake' )
+        } else if( depth < 200){
+            this.image = this.game.image_library.get_image( 'fish_salmon' )
+        } else if( depth < 300){
+            this.image = this.game.image_library.get_image( 'fish_maguro2' )
+
+        } else if( depth < 400){
+            this.image = this.game.image_library.get_image( 'fish_mola2' )
+
+        } else if( depth < 500){
+            this.image = this.game.image_library.get_image( 'fish_minokasago' )
+
+        } else if( depth < 600){
+            this.image = this.game.image_library.get_image( 'cthulhu_deep_ones' )
+
+        } else if( depth < 700){
+            this.image = this.game.image_library.get_image( 'animal_shachi_killer_whale' )
+
+        } else if( depth < 800){
+            this.image = this.game.image_library.get_image( 'character_cthulhu_kuturufu' )
+
+        } else if( depth < 900){
+            this.image = this.game.image_library.get_image( 'fantasy_genbu' )
+
+        } else if( depth < 1000){
+            this.image = this.game.image_library.get_image( 'fantasy_seiryu' )
+        } else {
+            this.image = this.game.image_library.get_image( 'fantasy_seiryu' )
+        }
+    }
+
     on_update(){
         super.on_update();
 

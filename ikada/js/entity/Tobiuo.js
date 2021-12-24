@@ -45,6 +45,11 @@ export class Tobiuo extends Enemy {
     on_update(){
         super.on_update();
 
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+
         if( 0 < this.y ){
             this.is_in_sea = true;
             this.vx *= 0.99;
@@ -93,16 +98,6 @@ export class Tobiuo extends Enemy {
                 this.vy -= this.dash_speed;
             }
         }
-
-        // プレイヤーとの当たり判定
-        if( this.test_hit( this.game.world.player.x, this.game.world.player.y ) ){
-            let knockback_vec = this.get_vector_to_player();
-            knockback_vec.x *= 20;
-            knockback_vec.y *= 20;
-            let damage = 10;
-            this.game.world.player.hit_damage( damage, knockback_vec, this );
-        }
-
     }
     on_draw( canvas ){
         super.on_draw( canvas );
