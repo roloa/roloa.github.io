@@ -11,6 +11,7 @@ export class ToolItem {
         this.saving_data = {}
 
         this.saving_data.item_name = 'noname item'
+        this.saving_data.item_subtitle = '';
 
         // デフォルトの料理時間
         this.cooking_finish_time = 500;
@@ -19,7 +20,9 @@ export class ToolItem {
         this.is_consumed = false;
 
     }
-
+    get_subtitle(){
+        return this.saving_data.item_subtitle;
+    }
     set_image( file_name ){
         this.image = this.game.image_library.get_image( file_name )
         this.saving_data.image_name = file_name;
@@ -31,7 +34,7 @@ export class ToolItem {
         return this.saving_data.item_name;
     }
     on_update(){
-        
+
     }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         console.log('default ToolItem onclick!')

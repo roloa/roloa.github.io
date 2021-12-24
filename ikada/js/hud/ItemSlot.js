@@ -212,8 +212,12 @@ export class ItemSlot {
                         this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
                         this.itemslot_start_y,
                         this.itemslot_size,
-                        this.itemslot_size )
-
+                        this.itemslot_size );
+                    canvas.font = 'bold 16px monospace';
+                    canvas.fillStyle = 'rgb(200,200,200)';
+                    canvas.fillText( this.item_slot[ slot_no ].get_subtitle(),
+                        this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing) + 3,
+                        this.itemslot_start_y + this.itemslot_size - 3);
                 }
             }
 

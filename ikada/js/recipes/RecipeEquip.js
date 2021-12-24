@@ -21,6 +21,7 @@ export class RecipeEquip extends Object {
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
                 new_item.saving_data.riseup_power = 100;
                 new_item.saving_data.fall_speed_reduce = 0.3;
+                new_item.saving_data.item_subtitle = 'Lv1';
                 return new_item; },
             'Lv1'
         );
@@ -34,8 +35,9 @@ export class RecipeEquip extends Object {
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
                 new_item.saving_data.riseup_power = 200;
                 new_item.saving_data.fall_speed_reduce = 0.7;
+                new_item.saving_data.item_subtitle = 'Lv3';
                 return new_item; },
-            'Lv5'
+            'Lv3'
         );
         c_r.add_recipe( category,
             ['風を受けて空に舞い上がるための傘です。', 'Lv5'],
@@ -47,6 +49,7 @@ export class RecipeEquip extends Object {
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
                 new_item.saving_data.riseup_power = 10000;
                 new_item.saving_data.fall_speed_reduce = 0.7;
+                new_item.saving_data.item_subtitle = 'Lv5';
                 return new_item; },
             'Lv5'
         );

@@ -217,6 +217,11 @@ export class MenuInventory {
                     if( i != this.mouse_holding_index ){
                         canvas.drawImage( this.game.inventory.tool_item_inventory[ i ].image ,
                         frame_x, frame_y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE );
+                        canvas.font = 'bold 16px monospace';
+                        canvas.fillStyle = 'rgb(100,100,100)';
+                        canvas.fillText( this.game.inventory.tool_item_inventory[ i ].get_subtitle(),
+                            frame_x + 3,
+                            frame_y + MenuInventory.LIST_ICON_SIZE - 3);
                     }
                 }
             }
@@ -229,6 +234,11 @@ export class MenuInventory {
         if( this.trashed_item != null ){
             canvas.drawImage( this.trashed_item.image,
             MenuInventory.TRASH_X, MenuInventory.TRASH_Y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE);
+            canvas.font = 'bold 16px monospace';
+            canvas.fillStyle = 'rgb(100,100,100)';
+            canvas.fillText( this.trashed_item.get_subtitle(),
+                MenuInventory.TRASH_X + 3,
+                MenuInventory.TRASH_Y + MenuInventory.LIST_ICON_SIZE - 3);
         } else {
             canvas.drawImage( this.trash_icon,
             MenuInventory.TRASH_X, MenuInventory.TRASH_Y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE);
