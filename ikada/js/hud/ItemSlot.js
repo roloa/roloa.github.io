@@ -191,6 +191,12 @@ export class ItemSlot {
                             }
                         } else {
                             this.is_mouse_holding = false;
+                            if( this.item_slot_cursor == slot_no ){
+                                if( this.item_slot[ this.item_slot_cursor ] != null ){
+                                    // 同じアイテムを2回クリックしたら、詳細情報をログに出す
+                                    this.item_slot[ this.item_slot_cursor ].dump_information_to_log();
+                                }
+                            }
                         }
                         this.item_slot_cursor = slot_no;
                         this.refresh();

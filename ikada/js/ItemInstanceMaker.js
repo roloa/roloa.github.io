@@ -5,6 +5,7 @@ import {EquipmentItem} from './tool_item/EquipmentItem.js'
 import {CatchNet} from './tool_item/CatchNet.js'
 import {ToolItem} from './tool_item/ToolItem.js'
 import {WeaponItem} from './tool_item/WeaponItem.js'
+import {Scouter} from './tool_item/Scouter.js'
 import {Spear} from './tool_item/Spear.js'
 import {DistillBottle} from './tool_item/DistillBottle.js'
 import {BuildBlock} from './tool_item/BuildBlock.js'
@@ -44,6 +45,8 @@ export class ItemInstanceMaker {
             return new ToolItem( this.game );
         } else if( item_data.class_name == 'WeaponItem' ){
             return new WeaponItem( this.game );
+        } else if( item_data.class_name == 'Scouter' ){
+            return new Scouter( this.game );
         } else if( item_data.class_name == 'Spear' ){
             return new Spear( this.game );
         } else if( item_data.class_name == 'DistillBottle' ){

@@ -3,6 +3,8 @@ import {Entity} from './Entity.js';
 import {DropItem} from './DropItem.js';
 import {ResourceItem} from '../tool_item/ResourceItem.js';
 import {DeadBody} from './particle/DeadBody.js';
+import {DamageNumber} from './particle/DamageNumber.js';
+
 
 export class Enemy extends Entity {
     constructor( game ){
@@ -77,13 +79,20 @@ export class Enemy extends Entity {
     test_hit_bullet( bullet ){
         if( this.test_hit( bullet.x, bullet.y ) ){
             // 弾に当たった
-
-            this.hp -= bullet.damage;
-            this.vx += bullet.vx * bullet.knock_back_rate;
-            this.vy += bullet.vy * bullet.knock_back_rate;
+            let taken_damage = bullet.calc_damage();
+            this.hp -= taken_damage;
+            this.vx += bullet.vx * bullet.gun_data.knockback_rate;
+            this.vy += bullet.vy * bullet.gun_data.knockback_rate;
 
             this.is_angry = true;
             this.showing_hp_timer = 100;
+
+            // ダメージ数字を出す
+            let damage_number = new DamageNumber( this.game );
+            damage_number.x = this.x;
+            damage_number.y = this.y;
+            damage_number.number = taken_damage;
+            this.game.world.push_entity( damage_number );
             if( this.hp <= 0) {
                 this.on_die();
             }

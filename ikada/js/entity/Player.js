@@ -53,6 +53,9 @@ export class Player extends Entity {
         vecy = vecy / length;
         return {x: vecx, y: vecy};
     }
+    get_radian_to_cursor(){
+        return Math.atan2( this.game.world.cursor_y - this.y, this.game.world.cursor_x - this.x )
+    }
     clear_equip_status(){
         for( var i = 0 ; i < EquipmentItem.EQUIP_MAX ; i++){
             this.equip_list[i] = null;

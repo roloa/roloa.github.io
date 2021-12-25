@@ -39,6 +39,9 @@ export class ToolItem {
     on_click( cursor_x, cursor_y, player_x, player_y ){
         console.log('default ToolItem onclick!')
     }
+    dump_information_to_log(){
+        this.game.log( this.saving_data.item_name );
+    }
     save_data(){
         let data = {};
         data.class_name = this.constructor.name;
