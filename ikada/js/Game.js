@@ -8,6 +8,7 @@ import {Materials} from './Materials.js'
 import {TitleScreen} from './TitleScreen.js'
 import {SaveDataManager} from './SaveDataManager.js'
 import {HudVirtualInput} from './hud/HudVirtualInput.js';
+import {DebugCommands} from './DebugCommands.js';
 
 
 
@@ -79,7 +80,7 @@ export class Game {
         this.movie_playing = null;
         this.hud_virtual_input = new HudVirtualInput( this );
 
-
+        this.dc = new DebugCommands( this );
         this.interbal_handle = 0;
     }
 
