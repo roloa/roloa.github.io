@@ -21,8 +21,11 @@ export class Scouter extends ToolItem {
             enemy.is_scouted = true;
 
             if( enemy.test_hit( cursor_x, cursor_y )){
-                this.game.log('Name   : ' + enemy.name);
-                this.game.log('Lv     : ' + enemy.strength_lv);
+                this.game.log('Name : ' + enemy.name);
+                this.game.log('Lv   : ' + enemy.strength_lv);
+                this.game.log('MHP  : ' + enemy.max_hp);
+                this.game.log('HP   : ' + enemy.hp);
+                this.game.log('Pow  : ' + enemy.power);
             }
         }
 
