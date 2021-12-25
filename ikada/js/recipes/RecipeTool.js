@@ -3,6 +3,7 @@ import {DeconstructHammer} from '../tool_item/DeconstructHammer.js';
 import {DistillBottle} from '../tool_item/DistillBottle.js';
 import {FishRod} from '../tool_item/FishRod.js';
 import {Oar} from '../tool_item/Oar.js';
+import {Scouter} from '../tool_item/Scouter.js';
 
 // import {} from '../tool_item/.js';
 
@@ -12,6 +13,14 @@ export class RecipeTool extends Object {
         this.game = game;
     }
     setup_recipe( c_r , category ){
+
+        c_r.add_recipe( category,
+            ['クリックした敵の情報を調べることが出来ます。'],
+            ['mech_parts'],
+            [3],
+            function( game ){ return new Scouter( game ); },
+            ''
+        );
 
         c_r.add_recipe( category,
             ['舟を漕げば、より多くの素材が流れてきます。'],

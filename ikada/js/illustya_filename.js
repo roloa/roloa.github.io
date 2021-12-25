@@ -38,6 +38,7 @@ export class Illustya {
   './img/illustya/fish_salmon.png',
   './img/illustya/bird_kamome.png',
   './img/illustya/fantasy_peryton.png',
+  './img/illustya/megane_3d_blue_red.png',
   './img/illustya/snorkel_goggle.png',
   './img/illustya/arrow_color12_play_flip.png',
   './img/illustya/arrow_color12_play.png',
@@ -122,3 +123,4 @@ export class Illustya {
   './img/illustya/food_yakisake.png',
   ]
 }
+

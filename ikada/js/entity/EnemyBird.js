@@ -30,37 +30,56 @@ export class EnemyBird extends Enemy {
 
         let altitude = this.y / 32;
 
+        // Lv = (高度10m)の2乗 x 0.1 + 10
+        // 100m = Lv10
+        // 200m = Lv40
+        // 300m = Lv90
+        // 400m = Lv160
+        // 500m = Lv250
+        //1000m = Lv1000
+        this.strength_lv = Math.floor((( altitude*0.1 ) ** 2)*0.1 + 10);
+
+        // HP = Lv x (9~10)
+        this.max_hp = this.strength_lv * (10 - Math.random())
+        this.hp = this.max_hp;
+        // 攻撃力 = Lv
+        this.power = this.strength_lv;
+
         if( altitude > -100 ){
             this.image = this.game.image_library.get_image( 'bird_hachidori' )
+            this.name = 'ハチドリ';
         } else if( altitude > -200){
             this.image = this.game.image_library.get_image( 'bird_toki_fly' )
+            this.name = 'トキ';
         } else if( altitude > -300){
             this.image = this.game.image_library.get_image( 'bird_tonbi' )
-
+            this.name = 'トビ';
         } else if( altitude > -400){
             this.image = this.game.image_library.get_image( 'animal_washi' )
-
+            this.name = 'ワシ';
         } else if( altitude > -500){
             this.image = this.game.image_library.get_image( 'fantasy_griffon' )
-
+            this.name = 'グリフォン';
         } else if( altitude > -600){
             this.image = this.game.image_library.get_image( 'fantasy_peryton' )
-
+            this.name = 'ペリュトン';
         } else if( altitude > -700){
             this.image = this.game.image_library.get_image( 'fantasy_dragon_wyvern' )
-
+            this.name = 'ワイバーン';
         } else if( altitude > -800){
             this.image = this.game.image_library.get_image( 'fantasy_dragon' )
-
+            this.name = 'ドラゴン';
         } else if( altitude > -900){
             this.image = this.game.image_library.get_image( 'youkai_suzaku' )
-
+            this.name = '朱雀';
         } else if( altitude > -1000){
             this.image = this.game.image_library.get_image( 'fantasy_ryu_doragon_asia' )
+            this.name = '龍';
         } else {
             this.image = this.game.image_library.get_image( 'fantasy_ryu_doragon_asia' )
         }
     }
+
     on_update(){
         super.on_update();
 

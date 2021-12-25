@@ -11,6 +11,11 @@ export class Enemy extends Entity {
 
         this.image = this.game.image_library.get_image( 'fish_sakana_iwashi' )
 
+        this.name = 'noname enemy';
+        this.strength_lv = 1;
+
+        this.is_scouted = false;
+
         this.width = 128;
         this.height = 128;
         this.width_half = this.width * 0.5;

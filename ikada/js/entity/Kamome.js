@@ -15,6 +15,9 @@ export class Kamome extends Enemy {
 
         this.image = this.game.image_library.get_image( 'bird_kamome' )
 
+        this.name = 'カモメ';
+        this.strength_lv = 3;
+
         this.width = 64;
         this.height = 40;
         this.width_half = this.width * 0.5;
