@@ -33,6 +33,9 @@ export class EquipmentItem extends ToolItem {
 
         // 環境によるスタミナ減少の軽減(%)
         this.saving_data.stamina_reduce = 0;
+
+        // 防御力、ダメージ軽減率
+        this.saving_data.damage_reduce = 0;
     }
 
 
@@ -41,6 +44,9 @@ export class EquipmentItem extends ToolItem {
         // 装備のステータスをログに出す
         this.game.log(this.saving_data.item_name);
 
+        if( 0 < this.saving_data.damage_reduce ){
+            this.game.log('ダメージ軽減: ' + this.saving_data.damage_reduce);
+        }
         if( 0 < this.saving_data.riseup_power ){
             this.game.log('上昇力: ' + this.saving_data.riseup_power);
         }

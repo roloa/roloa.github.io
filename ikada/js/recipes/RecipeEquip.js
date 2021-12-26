@@ -35,6 +35,7 @@ export class RecipeEquip extends Object {
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_GLIDER;
                 new_item.saving_data.riseup_power = 200;
                 new_item.saving_data.fall_speed_reduce = 0.7;
+                new_item.saving_data.damage_reduce = 0.5;
                 new_item.saving_data.item_subtitle = 'Lv3';
                 return new_item; },
             'Lv3'
@@ -63,6 +64,8 @@ export class RecipeEquip extends Object {
                 new_item.set_image( './img/illustya/feather_red.png' );
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_WING;
                 new_item.saving_data.midair_speed = 2;
+                new_item.saving_data.damage_reduce = 0.2;
+                new_item.saving_data.item_subtitle = 'Lv1';
                 return new_item; },
             'Lv1'
         );
@@ -76,8 +79,42 @@ export class RecipeEquip extends Object {
                 new_item.set_image( './img/illustya/snorkel_goggle.png' );
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_GOGGLE;
                 new_item.saving_data.underwater_speed = 0;
+                new_item.saving_data.stamina_reduce = 0.8;
+                new_item.saving_data.damage_reduce = 0.0;
+                new_item.saving_data.item_subtitle = 'Lv1';
                 return new_item; },
             'Lv1'
+        );
+
+        c_r.add_recipe( category,
+            ['海に潜るためのゴーグルです。'],
+            ['plastic', 'fin'],
+            [5, 5],
+            function( game ){
+                let new_item = new EquipmentItem( game );
+                new_item.set_image( './img/illustya/snorkel_goggle.png' );
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_GOGGLE;
+                new_item.saving_data.underwater_speed = 0;
+                new_item.saving_data.stamina_reduce = 0.9;
+                new_item.saving_data.damage_reduce = 0.5;
+                new_item.saving_data.item_subtitle = 'Lv2';
+                return new_item; },
+            'Lv2'
+        );
+        c_r.add_recipe( category,
+            ['海に潜るためのゴーグルです。'],
+            ['plastic', 'fin'],
+            [5, 5],
+            function( game ){
+                let new_item = new EquipmentItem( game );
+                new_item.set_image( './img/illustya/snorkel_goggle.png' );
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_GOGGLE;
+                new_item.saving_data.underwater_speed = 0;
+                new_item.saving_data.stamina_reduce = 0.99;
+                new_item.saving_data.damage_reduce = 0.9;
+                new_item.saving_data.item_subtitle = 'Lv5';
+                return new_item; },
+            'Lv5'
         );
 
         c_r.add_recipe( category,
@@ -89,9 +126,38 @@ export class RecipeEquip extends Object {
                 new_item.set_image( './img/illustya/snorkel_fin.png' );
                 new_item.saving_data.equip_part = EquipmentItem.EQUIP_FIN;
                 new_item.saving_data.underwater_speed = 1;
+                new_item.saving_data.damage_reduce = 0.0;
+                new_item.saving_data.item_subtitle = 'Lv1';
                 return new_item; },
             'Lv1'
         );
-
+        c_r.add_recipe( category,
+            ['水中で素早く移動するためのヒレです。'],
+            ['fin'],
+            [5],
+            function( game ){
+                let new_item = new EquipmentItem( game );
+                new_item.set_image( './img/illustya/snorkel_fin.png' );
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_FIN;
+                new_item.saving_data.underwater_speed = 2;
+                new_item.saving_data.damage_reduce = 0.2;
+                new_item.saving_data.item_subtitle = 'Lv2';
+                return new_item; },
+            'Lv2'
+        );
+        c_r.add_recipe( category,
+            ['水中で素早く移動するためのヒレです。'],
+            ['fin'],
+            [5],
+            function( game ){
+                let new_item = new EquipmentItem( game );
+                new_item.set_image( './img/illustya/snorkel_fin.png' );
+                new_item.saving_data.equip_part = EquipmentItem.EQUIP_FIN;
+                new_item.saving_data.underwater_speed = 5;
+                new_item.saving_data.damage_reduce = 0.9;
+                new_item.saving_data.item_subtitle = 'Lv5';
+                return new_item; },
+            'Lv5'
+        );
     }
 }

@@ -72,6 +72,8 @@ export class Player extends Entity {
         this.underwater_speed = 0;
         // 環境によるスタミナ減少の軽減
         this.stamina_reduce = 1;
+        // ダメージ軽減、防御力
+        this.damage_reduce = 1;
 
     }
 
@@ -87,7 +89,8 @@ export class Player extends Entity {
             this.midair_speed += new_equip.saving_data.midair_speed;
             this.fall_speed_reduce *= (100 - new_equip.saving_data.fall_speed_reduce) * 0.01;
             this.underwater_speed += new_equip.saving_data.underwater_speed ;
-            this.stamina_reduce *= (100 - new_equip.saving_data.stamina_reduce) * 0.01;
+            this.stamina_reduce *= (1 - new_equip.saving_data.stamina_reduce);
+            this.damage_reduce *= (1 - new_equip.saving_data.damage_reduce);
         } else {
             // 装備部位が重複したら装備せずにfalseを返す
             return false;
@@ -187,17 +190,17 @@ export class Player extends Entity {
                 // 潜水中でない場合は浮かぶ
                 this.vy -= 1;
                 this.vy *= 0.8;
+
+                // 海上でのスタミナ消費
+                if( !this.health.consume_sp( 0.3 * this.stamina_reduce ) ){
+                    // 足りない場合はHPが減っていく
+                    this.health.mod_hp( -0.1 );
+                }
             }
             this.is_landing = false;
             this.is_in_sea = true;
             this.is_flying = false;
             this.is_falling = false;
-
-            // スタミナ消費
-            if( !this.health.consume_sp( 0.3 ) ){
-                // 足りない場合はHPが減っていく
-                this.health.mod_hp( -0.1 );
-            }
 
         } else {
             // 海の中にいない
@@ -285,7 +288,7 @@ export class Player extends Entity {
             // TODO 床すりぬけ
 
             if( this.is_in_sea ){
-                if( 0 < this.underwater_speed ){
+                if( 0 < this.underwater_speed || this.stamina_reduce < 1){
                     // 潜水モードに入る
                     this.is_diving = true;
                     this.vy += 3;
@@ -357,17 +360,27 @@ export class Player extends Entity {
 
     control_diving(){
         // WASDで移動
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+
+        let water_resist = 0.3;
         if( this.game.input_controller.get_down_right() ){
-            this.vx += 1 + this.underwater_speed;
+            this.vx += (1 + this.underwater_speed) * water_resist;
         }
         if( this.game.input_controller.get_down_left() ){
-            this.vx -= 1 + this.underwater_speed;
+            this.vx -= (1 + this.underwater_speed) * water_resist;
         }
         if( this.game.input_controller.get_down_up() ){
-            this.vy -= 1 + this.underwater_speed;
+            this.vy -= (1 + this.underwater_speed) * water_resist;
         }
         if( this.game.input_controller.get_down_down() ){
-            this.vy += 1 + this.underwater_speed;
+            this.vy += (1 + this.underwater_speed) * water_resist;
+        }
+
+        // 水中でのスタミナ消費
+        if( !this.health.consume_sp( 1 * this.stamina_reduce ) ){
+            // 足りない場合はHPが減っていく
+            this.health.mod_hp( -0.1 );
         }
 
     }
