@@ -5,6 +5,8 @@ import {ResourceItem} from '../tool_item/ResourceItem.js';
 import {DeadBody} from './particle/DeadBody.js';
 import {DamageNumber} from './particle/DamageNumber.js';
 import {EnemyBullet} from './EnemyBullet.js';
+import {WeaponItem} from '../tool_item/WeaponItem.js';
+
 
 export class Enemy extends Entity {
     constructor( game ){
@@ -22,11 +24,9 @@ export class Enemy extends Entity {
         this.height = 128;
         this.width_half = this.width * 0.5;
         this.height_half = this.height * 0.5;
-        this.max_hp = 100;
-        this.hp = 100;
 
-        this.direct_damage = 23;
-        this.knock_back_rate = 1.0;
+
+
 
         this.vx = 0;
         this.vy = 0;
@@ -42,6 +42,14 @@ export class Enemy extends Entity {
         this.is_preparing_jump = false;
         this.preparing_jump_minimum_time = 50;
         this.preparing_jump_timer = 0;
+
+        this.max_hp = 100;
+        this.hp = 100;
+
+        this.direct_damage = 23;
+        this.knock_back_rate = 1.0;
+        this.bullet_damage = 10;
+        this.bullet_knock_back_rate = 1.0;
 
         this.fire_spread = 3;
         this.fire_spread_angle = 0.1;
@@ -123,11 +131,9 @@ export class Enemy extends Entity {
         return drop_item;
     }
     get_drop_tool_item(){
-        let new_tool_item = new ResourceItem( this.game );
-        new_tool_item.generate_drifting_item();
-        new_tool_item.set_image( 'tree_ryuuboku' );
-        new_tool_item.add_material( 'wood', 5);
-        return new_tool_item;
+        let new_drop_weapon = new WeaponItem( this.game );
+        new_drop_weapon.generate_random_weapon( this.strength_lv , null );
+        return new_drop_weapon;
     }
     get_distance_p2_to_player(){
         let vecx = this.game.world.player.x - this.x;
@@ -166,6 +172,8 @@ export class Enemy extends Entity {
         for( let i = 0 ; i < this.fire_spread ; i++ ){
             let bullet = new EnemyBullet( this.game );
             bullet.owner_enemy = this;
+            bullet.damage = this.bullet_damage;
+            bullet.knock_back_rate = this.bullet_knock_back_rate;
 
             let fire_rad = rad;
             if( 0 < i){

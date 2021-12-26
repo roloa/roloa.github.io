@@ -21,11 +21,11 @@ export class Scouter extends ToolItem {
             enemy.is_scouted = true;
 
             if( enemy.test_hit( cursor_x, cursor_y )){
-                this.game.log('Name : ' + enemy.name);
-                this.game.log('Lv   : ' + enemy.strength_lv);
-                this.game.log('MHP  : ' + enemy.max_hp);
-                this.game.log('HP   : ' + enemy.hp);
-                this.game.log('Pow  : ' + enemy.power);
+                this.game.log('    名前 : ' + enemy.name);
+                this.game.log('     Lv : ' + enemy.strength_lv);
+                this.game.log('     HP : ' + Math.ceil(enemy.hp) +'/'+Math.ceil(enemy.max_hp));
+                this.game.log('攻撃(弾) : ' + enemy.bullet_damage);
+                this.game.log('  (接触) : ' + enemy.direct_damage);
             }
         }
 

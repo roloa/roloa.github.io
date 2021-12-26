@@ -3,15 +3,68 @@ import {Bullet} from '../entity/Bullet.js';
 
 export class WeaponItem extends ToolItem {
 
+    static IMAGE_NAME_LIST = [
+        'music_recorder',
+        'shovel_scoop_ken',
+        'gas_burner',
+        'nokogiri',
+        'itonokogiri',
+        'souji_yuka_mop',
+        'handagote',
+        'water_gardening_hose',
+        'cooking_dendou_mixer',
+        'syousyuzai_spray',
+        'harisen',
+        'chain_saw',
+        'muchi',
+        'syousyuzai_spray_musyu',
+        'smartphone_selfystick',
+        'kouji_dendou_driver',
+        'kaji_hikeshi_matoi',
+        'tool_pickel',
+        'dougu_micrometer_digital',
+        'dougu_army_knife',
+        'cooking_masher',
+        'dougu_gluegun',
+        'kouji_dendou_drill',
+        'bug_haetataki_atack',
+        'kouji_yuudoubou',
+        'dougu_nogisu_digital',
+        'cooking_houchou_chopper',
+        'wood_hammer_100t',
+        'wood_hammer_10t',
+        'cooking_urokohiki',
+        'dougu_bar',
+        'hair_curl_dryer',
+        'hair_drier',
+        'machine_heat_gun',
+        'nunchaku',
+        'gardening_sentei_hasami',
+        'cooking_hand_blender',
+        'tosou_airbrush',
+        'mizudeppou',
+        'katana_shirasaya',
+        'starter_starting_pistol',
+        'game_ken',
+        'hinawaju',
+        'buki_morningstar_flail',
+        'tozan_stick',
+        'tsue_sennin',
+        'music_alto_saxophone',
+        'soccer_cheer_horn_music',
+        'soccer_vuvuzela_music',
+        'music_trumpet'
+    ];
+
     constructor( game ){
         super( game );
         this.game = game;
 
-        this.image = this.game.image_library.get_image( 'war_trident' );
+        this.image = this.game.image_library.get_image( 'text_mu' );
         this.saving_data.item_name = '無名の武器';
 
         // 攻撃力
-        // (武器の基礎攻撃力 x 矢弾の乗算 + 矢弾の加算) x 幸福度補正x1.5 x あれこれ補正？
+        // (武器の基礎攻撃力) x 幸福度補正x1.5 x あれこれ補正？
 
         // 基礎攻撃力
         this.saving_data.basic_power = 10;
@@ -110,7 +163,9 @@ export class WeaponItem extends ToolItem {
 
         this.saving_data.bullet_color = 'rgb(250,0,250)';
 
-        this.set_image('wood_hammer_100t');
+        let image_index = Math.floor( Math.random() * WeaponItem.IMAGE_NAME_LIST.length);
+
+        this.set_image( WeaponItem.IMAGE_NAME_LIST[image_index] );
     }
     calc_damage(){
         // TODO 攻撃力計算

@@ -30,35 +30,55 @@ export class EnemyFish extends Enemy {
         // 座標が設定済みの前提で、高度に応じたレベルの敵になる
         let depth = this.y / 32;
 
+        // Lv = (高度10m)の2乗 x 0.1 + 10
+        // 100m = Lv10
+        // 200m = Lv40
+        // 300m = Lv90
+        // 400m = Lv160
+        // 500m = Lv250
+        //1000m = Lv1000
+        this.strength_lv = Math.floor((( depth*0.1 ) ** 2)*0.1 + 10);
+
+        // HP = Lv x (9~10)
+        this.max_hp = this.strength_lv * (10 - Math.random())
+        this.hp = this.max_hp;
+        // 攻撃力 = Lv
+        this.direct_damage = this.strength_lv;
+        this.bullet_damage = this.strength_lv * 0.5;
+
         if( depth < 100 ){
             this.image = this.game.image_library.get_image( 'fish_sakana_sake' )
+            this.name = 'サケ';
         } else if( depth < 200){
             this.image = this.game.image_library.get_image( 'fish_salmon' )
+            this.name = 'トラウト';
         } else if( depth < 300){
             this.image = this.game.image_library.get_image( 'fish_maguro2' )
-
+            this.name = 'マグロ';
         } else if( depth < 400){
             this.image = this.game.image_library.get_image( 'fish_mola2' )
-
+            this.name = 'マンボウ';
         } else if( depth < 500){
             this.image = this.game.image_library.get_image( 'fish_minokasago' )
-
+            this.name = 'ミノカサゴ';
         } else if( depth < 600){
             this.image = this.game.image_library.get_image( 'cthulhu_deep_ones' )
-
+            this.name = '深きもの';
         } else if( depth < 700){
             this.image = this.game.image_library.get_image( 'animal_shachi_killer_whale' )
-
+            this.name = 'シャチ';
         } else if( depth < 800){
             this.image = this.game.image_library.get_image( 'character_cthulhu_kuturufu' )
-
+            this.name = 'クトゥルフ';
         } else if( depth < 900){
             this.image = this.game.image_library.get_image( 'fantasy_genbu' )
-
+            this.name = '玄武';
         } else if( depth < 1000){
             this.image = this.game.image_library.get_image( 'fantasy_seiryu' )
+            this.name = '青龍';
         } else {
             this.image = this.game.image_library.get_image( 'fantasy_seiryu' )
+            this.name = '青龍';
         }
     }
 
