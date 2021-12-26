@@ -32,6 +32,7 @@ export class Kamome extends Enemy {
 
         this.target_vx = -3;
         this.target_vy = 0;
+        this.target_height = -200;
     }
 
     get_drop_tool_item(){
@@ -86,7 +87,7 @@ export class Kamome extends Enemy {
             } else {
                 this.vx -= this.dash_speed;
             }
-            if( this.vy < this.target_vy ){
+            if( this.y < this.target_height ){
                 this.vy += this.dash_speed;
             } else {
                 this.vy -= this.dash_speed;

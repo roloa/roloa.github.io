@@ -77,18 +77,21 @@ export class WorldSpawner {
         }
 
         if( Math.random() < 0.01) {
+            // トビウオ
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof Tobiuo; }).length < 3 ){
                 let new_enemy = new Tobiuo( this.game );
-                new_enemy.x = 500;
-                new_enemy.y = 200;
+                new_enemy.x = this.world.camera.x + this.sight_distance + Math.random() * 100;
+                new_enemy.y = 200 - Math.random() * 100;
                 this.world.push_enemy( new_enemy );
             }
         }
         if( Math.random() < 0.01) {
+            // カモメ
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof Kamome; }).length < 3 ){
                 let new_enemy = new Kamome( this.game );
-                new_enemy.x = 500;
-                new_enemy.y = -200;
+                new_enemy.x = this.world.camera.x + this.sight_distance + Math.random() * 100;
+                new_enemy.y = -200 - Math.random() * 100;
+                new_enemy.target_height = -200 - Math.random() * 100;
                 this.world.push_enemy( new_enemy );
             }
         }
