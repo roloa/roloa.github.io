@@ -29,6 +29,9 @@ export class Tobiuo extends Enemy {
         this.is_preparing_jump = false;
         this.preparing_jump_minimum_time = 50;
         this.preparing_jump_timer = 0;
+
+        this.target_vy = 0;
+        this.target_vx = -3;
     }
 
     get_drop_tool_item(){
@@ -42,25 +45,8 @@ export class Tobiuo extends Enemy {
             return new FishKirimi( this.game );
         }
     }
-    on_update(){
-        super.on_update();
 
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= 0.99;
-        this.vy *= 0.99;
-
-        if( 0 < this.y ){
-            this.is_in_sea = true;
-            this.vx *= 0.99;
-            this.vy *= 0.99;
-
-        } else {
-            this.is_in_sea = false;
-            let gravity = 0.2 - Math.abs( this.vx * 0.1)
-            gravity = Math.max( 0.01, gravity );
-            this.vy += gravity;
-        }
+    enemy_move_ai(){
         // 怒っている場合
         if( this.is_angry ){
 
@@ -90,14 +76,47 @@ export class Tobiuo extends Enemy {
             // 弾を撃つ
         } else {
             // 平常時
-            this.vx -= this.dash_speed;
-            if( Math.random() < 0.3 ){
-                this.vy += this.dash_speed;
+            if( this.vx < this.target_vx ){
+                this.vx += this.dash_speed;
+            } else {
+                this.vx -= this.dash_speed;
             }
-            if( Math.random() < 0.3 ){
+            if( this.vy < this.target_vy ){
+                this.vy += this.dash_speed;
+            } else {
                 this.vy -= this.dash_speed;
             }
+
+            if( Math.random() < 0.3 ){
+                this.target_vy += this.dash_speed;
+            }
+            if( Math.random() < 0.3 ){
+                this.target_vy -= this.dash_speed;
+            }
         }
+    }
+
+    on_update(){
+        super.on_update();
+
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+
+        if( 0 < this.y ){
+            this.is_in_sea = true;
+            this.vx *= 0.99;
+            this.vy *= 0.99;
+
+        } else {
+            this.is_in_sea = false;
+            let gravity = 0.2 - Math.abs( this.vx * 0.1)
+            gravity = Math.max( 0.01, gravity );
+            this.vy += gravity;
+            this.target_vy = 1;
+        }
+
     }
     on_draw( canvas ){
         super.on_draw( canvas );

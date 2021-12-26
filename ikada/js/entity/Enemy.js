@@ -4,7 +4,7 @@ import {DropItem} from './DropItem.js';
 import {ResourceItem} from '../tool_item/ResourceItem.js';
 import {DeadBody} from './particle/DeadBody.js';
 import {DamageNumber} from './particle/DamageNumber.js';
-
+import {EnemyBullet} from './EnemyBullet.js';
 
 export class Enemy extends Entity {
     constructor( game ){
@@ -31,11 +31,25 @@ export class Enemy extends Entity {
         this.vx = 0;
         this.vy = 0;
         this.dash_speed = 2;
+        this.target_vy = Math.random()*2-1;
+        this.target_vx = Math.random()*2-1;
+
         this.is_angry = false;
+        this.angry_timer_max = 500;
+        this.angry_timer_count = 0;
+        this.gosya_forgive_count = 1;
 
         this.is_preparing_jump = false;
         this.preparing_jump_minimum_time = 50;
         this.preparing_jump_timer = 0;
+
+        this.fire_spread = 3;
+        this.fire_spread_angle = 0.1;
+        this.bullet_lifetime = 100;
+        this.bullet_velocity = 10;
+        this.fire_cool_time = 100;
+        this.fire_cool_time_count = 0;
+        this.blast_lifetime = 0;
 
         this.showing_hp_timer = 0;
 
@@ -54,8 +68,19 @@ export class Enemy extends Entity {
             this.hp -= taken_damage;
             this.vx += bullet.vx * bullet.gun_data.knockback_rate;
             this.vy += bullet.vy * bullet.gun_data.knockback_rate;
-
-            this.is_angry = true;
+            if( 0 < this.gosya_forgive_count ){
+                // 1発だけなら誤射かもしれない
+                this.gosya_forgive_count -= 1;
+                // 進行方向をプレイヤーの方に変える
+                let vec = this.get_vector_to_player_with_bias(0, 0)
+                this.target_vx = vec.x * 2;
+                this.target_vy = vec.y * 2;
+            } else {
+                if( this.hp < this.max_hp * 0.9 ){
+                    this.is_angry = true;
+                    this.angry_timer_count = this.angry_timer_max;
+                }
+            }
             this.showing_hp_timer = 100;
 
             // ダメージ数字を出す
@@ -130,12 +155,53 @@ export class Enemy extends Entity {
         vecy = vecy / length;
         return {x: vecx, y: vecy};
     }
+    fire_bullet(){
 
+        let rad = Math.atan2(
+            this.game.world.player.y - this.y,
+            this.game.world.player.x - this.x
+        );
+
+
+        for( let i = 0 ; i < this.fire_spread ; i++ ){
+            let bullet = new EnemyBullet( this.game );
+            bullet.owner_enemy = this;
+
+            let fire_rad = rad;
+            if( 0 < i){
+                let spread_direction = this.fire_spread_angle;
+                for( let spread_num = 1 ; spread_num <= i ; spread_num++ ){
+                    spread_direction = spread_direction * -spread_num;
+                    fire_rad += spread_direction;
+                }
+            }
+            bullet.vx = Math.cos(fire_rad) * this.bullet_velocity;
+            bullet.vy = Math.sin(fire_rad) * this.bullet_velocity;
+            bullet.x = this.x + bullet.vx;
+            bullet.y = this.y + bullet.vy;
+
+            bullet.life_time = this.bullet_lifetime;
+            if( 0 < this.blast_lifetime ){
+                bullet.is_blaster_bullet = true;
+            }
+
+            bullet.line_x = Math.cos(fire_rad) * 30;
+            bullet.line_y = Math.sin(fire_rad) * 30;
+            this.game.world.push_entity( bullet );
+        }
+    }
     on_update(){
         super.on_update();
 
         // 敵の行動AI
         this.enemy_move_ai();
+
+        if( 0 < this.angry_timer_count && !this.game.world.player.is_ghost ){
+            this.angry_timer_count -= 1;
+        } else {
+            // 怒り時間終了か、プレイヤーが死んでいる
+            this.is_angry = false;
+        }
 
         // プレイヤーとの当たり判定
         if( this.game.world.player.test_hit_enemy( this ) ){

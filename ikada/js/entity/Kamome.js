@@ -30,7 +30,8 @@ export class Kamome extends Enemy {
         this.vy = 0;
         this.dash_speed = 0.1;
 
-
+        this.target_vx = -3;
+        this.target_vy = 0;
     }
 
     get_drop_tool_item(){
@@ -74,14 +75,28 @@ export class Kamome extends Enemy {
             }
             if( 0 < this.y  ){
                 // 海
-                this.vy -= 2;
                 this.is_preparing_jump = true;
             }
 
             // 弾を撃つ
         } else {
             // 平常時
-            this.vx = -3;
+            if( this.vx < this.target_vx ){
+                this.vx += this.dash_speed;
+            } else {
+                this.vx -= this.dash_speed;
+            }
+            if( this.vy < this.target_vy ){
+                this.vy += this.dash_speed;
+            } else {
+                this.vy -= this.dash_speed;
+            }
+            if( Math.random() < 0.3 ){
+                this.target_vy += this.dash_speed;
+            }
+            if( Math.random() < 0.3 ){
+                this.target_vy -= this.dash_speed;
+            }
         }
     }
 
@@ -93,7 +108,12 @@ export class Kamome extends Enemy {
         this.y += this.vy;
         this.vx *= 0.99;
         this.vy *= 0.99;
-        
+
+        if( 0 < this.y  ){
+            // 海
+            this.vy -= 2;
+            this.target_vy = -2;
+        }
     }
     on_draw( canvas ){
         super.on_draw( canvas );

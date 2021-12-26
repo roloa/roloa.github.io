@@ -21,14 +21,6 @@ export class EnemyFish extends Enemy {
         this.dash_speed = 0.1;
         this.is_angry = false;
 
-        this.fire_spread = 3;
-        this.fire_spread_angle = 0.1;
-        this.bullet_lifetime = 100;
-        this.bullet_velocity = 10;
-        this.fire_cool_time = 100;
-        this.fire_cool_time_count = 0;
-        this.blast_lifetime = 0;
-
         this.showing_hp_timer = 0;
 
     }
@@ -95,7 +87,6 @@ export class EnemyFish extends Enemy {
             }
             if( this.y < 0 ){
                 // 海から飛び出した
-                this.vy += 2;
                 this.is_preparing_jump = true;
             }
 
@@ -108,44 +99,19 @@ export class EnemyFish extends Enemy {
             }
         } else {
             // 平常時
-            this.vx = -3;
+            if( this.vx < this.target_vx ){
+                this.vx += this.dash_speed;
+            } else {
+                this.vx -= this.dash_speed;
+            }
+            if( this.vy < this.target_vy ){
+                this.vy += this.dash_speed;
+            } else {
+                this.vy -= this.dash_speed;
+            }
         }
     }
-    fire_bullet(){
 
-        let rad = Math.atan2(
-            this.game.world.player.y - this.y,
-            this.game.world.player.x - this.x
-        );
-
-
-        for( let i = 0 ; i < this.fire_spread ; i++ ){
-            let bullet = new EnemyBullet( this.game );
-            bullet.owner_enemy = this;
-
-            let fire_rad = rad;
-            if( 0 < i){
-                let spread_direction = this.fire_spread_angle;
-                for( let spread_num = 1 ; spread_num <= i ; spread_num++ ){
-                    spread_direction = spread_direction * -spread_num;
-                    fire_rad += spread_direction;
-                }
-            }
-            bullet.vx = Math.cos(fire_rad) * this.bullet_velocity;
-            bullet.vy = Math.sin(fire_rad) * this.bullet_velocity;
-            bullet.x = this.x + bullet.vx;
-            bullet.y = this.y + bullet.vy;
-
-            bullet.life_time = this.bullet_lifetime;
-            if( 0 < this.blast_lifetime ){
-                bullet.is_blaster_bullet = true;
-            }
-
-            bullet.line_x = Math.cos(fire_rad) * 30;
-            bullet.line_y = Math.sin(fire_rad) * 30;
-            this.game.world.push_entity( bullet );
-        }
-    }
     on_update(){
         super.on_update();
 
@@ -153,6 +119,12 @@ export class EnemyFish extends Enemy {
         this.y += this.vy;
         this.vx *= 0.99;
         this.vy *= 0.99;
+
+        if( this.y < 0 ){
+            // 海から飛び出した
+            this.vy += 2;
+            this.target_vy = 1;
+        }
 
     }
     on_draw( canvas ){
