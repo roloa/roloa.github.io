@@ -18,7 +18,8 @@ export class RecipeWeapon extends Object {
             [3, 1],
             function( game ){
                 let new_item = new Bow( game );
-                new_item.saving_data.power = 11;
+                new_item.saving_data.basic_power = 11;
+                new_item.saving_data.item_subtitle = 'Lv1';
                 return new_item; },
             'Lv1'
         );
@@ -28,7 +29,8 @@ export class RecipeWeapon extends Object {
             [3, 1],
             function( game ){
                 let new_item = new Bow( game );
-                new_item.saving_data.power = 33;
+                new_item.saving_data.basic_power = 33;
+                new_item.saving_data.item_subtitle = 'Lv2';
                 return new_item; },
             'Lv2'
         );
@@ -39,7 +41,8 @@ export class RecipeWeapon extends Object {
             [3, 1],
             function( game ){
                 let new_item = new Bow( game );
-                new_item.saving_data.power = 2000;
+                new_item.saving_data.basic_power = 2000;
+                new_item.saving_data.item_subtitle = 'Lv5';
                 return new_item; },
             'Lv5'
         );

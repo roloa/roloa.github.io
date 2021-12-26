@@ -48,6 +48,44 @@ export class Kamome extends Enemy {
             }
         }
     }
+
+    enemy_move_ai(){
+        // 怒っている場合
+        if( this.is_angry ){
+            if( this.is_preparing_jump){
+                // 助走をつけようとする状態
+                // プレイヤーとは反対側に進む
+                let vec = this.get_vector_to_player_with_bias(0, 64);
+                this.vx += -vec.x * this.dash_speed;
+                this.vy += -(vec.y - 0.1) * this.dash_speed;
+                if( Math.random() < 0.1 ){
+                    if( 40000 < this.get_distance_p2_to_player()){
+                        this.is_preparing_jump = false;
+                    }
+                }
+            } else {
+                // プレイヤーの方に向かう
+                let vec = this.get_vector_to_player_with_bias(0, 0)
+                this.vx += vec.x * this.dash_speed;
+                this.vy += vec.y * this.dash_speed;
+                if( Math.random() < 0.01){
+                        this.is_preparing_jump = true;
+                }
+            }
+            if( 0 < this.y  ){
+                // 海
+                this.vy -= 2;
+                this.is_preparing_jump = true;
+            }
+
+            // 弾を撃つ
+        } else {
+            // 平常時
+            this.vx = -3;
+        }
+    }
+
+
     on_update(){
         super.on_update();
 
@@ -55,6 +93,7 @@ export class Kamome extends Enemy {
         this.y += this.vy;
         this.vx *= 0.99;
         this.vy *= 0.99;
+        
     }
     on_draw( canvas ){
         super.on_draw( canvas );

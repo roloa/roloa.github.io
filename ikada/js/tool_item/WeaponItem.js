@@ -19,24 +19,24 @@ export class WeaponItem extends ToolItem {
         this.saving_data.cool_time = 50
 
         //this.saving_data.fire_burst = 5;
-        this.saving_data.fire_spread = 3;
-        this.saving_data.fire_spread_angle = 0.2;
+        this.saving_data.fire_spread = 1;
+        this.saving_data.fire_spread_angle = 0.1;
 
         this.saving_data.bullet_lifetime = 50;
         this.saving_data.bullet_velocity = 10;
         this.saving_data.bullet_weight = 50;
-        this.saving_data.blast_lifetime = 25;
-        this.saving_data.blast_velocity = 10;
+        this.saving_data.blast_lifetime = 0;
+        this.saving_data.blast_velocity = 0;
 
-        this.saving_data.critical_range_lifetime = 45;
-        this.saving_data.critical_range_lifetime_window = 5;
-        this.saving_data.critical_range_damage = 3.0;
-        this.saving_data.critical_chance = 0.1;
-        this.saving_data.critical_chance_damage = 2.0;
+        this.saving_data.critical_range_lifetime = 0;
+        this.saving_data.critical_range_lifetime_window = 0;
+        this.saving_data.critical_range_damage = 0;
+        this.saving_data.critical_chance = 0;
+        this.saving_data.critical_chance_damage = 1.0;
         this.saving_data.knockback_rate = 1.0;
-        this.saving_data.poison_damage = 10;
-        this.saving_data.slow_rate = 0.2;
-        this.saving_data.life_leech = 10;
+        this.saving_data.poison_damage = 0;
+        this.saving_data.slow_rate = 0.0;
+        this.saving_data.life_leech = 0;
         this.saving_data.bullet_color = 'rgb(250,0,250)';
 
         this.cool_time_count = 0;
@@ -114,7 +114,7 @@ export class WeaponItem extends ToolItem {
     }
     calc_damage(){
         // TODO 攻撃力計算
-        return this.saving_data.power;
+        return this.saving_data.basic_power;
     }
     on_update(){
         if( 0 < this.cool_time_count ){
@@ -130,7 +130,7 @@ export class WeaponItem extends ToolItem {
         for( let i = 0 ; i < this.saving_data.fire_spread ; i++ ){
             let bullet = new Bullet( this.game );
             bullet.x = this.game.world.player.x + vec.x * 30;
-            bullet.y = this.game.world.player.y + vec.y * 30 - 16 ;
+            bullet.y = this.game.world.player.y + vec.y * 30;
             // bullet.vx = vec.x * 10;
             // bullet.vy = vec.y * 10;
             let fire_rad = rad;
@@ -172,26 +172,40 @@ export class WeaponItem extends ToolItem {
         let lt = Math.floor(this.saving_data.bullet_lifetime/ 50 * 1000);
         let vel = Math.floor(this.saving_data.bullet_velocity * 50 / 32)
         this.game.log('飛翔速度,時間: ' + vel+'m/s, '+lt+'ms');
-
-        let deg = Math.floor((this.saving_data.fire_spread_angle / Math.PI * 180) * this.saving_data.fire_spread);
-        this.game.log('散弾数, 角度: ' + this.saving_data.fire_spread +', ' + deg +'度');
         this.game.log('弾の重さ: ' + this.saving_data.bullet_weight + '%');
-        let b_vel = ( this.saving_data.blast_velocity * 50 / 32)
-        let b_lt =  Math.floor(this.saving_data.blast_lifetime/ 50 * 1000);
-        this.game.log('爆発速度,時間: ' + b_vel+'m/s, '+b_lt+'ms');
-        let chance = Math.floor( this.saving_data.critical_chance * 100 )
-        let chance_damage = Math.floor( this.saving_data.critical_chance_damage * 100)
-        this.game.log('クリッツ確率,倍率: ' + chance+'%, '+chance_damage+'%');
-        let crit_lt = Math.floor(this.saving_data.critical_range_lifetime / 50 * 1000);
-        let crit_window = Math.floor(this.saving_data.critical_range_lifetime_window/ 50 * 1000);
-        let crit_range_damage = Math.floor(this.saving_data.critical_range_damage * 100)
-        this.game.log('クリッツ距離,猶予,倍率: ' + crit_lt+'ms, '+crit_window+'ms, '+crit_range_damage+'%');
         let kb = Math.floor( this.saving_data.knockback_rate * 100);
         this.game.log('ノックバック: ' + kb + '%');
-        this.game.log('毒ダメージ: ' + this.saving_data.poison_damage);
-        let slow = Math.floor( this.saving_data.slow_rate * 100 );
-        this.game.log('減速効果: -' + slow + '%');
-        this.game.log('自己回復効果: ' + this.saving_data.life_leech);
+
+        if( 1 < this.saving_data.fire_spread){
+            let deg = Math.floor((this.saving_data.fire_spread_angle / Math.PI * 180) * this.saving_data.fire_spread);
+            this.game.log('散弾数, 角度: ' + this.saving_data.fire_spread +', ' + deg +'度');
+        }
+        if(0 < this.saving_data.blast_lifetime){
+            let b_vel = ( this.saving_data.blast_velocity * 50 / 32)
+            let b_lt =  Math.floor(this.saving_data.blast_lifetime/ 50 * 1000);
+            this.game.log('爆発速度,時間: ' + b_vel+'m/s, '+b_lt+'ms');
+        }
+        if( 0 < this.saving_data.critical_chance ){
+            let chance = Math.floor( this.saving_data.critical_chance * 100 )
+            let chance_damage = Math.floor( this.saving_data.critical_chance_damage * 100)
+            this.game.log('クリティカル確率,倍率: ' + chance+'%, '+chance_damage+'%');
+        }
+        if( 0 < this.saving_data.critical_range_lifetime ){
+            let crit_lt = Math.floor(this.saving_data.critical_range_lifetime / 50 * 1000);
+            let crit_window = Math.floor(this.saving_data.critical_range_lifetime_window/ 50 * 1000);
+            let crit_range_damage = Math.floor(this.saving_data.critical_range_damage * 100)
+            this.game.log('クリティカル距離,猶予,倍率: ' + crit_lt+'ms, '+crit_window+'ms, '+crit_range_damage+'%');
+        }
+        if( 0 < this.saving_data.poison_damage){
+            this.game.log('毒ダメージ: ' + this.saving_data.poison_damage);
+        }
+        if( 0 < this.saving_data.slow_rate ){
+            let slow = Math.floor( this.saving_data.slow_rate * 100 );
+            this.game.log('減速効果: -' + slow + '%');
+        }
+        if( 0 < this.saving_data.life_leech ){
+            this.game.log('自己回復効果: ' + this.saving_data.life_leech);
+        }
 
     }
 }

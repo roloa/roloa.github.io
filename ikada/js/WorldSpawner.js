@@ -43,21 +43,33 @@ export class WorldSpawner {
             this.spawn_wind();
             this.spawn_cloud();
         }
-        if( Math.random() < 0.01){
+        if( this.world.player.y < this.despawn_distance && Math.random() < 0.01){
             // 空の敵
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyBird; }).length < 10 ){
                 let new_enemy = new EnemyBird( this.game );
-
                 this.set_coodinate_randomly( new_enemy );
-                this.move_outsight_up( new_enemy );
-
+                this.move_outsight_random( new_enemy );
                 new_enemy.generate_enemy_bird();
-
                 if( -100 < new_enemy.y){
                     // 海の中はだめ
                     return;
                 }
+                this.world.push_enemy( new_enemy )
 
+            }
+
+        }
+        if( -this.despawn_distance < this.world.player.y && Math.random() < 0.1){
+            // 海の敵
+            if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyFish; }).length < 10 ){
+                let new_enemy = new EnemyFish( this.game );
+                this.set_coodinate_randomly( new_enemy );
+                this.move_outsight_random( new_enemy );
+                new_enemy.generate_enemy_fish();
+                if( new_enemy.y < 100){
+                    // 海の外はだめ
+                    return;
+                }
                 this.world.push_enemy( new_enemy )
 
             }
@@ -130,15 +142,37 @@ export class WorldSpawner {
         new_entity.x = this.world.camera.x + Math.random() * this.despawn_distance * 2 - this.despawn_distance
         new_entity.y = this.world.camera.y + Math.random() * this.despawn_distance * 2 - this.despawn_distance;
     }
+    move_outsight_random( new_entity ){
+        let r = Math.random() * 4
+        if(r < 1){
+            this.move_outsight_up( new_entity );
+        } else if(r < 2){
+            this.move_outsight_down( new_entity );
+        } else if(r < 3){
+            this.move_outsight_left( new_entity );
+        } else {
+            this.move_outsight_right( new_entity );
+        }
+    }
     move_outsight_right( new_entity ){
         if( this.check_is_in_sight( new_entity.x, new_entity.y )){
             // 視界内なら、視界外の右側によける
             new_entity.x = this.world.camera.x + this.sight_distance + Math.random() * 200;
         }
     }
+    move_outsight_left( new_entity ){
+        if( this.check_is_in_sight( new_entity.x, new_entity.y )){
+            new_entity.x = this.world.camera.x - this.sight_distance - Math.random() * 200;
+        }
+    }
     move_outsight_up( new_entity ){
         if( this.check_is_in_sight( new_entity.x, new_entity.y )){
-            new_entity.y = this.world.camera.y - this.sight_distance + Math.random() * 200;
+            new_entity.y = this.world.camera.y - this.sight_distance - Math.random() * 200;
+        }
+    }
+    move_outsight_down( new_entity ){
+        if( this.check_is_in_sight( new_entity.x, new_entity.y )){
+            new_entity.y = this.world.camera.y + this.sight_distance + Math.random() * 200;
         }
     }
     check_is_in_sight(x1, y1){

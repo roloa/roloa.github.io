@@ -2,6 +2,7 @@
 import {Entity} from './Entity.js';
 import {ShipBlock} from '../ship_block/ShipBlock.js';
 import {EquipmentItem} from '../tool_item/EquipmentItem.js';
+import {DamageNumber} from './particle/DamageNumber.js';
 
 import {PlayerHealth} from './PlayerHealth.js';
 
@@ -31,7 +32,7 @@ export class Player extends Entity {
 
         this.width = 32;
         this.width_half = this.width / 2;
-        this.height = 32;
+        this.height = 44;
         this.height_half = this.height / 2;
 
         this.is_landing = false;
@@ -116,16 +117,66 @@ export class Player extends Entity {
         return this.game.hud.item_slot.put_pickup_item( new_item.item_to_pickup )
 
     }
+    test_hit_enemy( enemy ){
+        // 当たらない判定
+        if( this.game.world.player.is_ghost == true ){
+            return false;
+        }
+        if( 0 < this.hit_invincible_timer ){
+            return false;
+        }
+        // 当たり判定
 
-    hit_damage( damage_amount, knockback_vec, attacker ){
+        if( this.test_hit(enemy.x, enemy.y) ){
+            let rad = Math.atan2(this.y - enemy.y , this.x - enemy.x)
+
+            this.hit_damage( enemy.direct_damage,
+                enemy.vx * enemy.knock_back_rate + Math.cos(rad) * 2,
+                enemy.vy * enemy.knock_back_rate + Math.sin(rad) * 2,
+                enemy );
+            return true;
+        }
+        return false;
+    }
+    test_hit_bullet( bullet ){
+        // 当たらない判定
+        if( this.game.world.player.is_ghost == true ){
+            return false;
+        }
+        if( 0 < this.hit_invincible_timer ){
+            return false;
+        }
+        // 当たり判定
+        if( this.test_hit(bullet.x, bullet.y) ){
+            this.hit_damage( bullet.damage,
+                bullet.vx * bullet.knock_back_rate,
+                bullet.vy * bullet.knock_back_rate,
+                bullet.owner_enemy );
+            return true;
+        }
+        return false;
+    }
+    test_hit(x1, y1){
+        return (this.x - this.width_half < x1 && x1 < this.x + this.width_half &&
+            this.y - this.height_half < y1 && y1 < this.y + this.height_half)
+    }
+    hit_damage( damage_amount, knockback_vx, knockback_vy, attacker ){
         // 無敵時間
         if( 0 < this.hit_invincible_timer ){
             return false;
         }
-        this.health.mod_hp( damage_amount );
-        this.vx = knockback_vec.x;
-        this.vy = knockback_vec.y;
+        this.health.mod_hp( -damage_amount );
+        this.vx += knockback_vx;
+        this.vx = Math.max( -20, Math.min(this.vx, 20) );
+        this.vy += knockback_vy;
+        this.vy = Math.max( -20, Math.min(this.vy, 20) );
         this.hit_invincible_timer = 50;
+
+        let damage_number = new DamageNumber( this.game );
+        damage_number.x = this.x;
+        damage_number.y = this.y;
+        damage_number.number = damage_amount;
+        this.game.world.push_entity( damage_number );
 
         return true;
     }
@@ -137,8 +188,7 @@ export class Player extends Entity {
         this.x += this.vx;
         this.y += this.vy;
 
-        // ステータスの変動
-        this.health.always_process();
+
 
         if ( this.is_ghost ) {
             // 死んでリスポン待ちの幽霊
@@ -185,8 +235,8 @@ export class Player extends Entity {
         }
 
         // 海との当たり判定
-        if( 16 <= this.y ){
-            if( !this.is_diving && 24 <= this.y){
+        if( -this.height <= this.y ){
+            if( !this.is_diving && 0 <= this.y){
                 // 潜水中でない場合は浮かぶ
                 this.vy -= 1;
                 this.vy *= 0.8;
@@ -224,6 +274,9 @@ export class Player extends Entity {
             this.vx = 0;
             this.vy = 0;
         }
+
+        // ステータスの変動
+        this.health.always_process();
 
         // マウスクリック
         if( !this.game.hud.hud_menu.is_menu_open ){
@@ -389,7 +442,7 @@ export class Player extends Entity {
         // 船との当たり判定
         // 船から見たローカル座標
         let local_x_in_ship = this.x + (this.game.world.ship.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
-        let local_y_in_ship = this.y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_y_in_ship = this.y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS + this.height_half;
 
         // 触れているブロックの座標
         let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
@@ -401,7 +454,7 @@ export class Player extends Entity {
                 this.game.world.ship.block_array[block_x][block_y].is_floor
             ){
                 // 着地判定を得る
-                this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
+                this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS - this.height_half;
                 this.vy = 0;
                 this.is_landing = true;
                 this.is_on_ship = true;
@@ -411,12 +464,12 @@ export class Player extends Entity {
     on_draw( canvas ){
 
         canvas.strokeStyle = 'rgb(200,0,200)'
-        canvas.strokeRect( this.x - this.width_half, this.y - this.height, this.width, this.height)
+        canvas.strokeRect( this.x - this.width_half, this.y - this.height_half, this.width, this.height)
 
         if( this.is_ghost ){
-            canvas.drawImage( this.image_ghost, this.x - this.width_half, this.y - this.height, this.width, this.height )
+            canvas.drawImage( this.image_ghost, this.x - this.width_half, this.y - this.height_half, this.width, this.height )
         } else {
-            canvas.drawImage( this.image, this.x - this.width_half, this.y - this.height, this.width, this.height )
+            canvas.drawImage( this.image, this.x - this.width_half, this.y - this.height_half, this.width, this.height )
         }
 
 
