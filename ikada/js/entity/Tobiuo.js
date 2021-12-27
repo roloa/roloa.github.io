@@ -30,6 +30,9 @@ export class Tobiuo extends Enemy {
         this.preparing_jump_minimum_time = 50;
         this.preparing_jump_timer = 0;
 
+        this.direct_damage = 9;
+        this.knock_back_rate = 1.0;
+
         this.target_vy = 0;
         this.target_vx = -3;
     }

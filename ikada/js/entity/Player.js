@@ -100,6 +100,9 @@ export class Player extends Entity {
     }
 
     hit_wind( wind ){
+        if( this.game.hud.hud_menu.is_menu_open ){
+            return false;
+        }
         if( this.is_falling ){
             // 急降下中は風に当たらない
         } else if( this.riseup_power <= 0 ){
@@ -123,6 +126,9 @@ export class Player extends Entity {
             return false;
         }
         if( 0 < this.hit_invincible_timer ){
+            return false;
+        }
+        if( this.game.hud.hud_menu.is_menu_open ){
             return false;
         }
         // 当たり判定
@@ -168,7 +174,7 @@ export class Player extends Entity {
         if( this.game.hud.hud_menu.is_menu_open ){
             return false;
         }
-        
+
         this.health.mod_hp( -damage_amount );
         this.vx += knockback_vx;
         this.vx = Math.max( -20, Math.min(this.vx, 20) );

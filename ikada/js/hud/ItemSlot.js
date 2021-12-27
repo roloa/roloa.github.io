@@ -3,6 +3,7 @@ import {CatchNet} from '../tool_item/CatchNet.js';
 import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
 import {FishRod} from '../tool_item/FishRod.js';
 import {EquipmentItem} from '../tool_item/EquipmentItem.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
 import {Bow} from '../tool_item/Bow.js';
 
 import {BuildBlock} from '../tool_item/BuildBlock.js';
@@ -37,6 +38,8 @@ export class ItemSlot {
 
         this.item_slot_cursor = 0;
         this.is_mouse_holding = false;
+
+        this.is_config_auto_material_deconstruct = true;
     }
 
 
@@ -71,15 +74,21 @@ export class ItemSlot {
          this.item_slot[ this.item_slot_cursor ] = null;
     }
     put_pickup_item( new_item ){
+        if( this.is_config_auto_material_deconstruct ){
+            if( new_item instanceof ResourceItem ){
+                new_item.on_click(0,0,0,0);
+                return true;
+            }
+        }
         // アイテムスロットの後側から入る場所を探す
         for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
             if( this.item_slot[ i ] == null ){
                 this.item_slot[ i ] = new_item;
+                this.refresh();
                 return true;
             }
         }
         // 入る場所が無かったらfalseを返す
-        this.refresh();
         return false;
     }
     has_empty_space(){

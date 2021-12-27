@@ -30,6 +30,9 @@ export class Kamome extends Enemy {
         this.vy = 0;
         this.dash_speed = 0.1;
 
+        this.direct_damage = 9;
+        this.knock_back_rate = 1.0;
+
         this.target_vx = -3;
         this.target_vy = 0;
         this.target_height = -200;

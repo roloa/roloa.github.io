@@ -54,7 +54,8 @@ export class MenuConfig {
         this.config_list[3] = 'データ[2]にセーブする'
         this.config_list[4] = '---'
         this.config_list[5] = '仮想キーボード(試作)'
-        this.config_list[6] = '---'
+        this.config_list[6] = 'マテリアルの自動解体'
+        this.config_list[7] = '---'
 
         this.function_list = [];
         this.function_list[0] = function(){ }.bind(this);
@@ -63,7 +64,10 @@ export class MenuConfig {
         this.function_list[3] = this.save_game_2.bind(this);
         this.function_list[4] = function(){ }.bind(this);
         this.function_list[5] = this.toggle_virtual_key.bind(this);
-        this.function_list[6] = function(){ }.bind(this);
+        this.function_list[6] = this.toggle_material_auto_destruct.bind(this);
+        this.function_list[7] = function(){ }.bind(this);
+
+
         this.config_cursor = 0;
         this.config_scroll = 0;
         this.menu_icon = this.game.image_library.get_image( 'haguruma' );
@@ -71,6 +75,15 @@ export class MenuConfig {
 
     toggle_virtual_key(){
         this.game.hud_virtual_input.toggle_enable();
+    }
+    toggle_material_auto_destruct(){
+        if (this.game.hud.item_slot.is_config_auto_material_deconstruct){
+            this.game.hud.item_slot.is_config_auto_material_deconstruct = false;
+            this.game.log('マテリアル自動解体をオフにしました。');
+        } else {
+            this.game.hud.item_slot.is_config_auto_material_deconstruct = true;
+            this.game.log('マテリアル自動解体をオンにしました。');
+        }
     }
     save_game_auto(){
         this.game.save_data_manager.save_game('save_data_auto')
