@@ -84,8 +84,8 @@ export class World {
     give_tool_item_player( new_tool_item ){
         let new_drop_item = new DropItem( this.game );
         new_drop_item.set_tool_item( new_tool_item );
-        new_drop_item.x = this.game.world.player.x
-        new_drop_item.y = this.game.world.player.y - 48;
+        new_drop_item.x = this.game.world.player.x;
+        new_drop_item.y = this.game.world.player.y;
         this.entity_list.push( new_drop_item )
     }
 
