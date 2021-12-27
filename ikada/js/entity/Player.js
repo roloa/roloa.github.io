@@ -165,6 +165,10 @@ export class Player extends Entity {
         if( 0 < this.hit_invincible_timer ){
             return false;
         }
+        if( this.game.hud.hud_menu.is_menu_open ){
+            return false;
+        }
+        
         this.health.mod_hp( -damage_amount );
         this.vx += knockback_vx;
         this.vx = Math.max( -20, Math.min(this.vx, 20) );
@@ -441,7 +445,17 @@ export class Player extends Entity {
         }
 
     }
-
+    is_in_ship(){
+        let local_x_in_ship = this.x + (this.game.world.ship.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_y_in_ship = this.y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS + this.height_half;
+        let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
+        let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
+        if( 0 <= block_x && block_x < this.game.world.ship.block_array.length &&
+            0 <= block_y && block_y < this.game.world.ship.block_array[0].length){
+                return true;
+        }
+        return false;
+    }
     hittest_ship(){
         // 船との当たり判定
         // 船から見たローカル座標

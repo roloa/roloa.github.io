@@ -69,27 +69,29 @@ export class HudMenu {
                         }
                     }
                 }
-                // マウスクリックを消費する
-                this.game.input_controller.is_mouse_press_consumed = true;
             }
         } else {
             // メニューが閉じている時
             if( this.game.input_controller.get_press_tab() ){
                 // タブキーでメニューを開く
-                this.is_menu_open = true;
+                this.open_menu();
             }
             // マウス操作
             if( this.game.input_controller.get_mouse_press() ){
                 if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
-                    this.is_menu_open = true;
-                    // マウスクリックを消費する
-                    this.game.input_controller.is_mouse_press_consumed = true;
+                    this.open_menu();
                 }
             }
         }
-
-
     }
+    open_menu(){
+        if( this.game.world.player.is_in_ship() || this.game.input_controller.is_down_key['KeyG']){
+            this.is_menu_open = true;
+        } else {
+            this.game.log('メニューは舟の上でのみ開けます。');
+        }
+    }
+
     hittest_menu_open_button( mouse_x, mouse_y ){
         let frame_x = HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING);
         return (
