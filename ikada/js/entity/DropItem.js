@@ -49,8 +49,8 @@ export class DropItem extends Entity {
 
         // プレイヤーとの当たり判定
         let player = this.game.world.player;
-        if( player.x - 16 < this.x && this.x < player.x + 16 &&
-            player.y - 32 < this.y && this.y < player.y + 8
+        if( player.x - player.width_half - 16 < this.x && this.x < player.x + player.width_half + 16 &&
+            player.y - player.height_half - 16 < this.y && this.y < player.y + player.height_half - 4
         ){
             let picked = player.hit_drop_item( this );
             if( picked ) {

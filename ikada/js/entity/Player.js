@@ -235,7 +235,7 @@ export class Player extends Entity {
         }
 
         // 海との当たり判定
-        if( -this.height <= this.y ){
+        if( -this.height_half <= this.y ){
             if( !this.is_diving && 0 <= this.y){
                 // 潜水中でない場合は浮かぶ
                 this.vy -= 1;
@@ -349,7 +349,11 @@ export class Player extends Entity {
                 } else {
                     // 潜水装備をつけてない場合
                 }
+            } else {
+                this.is_off_platform = true;
             }
+        } else {
+            this.is_off_platform = false;
         }
 
     }
@@ -454,10 +458,14 @@ export class Player extends Entity {
                 this.game.world.ship.block_array[block_x][block_y].is_floor
             ){
                 // 着地判定を得る
-                this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS - this.height_half;
-                this.vy = 0;
-                this.is_landing = true;
-                this.is_on_ship = true;
+                if( this.is_off_platform ){
+                    // 床すりぬけ状態
+                } else {
+                    this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS - this.height_half;
+                    this.vy = 0;
+                    this.is_landing = true;
+                    this.is_on_ship = true;
+                }
             }
         }
     }
