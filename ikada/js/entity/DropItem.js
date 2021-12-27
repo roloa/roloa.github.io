@@ -58,9 +58,9 @@ export class DropItem extends Entity {
             }
         }
 
-        if( this.x < -300 ){
-            this.is_alive = false;
-        }
+        // if( this.x < -300 ){
+        //     this.is_alive = false;
+        // }
 
         // 船との当たり判定
         // 船から見たローカル座標

@@ -30,10 +30,10 @@ export class Bullet extends Entity {
 
         if(0 < this.y){
             // 水中
-            this.vy -= (100 - this.weight)*0.005;
+            this.vy -= (100 - this.weight)*0.001;
         } else {
             // 空中
-            this.vy += (this.weight)*0.005;
+            this.vy += (this.weight)*0.001;
         }
 
         // 敵との当たり判定

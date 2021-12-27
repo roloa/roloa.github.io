@@ -97,9 +97,11 @@ export class WeaponItem extends ToolItem {
     }
     generate_random_weapon( level, rarity ){
         // 基礎攻撃力
-        let power = (( level ) * ( level )) * (1 + Math.random())
+        let power = ( level ) * (2 + Math.random());
 
-        this.saving_data.fire_spread = Math.floor(Math.random() * Math.random() * Math.random() * 7 + 1.1);
+        let spread = Math.floor(Math.random() * Math.random() * 7 + 1.1);
+        this.saving_data.fire_spread = spread
+        power = (power * 2) / (1 + spread);
 
         this.saving_data.fire_spread_angle = Math.random() * 0.2 + 0.02;
 
@@ -139,7 +141,8 @@ export class WeaponItem extends ToolItem {
 
         this.saving_data.knockback_rate = 0.1 + Math.random() * Math.random();
         if( Math.random() < 0.2){
-            this.saving_data.poison_damage = power * (0.1 + Math.random() * 0.3 + Math.random() * Math.random() * 0.9);
+            this.saving_data.poison_damage = Math.floor(power * (0.1 + Math.random() * 0.3 + Math.random() * Math.random() * 0.9));
+            power *= 0.8;
         } else {
             this.saving_data.poison_damage = 0;
         }
@@ -149,7 +152,8 @@ export class WeaponItem extends ToolItem {
             this.saving_data.slow_rate = 0;
         }
         if( Math.random() < 0.2){
-            this.saving_data.life_leech = (1 + Math.random() * 3 + Math.random() * Math.random() * 7);
+            this.saving_data.life_leech = Math.floor(1 + Math.random() * 3 + Math.random() * Math.random() * 7);
+            power *= 0.8;
         } else {
             this.saving_data.life_leech = 0;
         }
