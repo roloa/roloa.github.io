@@ -98,7 +98,7 @@ export class MenuInventory {
         }
 
         // マウスクリック
-        if( this.game.input_controller.is_mouse_press ){
+        if( this.game.input_controller.get_mouse_press() ){
             let m_x = this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT;
             let m_y = this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP;
 

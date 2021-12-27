@@ -161,7 +161,7 @@ export class ItemSlot {
             this.item_slot_cursor = 8;
         }
 
-        if( this.game.input_controller.is_mouse_press ){
+        if( this.game.input_controller.get_mouse_press() ){
             let m_y = this.game.input_controller.mouse_y;
             let m_x = this.game.input_controller.mouse_x;
             if( this.itemslot_start_y < m_y && m_y < this.itemslot_start_y + this.itemslot_size ){

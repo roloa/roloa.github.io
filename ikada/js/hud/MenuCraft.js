@@ -82,7 +82,7 @@ export class MenuCraft {
             }
         }
         // マウス操作
-        if( this.game.input_controller.is_mouse_press ) {
+        if( this.game.input_controller.get_mouse_press() ) {
             this.on_click(
                 this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT,
                 this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP );

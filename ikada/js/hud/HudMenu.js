@@ -50,8 +50,8 @@ export class HudMenu {
                 }
             }
             // マウス操作
-            if( this.game.input_controller.is_mouse_press ){
-                if( this.game.input_controller.is_mouse_press ){
+            if( this.game.input_controller.get_mouse_press() ){
+                if( this.game.input_controller.get_mouse_press() ){
                     // 閉じるボタン
                     if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
                         this.is_menu_open = false;
@@ -74,7 +74,7 @@ export class HudMenu {
                 this.is_menu_open = true;
             }
             // マウス操作
-            if( this.game.input_controller.is_mouse_press ){
+            if( this.game.input_controller.get_mouse_press() ){
                 if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
                     this.is_menu_open = true;
                 }

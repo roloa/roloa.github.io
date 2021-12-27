@@ -280,7 +280,7 @@ export class Player extends Entity {
 
         // マウスクリック
         if( !this.game.hud.hud_menu.is_menu_open ){
-            if( this.game.input_controller.is_mouse_press ) {
+            if( this.game.input_controller.get_mouse_press() ) {
                 this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
             }
         }

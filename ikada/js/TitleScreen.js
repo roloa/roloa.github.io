@@ -46,7 +46,7 @@ export class TitleScreen extends Object {
 
 
         // マウス操作
-        if( this.game.input_controller.is_mouse_press ){
+        if( this.game.input_controller.get_mouse_press() ){
             if( TitleScreen.MENU_MARGIN_LEFT - TitleScreen.MENU_ARROW_X < this.game.input_controller.mouse_x &&
                 TitleScreen.MENU_MARGIN_LEFT + TitleScreen.MENU_ITEM_WIDTH > this.game.input_controller.mouse_x
              ){
