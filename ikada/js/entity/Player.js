@@ -325,7 +325,7 @@ export class Player extends Entity {
         this.vx *= this.walk_speed_down_rate;
 
         // ジャンプ　海面でも小さくジャンプできる
-        if( this.game.input_controller.get_down_up() ){
+        if( this.game.input_controller.get_down_up() || this.game.input_controller.get_down_space()){
             if( -1 < this.vy ){
                 if( this.is_landing ){
                     if( this.health.consume_sp( 3 ) ){
