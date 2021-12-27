@@ -59,6 +59,11 @@ export class Enemy extends Entity {
         this.fire_cool_time_count = 0;
         this.blast_lifetime = 0;
 
+        this.poison_count = 0;
+        this.poison_damage = 0;
+        this.slow_count = 0;
+        this.slow_rate = 1.0;
+
         this.showing_hp_timer = 0;
 
     }
@@ -72,8 +77,9 @@ export class Enemy extends Entity {
     test_hit_bullet( bullet ){
         if( this.test_hit( bullet.x, bullet.y ) ){
             // 弾に当たった
+
             let taken_damage = bullet.calc_damage();
-            this.hp -= taken_damage;
+            this.take_damage( taken_damage );
             this.vx += bullet.vx * bullet.gun_data.knockback_rate;
             this.vy += bullet.vy * bullet.gun_data.knockback_rate;
             if( 0 < this.gosya_forgive_count ){
@@ -89,20 +95,36 @@ export class Enemy extends Entity {
                     this.angry_timer_count = this.angry_timer_max;
                 }
             }
-            this.showing_hp_timer = 100;
 
-            // ダメージ数字を出す
-            let damage_number = new DamageNumber( this.game );
-            damage_number.x = this.x;
-            damage_number.y = this.y;
-            damage_number.number = taken_damage;
-            this.game.world.push_entity( damage_number );
-            if( this.hp <= 0) {
-                this.on_die();
+            // 状態異常を受ける
+            if( 0 < bullet.gun_data.poison_damage ){
+                this.poison_damage = bullet.gun_data.poison_damage;
+                this.poison_count = 255; // 5秒間、5回分
             }
+            if( 0 < bullet.gun_data.slow_rate ){
+                this.slow_rate = 1.0 - bullet.gun_data.slow_rate;
+                this.slow_count = 255; // 約5秒間
+            }
+            if( 0 < bullet.gun_data.life_leech ){
+                this.game.world.player.health.mod_hp( bullet.gun_data.life_leech );
+            }
+
             return true;
         }
         return false;
+    }
+    take_damage( taken_damage ){
+        this.hp -= taken_damage;
+        // ダメージ数字を出す
+        let damage_number = new DamageNumber( this.game );
+        damage_number.x = this.x;
+        damage_number.y = this.y;
+        damage_number.number = taken_damage;
+        this.game.world.push_entity( damage_number );
+        if( this.hp <= 0) {
+            this.on_die();
+        }
+        this.showing_hp_timer = 250;
     }
     on_die(){
         // 生存フラグをなくす
@@ -203,6 +225,17 @@ export class Enemy extends Entity {
 
         // 敵の行動AI
         this.enemy_move_ai();
+
+        // 状態異常カウントの減少
+        if( 0 < this.poison_count ){
+            this.poison_count -= 1;
+            if( this.poison_count % 50 == 0){
+                this.take_damage( this.poison_damage )
+            }
+        }
+        if( 0 < this.slow_count ){
+            this.slow_count -= 1;
+        }
 
         if( 0 < this.angry_timer_count && !this.game.world.player.is_ghost ){
             this.angry_timer_count -= 1;

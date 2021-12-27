@@ -131,14 +131,22 @@ export class EnemyFish extends Enemy {
             }
         }
     }
-
+    basic_coodinate_update(){
+        if( 0 < this.slow_count){
+            // スロー効果中
+            this.x += this.vx * this.slow_rate;
+            this.y += this.vy * this.slow_rate;
+        } else {
+            this.x += this.vx;
+            this.y += this.vy;
+        }
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+    }
     on_update(){
         super.on_update();
 
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= 0.99;
-        this.vy *= 0.99;
+        this.basic_coodinate_update()
 
         if( this.y < 0 ){
             // 海から飛び出した

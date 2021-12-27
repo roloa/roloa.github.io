@@ -12,7 +12,7 @@ export class DamageNumber extends Entity {
 
         this.number = 0;
 
-        this.life_time = 200;
+        this.life_time = 50;
 
     }
     on_update(){
