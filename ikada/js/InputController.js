@@ -97,6 +97,7 @@ export class InputController {
         this.is_mouse_press = this.is_mouse_press_buffer;
         this.is_mouse_press_buffer = false;
         this.is_mouse_down_consumed = false;
+        this.is_mouse_press_consumed = false;
 
         this.is_press_left = this.is_buffer_left;
         this.is_press_right = this.is_buffer_right;
@@ -135,7 +136,7 @@ export class InputController {
         return this.is_mouse_down && !this.is_mouse_down_consumed;
     }
     get_mouse_press(){
-        return this.is_mouse_press; // && !this.is_mouse_press_consumed;
+        return this.is_mouse_press && !this.is_mouse_press_consumed;
     }
     get_down_left(){
         return this.is_down_left || this.is_virtual_down_left;

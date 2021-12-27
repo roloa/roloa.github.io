@@ -124,8 +124,8 @@ export class Game {
             } else if( this.is_there_title ){
                 this.title_screen.on_update();
             } else {
-                this.world.on_update();
                 this.hud.on_update();
+                this.world.on_update();
             }
 
             this.on_draw();

@@ -168,6 +168,8 @@ export class ItemSlot {
                 for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
                     let frame_x = this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing)
                     if( frame_x < m_x && m_x < frame_x + this.itemslot_size ){
+                        // マウスクリックを消費する
+                        this.game.input_controller.is_mouse_press_consumed = true;
 
                         if( this.is_menu_open() ){
                             if( this.is_mouse_holding ){

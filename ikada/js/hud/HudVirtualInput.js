@@ -36,27 +36,27 @@ export class HudVirtualInput {
                 let mouse_y = this.game.input_controller.mouse_y;
                 if( this.hit_test_button( mouse_x, mouse_y, this.down_x, this.down_y, this.button_size ) ){
                     this.game.input_controller.is_virtual_press_down = true;
-                    this.game.input_controller.get_mouse_press() = false;
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
                 if( this.hit_test_button( mouse_x, mouse_y, this.up_x, this.up_y, this.button_size ) ){
                     this.game.input_controller.is_virtual_press_up = true;
-                    this.game.input_controller.get_mouse_press() = false;
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
                 if( this.hit_test_button( mouse_x, mouse_y, this.left_x, this.left_y, this.button_size ) ){
                     this.game.input_controller.is_virtual_press_left = true;
-                    this.game.input_controller.get_mouse_press() = false;
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
                 if( this.hit_test_button( mouse_x, mouse_y, this.right_x, this.right_y, this.button_size ) ){
                     this.game.input_controller.is_virtual_press_right = true;
-                    this.game.input_controller.get_mouse_press() = false;
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
                 if( this.hit_test_button( mouse_x, mouse_y, this.a_x, this.a_y, this.button_size ) ){
                     this.game.input_controller.is_virtual_press_space = true;
-                    this.game.input_controller.get_mouse_press() = false;
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
                 if( this.hit_test_button( mouse_x, mouse_y, this.b_x, this.b_y, this.button_size ) ){
                     this.game.input_controller.is_virtual_press_esc = true;
-                    this.game.input_controller.get_mouse_press() = false;
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
             }
             if( this.game.input_controller.get_mouse_down() ){

@@ -49,6 +49,12 @@ export class HudMenu {
                     this.menu_list_cursor += 1;
                 }
             }
+
+            // メニューの操作
+            if( this.menu_list[ this.menu_list_cursor ] ) {
+                this.menu_list[ this.menu_list_cursor ].on_update();
+            }
+
             // マウス操作
             if( this.game.input_controller.get_mouse_press() ){
                 if( this.game.input_controller.get_mouse_press() ){
@@ -63,20 +69,21 @@ export class HudMenu {
                         }
                     }
                 }
-            }
-            // メニューの操作
-            if( this.menu_list[ this.menu_list_cursor ] ) {
-                this.menu_list[ this.menu_list_cursor ].on_update();
+                // マウスクリックを消費する
+                this.game.input_controller.is_mouse_press_consumed = true;
             }
         } else {
             // メニューが閉じている時
             if( this.game.input_controller.get_press_tab() ){
+                // タブキーでメニューを開く
                 this.is_menu_open = true;
             }
             // マウス操作
             if( this.game.input_controller.get_mouse_press() ){
                 if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
                     this.is_menu_open = true;
+                    // マウスクリックを消費する
+                    this.game.input_controller.is_mouse_press_consumed = true;
                 }
             }
         }
