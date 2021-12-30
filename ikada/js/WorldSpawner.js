@@ -8,6 +8,7 @@ import {EnemyBird} from './entity/EnemyBird.js';
 import {Kamome} from './entity/Kamome.js';
 import {Tobiuo} from './entity/Tobiuo.js';
 import {ResourceItem} from './tool_item/ResourceItem.js';
+import {BreakableObject} from './entity/BreakableObject.js';
 
 
 export class WorldSpawner {
@@ -41,7 +42,7 @@ export class WorldSpawner {
         }
         if( Math.random() < 0.1){
             this.spawn_wind();
-            this.spawn_cloud();
+            // this.spawn_cloud();
         }
         if( this.world.player.y < this.despawn_distance && Math.random() < 0.01){
             // 空の敵
@@ -75,7 +76,18 @@ export class WorldSpawner {
             }
 
         }
+        if( Math.random() < 0.1){
+            // 破壊可能オブジェクト
+            if( this.world.enemy_list.filter(function( elem ){ return elem instanceof BreakableObject; }).length < 20 ){
+                let new_enemy = new BreakableObject( this.game );
+                this.set_coodinate_randomly( new_enemy );
+                this.move_outsight_random( new_enemy );
+                new_enemy.generate_object();
+                this.world.push_enemy( new_enemy )
 
+            }
+
+        }
         if( Math.random() < 0.01) {
             // トビウオ
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof Tobiuo; }).length < 3 ){
