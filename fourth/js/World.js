@@ -101,7 +101,7 @@ export class World extends Object {
 
         if( this.is_first_goal ){
             this.is_first_goal = false;
-            document.getElementById('desc_goal').innerHTML += "一度クリアしたら、<span id='another_goal'>裏ゴール</span>も探してみてください。";
+            document.getElementById('desc_another_goal').innerHTML += "一度クリアしたら、<span id='another_goal'>裏ゴール</span>も探してみてください。";
             this.true_another_goal_span = document.getElementById('another_goal');
         }
     }
