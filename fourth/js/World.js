@@ -115,7 +115,9 @@ export class World extends Object {
         this.is_right_edge_goaled = false;
         this.player_x = this.player_start_x;
         this.player_y = this.player_start_y;
-
+        this.player_vx = 0;
+        this.player_vy = 0;
+        this.player_can_jump = false;
         if( this.is_first_goal ){
             this.is_first_goal = false;
             document.getElementById('desc_another_goal').innerHTML += "一度クリアしたら、<span id='another_goal'>裏ゴール</span>も探してみてください。";
@@ -453,6 +455,7 @@ export class World extends Object {
                 canvas.fillText('これは文字通り、裏ゴールを超えた偉業ですよ！', 50,125);
             } else if( this.is_outer_goaled){
                 canvas.fillText('見事、真の「裏ゴール」に到達しました！', 75,100);
+                canvas.fillText('おめでとうございます！', 150, 125);
             } else {
                 canvas.fillText('ゴールしました！', 150,100);
             }
