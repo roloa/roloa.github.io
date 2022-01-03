@@ -59,6 +59,23 @@ export class World extends Object {
         this.player_walk_animation_count = 0;
         this.player_head_left = false;
 
+        this.p_block_part_x1 = 0;
+        this.p_block_part_y1 = 0;
+        this.p_block_part_x2 = 0;
+        this.p_block_part_y2 = 0;
+        this.p_block_part_x3 = 0;
+        this.p_block_part_y3 = 0;
+        this.p_block_part_x4 = 0;
+        this.p_block_part_y4 = 0;
+        this.p_block_part_vx1 = 0;
+        this.p_block_part_vy1 = 0;
+        this.p_block_part_vx2 = 0;
+        this.p_block_part_vy2 = 0;
+        this.p_block_part_vx3 = 0;
+        this.p_block_part_vy3 = 0;
+        this.p_block_part_vx4 = 0;
+        this.p_block_part_vy4 = 0;
+
         // 外側のプレイヤーの要素
         this.outer_player_img = document.createElement('img')
         this.outer_player_img.src = './img/1g.png';
@@ -233,9 +250,49 @@ export class World extends Object {
         }
         if( 0 < this.placed_block_timer ){
             this.placed_block_timer -= 1;
+            if( this.placed_block_timer == this.placed_block_timer_vanish){
+                let x = this.placed_block_x * this.block_size + this.block_size * 0.25;
+                let y = this.placed_block_y * this.block_size + this.block_size * 0.25;
+                this.p_block_part_x1 = x;
+                this.p_block_part_y1 = y;
+                this.p_block_part_x2 = x;
+                this.p_block_part_y2 = y;
+                this.p_block_part_x3 = x;
+                this.p_block_part_y3 = y;
+                this.p_block_part_x4 = x;
+                this.p_block_part_y4 = y;
+                let spd = 2;
+                this.p_block_part_vx1 = -spd;
+                this.p_block_part_vy1 = -spd;
+                this.p_block_part_vx2 = -spd;
+                this.p_block_part_vy2 = spd;
+                this.p_block_part_vx3 = spd;
+                this.p_block_part_vy3 = -spd;
+                this.p_block_part_vx4 = spd;
+                this.p_block_part_vy4 = spd;
+            }
         }
 
-
+        this.on_update_p_block_part()
+    }
+    on_update_p_block_part(){
+        this.p_block_part_x1 += this.p_block_part_vx1;
+        this.p_block_part_y1 += this.p_block_part_vy1;
+        this.p_block_part_x2 += this.p_block_part_vx2;
+        this.p_block_part_y2 += this.p_block_part_vy2;
+        this.p_block_part_x3 += this.p_block_part_vx3;
+        this.p_block_part_y3 += this.p_block_part_vy3;
+        this.p_block_part_x4 += this.p_block_part_vx4;
+        this.p_block_part_y4 += this.p_block_part_vy4;
+        let rate = 0.95;
+        this.p_block_part_vx1 *= rate;
+        this.p_block_part_vy1 *= rate;
+        this.p_block_part_vx2 *= rate;
+        this.p_block_part_vy2 *= rate;
+        this.p_block_part_vx3 *= rate;
+        this.p_block_part_vy3 *= rate;
+        this.p_block_part_vx4 *= rate;
+        this.p_block_part_vy4 *= rate;
     }
     check_goal(){
         let cell_x = Math.floor(this.player_x / this.block_size);
@@ -396,5 +453,29 @@ export class World extends Object {
             }
             canvas.fillText('Spaceキーでリセット', 150, 150);
         }
+
+        if( 0 < this.placed_block_timer && this.placed_block_timer < this.placed_block_timer_vanish ){
+            this.on_draw_p_block_part( canvas );
+        }
+    }
+    on_draw_p_block_part( canvas ){
+
+        canvas.drawImage( this.image_block_p,
+            this.p_block_part_x1,
+            this.p_block_part_y1,
+            this.block_size * 0.5, this.block_size * 0.5);
+        canvas.drawImage( this.image_block_p,
+            this.p_block_part_x2,
+            this.p_block_part_y2,
+            this.block_size * 0.5, this.block_size * 0.5);
+        canvas.drawImage( this.image_block_p,
+            this.p_block_part_x3,
+            this.p_block_part_y3,
+            this.block_size * 0.5, this.block_size * 0.5);
+        canvas.drawImage( this.image_block_p,
+            this.p_block_part_x4,
+            this.p_block_part_y4,
+            this.block_size * 0.5, this.block_size * 0.5);
+
     }
 }
