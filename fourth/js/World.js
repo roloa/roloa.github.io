@@ -284,6 +284,11 @@ export class World extends Object {
         this.p_block_part_y3 += this.p_block_part_vy3;
         this.p_block_part_x4 += this.p_block_part_vx4;
         this.p_block_part_y4 += this.p_block_part_vy4;
+        let grav = 0.1;
+        this.p_block_part_vy1 += grav;
+        this.p_block_part_vy2 += grav;
+        this.p_block_part_vy3 += grav;
+        this.p_block_part_vy4 += grav;
         let rate = 0.95;
         this.p_block_part_vx1 *= rate;
         this.p_block_part_vy1 *= rate;
