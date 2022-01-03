@@ -123,6 +123,9 @@ export class World extends Object {
             document.getElementById('desc_another_goal').innerHTML += "一度クリアしたら、<span id='another_goal'>裏ゴール</span>も探してみてください。";
             this.true_another_goal_span = document.getElementById('another_goal');
         }
+        if( this.true_another_goal_span != null ){
+            this.true_another_goal_span.style['background-color'] = '';
+        }
     }
     on_update(){
 
@@ -332,6 +335,7 @@ export class World extends Object {
             ){
                 this.is_goaled = true;
                 this.is_outer_goaled = true;
+                this.true_another_goal_span.style['background-color'] = '#C00';
             }
         }
     }
