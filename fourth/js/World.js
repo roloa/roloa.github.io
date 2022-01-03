@@ -173,8 +173,9 @@ export class World extends Object {
 
         if( this.outer_player_is_active ){
             // 外側の壁
-            if( 450 < this.player_y + this.player_hitbox_height * 0.5){
-                this.player_y = 450 - this.player_hitbox_height * 0.5;
+            let bottom_floor = 450;
+            if( bottom_floor < this.player_y + this.player_hitbox_height * 0.5){
+                this.player_y = bottom_floor - this.player_hitbox_height * 0.5;
                 this.player_vy = 0;
                 this.player_can_jump = true;
             }
