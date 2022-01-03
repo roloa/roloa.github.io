@@ -169,9 +169,9 @@ export class World extends Object {
         // ゴール判定
         this.check_goal();
 
-        this.check_outer_goal();
-
         if( this.outer_player_is_active ){
+            // 外側のゴール判定
+            this.check_outer_goal();
             // 外側の壁
             let bottom_floor = 450;
             if( bottom_floor < this.player_y + this.player_hitbox_height * 0.5){
@@ -193,6 +193,8 @@ export class World extends Object {
             // 落下死
             this.player_x = this.player_start_x;
             this.player_y = this.player_start_y;
+            this.player_vx = 0;
+            this.player_vy = 0;
         }
         // 外側プレイヤーのアクティブ化
         if( this.outer_player_is_active ){
@@ -388,7 +390,7 @@ export class World extends Object {
                 canvas.fillText('画面外の右端に到達しました！！', 150,100);
                 canvas.fillText('これは文字通り、裏ゴールを超えた偉業ですよ！', 50,125);
             } else if( this.is_outer_goaled){
-                canvas.fillText('見事、真の裏ゴールを見つけました！', 150,70);
+                canvas.fillText('見事、真の「裏ゴール」に到達しました！', 75,100);
             } else {
                 canvas.fillText('ゴールしました！', 150,100);
             }
