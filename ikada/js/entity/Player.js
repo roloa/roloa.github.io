@@ -3,7 +3,7 @@ import {Entity} from './Entity.js';
 import {ShipBlock} from '../ship_block/ShipBlock.js';
 import {EquipmentItem} from '../tool_item/EquipmentItem.js';
 import {DamageNumber} from './particle/DamageNumber.js';
-
+import {DropItem} from './DropItem.js';
 import {PlayerHealth} from './PlayerHealth.js';
 
 
@@ -293,8 +293,20 @@ export class Player extends Entity {
             if( this.game.input_controller.get_mouse_press() ) {
                 this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
             }
-        }
+            if( this.game.input_controller.is_down_key['KeyT']){
+                // アイテムの投棄
+                let active_item = this.game.hud.item_slot.get_active_item();
+                if( active_item != null){
+                    let new_drop_item = new DropItem( this.game );
+                    new_drop_item.set_tool_item( active_item );
+                    new_drop_item.x = this.x + 32;
+                    new_drop_item.y = this.y;
+                    this.game.world.push_entity( new_drop_item )
+                    this.game.hud.item_slot.delete_active_item()
+                }
+            }
 
+        }
     }
     on_click( cursor_x, cursor_y ){
         // 船の設備へのインタラクトを試みる
