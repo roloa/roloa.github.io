@@ -6,6 +6,7 @@ import {ShipFrame} from './ship_block/ShipFrame.js'
 import {DryLack} from './ship_block/DryLack.js'
 import {ShipFloor} from './ship_block/ShipFloor.js'
 import {ShipFarm} from './ship_block/ShipFarm.js'
+import {FuelEngine} from './ship_block/FuelEngine.js'
 import {VictoryRocket} from './ship_block/VictoryRocket.js'
 import {DroneHome} from './ship_block/DroneHome.js'
 import {FirePlace} from './ship_block/FirePlace.js'
@@ -32,6 +33,8 @@ export class BlockInstanceMaker {
             return new ShipFloor( this.game );
         } else if( block_data.class_name == 'ShipFarm' ){
             return new ShipFarm( this.game );
+        } else if( block_data.class_name == 'FuelEngine' ){
+            return new FuelEngine( this.game );
         } else if( block_data.class_name == 'VictoryRocket' ){
             return new VictoryRocket( this.game );
         } else if( block_data.class_name == 'DroneHome' ){

@@ -3,6 +3,7 @@ import {RecipeEquip} from './RecipeEquip.js';
 import {RecipeShipBlock} from './RecipeShipBlock.js';
 import {RecipeTool} from './RecipeTool.js';
 import {RecipeWeapon} from './RecipeWeapon.js';
+import {RecipeSupply} from './RecipeSupply.js';
 
 export class CraftRecipe extends Object {
 
@@ -10,7 +11,8 @@ export class CraftRecipe extends Object {
     static CATEGORY_SHIP = 1;
     static CATEGORY_WEAPON = 2;
     static CATEGORY_EQUIP = 3;
-    static CATEGORY_COUNT = 4;
+    static CATEGORY_SUPPLY = 4;
+    static CATEGORY_COUNT = 5;
 
     constructor( game ){
         super( game );
@@ -20,31 +22,36 @@ export class CraftRecipe extends Object {
         this.recipe_list[ CraftRecipe.CATEGORY_SHIP ] = [];
         this.recipe_list[ CraftRecipe.CATEGORY_WEAPON ] = [];
         this.recipe_list[ CraftRecipe.CATEGORY_EQUIP ] = [];
+        this.recipe_list[ CraftRecipe.CATEGORY_SUPPLY ] = [];
 
         this.category_icon_list = [];
         this.category_icon_list[ CraftRecipe.CATEGORY_TOOL ] = this.game.image_library.get_image( 'fishing_tsurizao_nobezao' );
         this.category_icon_list[ CraftRecipe.CATEGORY_SHIP ] = this.game.image_library.get_image( 'fune_ikada' );
         this.category_icon_list[ CraftRecipe.CATEGORY_WEAPON ] = this.game.image_library.get_image( 'yumiya_bowgun' );
         this.category_icon_list[ CraftRecipe.CATEGORY_EQUIP ] = this.game.image_library.get_image( 'snorkel_goods' );
+        this.category_icon_list[ CraftRecipe.CATEGORY_SUPPLY ] = this.game.image_library.get_image( 'cooking_kokei_nenryou_fire' );
 
         this.category_name_list = [];
         this.category_name_list[ CraftRecipe.CATEGORY_TOOL ] = '道具';
         this.category_name_list[ CraftRecipe.CATEGORY_SHIP ] = '舟';
         this.category_name_list[ CraftRecipe.CATEGORY_WEAPON ] = '武器';
         this.category_name_list[ CraftRecipe.CATEGORY_EQUIP ] = '装備';
+        this.category_name_list[ CraftRecipe.CATEGORY_SUPPLY ] = '補給品';
 
         this.setup();
     }
     setup(){
         let recipe_lib = null;
         recipe_lib = new RecipeTool( this.game );
-        recipe_lib.setup_recipe( this, 0 );
+        recipe_lib.setup_recipe( this, CraftRecipe.CATEGORY_TOOL );
         recipe_lib = new RecipeShipBlock( this.game );
-        recipe_lib.setup_recipe( this, 1 );
+        recipe_lib.setup_recipe( this, CraftRecipe.CATEGORY_SHIP );
         recipe_lib = new RecipeWeapon( this.game );
-        recipe_lib.setup_recipe( this, 2 );
+        recipe_lib.setup_recipe( this, CraftRecipe.CATEGORY_WEAPON );
         recipe_lib = new RecipeEquip( this.game );
-        recipe_lib.setup_recipe( this, 3 );
+        recipe_lib.setup_recipe( this, CraftRecipe.CATEGORY_EQUIP );
+        recipe_lib = new RecipeSupply( this.game );
+        recipe_lib.setup_recipe( this, CraftRecipe.CATEGORY_SUPPLY );
     }
     get_recipe( category, index ){
         if( category < this.recipe_list.length){

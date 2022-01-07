@@ -5,6 +5,7 @@ import {EquipmentItem} from './tool_item/EquipmentItem.js'
 import {CatchNet} from './tool_item/CatchNet.js'
 import {ToolItem} from './tool_item/ToolItem.js'
 import {WeaponItem} from './tool_item/WeaponItem.js'
+import {SolidFuel} from './tool_item/SolidFuel.js'
 import {Scouter} from './tool_item/Scouter.js'
 import {Spear} from './tool_item/Spear.js'
 import {DistillBottle} from './tool_item/DistillBottle.js'
@@ -13,6 +14,7 @@ import {ItemBoomerang} from './tool_item/ItemBoomerang.js'
 import {Arrow} from './tool_item/Arrow.js'
 import {Oar} from './tool_item/Oar.js'
 import {DeconstructHammer} from './tool_item/DeconstructHammer.js'
+import {AmmoItem} from './tool_item/AmmoItem.js'
 import {Bow} from './tool_item/Bow.js'
 import {ChickenRawSaki} from './tool_item/d_foods/ChickenRawSaki.js'
 import {ChickenRawMoto} from './tool_item/d_foods/ChickenRawMoto.js'
@@ -45,6 +47,8 @@ export class ItemInstanceMaker {
             return new ToolItem( this.game );
         } else if( item_data.class_name == 'WeaponItem' ){
             return new WeaponItem( this.game );
+        } else if( item_data.class_name == 'SolidFuel' ){
+            return new SolidFuel( this.game );
         } else if( item_data.class_name == 'Scouter' ){
             return new Scouter( this.game );
         } else if( item_data.class_name == 'Spear' ){
@@ -61,6 +65,8 @@ export class ItemInstanceMaker {
             return new Oar( this.game );
         } else if( item_data.class_name == 'DeconstructHammer' ){
             return new DeconstructHammer( this.game );
+        } else if( item_data.class_name == 'AmmoItem' ){
+            return new AmmoItem( this.game );
         } else if( item_data.class_name == 'Bow' ){
             return new Bow( this.game );
         } else if( item_data.class_name == 'ChickenRawSaki' ){

@@ -9,6 +9,7 @@ import {ShipFrame} from '../ship_block/ShipFrame.js';
 import {WaterPlace} from '../ship_block/WaterPlace.js';
 import {ShipFarm} from '../ship_block/ShipFarm.js';
 import {VictoryRocket} from '../ship_block/VictoryRocket.js';
+import {FuelEngine} from '../ship_block/FuelEngine.js';
 
 // import {} from '../ship_block/.js';
 
@@ -27,6 +28,16 @@ export class RecipeShipBlock extends Object {
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFloor( game ) ); },
             ''
         );
+
+        c_r.add_recipe( category,
+            ['燃料式のエンジンです。','燃料を投入すると、舟を前に進めます。'],
+            ['metal','mech_parts'],
+            [10,10],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new FuelEngine( game ) ); },
+            ''
+        );
+
+
         c_r.add_recipe( category,
             ['船に設置する焚き火です。',
             '配置して、生の食材を調理できます。'],
