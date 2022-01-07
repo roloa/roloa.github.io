@@ -9,6 +9,11 @@ import {ResourceItem} from './tool_item/ResourceItem.js';
 import {EffectWind} from './entity/EffectWind.js';
 
 export class World {
+
+    static SEA_WAVE_COUNT = 40;
+    static SEA_WAVE_SPACE = 2000 / World.SEA_WAVE_COUNT;
+    static SEA_WAVE_SPACE_2 = World.SEA_WAVE_SPACE * 2;
+
     constructor( game ){
         this.name = 'world';
         this.game = game;
@@ -33,6 +38,8 @@ export class World {
 
         this.auto_save_timer_max = 50 * 180; // 3min
         this.auto_save_timer = this.auto_save_timer_max ;
+
+        this.sea_offset_x = 0;
 
         // 風のテスト
         let test_wind = new EffectWind( this.game );
@@ -165,6 +172,28 @@ export class World {
         this.player.on_update();
         this.lure.on_update();
 
+        // 海の処理
+        this.sea_offset_x -= this.ship.velocity;
+        if( this.sea_offset_x < -World.SEA_WAVE_SPACE_2 ){
+            this.sea_offset_x += World.SEA_WAVE_SPACE_2
+        }
+
+    }
+    draw_sea( canvas ){
+        canvas.strokeStyle = 'rgb(0,100,200)'
+        canvas.beginPath()
+
+        // 海のなみなみを描く
+        let start_x = Math.floor(this.camera.x / World.SEA_WAVE_SPACE_2) * World.SEA_WAVE_SPACE_2 - 1000;
+
+        canvas.moveTo(start_x + this.sea_offset_x  , 0)
+         for( let i = 0 ; i < World.SEA_WAVE_COUNT ; i++ ){
+             canvas.lineTo( World.SEA_WAVE_SPACE * i + start_x + this.sea_offset_x  ,
+                 (i % 2)*10)
+        }
+        canvas.lineTo( 2000 + start_x + this.sea_offset_x , 0)
+        canvas.stroke()
+
     }
     //
     on_draw( canvas ){
@@ -201,11 +230,7 @@ export class World {
             }
         }
         // 海面
-        canvas.strokeStyle = 'rgb(0,100,200)'
-        canvas.beginPath()
-        canvas.moveTo(this.camera.x - 1000,0)
-        canvas.lineTo(this.camera.x + 1000,0)
-        canvas.stroke()
+        this.draw_sea( canvas );
 
         // マウスカーソル
         canvas.strokeStyle = 'rgb(250,20,20)'
