@@ -26,6 +26,8 @@ export class FuelEngine extends ShipBlock {
         return true;
     }
     on_update(){
+        super.on_update();
+
         // 燃料があるなら、燃料を消費して舟を推進する
         if( 0 < this.saving_data.fuel_amount ){
             this.saving_data.fuel_amount -= 0.02;

@@ -49,7 +49,7 @@ export class WorldSpawner {
 
         // 舟の速度と同じだけ進行量を増やす
         this.ship_progress += this.game.world.ship.velocity;
-        if( 1000 < this.ship_progress ){
+        if( 1 < this.ship_progress ){
             this.ship_progress -= 500;
             // 舟が一定量進んだら、海上の敵スポーンをする
             this.spawn_surface();
@@ -128,7 +128,7 @@ export class WorldSpawner {
         this.move_outsight_right( new_entity );
         new_entity.generate_by_ship_level( 0 );
 
-        this.world.entity_list.push( new_entity )
+        this.world.push_enemy( new_entity )
     }
     spawn_wind(){
         // 風

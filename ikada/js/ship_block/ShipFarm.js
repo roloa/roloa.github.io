@@ -40,6 +40,8 @@ export class ShipFarm extends ShipBlock {
         return new VeggieTomato( this.game );
     }
     on_update(){
+        super.on_update();
+
         if( this.food == null ){
             //
             if( 0 < this.saving_data.growing_timer ){

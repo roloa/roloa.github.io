@@ -14,6 +14,10 @@ export class ShipBlock {
         this.is_floor = false
         this.image = null;
         this.is_removed = false;
+
+        this.max_hp = 100;
+        this.saving_data.hp = this.max_hp;
+        this.saving_data.is_broken = false;
     }
     on_click(){
         // プレイヤーがハンマーを構えているなら、自壊してアイテム化する
@@ -32,15 +36,53 @@ export class ShipBlock {
         // 下位クラスでブロックの機能を実装する
         return false;
     }
+    on_hit_bullet( bullet ){
+        this.saving_data.hp -= bullet.damage;
+        if( this.saving_data.hp <= 0){
+            this.saving_data.is_broken = true;
+            this.saving_data.hp = 0;
+        }
+    }
     on_update(){
+
+        // hpは微量に自然回復する
+        if( this.saving_data.hp < this.max_hp ){
+            this.saving_data.hp += 0.05;
+        } else if( this.saving_data.is_broken ){
+            this.saving_data.is_broken = false;
+        } else {
+            this.saving_data.hp = this.max_hp;
+        }
 
     }
     get_image(){
         return this.image;
     }
     on_draw( canvas ){
-        if( this.image != null ) {
-            canvas.drawImage( this.get_image(), -ShipBlock.BLOCK_RADIUS, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_SIZE, ShipBlock.BLOCK_SIZE);
+        if( this.saving_data.is_broken ){
+            // 壊れている
+            canvas.globalAlpha = 0.2;
+            if( this.image != null ) {
+                canvas.drawImage( this.get_image(), -ShipBlock.BLOCK_RADIUS, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_SIZE, ShipBlock.BLOCK_SIZE);
+            }
+        } else {
+            if( this.image != null ) {
+                canvas.drawImage( this.get_image(), -ShipBlock.BLOCK_RADIUS, -ShipBlock.BLOCK_RADIUS, ShipBlock.BLOCK_SIZE, ShipBlock.BLOCK_SIZE);
+            }
+        }
+        // ダメージによるヒビ
+        if( this.saving_data.hp < this.max_hp ){
+            canvas.strokeStyle = 'rgb(0,0,0)'
+            canvas.beginPath();
+            canvas.moveTo(0, 0);
+            let crack_length = ShipBlock.BLOCK_RADIUS * (this.max_hp - this.saving_data.hp) / this.max_hp
+            canvas.lineTo( crack_length, crack_length );
+            canvas.stroke()
+            canvas.strokeStyle = 'rgb(200,200,200)'
+            canvas.beginPath();
+            canvas.moveTo(0, 0);
+            canvas.lineTo( -crack_length, -crack_length );
+            canvas.stroke()
         }
     }
     save_data(){

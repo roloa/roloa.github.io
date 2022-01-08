@@ -12,11 +12,11 @@ export class VictoryRocket extends ShipBlock{
     }
 
     on_update(){
-
+        super.on_update();
     }
     on_interact(){
 
         this.game.movie_playing = new EndingMovie( this.game );
-        
+
     }
 }

@@ -12,7 +12,7 @@ export class DroneHome extends ShipBlock {
     }
 
     on_update(){
-
+        super.on_update();
     }
 
 }

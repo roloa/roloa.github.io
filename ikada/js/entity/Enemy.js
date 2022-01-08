@@ -167,6 +167,14 @@ export class Enemy extends Entity {
         let vecy = this.game.world.player.y - this.y;
         let length = Math.sqrt( (vecx * vecx) + (vecy * vecy) );
     }
+    get_vector_to_point( x1, y1 ){
+        let vecx = x1 - this.x;
+        let vecy = y1 - this.y;
+        let length = Math.sqrt( (vecx * vecx) + (vecy * vecy) );
+        vecx = vecx / length;
+        vecy = vecy / length;
+        return {x: vecx, y: vecy};
+    }
     get_vector_to_player(){
         let vecx = this.game.world.player.x - this.x;
         let vecy = this.game.world.player.y - this.y;

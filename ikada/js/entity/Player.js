@@ -480,24 +480,20 @@ export class Player extends Entity {
         let local_x_in_ship = this.x + (this.game.world.ship.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
         let local_y_in_ship = this.y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS + this.height_half;
 
-        // 触れているブロックの座標
-        let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
-        let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
-        if( 0 <= block_x && block_x < this.game.world.ship.block_array.length &&
-            0 <= block_y && block_y < this.game.world.ship.block_array[0].length){
-            if( local_y_in_ship % ShipBlock.BLOCK_SIZE < 8 && // 床の厚さ
-                this.game.world.ship.block_array[block_x][block_y] != null &&
-                this.game.world.ship.block_array[block_x][block_y].is_floor
-            ){
-                // 着地判定を得る
-                if( this.is_off_platform ){
-                    // 床すりぬけ状態
-                } else {
-                    this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS - this.height_half;
-                    this.vy = 0;
-                    this.is_landing = true;
-                    this.is_on_ship = true;
-                }
+        let ship_block = this.game.world.ship.get_ship_block( this.x, this.y + this.height_half);
+        if( local_y_in_ship % ShipBlock.BLOCK_SIZE < 8 && // 床の厚さ
+            ship_block != null &&
+            ship_block.is_floor
+        ){
+            // 着地判定を得る
+            if( this.is_off_platform ){
+                // 床すりぬけ状態
+            } else {
+                let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
+                this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS - this.height_half;
+                this.vy = 0;
+                this.is_landing = true;
+                this.is_on_ship = true;
             }
         }
     }

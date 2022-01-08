@@ -17,13 +17,24 @@ export class EnemySurfaceBird extends Enemy {
 
         this.vx = 0;
         this.vy = 0;
-        this.dash_speed = 2;
+        this.dash_speed = 0.2;
         this.is_angry = false;
+
+        this.fire_spread = 1;
+        this.bullet_lifetime = 100;
+        this.bullet_velocity = 5;
 
         this.showing_hp_timer = 0;
 
+        this.position_x = 0;
+        this.position_y = 0;
+        this.reset_position();
     }
-
+    reset_position(){
+        // 位置取りを再設定
+        this.position_x = this.game.world.ship.get_left_side_x() + 100 + Math.random() * 100;
+        this.position_y = Math.random() * -300 - 100;
+    }
     generate_by_ship_level( ship_level ){
         // 鳥の敵を生成する
         // 座標が設定済みの前提で、高度に応じたレベルの敵になる
@@ -45,29 +56,31 @@ export class EnemySurfaceBird extends Enemy {
             this.name = 'トキ';
         }
     }
+    enemy_move_ai(){
 
+        // プレイヤーの方に向かう
+        let vec = this.get_vector_to_point( this.position_x, this.position_y);
+        this.vx += vec.x * this.dash_speed;
+        this.vy += vec.y * this.dash_speed;
+        // 時々位置変えする
+        if( Math.random() < 0.01 ){
+            this.reset_position();
+        }
+        // 弾を撃つ
+        if( 0 < this.fire_cool_time_count ){
+            this.fire_cool_time_count -= 1;
+        } else {
+            this.fire_bullet();
+            this.fire_cool_time_count = this.fire_cool_time;
+        }
+    }
     on_update(){
         super.on_update();
 
-
         this.x += this.vx;
         this.y += this.vy;
-        this.vx *= 0.99;
-        this.vy *= 0.99;
-
-        // 怒っている場合
-        if( this.is_angry ){
-
-            // プレイヤーの方に向かう
-            let vec = this.get_vector_to_player();
-            this.vx = vec.x * this.dash_speed;
-            this.vy = vec.y * this.dash_speed;
-
-            // 弾を撃つ
-        } else {
-            // 平常時
-            this.vx = -1;
-        }
+        this.vx *= 0.95;
+        this.vy *= 0.95;
 
     }
     on_draw( canvas ){

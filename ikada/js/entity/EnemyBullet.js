@@ -29,6 +29,13 @@ export class EnemyBullet extends Entity {
         this.y += this.vy;
 
         // プレイヤーとの当たり判定
+        // 舟との当たり判定
+        let ship_block = this.game.world.ship.get_ship_block( this.x, this.y );
+        if( ship_block ){
+            ship_block.on_hit_bullet( this );
+            this.is_alive = false;
+        }
+
         let is_hit = this.game.world.player.test_hit_bullet( this );
         if( is_hit ){
             this.is_alive = false;

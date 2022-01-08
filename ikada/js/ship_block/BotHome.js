@@ -12,7 +12,7 @@ export class BotHome extends ShipBlock {
     }
 
     on_update(){
-
+        super.on_update();
     }
 
 }

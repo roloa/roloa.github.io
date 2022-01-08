@@ -60,7 +60,7 @@ export class Ship {
         }
 
     }
-    get_ship_block( x_in_world, y_in_world ){
+    get_ship_block( x_in_world, y_in_world, is_force_get_broken ){
         let local_x_in_ship = x_in_world + (this.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
         let local_y_in_ship = y_in_world + (this.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
 
@@ -69,12 +69,24 @@ export class Ship {
         let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
         if( 0 <= block_x && block_x < this.block_array.length &&
             0 <= block_y && block_y < this.block_array[0].length){
+                if( this.block_array[ block_x ][ block_y ] != null ){
+                    if( is_force_get_broken || this.block_array[ block_x ][ block_y ].saving_data.is_broken ){
+                        // 壊れているなら、nullを返す
+                        // forceなら壊れていてもブロックを返す
+                        return null;
+                    }
+                }
                 return this.block_array[ block_x ][ block_y ];
         }
+        return null;
     }
     impulse_velocity( amount ){
         this.velocity += amount;
     }
+    get_left_side_x(){
+        return 200;
+    }
+
     on_update(){
 
         this.velocity *= 0.95;

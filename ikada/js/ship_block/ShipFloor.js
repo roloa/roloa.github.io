@@ -11,7 +11,7 @@ export class ShipFloor extends ShipBlock{
     }
 
     on_update(){
-
+        super.on_update();
     }
 
 }

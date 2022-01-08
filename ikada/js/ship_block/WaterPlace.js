@@ -22,6 +22,8 @@ export class WaterPlace extends ShipBlock {
         return this.image_empty;
     }
     on_update(){
+        super.on_update();
+
         if( !this.saving_data.is_water_filled ){
             if( 0 < this.saving_data.water_fill_timer){
                 this.saving_data.water_fill_timer -= 1;

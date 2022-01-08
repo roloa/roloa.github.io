@@ -34,6 +34,8 @@ export class DryLack extends ShipBlock {
     }
 
     on_update(){
+        super.on_update();
+
         if( this.food != null && this.food.get_cooked_item ){
             //
             this.cooking_count += 1;
