@@ -4,6 +4,8 @@ import {DistillBottle} from '../tool_item/DistillBottle.js';
 import {FishRod} from '../tool_item/FishRod.js';
 import {Oar} from '../tool_item/Oar.js';
 import {Scouter} from '../tool_item/Scouter.js';
+import {RepairWrench} from '../tool_item/RepairWrench.js';
+
 
 // import {} from '../tool_item/.js';
 
@@ -43,6 +45,13 @@ export class RecipeTool extends Object {
             ['wood', 'metal'],
             [3, 3],
             function( game ){ return new DeconstructHammer( game ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['修理レンチ', '船のブロックを修理できます。'],
+            ['wood', 'metal'],
+            [3, 3],
+            function( game ){ return new RepairWrench( game ); },
             ''
         );
 

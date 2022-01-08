@@ -310,7 +310,7 @@ export class Player extends Entity {
     }
     on_click( cursor_x, cursor_y ){
         // 船の設備へのインタラクトを試みる
-        let block = this.game.world.ship.get_ship_block( cursor_x, cursor_y );
+        let block = this.game.world.ship.get_ship_block( cursor_x, cursor_y, true );
         if( block ){
             if( block.on_click() ){
                 // インタラクトに成功した場合、処理終了

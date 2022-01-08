@@ -9,6 +9,7 @@ import {SolidFuel} from './tool_item/SolidFuel.js'
 import {Scouter} from './tool_item/Scouter.js'
 import {Spear} from './tool_item/Spear.js'
 import {DistillBottle} from './tool_item/DistillBottle.js'
+import {RepairWrench} from './tool_item/RepairWrench.js'
 import {BuildBlock} from './tool_item/BuildBlock.js'
 import {ItemBoomerang} from './tool_item/ItemBoomerang.js'
 import {Arrow} from './tool_item/Arrow.js'
@@ -55,6 +56,8 @@ export class ItemInstanceMaker {
             return new Spear( this.game );
         } else if( item_data.class_name == 'DistillBottle' ){
             return new DistillBottle( this.game );
+        } else if( item_data.class_name == 'RepairWrench' ){
+            return new RepairWrench( this.game );
         } else if( item_data.class_name == 'BuildBlock' ){
             return new BuildBlock( this.game );
         } else if( item_data.class_name == 'ItemBoomerang' ){

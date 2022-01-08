@@ -170,6 +170,7 @@ export class Illustya {
   './img/illustya/fish_tobiuo2.png',
   './img/illustya/engine_hatsudenki_small.png',
   './img/illustya/music_trumpet.png',
+  './img/illustya/monkey_wrench.png',
   './img/illustya/fantasy_dragon_wyvern.png',
   './img/illustya/cardboard_open.png',
   './img/illustya/bird_kakkou.png',

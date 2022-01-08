@@ -70,7 +70,7 @@ export class Ship {
         if( 0 <= block_x && block_x < this.block_array.length &&
             0 <= block_y && block_y < this.block_array[0].length){
                 if( this.block_array[ block_x ][ block_y ] != null ){
-                    if( is_force_get_broken || this.block_array[ block_x ][ block_y ].saving_data.is_broken ){
+                    if( !is_force_get_broken && this.block_array[ block_x ][ block_y ].saving_data.is_broken ){
                         // 壊れているなら、nullを返す
                         // forceなら壊れていてもブロックを返す
                         return null;
