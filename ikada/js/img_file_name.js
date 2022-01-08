@@ -7,6 +7,14 @@ export class ImgFileName {
   './img/dry_lack.png',
   './img/fish_fin.png',
   './img/cloud.png',
+  './img/laser_turret.png',
+  './img/mortor.png',
+  './img/machine_gun.png',
+  './img/air_cannon.png',
+  './img/mast_close.png',
+  './img/mast_open.png',
+  './img/spring_green.png',
+  './img/spring_red.png',
 //  './img/.png',
   './img/ikada.png'
   ]

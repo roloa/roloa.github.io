@@ -7,9 +7,12 @@ import {DroneHome} from '../ship_block/DroneHome.js';
 import {DryLack} from '../ship_block/DryLack.js';
 import {ShipFrame} from '../ship_block/ShipFrame.js';
 import {WaterPlace} from '../ship_block/WaterPlace.js';
+import {WaterPlace2} from '../ship_block/WaterPlace2.js';
 import {ShipFarm} from '../ship_block/ShipFarm.js';
+import {ShipFarmWet} from '../ship_block/ShipFarmWet.js';
 import {VictoryRocket} from '../ship_block/VictoryRocket.js';
 import {FuelEngine} from '../ship_block/FuelEngine.js';
+import {WeaponAirCannon} from '../ship_block/WeaponAirCannon.js';
 
 // import {} from '../ship_block/.js';
 
@@ -26,6 +29,14 @@ export class RecipeShipBlock extends Object {
             ['wood'],
             [10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFloor( game ) ); },
+            ''
+        );
+
+        c_r.add_recipe( category,
+            ['燃料で動く自動空気砲です。','燃料を投入すると、自動で敵を攻撃します。'],
+            ['metal','mech_parts'],
+            [10,10],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new WeaponAirCannon( game ) ); },
             ''
         );
 
@@ -79,13 +90,28 @@ export class RecipeShipBlock extends Object {
         );
 
         c_r.add_recipe( category,
-            ['水飲み場です。', ' 時間経過で飲み水がたまります。'],
+            ['水飲み場です。', 'より短い時間経過で飲み水がたまります。'],
             ['metal', 'plastic'],
             [10, 5],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace( game ) ); },
             ''
         );
+        c_r.add_recipe( category,
+            ['水が自然にたまるバケツです。', '時間経過で飲み水がたまります。'],
+            ['metal', 'plastic'],
+            [10, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace2( game ) ); },
+            ''
+        );
 
+
+        c_r.add_recipe( category,
+            ['作物を育てます。'],
+            ['leftover', 'wood'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmWet( game ) ); },
+            '2'
+        );
         c_r.add_recipe( category,
             ['作物を育てます。'],
             ['leftover', 'wood'],

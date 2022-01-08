@@ -11,6 +11,8 @@ export class ShipBlock {
 
         this.saving_data = {}
 
+        this.name = '木製ブロック';
+
         this.is_floor = false
         this.image = null;
         this.is_removed = false;
