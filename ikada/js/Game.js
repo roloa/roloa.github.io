@@ -38,6 +38,7 @@ export class Game {
         this.name = 'ikada';
         this.version = '0.1';
 
+        this.game = this;
 
         this.display_canvas_element = document.getElementById('my_canvas');
         this.display_canvas = this.display_canvas_element.getContext('2d');
@@ -126,6 +127,12 @@ export class Game {
             } else {
                 this.hud.on_update();
                 this.world.on_update();
+            }
+
+            // デバッグチート
+            if( this.input_controller.is_pressed_key['KeyP']){
+                this.game.log('デバッグチート');
+                this.game.materials.cheat();
             }
 
             this.on_draw();

@@ -5,6 +5,7 @@ import {EffectWind} from './entity/EffectWind.js';
 import {Cloud} from './entity/Cloud.js';
 import {EnemyFish} from './entity/EnemyFish.js';
 import {EnemyBird} from './entity/EnemyBird.js';
+import {EnemySurfaceBird} from './entity/EnemySurfaceBird.js';
 import {Kamome} from './entity/Kamome.js';
 import {Tobiuo} from './entity/Tobiuo.js';
 import {ResourceItem} from './tool_item/ResourceItem.js';
@@ -20,6 +21,8 @@ export class WorldSpawner {
         this.drifting_spawn_timer = 0;
         this.sight_distance = 1100;
         this.despawn_distance = Entity.DESPAWN_DISTANCE;
+
+        this.ship_progress = 0;
 
         for(let i = 0 ; i < 100 ; i++ ){
             this.spawn_wind();
@@ -42,8 +45,16 @@ export class WorldSpawner {
         }
         if( Math.random() < 0.1){
             this.spawn_wind();
-            // this.spawn_cloud();
         }
+
+        // 舟の速度と同じだけ進行量を増やす
+        this.ship_progress += this.game.world.ship.velocity;
+        if( 1000 < this.ship_progress ){
+            this.ship_progress -= 500;
+            // 舟が一定量進んだら、海上の敵スポーンをする
+            this.spawn_surface();
+        }
+
         if( this.world.player.y < this.despawn_distance && Math.random() < 0.01){
             // 空の敵
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyBird; }).length < 10 ){
@@ -108,6 +119,16 @@ export class WorldSpawner {
             }
         }
 
+    }
+    spawn_surface(){
+        let new_entity = new EnemySurfaceBird( this.game )
+        let rand = Math.random();
+        new_entity.x = 1000;
+        new_entity.y = -100;
+        this.move_outsight_right( new_entity );
+        new_entity.generate_by_ship_level( 0 );
+
+        this.world.entity_list.push( new_entity )
     }
     spawn_wind(){
         // 風

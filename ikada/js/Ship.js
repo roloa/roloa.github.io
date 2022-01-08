@@ -72,6 +72,9 @@ export class Ship {
                 return this.block_array[ block_x ][ block_y ];
         }
     }
+    impulse_velocity( amount ){
+        this.velocity += amount;
+    }
     on_update(){
 
         this.velocity *= 0.95;

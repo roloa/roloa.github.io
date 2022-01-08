@@ -78,6 +78,11 @@ export class EnemyBird extends Enemy {
         } else {
             this.image = this.game.image_library.get_image( 'fantasy_ryu_doragon_asia' )
         }
+
+        // 空中戦を調整するまで、無条件で朱雀
+        this.image = this.game.image_library.get_image( 'youkai_suzaku' )
+        this.name = '朱雀';
+
     }
 
     on_update(){
