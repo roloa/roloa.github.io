@@ -48,12 +48,52 @@ export class EnemySurfaceBird extends Enemy {
         // 攻撃力 = Lv
         this.power = this.strength_lv;
 
-        if( 0.5 < Math.random() ){
-            this.image = this.game.image_library.get_image( 'bird_hachidori' )
-            this.name = 'ハチドリ';
+        if( this.strength_lv < 15){
+            // レベル0
+            if( 0.5 < Math.random() ){
+                this.image = this.game.image_library.get_image( 'bird_hachidori' )
+                this.name = 'ハチドリ';
+            } else {
+                this.image = this.game.image_library.get_image( 'bird_toki_fly' )
+                this.name = 'トキ';
+            }
+        } else if( this.strength_lv < 25){
+            // レベル1
+            if( 0.5 < Math.random() ){
+                this.image = this.game.image_library.get_image( 'bird_tonbi' )
+                this.name = 'トビ';
+            } else {
+                this.image = this.game.image_library.get_image( 'animal_washi' )
+                this.name = 'ワシ';
+            }
+        } else if( this.strength_lv < 35){
+            // レベル2
+            if( 0.5 < Math.random() ){
+                this.image = this.game.image_library.get_image( 'dinosaur_quetzalcoatlus' )
+                this.name = 'ケツァルコアトル';
+            } else {
+                this.image = this.game.image_library.get_image( 'kodai_microraptor' )
+                this.name = 'ミクロラプトル';
+            }
+        } else if( this.strength_lv < 45){
+            // レベル3
+            if( 0.5 < Math.random() ){
+                this.image = this.game.image_library.get_image( 'fantasy_griffon' )
+                this.name = 'グリフォン';
+            } else {
+                this.image = this.game.image_library.get_image( 'fantasy_peryton' )
+                this.name = 'ペリュトン';
+            }
         } else {
-            this.image = this.game.image_library.get_image( 'bird_toki_fly' )
-            this.name = 'トキ';
+            if( 0.5 < Math.random() ){
+                this.image = this.game.image_library.get_image( 'fantasy_dragon_wyvern' )
+                this.name = 'ワイバーン';
+            } else {
+                this.image = this.game.image_library.get_image( 'fantasy_dragon' )
+                this.name = 'ドラゴン';
+            }
+
+
         }
     }
     enemy_move_ai(){

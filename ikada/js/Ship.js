@@ -15,6 +15,7 @@ export class Ship {
 
         this.velocity = 0;
 
+        this.ship_level = 0;
     }
 
     init_block_array(){
@@ -80,7 +81,7 @@ export class Ship {
         }
         return null;
     }
-    put_ship_block( new_block, put_x, put_y){
+    put_ship_block( new_block, put_x, put_y, skip_calc_ship_status ){
         if( new_block != null){
             new_block.is_removed = false;
             this.game.world.ship.block_array[ put_x ][ put_y ] = new_block;
@@ -89,6 +90,9 @@ export class Ship {
         } else {
             this.game.world.ship.block_array[ put_x ][ put_y ] = null;
         }
+        if( skip_calc_ship_status != true ){
+            this.calc_ship_status();
+        }
     }
 
     impulse_velocity( amount ){
@@ -96,6 +100,32 @@ export class Ship {
     }
     get_left_side_x(){
         return 200;
+    }
+    calc_ship_status(){
+        // 舟のレベル
+        // TODO 舟のキャパシティ
+        let ship_level_value_max = 0;
+
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                let block = this.block_array[x][y];
+                if( block != null ){
+                    if( ship_level_value_max < block.ship_level_value ){
+                        ship_level_value_max = block.ship_level_value;
+                    }
+                }
+            }
+        }
+        if( this.ship_level < ship_level_value_max ){
+            this.game.log('舟レベルアップ: ');
+            this.game.log( 'Lv' + this.ship_level +' -> Lv' + ship_level_value_max);
+            this.ship_level = ship_level_value_max;
+        } else if( ship_level_value_max < this.ship_level ){
+            this.game.log('舟レベルダウン: ');
+            this.game.log( 'Lv' + this.ship_level +' -> Lv' + ship_level_value_max);
+            this.ship_level = ship_level_value_max;
+        }
+
     }
     on_update(){
 
@@ -107,6 +137,7 @@ export class Ship {
                     // ブロックごとの処理
                     if( this.block_array[x][y].is_removed ){
                         this.block_array[x][y] = null;
+                        this.calc_ship_status();
                     } else {
                         this.block_array[x][y].on_update();
                     }
@@ -145,9 +176,10 @@ export class Ship {
             for( let y = 0 ; y < data.block_array[x].length ; y++ ){
                 let new_block =
                 this.game.save_data_manager.deserialize_block( data.block_array[x][y] )
-                this.put_ship_block( new_block, x, y );
+                this.put_ship_block( new_block, x, y, true);
             }
         }
+        this.calc_ship_status();
     }
     save_data(){
         let data = {}

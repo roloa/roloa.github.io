@@ -13,6 +13,9 @@ import {ShipFarmWet} from '../ship_block/ShipFarmWet.js';
 import {VictoryRocket} from '../ship_block/VictoryRocket.js';
 import {FuelEngine} from '../ship_block/FuelEngine.js';
 import {WeaponAirCannon} from '../ship_block/WeaponAirCannon.js';
+import {LevelFlag1} from '../ship_block/LevelFlag1.js';
+import {LevelFlag2} from '../ship_block/LevelFlag2.js';
+import {LevelFlag3} from '../ship_block/LevelFlag3.js';
 
 // import {} from '../ship_block/.js';
 
@@ -78,6 +81,28 @@ export class RecipeShipBlock extends Object {
             ['wood', 'cloth'],
             [5, 5],
             function( game ){ return new BuildBlock( game ).set_ship_block( new DryLack( game ) ); },
+            ''
+        );
+
+        c_r.add_recipe( category,
+            ['設置すると舟レベルを[1]に上げます。','上位の敵が出現します。'],
+            ['wood', 'cloth'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag1( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['設置すると舟レベルを[2]に上げます。','上位の敵が出現します。'],
+            ['wood', 'cloth'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag2( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['設置すると舟レベルを[3]に上げます。','上位の敵が出現します。'],
+            ['wood', 'cloth'],
+            [5, 5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag3( game ) ); },
             ''
         );
 

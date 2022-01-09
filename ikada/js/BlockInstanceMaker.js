@@ -6,12 +6,15 @@ import {BotHome} from './ship_block/BotHome.js'
 import {ShipFrame} from './ship_block/ShipFrame.js'
 import {DryLack} from './ship_block/DryLack.js'
 import {ShipFloor} from './ship_block/ShipFloor.js'
+import {LevelFlag2} from './ship_block/LevelFlag2.js'
 import {ShipFarm} from './ship_block/ShipFarm.js'
 import {WeaponAirCannon} from './ship_block/WeaponAirCannon.js'
 import {FuelEngine} from './ship_block/FuelEngine.js'
 import {VictoryRocket} from './ship_block/VictoryRocket.js'
 import {DroneHome} from './ship_block/DroneHome.js'
 import {WaterPlace2} from './ship_block/WaterPlace2.js'
+import {LevelFlag1} from './ship_block/LevelFlag1.js'
+import {LevelFlag3} from './ship_block/LevelFlag3.js'
 import {FirePlace} from './ship_block/FirePlace.js'
 
 export class BlockInstanceMaker {
@@ -36,6 +39,8 @@ export class BlockInstanceMaker {
             return new DryLack( this.game );
         } else if( block_data.class_name == 'ShipFloor' ){
             return new ShipFloor( this.game );
+        } else if( block_data.class_name == 'LevelFlag2' ){
+            return new LevelFlag2( this.game );
         } else if( block_data.class_name == 'ShipFarm' ){
             return new ShipFarm( this.game );
         } else if( block_data.class_name == 'WeaponAirCannon' ){
@@ -48,6 +53,10 @@ export class BlockInstanceMaker {
             return new DroneHome( this.game );
         } else if( block_data.class_name == 'WaterPlace2' ){
             return new WaterPlace2( this.game );
+        } else if( block_data.class_name == 'LevelFlag1' ){
+            return new LevelFlag1( this.game );
+        } else if( block_data.class_name == 'LevelFlag3' ){
+            return new LevelFlag3( this.game );
         } else if( block_data.class_name == 'FirePlace' ){
             return new FirePlace( this.game );
         }

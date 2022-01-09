@@ -53,6 +53,7 @@ export class SaveDataManager {
         } catch( e ) {
             this.game.log('データのロードに失敗しました。');
             this.game.log('エラー: ' + e );
+            console.log(e);
             return false;
         }
         return true;

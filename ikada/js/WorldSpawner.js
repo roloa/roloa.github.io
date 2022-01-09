@@ -126,7 +126,7 @@ export class WorldSpawner {
         new_entity.x = 1000;
         new_entity.y = -100;
         this.move_outsight_right( new_entity );
-        new_entity.generate_by_ship_level( 0 );
+        new_entity.generate_by_ship_level( this.game.world.ship.ship_level );
 
         this.world.push_enemy( new_entity )
     }
