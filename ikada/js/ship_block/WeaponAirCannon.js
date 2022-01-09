@@ -16,6 +16,8 @@ export class WeaponAirCannon extends ShipBlock {
         this.cool_time_max = 60;
 
         this.target_enemy = null;
+        this.target_range = 320;
+        this.target_range_p2 = this.target_range * this.target_range;
 
         this.setup_gun_data();
     }
@@ -74,7 +76,7 @@ export class WeaponAirCannon extends ShipBlock {
                 // 燃料があるなら、燃料を消費して弾を撃つ
                 this.saving_data.fuel_amount -= 1;
 
-                if( this.target_enemy == null ){
+                if( this.target_enemy == null || this.target_enemy.is_alive == false){
                     this.search_target();
                 }
                 if( this.target_enemy != null ){
@@ -87,7 +89,8 @@ export class WeaponAirCannon extends ShipBlock {
         return Math.atan2( this.target_enemy.y - this.y, this.target_enemy.x - this.x )
     }
     search_target(){
-        this.target_enemy = this.game.world.player;
+//        this.target_enemy = this.game.world.player;
+        this.target_enemy = this.game.world.search_nearest_enemy( this.x, this.y );
     }
     on_fire(){
 

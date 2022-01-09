@@ -87,7 +87,20 @@ export class World {
     push_entity( new_entity ){
         this.entity_list.push( new_entity )
     }
-
+    search_nearest_enemy( x1, y1 ){
+        let nearest_dist_p2 = 1000 * 1000; // range
+        let nearest_enemy = null;
+        for( let enemy of this.enemy_list ){
+            if( enemy != null ){
+                let dist_p2 = (enemy.x - x1) * (enemy.x - x1) + (enemy.y - y1) * (enemy.y - y1);
+                if( dist_p2 < nearest_dist_p2 ){
+                    nearest_enemy = enemy;
+                    nearest_dist_p2 = dist_p2;
+                }
+            }
+        }
+        return nearest_enemy;
+    }
     give_tool_item_player( new_tool_item ){
         let new_drop_item = new DropItem( this.game );
         new_drop_item.set_tool_item( new_tool_item );
