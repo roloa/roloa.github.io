@@ -17,7 +17,7 @@ export class WeaponAirCannon extends ShipBlock {
         let item = this.game.hud.item_slot.get_active_item();
         if( item && item.fuel_value ) {
             this.game.hud.item_slot.delete_active_item();
-            this.game.log( 'エンジンに燃料を補充しました。' );
+            this.game.log( '空気砲に燃料を補充しました。' );
             this.saving_data.fuel_amount += item.fuel_value;
             return true;
         } else {

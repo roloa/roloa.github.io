@@ -8,6 +8,8 @@ export class ShipFarm extends ShipBlock {
     constructor( game ){
         super( game );
 
+        this.name = 'プランター';
+
         this.is_floor = false;
         this.image = this.game.image_library.get_image('dougu_torobune_tsuchi');
         this.food = null;

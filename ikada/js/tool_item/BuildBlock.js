@@ -36,6 +36,12 @@ export class BuildBlock extends ToolItem {
             }
         }
     }
+    get_name(){
+        if( this.ship_block != null){
+            return this.ship_block.get_name();
+        }
+        return super.get_name();
+    }
     save_data(){
         let data = super.save_data();
         data.ship_block = this.ship_block.save_data();

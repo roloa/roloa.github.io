@@ -7,6 +7,8 @@ export class WaterPlace2 extends WaterPlace {
     constructor( game ){
         super( game );
 
+        this.name = '給水バケツ';
+
         this.is_floor = false;
         this.image = this.game.image_library.get_image('bucket_iron_water_up');
         this.image_empty = this.game.image_library.get_image('bucket_iron_empty_up');

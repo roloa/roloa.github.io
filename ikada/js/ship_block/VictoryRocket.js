@@ -7,6 +7,8 @@ export class VictoryRocket extends ShipBlock{
     constructor( game ){
         super( game );
 
+        this.name = 'ヴィクトリーロケット';
+
         this.is_floor = true;
         this.image = this.game.image_library.get_image('hanabi_rocket');
     }

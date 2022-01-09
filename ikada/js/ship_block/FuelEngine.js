@@ -7,6 +7,8 @@ export class FuelEngine extends ShipBlock {
     constructor( game ){
         super( game );
 
+        this.name = '燃料式エンジン';
+
         this.image = this.game.image_library.get_image('car_engine');
 
         this.saving_data.fuel_amount = 0;

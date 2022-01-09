@@ -9,6 +9,8 @@ export class ShipFarmWet extends ShipFarm {
     constructor( game ){
         super( game );
 
+        this.name = '上級プランター';
+
         this.is_floor = false;
         this.image = this.game.image_library.get_image('dougu_torobune_tsuchi');
         this.food = null;

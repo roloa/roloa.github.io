@@ -7,6 +7,8 @@ export class DryLack extends ShipBlock {
     constructor( game ){
         super( game );
 
+        this.name = '乾燥ラック';
+
         this.is_floor = false;
         this.image = this.game.image_library.get_image('dry_lack');
         this.food = null;

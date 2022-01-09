@@ -7,6 +7,8 @@ export class FirePlace extends ShipBlock{
     constructor( game ){
         super( game );
 
+        this.name = '焚き火';
+
         this.is_floor = false;
         this.image = this.game.image_library.get_image('takibi_dai_fire');
         this.food = null;

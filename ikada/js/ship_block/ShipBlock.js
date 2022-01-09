@@ -73,6 +73,9 @@ export class ShipBlock {
     get_image(){
         return this.image;
     }
+    get_name(){
+        return this.name;
+    }
     on_draw( canvas ){
         if( this.saving_data.is_broken ){
             // 壊れている
