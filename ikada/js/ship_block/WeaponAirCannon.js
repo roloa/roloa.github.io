@@ -10,6 +10,8 @@ export class WeaponAirCannon extends ShipBlock {
 
         this.name = '燃料式空気砲';
         this.image = this.game.image_library.get_image('air_cannon');
+        this.bullet_image = this.game.image_library.get_image('air_ball');
+
 
         this.saving_data.fuel_amount = 0;
         this.cool_time_count = 0;
@@ -76,9 +78,11 @@ export class WeaponAirCannon extends ShipBlock {
                 // 燃料があるなら、燃料を消費して弾を撃つ
                 this.saving_data.fuel_amount -= 1;
 
-                if( this.target_enemy == null || this.target_enemy.is_alive == false){
-                    this.search_target();
-                }
+                // if( this.target_enemy == null || this.target_enemy.is_alive == false){
+                //     this.search_target();
+                // }
+                this.search_target();
+
                 if( this.target_enemy != null ){
                     this.on_fire();
                 }
@@ -103,8 +107,8 @@ export class WeaponAirCannon extends ShipBlock {
         bullet.y = this.y + vec_y * 30;
         bullet.vx = vec_x * this.gun_data.bullet_velocity;
         bullet.vy = vec_y * this.gun_data.bullet_velocity;
-        bullet.line_x = vec_x * 30;
-        bullet.line_y = vec_y * 30;
+        bullet.rotation = rad;
+        bullet.image = this.bullet_image;
         bullet.life_time = this.gun_data.bullet_lifetime;
         bullet.weight = this.gun_data.bullet_weight;
         bullet.gun_data = this.gun_data;

@@ -63,6 +63,9 @@ export class WeaponItem extends ToolItem {
         this.image = this.game.image_library.get_image( 'text_mu' );
         this.saving_data.item_name = '無名の武器';
 
+        this.bullet_image = this.game.image_library.get_image('bullet_arrow');
+
+
         // 攻撃力
         // (武器の基礎攻撃力) x 幸福度補正x1.5 x あれこれ補正？
 
@@ -209,8 +212,8 @@ export class WeaponItem extends ToolItem {
                 bullet.is_blaster_bullet = true;
             }
 
-            bullet.line_x = vec.x * 30;
-            bullet.line_y = vec.y * 30;
+            bullet.rotation = fire_rad;
+            bullet.image = this.bullet_image;
             bullet.gun_data = this.saving_data;
             this.game.world.push_entity( bullet );
         }

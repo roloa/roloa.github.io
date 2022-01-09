@@ -223,8 +223,7 @@ export class Enemy extends Entity {
                 bullet.is_blaster_bullet = true;
             }
 
-            bullet.line_x = Math.cos(fire_rad) * 30;
-            bullet.line_y = Math.sin(fire_rad) * 30;
+            bullet.rotation = fire_rad;
             this.game.world.push_entity( bullet );
         }
     }

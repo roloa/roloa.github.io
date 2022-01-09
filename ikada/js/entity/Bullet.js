@@ -7,6 +7,11 @@ export class Bullet extends Entity {
         super( game );
         this.game = game;
 
+        this.name = '名もなき弾丸';
+        this.image = null;
+        this.rotation = 0;
+        this.image_size = 32;
+
         this.vx = 0;
         this.vy = 0;
         this.gravity = 0;
@@ -69,8 +74,7 @@ export class Bullet extends Entity {
                     bullet.life_time = this.gun_data.blast_lifetime;
                     bullet.weight = this.weight;
 
-                    bullet.line_x = Math.cos(rad) * 30;
-                    bullet.line_y = Math.sin(rad) * 30;
+                    bullet.rotation = rad;
                     bullet.gun_data = this.gun_data;
                     this.game.world.push_entity( bullet );
                 }
@@ -91,11 +95,19 @@ export class Bullet extends Entity {
         return damage;
     }
     on_draw( canvas ){
-        canvas.strokeStyle = 'rgb(250,250,20)';
-        canvas.lineWidth = 5;
-        canvas.beginPath();
-        canvas.moveTo( this.x, this.y);
-        canvas.lineTo( this.x + this.line_x, this.y + this.line_y);
-        canvas.stroke();
+        canvas.save();
+        canvas.translate( this.x, this.y );
+        canvas.rotate( this.rotation );
+        if( this.image != null){
+            canvas.drawImage( this.image, this.image_size * -0.5, this.image_size * -0.5, this.image_size, this.image_size);
+        } else {
+            canvas.strokeStyle = 'rgb(250,250,20)';
+            canvas.lineWidth = 5;
+            canvas.beginPath();
+            canvas.moveTo( 0, 0 );
+            canvas.lineTo( this.x, this.y);
+            canvas.stroke();
+        }
+        canvas.restore();
     }
 }
