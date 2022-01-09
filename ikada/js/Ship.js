@@ -80,13 +80,23 @@ export class Ship {
         }
         return null;
     }
+    put_ship_block( new_block, put_x, put_y){
+        if( new_block != null){
+            new_block.is_removed = false;
+            this.game.world.ship.block_array[ put_x ][ put_y ] = new_block;
+            new_block.x = put_x * ShipBlock.BLOCK_SIZE - this.ship_offset_x * ShipBlock.BLOCK_SIZE + ShipBlock.BLOCK_RADIUS;
+            new_block.y = put_y * ShipBlock.BLOCK_SIZE - this.ship_offset_y * ShipBlock.BLOCK_SIZE + ShipBlock.BLOCK_RADIUS;
+        } else {
+            this.game.world.ship.block_array[ put_x ][ put_y ] = null;
+        }
+    }
+
     impulse_velocity( amount ){
         this.velocity += amount;
     }
     get_left_side_x(){
         return 200;
     }
-
     on_update(){
 
         this.velocity *= 0.95;
@@ -133,8 +143,9 @@ export class Ship {
         for( let x = 0 ; x < data.block_array.length ; x++ ){
             this.block_array[x] = [];
             for( let y = 0 ; y < data.block_array[x].length ; y++ ){
-                this.block_array[x][y] =
+                let new_block =
                 this.game.save_data_manager.deserialize_block( data.block_array[x][y] )
+                this.put_ship_block( new_block, x, y );
             }
         }
     }

@@ -17,6 +17,9 @@ export class ShipBlock {
         this.image = null;
         this.is_removed = false;
 
+        this.x = 0;
+        this.y = 0;
+
         this.max_hp = 100;
         this.saving_data.hp = this.max_hp;
         this.saving_data.is_broken = false;
