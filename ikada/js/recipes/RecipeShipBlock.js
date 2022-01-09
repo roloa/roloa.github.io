@@ -17,6 +17,7 @@ import {LevelFlag1} from '../ship_block/LevelFlag1.js';
 import {LevelFlag2} from '../ship_block/LevelFlag2.js';
 import {LevelFlag3} from '../ship_block/LevelFlag3.js';
 
+
 // import {} from '../ship_block/.js';
 
 export class RecipeShipBlock extends Object {
