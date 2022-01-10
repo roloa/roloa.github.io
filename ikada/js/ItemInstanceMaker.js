@@ -4,6 +4,7 @@ import {FishRod} from './tool_item/FishRod.js'
 import {EquipmentItem} from './tool_item/EquipmentItem.js'
 import {CatchNet} from './tool_item/CatchNet.js'
 import {ToolItem} from './tool_item/ToolItem.js'
+import {CannonAmmoItem} from './tool_item/CannonAmmoItem.js'
 import {WeaponItem} from './tool_item/WeaponItem.js'
 import {SolidFuel} from './tool_item/SolidFuel.js'
 import {Scouter} from './tool_item/Scouter.js'
@@ -46,6 +47,8 @@ export class ItemInstanceMaker {
             return new CatchNet( this.game );
         } else if( item_data.class_name == 'ToolItem' ){
             return new ToolItem( this.game );
+        } else if( item_data.class_name == 'CannonAmmoItem' ){
+            return new CannonAmmoItem( this.game );
         } else if( item_data.class_name == 'WeaponItem' ){
             return new WeaponItem( this.game );
         } else if( item_data.class_name == 'SolidFuel' ){

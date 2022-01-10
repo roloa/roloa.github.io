@@ -24,6 +24,9 @@ export class ShipBlock {
         this.saving_data.hp = this.max_hp;
         this.saving_data.is_broken = false;
     }
+    is_need_operate(){
+        //
+    }
     on_click(){
         let item = this.game.hud.item_slot.get_active_item();
         if( item && item.is_hammer ){

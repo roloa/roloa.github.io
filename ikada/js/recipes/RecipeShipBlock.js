@@ -13,9 +13,12 @@ import {ShipFarmWet} from '../ship_block/ShipFarmWet.js';
 import {VictoryRocket} from '../ship_block/VictoryRocket.js';
 import {FuelEngine} from '../ship_block/FuelEngine.js';
 import {WeaponAirCannon} from '../ship_block/WeaponAirCannon.js';
+import {WeaponMachineGun} from '../ship_block/WeaponMachineGun.js';
+import {WeaponMortorTube} from '../ship_block/WeaponMortorTube.js';
 import {LevelFlag1} from '../ship_block/LevelFlag1.js';
 import {LevelFlag2} from '../ship_block/LevelFlag2.js';
 import {LevelFlag3} from '../ship_block/LevelFlag3.js';
+
 
 
 // import {} from '../ship_block/.js';
@@ -37,10 +40,24 @@ export class RecipeShipBlock extends Object {
         );
 
         c_r.add_recipe( category,
-            ['燃料で動く自動空気砲です。','燃料を投入すると、自動で敵を攻撃します。'],
+            ['自動で敵を撃つ空気砲です。','燃料を投入すると、自動で敵を攻撃します。'],
             ['metal','mech_parts'],
             [10,10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WeaponAirCannon( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['自動で敵を撃つ機銃です。','弾薬を投入すると、自動で敵を攻撃します。'],
+            ['metal','mech_parts'],
+            [10,10],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new WeaponMachineGun( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['自動で敵を撃つ大砲です。','砲弾を投入すると、自動で敵を攻撃します。'],
+            ['metal','mech_parts'],
+            [10,10],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new WeaponMortorTube( game ) ); },
             ''
         );
 
