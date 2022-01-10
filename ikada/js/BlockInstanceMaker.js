@@ -3,6 +3,8 @@ import {ShipFarmWet} from './ship_block/ShipFarmWet.js'
 import {WaterPlace} from './ship_block/WaterPlace.js'
 import {ShipBlock} from './ship_block/ShipBlock.js'
 import {BotHome} from './ship_block/BotHome.js'
+import {BotHouseDog} from './ship_block/BotHouseDog.js'
+import {BotHouseCat} from './ship_block/BotHouseCat.js'
 import {ShipFrame} from './ship_block/ShipFrame.js'
 import {DryLack} from './ship_block/DryLack.js'
 import {ShipFloor} from './ship_block/ShipFloor.js'
@@ -33,6 +35,10 @@ export class BlockInstanceMaker {
             return new ShipBlock( this.game );
         } else if( block_data.class_name == 'BotHome' ){
             return new BotHome( this.game );
+        } else if( block_data.class_name == 'BotHouseDog' ){
+            return new BotHouseDog( this.game );
+        } else if( block_data.class_name == 'BotHouseCat' ){
+            return new BotHouseCat( this.game );
         } else if( block_data.class_name == 'ShipFrame' ){
             return new ShipFrame( this.game );
         } else if( block_data.class_name == 'DryLack' ){

@@ -81,6 +81,20 @@ export class Ship {
         }
         return null;
     }
+    get_ship_block_by_index( block_x, block_y, is_force_get_broken ){
+        if( 0 <= block_x && block_x < this.block_array.length &&
+            0 <= block_y && block_y < this.block_array[0].length){
+                if( this.block_array[ block_x ][ block_y ] != null ){
+                    if( !is_force_get_broken && this.block_array[ block_x ][ block_y ].saving_data.is_broken ){
+                        // 壊れているなら、nullを返す
+                        // forceなら壊れていてもブロックを返す
+                        return null;
+                    }
+                }
+                return this.block_array[ block_x ][ block_y ];
+        }
+        return null;
+    }
     put_ship_block( new_block, put_x, put_y, skip_calc_ship_status ){
         if( new_block != null){
             new_block.is_removed = false;
@@ -93,6 +107,24 @@ export class Ship {
         if( skip_calc_ship_status != true ){
             this.calc_ship_status();
         }
+    }
+    global_to_local_x( g_x ){
+        return g_x + (this.ship_offset_x * ShipBlock.BLOCK_SIZE);
+    }
+    global_to_local_y( g_y ){
+        return g_y + (this.ship_offset_y * ShipBlock.BLOCK_SIZE);
+    }
+    local_to_cell_x( l_x ){
+        return Math.floor( l_x / ShipBlock.BLOCK_SIZE);
+    }
+    local_to_cell_y( l_y ){
+        return Math.floor( l_y / ShipBlock.BLOCK_SIZE);
+    }
+    cell_to_global_x( c_x ){
+        return (c_x * ShipBlock.BLOCK_SIZE) - (this.ship_offset_x * ShipBlock.BLOCK_SIZE);
+    }
+    cell_to_global_y( c_y ){
+        return (c_y * ShipBlock.BLOCK_SIZE) - (this.ship_offset_y * ShipBlock.BLOCK_SIZE);
     }
 
     impulse_velocity( amount ){
