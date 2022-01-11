@@ -25,6 +25,8 @@ export class BotDog extends Entity {
 
         this.path_finding = new PathFinding( this.game );
         this.path_leading_index = 0;
+        this.path_leading_time_limit_max = 50;
+        this.path_leading_time_limit_count = this.path_leading_time_limit_max;
 
         this.dash_speed = 3;
     }
@@ -89,7 +91,11 @@ export class BotDog extends Entity {
 
     }
     set_target_place(){
+        // リーディング系のステータスを初期化
         this.path_leading_index = 0;
+        this.path_leading_time_limit_count = this.path_leading_time_limit_max;
+
+        // 場所を決める
         let sp = this.game.world.ship;
         this.path_finding.init_finding(
             sp.local_to_cell_x( sp.global_to_local_x( this.x )),
@@ -102,6 +108,13 @@ export class BotDog extends Entity {
     on_lead_path(){
         if( this.path_finding.path.length <= this.path_leading_index ){
             // パスの最後まで来た
+            this.set_target_place();
+            return;
+        }
+        if( 0 < this.path_leading_time_limit_count){
+            this.path_leading_time_limit_count -= 1;
+        } else {
+            // 時間内に次のノードに着けなかった
             this.set_target_place();
             return;
         }
@@ -129,7 +142,9 @@ export class BotDog extends Entity {
             }
         }
         if( Math.abs( x_dist ) <= margin && Math.abs( y_dist ) <= margin ){
+            // 次のノードへ向かう
             this.path_leading_index += 1;
+            this.path_leading_time_limit_count = this.path_leading_time_limit_max;
         }
     }
     on_draw( canvas ){
