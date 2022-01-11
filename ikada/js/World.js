@@ -92,10 +92,12 @@ export class World {
         let nearest_enemy = null;
         for( let enemy of this.enemy_list ){
             if( enemy != null ){
-                let dist_p2 = (enemy.x - x1) * (enemy.x - x1) + (enemy.y - y1) * (enemy.y - y1);
-                if( dist_p2 < nearest_dist_p2 ){
-                    nearest_enemy = enemy;
-                    nearest_dist_p2 = dist_p2;
+                if( enemy.is_angry == true ){
+                    let dist_p2 = (enemy.x - x1) * (enemy.x - x1) + (enemy.y - y1) * (enemy.y - y1);
+                    if( dist_p2 < nearest_dist_p2 ){
+                        nearest_enemy = enemy;
+                        nearest_dist_p2 = dist_p2;
+                    }
                 }
             }
         }

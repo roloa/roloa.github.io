@@ -12,7 +12,7 @@ export class WeaponMachineGun extends WeaponAirCannon {
 
         this.name = 'オート機関銃';
         this.image = this.game.image_library.get_image('machine_gun');
-        //this.bullet_image = this.game.image_library.get_image('air_ball');
+        this.bullet_image = this.game.image_library.get_image('bullet_right');
 
         this.accept_ammo_type = 'gun';
 

@@ -12,7 +12,7 @@ export class WeaponMortorTube extends WeaponAirCannon {
 
         this.name = '大砲';
         this.image = this.game.image_library.get_image('mortor');
-        //this.bullet_image = this.game.image_library.get_image('air_ball');
+        this.bullet_image = this.game.image_library.get_image('cannonball_right');
 
         this.accept_ammo_type = 'cannon';
 

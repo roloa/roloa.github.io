@@ -15,6 +15,8 @@ export class EnemySurfaceBird extends Enemy {
         this.max_hp = 100;
         this.hp = 100;
 
+        this.is_angry = true;
+
         this.vx = 0;
         this.vy = 0;
         this.dash_speed = 0.2;
