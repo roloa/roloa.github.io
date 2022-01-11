@@ -12,8 +12,9 @@ export class WeaponAirCannon extends ShipBlock {
         this.image = this.game.image_library.get_image('air_cannon');
         this.bullet_image = this.game.image_library.get_image('air_ball');
 
+        this.accept_ammo_type = 'fuel';
 
-        this.saving_data.fuel_amount = 0;
+        this.saving_data.ammo_amount = 0;
         this.cool_time_count = 0;
         this.cool_time_max = 60;
 
@@ -55,15 +56,7 @@ export class WeaponAirCannon extends ShipBlock {
 
     on_interact(){
 
-        let item = this.game.hud.item_slot.get_active_item();
-        if( item && item.fuel_value ) {
-            this.game.hud.item_slot.delete_active_item();
-            this.game.log( '空気砲に燃料を補充しました。' );
-            this.saving_data.fuel_amount += item.fuel_value;
-            return true;
-        } else {
-        }
-        this.game.log( '燃料の量: ' + this.saving_data.fuel_amount );
+        this.game.log( '燃料の量: ' + this.saving_data.ammo_amount );
         return true;
     }
     on_update(){
@@ -73,10 +66,10 @@ export class WeaponAirCannon extends ShipBlock {
             // クールタイム
             this.cool_time_count -= 1;
         } else {
-            if( 0 < this.saving_data.fuel_amount ){
+            if( 0 < this.saving_data.ammo_amount ){
                 this.cool_time_count = this.cool_time_max;
                 // 燃料があるなら、燃料を消費して弾を撃つ
-                this.saving_data.fuel_amount -= 1;
+                this.saving_data.ammo_amount -= 1;
 
                 // if( this.target_enemy == null || this.target_enemy.is_alive == false){
                 //     this.search_target();

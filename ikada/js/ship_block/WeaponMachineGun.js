@@ -14,6 +14,8 @@ export class WeaponMachineGun extends WeaponAirCannon {
         this.image = this.game.image_library.get_image('machine_gun');
         //this.bullet_image = this.game.image_library.get_image('air_ball');
 
+        this.accept_ammo_type = 'gun';
+
         this.saving_data.fuel_amount = 0;
         this.cool_time_count = 0;
         this.cool_time_max = 10;

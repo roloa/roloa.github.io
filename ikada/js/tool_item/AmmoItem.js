@@ -10,6 +10,7 @@ export class AmmoItem extends ToolItem {
         this.saving_data.item_name = '弾薬';
 
         this.image = this.game.image_library.get_image( 'bullet_item' );
+        this.ammo_type = 'gun';
         this.ammo_value = 100;
     }
 

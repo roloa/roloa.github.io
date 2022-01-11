@@ -10,6 +10,8 @@ export class SolidFuel extends ToolItem {
         this.saving_data.item_name = '燃料';
 
         this.image = this.game.image_library.get_image( 'cooking_kokei_nenryou' );
+        this.ammo_type = 'fuel';
+        this.ammo_value = 100;
         this.fuel_value = 100;
     }
 

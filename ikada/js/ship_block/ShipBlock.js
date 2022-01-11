@@ -23,12 +23,25 @@ export class ShipBlock {
         this.max_hp = 100;
         this.saving_data.hp = this.max_hp;
         this.saving_data.is_broken = false;
+
+        this.accept_ammo_type = null;
     }
     is_need_operate(){
         //
     }
     on_click(){
         let item = this.game.hud.item_slot.get_active_item();
+        if( item && item.is_wrench ){
+            // レンチなら、完全に修理される
+            this.saving_data.hp = this.max_hp;
+            this.saving_data.is_broken = false;
+            return true;
+        }
+        if( this.saving_data.is_broken ){
+            this.game.log('その設備は壊れています。');
+            this.game.log('修復を待つか、レンチで修理できます。');
+            return false;
+        }
         if( item && item.is_hammer ){
             // プレイヤーがハンマーを構えているなら、自壊してアイテム化する
             // 撤去される前に修理される
@@ -41,15 +54,13 @@ export class ShipBlock {
             this.game.world.give_tool_item_player( new_item );
             // 処理完了のため、trueを返す
             return true;
-        } else if( item && item.is_wrench ){
-            // レンチなら、完全に修理される
-            this.saving_data.hp = this.max_hp;
-            this.saving_data.is_broken = false;
-            return true;
         }
-        if( this.saving_data.is_broken ){
-            this.game.log('その設備は壊れています。修復を待つか、修理できます。');
-            return false;
+        if( item && this.accept_ammo_type && item.ammo_type &&
+            this.accept_ammo_type == item.ammo_type ) {
+            this.game.hud.item_slot.delete_active_item();
+            this.game.log( '補充しました。' );
+            this.saving_data.ammo_amount += item.ammo_value;
+            return true;
         }
         return this.on_interact();
     }

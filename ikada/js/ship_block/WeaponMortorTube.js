@@ -14,6 +14,8 @@ export class WeaponMortorTube extends WeaponAirCannon {
         this.image = this.game.image_library.get_image('mortor');
         //this.bullet_image = this.game.image_library.get_image('air_ball');
 
+        this.accept_ammo_type = 'cannon';
+
         this.saving_data.fuel_amount = 0;
         this.cool_time_count = 0;
         this.cool_time_max = 60;
