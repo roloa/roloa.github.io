@@ -19,6 +19,8 @@ export class ShipBlock {
 
         this.x = 0;
         this.y = 0;
+        this.cell_x = 0;
+        this.cell_y = 0;
 
         this.max_hp = 100;
         this.saving_data.hp = this.max_hp;
@@ -63,6 +65,11 @@ export class ShipBlock {
             return true;
         }
         return this.on_interact();
+    }
+    deposit_item(){
+        // アイテムを投入された時の反応
+        // アイテムを受け入れた場合はTrueを返す
+        return false;
     }
     on_interact(){
         // 下位クラスでブロックの機能を実装する

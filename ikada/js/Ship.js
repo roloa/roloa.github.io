@@ -101,6 +101,8 @@ export class Ship {
             this.game.world.ship.block_array[ put_x ][ put_y ] = new_block;
             new_block.x = put_x * ShipBlock.BLOCK_SIZE - this.ship_offset_x * ShipBlock.BLOCK_SIZE + ShipBlock.BLOCK_RADIUS;
             new_block.y = put_y * ShipBlock.BLOCK_SIZE - this.ship_offset_y * ShipBlock.BLOCK_SIZE + ShipBlock.BLOCK_RADIUS;
+            new_block.cell_x = put_x;
+            new_block.cell_y = put_y;
         } else {
             this.game.world.ship.block_array[ put_x ][ put_y ] = null;
         }
@@ -125,6 +127,33 @@ export class Ship {
     }
     cell_to_global_y( c_y ){
         return (c_y * ShipBlock.BLOCK_SIZE) - (this.ship_offset_y * ShipBlock.BLOCK_SIZE);
+    }
+    global_to_cell_x( g_x ){
+        return this.local_to_cell_x( this.global_to_local_x( g_x ) );
+    }
+    global_to_cell_y( g_y ){
+        return this.local_to_cell_y( this.global_to_local_y( g_y ) );
+    }
+    search_block_in_nearest_in_condition( x1, y1, condition_func ){
+        let cell_x = this.global_to_cell_x( x1 );
+        let cell_y = this.global_to_cell_x( y1 );
+        let nearest_block = null;
+        let nearest_distance = 1000000;
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                let block = this.block_array[x][y];
+                if( block != null ){
+                    if( condition_func( block ) ){
+                        let distance = (x - cell_x) * (x - cell_x) + (y - cell_y) * (y - cell_y);
+                        if( distance < nearest_distance ){
+                            nearest_distance = distance;
+                            nearest_block = block;
+                        }
+                    }
+                }
+            }
+        }
+        return nearest_block;
     }
 
     impulse_velocity( amount ){

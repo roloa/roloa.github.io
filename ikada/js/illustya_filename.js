@@ -138,6 +138,7 @@ export class Illustya {
   './img/illustya/war_taihou.png',
   './img/illustya/bucket_iron_empty_up.png',
   './img/illustya/pet_robot_dog.png',
+  './img/illustya/inugoya_blue.png',
   './img/illustya/tree_ryuuboku.png',
   './img/illustya/job_programmer.png',
   './img/illustya/satsumaimo_sweetpotato.png',

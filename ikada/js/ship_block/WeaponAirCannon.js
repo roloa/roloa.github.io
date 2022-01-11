@@ -14,6 +14,9 @@ export class WeaponAirCannon extends ShipBlock {
 
         this.accept_ammo_type = 'fuel';
 
+        this.angry_timer_max = 300;
+        this.angry_timer_count = 0;
+
         this.saving_data.ammo_amount = 0;
         this.cool_time_count = 0;
         this.cool_time_max = 60;
@@ -53,14 +56,28 @@ export class WeaponAirCannon extends ShipBlock {
         this.gun_data.life_leech = 0;
         this.gun_data.bullet_color = 'rgb(250,0,250)';
     }
-
+    deposit_item( item ){
+        // アイテムを投入された時の反応
+        // アイテムを受け入れた場合はTrueを返す
+        this.saving_data.ammo_amount += item.ammo_value;
+        return true;
+    }
     on_interact(){
 
         this.game.log( '燃料の量: ' + this.saving_data.ammo_amount );
+        this.on_operate();
         return true;
+    }
+    on_operate(){
+        this.game.log( '武器をオペレート。' );
     }
     on_update(){
         super.on_update();
+
+        if( 0 < this.angry_timer_count ){
+            // 戦闘状態継続の時間
+            this.angry_timer_count -= 1;
+        }
 
         if( 0 < this.cool_time_count ){
             // クールタイム
@@ -78,6 +95,8 @@ export class WeaponAirCannon extends ShipBlock {
 
                 if( this.target_enemy != null ){
                     this.on_fire();
+                    // 発砲したら戦闘状態になり、イヌボットを呼ぶことになる
+                    this.angry_timer_count = this.angry_timer_max;
                 }
             }
         }
