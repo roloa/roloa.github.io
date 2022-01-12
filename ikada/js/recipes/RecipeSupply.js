@@ -2,6 +2,7 @@
 import {ResourceItem} from '../tool_item/ResourceItem.js';
 import {SolidFuel} from '../tool_item/SolidFuel.js';
 import {AmmoItem} from '../tool_item/AmmoItem.js';
+import {AmmoStone} from '../tool_item/AmmoStone.js';
 import {CannonAmmoItem} from '../tool_item/CannonAmmoItem.js';
 
 
@@ -15,7 +16,7 @@ export class RecipeSupply extends Object {
     setup_recipe( c_r , category ){
 
         c_r.add_recipe( category,
-            ['設備に補充するための燃料です。'],
+            ['さまざまな設備に補充するための燃料です。'],
             ['fuel'],
             [10],
             function( game ){
@@ -23,7 +24,15 @@ export class RecipeSupply extends Object {
             ''
         );
         c_r.add_recipe( category,
-            ['設備に補充するための弾薬です。'],
+            ['カタパルトから撃ち出すための小石です。'],
+            ['stone'],
+            [3],
+            function( game ){
+                return new AmmoStone( game );},
+            ''
+        );
+        c_r.add_recipe( category,
+            ['機銃に補充するための弾薬です。'],
             ['metal', 'fuel'],
             [2, 10],
             function( game ){
@@ -31,7 +40,7 @@ export class RecipeSupply extends Object {
             ''
         );
         c_r.add_recipe( category,
-            ['設備に補充するための砲弾です。'],
+            ['大砲に補充するための砲弾です。'],
             ['metal', 'fuel'],
             [10, 2],
             function( game ){

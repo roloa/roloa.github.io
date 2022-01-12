@@ -17,6 +17,10 @@ export class ImgFileName {
   './img/spring_red.png',
   './img/air_ball.png',
   './img/bullet_arrow.png',
+  './img/ladder.png',
+  './img/catapult.png',
+  './img/catapult_bullet.png',
+  './img/catapult_ammo.png',
 //  './img/.png',
   './img/ikada.png'
   ]

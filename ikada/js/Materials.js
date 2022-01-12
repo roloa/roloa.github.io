@@ -9,15 +9,33 @@ export class Materials {
         this.list = {};
 
         this.name_list = [];
-        this.name_list[ 'wood' ] = '木材';
-        this.name_list[ 'metal' ] = '金属';
-        this.name_list[ 'cloth' ] = '布切れ';
-        this.name_list[ 'mech_parts' ] = '機械部品';
-        this.name_list[ 'plastic' ] = 'プラスチック';
-        this.name_list[ 'leftover' ] = '残飯';
+
+        // 汎用素材
         this.name_list[ 'fuel' ] = '燃料';
-        this.name_list[ 'bone' ] = '骨';
+        this.name_list[ 'leftover' ] = '残飯';
+
+        // レベル0素材
+        this.name_list[ 'wood' ] = '木';
+        this.name_list[ 'stone' ] = '石';
+        this.name_list[ 'cloth' ] = '布切れ';
+        this.name_list[ 'iron' ] = '鉄クズ';
         this.name_list[ 'feather' ] = '鳥の羽根';
+        this.name_list[ 'seed' ] = '種';
+        this.name_list[ 'jar' ] = 'ビン';
+
+        // レベル1素材
+        this.name_list[ 'parts' ] = '機械部品';
+        this.name_list[ 'circuit' ] = '電子回路';
+        this.name_list[ 'lead' ] = '鉛の塊';
+        this.name_list[ 'plastic' ] = 'プラスチック';
+
+        // レベル2素材
+        this.name_list[ 'silver' ] = '銀の欠片';
+        this.name_list[ 'fur' ] = '毛皮';
+
+        // 暫定未使用
+        this.name_list[ 'metal' ] = '金属';
+        this.name_list[ 'bone' ] = '骨';
         this.name_list[ 'fin' ] = '魚のヒレ';
         // this.name_list[ '' ] = '';
 
