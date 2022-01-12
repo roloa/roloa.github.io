@@ -16,11 +16,12 @@ export class EnemySurfaceBird extends Enemy {
         this.hp = 100;
 
         this.is_angry = true;
+        this.angry_timer_max = 500;
+        this.angry_timer_count = this.angry_timer_max;
 
         this.vx = 0;
         this.vy = 0;
         this.dash_speed = 0.2;
-        this.is_angry = false;
 
         this.fire_spread = 1;
         this.bullet_lifetime = 100;
