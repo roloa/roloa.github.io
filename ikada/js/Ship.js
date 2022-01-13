@@ -95,6 +95,70 @@ export class Ship {
         }
         return null;
     }
+    put_ship_block_coodinate( new_block, cursor_x, cursor_y ){
+        let local_x_in_ship = cursor_x + (this.game.world.ship.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_y_in_ship = cursor_y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+
+        // 触れているブロックの座標
+        let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
+        let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);
+
+
+        // 隣接するブロックがあるかをチェック
+        let left_block   = this.get_ship_block_by_index( block_x - 1, block_y, true );
+        let right_block  = this.get_ship_block_by_index( block_x + 1, block_y, true );
+        let up_block     = this.get_ship_block_by_index( block_x, block_y - 1, true );
+        let down_block   = this.get_ship_block_by_index( block_x, block_y + 1, true );
+        let is_there_neighbor = ( left_block != null || right_block != null || up_block != null || down_block != null);
+
+        if( is_there_neighbor == false ){
+            this.game.log('隣接するブロックが無いと置けません。');
+            return false;
+        }
+        //
+        if( block_x < 0 ){
+            // 左側に拡張する
+            let new_col = [];
+            for( let y = 0 ; y < this.game.world.ship.block_array[0].length ; y++ ){
+                new_col.push( null );
+            }
+            this.game.world.ship.block_array.unshift( new_col );
+            block_x += 1;
+            this.ship_offset_x += 1;
+        } else if( this.game.world.ship.block_array.length <= block_x){
+            // 右側に拡張する
+            let new_col = [];
+            for( let y = 0 ; y < this.game.world.ship.block_array[0].length ; y++ ){
+                new_col.push( null );
+            }
+            this.game.world.ship.block_array.push( new_col );
+        }
+        if( block_y < 0 ){
+            // 上側に拡張する
+            for( let x = 0 ; x < this.block_array.length ; x++ ){
+                this.block_array[x].unshift( null );
+            }
+            block_y += 1;
+            this.ship_offset_y += 1;
+        }
+        // 下側には拡張できない(海の中にブロックを置けない)
+
+        if( 0 <= block_x && block_x < this.game.world.ship.block_array.length &&
+            0 <= block_y && block_y < this.game.world.ship.block_array[0].length){
+                // 範囲内なら、
+                if( this.game.world.ship.block_array[block_x][block_y] != null ){
+                    this.game.log('既にブロックがあります。');
+                    return false;
+                }
+
+                this.game.world.ship.put_ship_block(　new_block, block_x, block_y);
+                return true;
+        } else {
+            // 拡張できる限りここには来ないはず
+            this.game.log( 'ブロックを置ける範囲外です。' );
+        }
+        return false;
+    }
     put_ship_block( new_block, put_x, put_y, skip_calc_ship_status ){
         if( new_block != null){
             new_block.is_removed = false;
