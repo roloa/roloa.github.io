@@ -46,9 +46,9 @@ export class Enemy extends Entity {
         this.max_hp = 100;
         this.hp = 100;
 
-        this.direct_damage = 23;
+        this.direct_damage = 7;
         this.knock_back_rate = 1.0;
-        this.bullet_damage = 10;
+        this.bullet_damage = 5;
         this.bullet_knock_back_rate = 1.0;
 
         this.fire_spread = 3;
@@ -125,6 +125,33 @@ export class Enemy extends Entity {
             this.on_die();
         }
         this.showing_hp_timer = 250;
+    }
+    test_hit_ship(){
+        // 舟との当たり判定を取り、当たった場合はなんか処理する
+        // そもそも舟の範囲にいるかどうか
+        let ship = this.game.world.ship;
+        let ship_block = ship.get_ship_block( this.x, this.y );
+        if( ship_block != null ){
+            ship_block.take_damage( this.direct_damage );
+            this.take_damage( ship_block.kickback_damage );
+            if( this.vx < ship.velocity ){
+                // 右から入った
+                this.vx *= -1.1;
+                this.vx += ship.velocity * 2;
+                this.x += ship.velocity;
+            } else {
+                // 左から
+                this.vx *= -1.1;
+                this.x -= 16;
+            }
+            if( this.vy < 0){
+                this.vy *= -1.1;
+                this.y += 16;
+            } else {
+                this.vy *= -1.1;
+                this.y -= 16;
+            }
+        }
     }
     on_die(){
         // 生存フラグをなくす
@@ -256,6 +283,10 @@ export class Enemy extends Entity {
             this.vx = -this.vx;
             this.vy = -this.vy;
         }
+        // 舟との当たり判定
+        this.test_hit_ship();
+
+        // TODO ボットへの当たり判定
 
         // hp表示タイマー
         if( 0 < this.showing_hp_timer ){

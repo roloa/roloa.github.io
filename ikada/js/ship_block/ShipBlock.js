@@ -22,6 +22,9 @@ export class ShipBlock {
         this.cell_x = 0;
         this.cell_y = 0;
 
+        // 敵が衝突したときのダメージ量
+        this.kickback_damage = 10;
+
         this.max_hp = 100;
         this.saving_data.hp = this.max_hp;
         this.saving_data.is_broken = false;
@@ -76,7 +79,10 @@ export class ShipBlock {
         return false;
     }
     on_hit_bullet( bullet ){
-        this.saving_data.hp -= bullet.damage;
+        this.take_damage( bullet.damage );
+    }
+    take_damage( damage_amount ){
+        this.saving_data.hp -= damage_amount;
         if( this.saving_data.hp <= 0){
             this.saving_data.is_broken = true;
             this.saving_data.hp = 0;

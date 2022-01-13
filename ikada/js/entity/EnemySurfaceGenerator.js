@@ -36,12 +36,15 @@ export class EnemySurfaceGenerator {
             new_enemy.name = 'ハチドリ';
             // 突撃タイプ
             new_enemy.do_tackle_attack = true;
+            new_enemy.direct_damage = 8;
         } else if( enemy_type_value < 11 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_toki_fly' )
             new_enemy.name = 'トキ';
             // 突撃射撃タイプ
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
+            new_enemy.direct_damage = 4;
+            new_enemy.bullet_damage = 4;
         } else if( enemy_type_value < 21 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_tonbi' )
             new_enemy.name = 'トビ';
