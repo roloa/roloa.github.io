@@ -31,12 +31,7 @@ export class FishingLure extends Entity {
 
     }
     generate_hit_item(){
-        if( Math.random() < 0.5 ){
-            let new_item = new ResourceItem( this.game )
-            new_item.generate_drifting_item();
-            return new_item;
-        }
-        return new FishKirimi( this.game );
+        return this.game.materials.balance.get_fishing_result();
     }
     catch_drop_item(){
         // ドロップアイテムをキャッチする

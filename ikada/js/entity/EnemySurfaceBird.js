@@ -19,102 +19,99 @@ export class EnemySurfaceBird extends Enemy {
         this.angry_timer_max = 500;
         this.angry_timer_count = this.angry_timer_max;
 
+        this.showing_hp_timer = 0;
+
         this.vx = 0;
         this.vy = 0;
         this.dash_speed = 0.2;
 
+        this.position_x = 0;
+        this.position_y = 0;
+
+        // 射撃系ステータス
+        this.do_fire_attack = false;
         this.fire_spread = 1;
         this.bullet_lifetime = 100;
         this.bullet_velocity = 5;
 
-        this.showing_hp_timer = 0;
+        // AI属性
+        // 突進
+        this.do_tackle_attack = false;
+        this.tackle_timer_max = 200;
+        this.tackle_timer_count = 0;
+        this.is_in_tackle = false;
 
-        this.position_x = 0;
-        this.position_y = 0;
+        // 移動系
+        // 舟との間合い
+        this.distance_from_ship = 100;
+        // 上空型かどうか
+        this.is_fly_above = false;
+        // 裏取り型かどうか
+        this.is_back_attack = false;
+
+
         this.reset_position();
     }
     reset_position(){
         // 位置取りを再設定
-        this.position_x = this.game.world.ship.get_left_side_x() + 100 + Math.random() * 100;
+
+        if( this.is_fly_above ){
+            // 上空型
+            this.position_x = Math.random() * 200;
+            this.position_y = this.game.world.ship.get_top_y() - this.distance_from_ship;
+            return;
+        }
+        if( this.is_back_attack ){
+            // 裏取り型
+            this.position_x = this.game.world.ship.get_left_side_x() - this.distance_from_ship;
+            this.position_y = Math.random() * -300 - 100;
+            return;
+        }
+        // それ以外
+        this.position_x = this.game.world.ship.get_right_side_x() + this.distance_from_ship;
         this.position_y = Math.random() * -300 - 100;
     }
-    generate_by_ship_level( ship_level ){
-        // 鳥の敵を生成する
-        // 座標が設定済みの前提で、高度に応じたレベルの敵になる
 
-
-        this.strength_lv = (ship_level + 1) * 10;
-
-        // HP = Lv x (9~10)
-        this.max_hp = this.strength_lv * (10 - Math.random())
-        this.hp = this.max_hp;
-        // 攻撃力 = Lv
-        this.power = this.strength_lv;
-
-        if( this.strength_lv < 15){
-            // レベル0
-            if( 0.5 < Math.random() ){
-                this.image = this.game.image_library.get_image( 'bird_hachidori' )
-                this.name = 'ハチドリ';
-            } else {
-                this.image = this.game.image_library.get_image( 'bird_toki_fly' )
-                this.name = 'トキ';
-            }
-        } else if( this.strength_lv < 25){
-            // レベル1
-            if( 0.5 < Math.random() ){
-                this.image = this.game.image_library.get_image( 'bird_tonbi' )
-                this.name = 'トビ';
-            } else {
-                this.image = this.game.image_library.get_image( 'animal_washi' )
-                this.name = 'ワシ';
-            }
-        } else if( this.strength_lv < 35){
-            // レベル2
-            if( 0.5 < Math.random() ){
-                this.image = this.game.image_library.get_image( 'dinosaur_quetzalcoatlus' )
-                this.name = 'ケツァルコアトル';
-            } else {
-                this.image = this.game.image_library.get_image( 'kodai_microraptor' )
-                this.name = 'ミクロラプトル';
-            }
-        } else if( this.strength_lv < 45){
-            // レベル3
-            if( 0.5 < Math.random() ){
-                this.image = this.game.image_library.get_image( 'fantasy_griffon' )
-                this.name = 'グリフォン';
-            } else {
-                this.image = this.game.image_library.get_image( 'fantasy_peryton' )
-                this.name = 'ペリュトン';
-            }
-        } else {
-            if( 0.5 < Math.random() ){
-                this.image = this.game.image_library.get_image( 'fantasy_dragon_wyvern' )
-                this.name = 'ワイバーン';
-            } else {
-                this.image = this.game.image_library.get_image( 'fantasy_dragon' )
-                this.name = 'ドラゴン';
-            }
-
-
-        }
-    }
     enemy_move_ai(){
 
-        // プレイヤーの方に向かう
-        let vec = this.get_vector_to_point( this.position_x, this.position_y);
+        // 前に決めた目的地に向かう
+        let vec = this.get_vector_to_point( this.position_x, this.position_y );
         this.vx += vec.x * this.dash_speed;
         this.vy += vec.y * this.dash_speed;
-        // 時々位置変えする
-        if( Math.random() < 0.01 ){
+
+        if( this.is_in_tackle ){
+            // タックル中、軌道修正はしない
+            if( Math.abs(this.position_x - this.x) + Math.abs(this.position_y - this.y) < 50 ){
+                // 目的地に十分近づいたら、タックルを中止する
+                this.reset_position();
+                this.is_in_tackle = false;
+            }
+        } else if( Math.random() < 0.01 ){
+            // 時々位置変えする
             this.reset_position();
         }
+
+        // 突進する
+        if( this.do_tackle_attack ){
+            if( 0 < this.tackle_timer_count ){
+                this.tackle_timer_count -= 1;
+            } else {
+                this.tackle_timer_count = this.tackle_timer_max;
+                // タックル対象の座標を決める
+                this.position_x = 0;
+                this.position_y = -50;
+                this.is_in_tackle = true;
+            }
+        }
+
         // 弾を撃つ
-        if( 0 < this.fire_cool_time_count ){
-            this.fire_cool_time_count -= 1;
-        } else {
-            this.fire_bullet();
-            this.fire_cool_time_count = this.fire_cool_time;
+        if( this.do_fire_attack ){
+            if( 0 < this.fire_cool_time_count ){
+                this.fire_cool_time_count -= 1;
+            } else {
+                this.fire_bullet();
+                this.fire_cool_time_count = this.fire_cool_time;
+            }
         }
     }
     on_update(){

@@ -1,10 +1,14 @@
 
+import {MaterialBalance} from './MaterialBalance.js';
+
 
 export class Materials {
 
     constructor( game ){
 
         this.game = game;
+
+        this.balance = new MaterialBalance(  this.game );
 
         this.list = {};
 

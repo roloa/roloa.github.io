@@ -160,8 +160,15 @@ export class Ship {
         this.velocity += amount;
     }
     get_left_side_x(){
+        return -200;
+    }
+    get_right_side_x(){
         return 200;
     }
+    get_top_y(){
+        return -200;
+    }
+
     calc_ship_status(){
         // 舟のレベル
         // TODO 舟のキャパシティ

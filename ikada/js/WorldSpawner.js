@@ -5,7 +5,7 @@ import {EffectWind} from './entity/EffectWind.js';
 import {Cloud} from './entity/Cloud.js';
 import {EnemyFish} from './entity/EnemyFish.js';
 import {EnemyBird} from './entity/EnemyBird.js';
-import {EnemySurfaceBird} from './entity/EnemySurfaceBird.js';
+import {EnemySurfaceGenerator} from './entity/EnemySurfaceGenerator.js';
 import {Kamome} from './entity/Kamome.js';
 import {Tobiuo} from './entity/Tobiuo.js';
 import {ResourceItem} from './tool_item/ResourceItem.js';
@@ -24,6 +24,8 @@ export class WorldSpawner {
 
         this.ship_progress = 0;
 
+        this.surface_generator = new EnemySurfaceGenerator( this.game )
+
         for(let i = 0 ; i < 100 ; i++ ){
             this.spawn_wind();
         }
@@ -36,13 +38,21 @@ export class WorldSpawner {
             this.drifting_spawn_timer -= 1 + Math.floor(this.world.ship.velocity * 3);
         } else {
             this.drifting_spawn_timer = this.drifting_spawn_interval + this.drifting_spawn_interval * Math.random();
+            // 前側
             let new_item = new DropItem( this.game )
-            new_item.x = 300
-            let new_tool_item = new ResourceItem( this.game );
-            new_tool_item.generate_drifting_item();
+            new_item.x = this.sight_distance;
+            let new_tool_item = this.game.materials.balance.get_drifting_item();
             new_item.set_tool_item( new_tool_item );
             this.world.entity_list.push( new_item )
+            // 後ろ側
+            new_item = new DropItem( this.game )
+            new_item.x = -this.sight_distance;
+            new_tool_item = this.game.materials.balance.get_drifting_item();
+            new_item.set_tool_item( new_tool_item );
+            this.world.entity_list.push( new_item )
+
         }
+
         if( Math.random() < 0.1){
             this.spawn_wind();
         }
@@ -121,12 +131,10 @@ export class WorldSpawner {
 
     }
     spawn_surface(){
-        let new_entity = new EnemySurfaceBird( this.game )
-        let rand = Math.random();
+        let new_entity = this.surface_generator.generate_by_ship_level( this.game.world.ship.ship_level );
         new_entity.x = 1000;
         new_entity.y = -100;
         this.move_outsight_right( new_entity );
-        new_entity.generate_by_ship_level( this.game.world.ship.ship_level );
 
         this.world.push_enemy( new_entity )
     }
