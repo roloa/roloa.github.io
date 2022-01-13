@@ -1,6 +1,12 @@
 
 import {EnemySurfaceBird} from './EnemySurfaceBird.js';
 
+import {ResourceItem} from '../tool_item/ResourceItem.js';
+
+import {ChickenRawMoto} from '../tool_item/d_foods/ChickenRawMoto.js';
+import {ChickenRawSaki} from '../tool_item/d_foods/ChickenRawSaki.js';
+import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
+
 export class EnemySurfaceGenerator {
 
     constructor( game ){
@@ -37,6 +43,14 @@ export class EnemySurfaceGenerator {
             // 突撃タイプ
             new_enemy.do_tackle_attack = true;
             new_enemy.direct_damage = 8;
+
+            if( Math.random() < 0.5){
+                new_enemy.drop_tool_item = this.drop_material( 'feather_white',
+                    ['feather', 'seed'],
+                    [10, 1] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
         } else if( enemy_type_value < 11 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_toki_fly' )
             new_enemy.name = 'トキ';
@@ -45,6 +59,15 @@ export class EnemySurfaceGenerator {
             new_enemy.do_tackle_attack = true;
             new_enemy.direct_damage = 4;
             new_enemy.bullet_damage = 4;
+
+            if( Math.random() < 0.5){
+                new_enemy.drop_tool_item = this.drop_material( 'feather_green',
+                    ['feather', 'stone'],
+                    [10, 1] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
         } else if( enemy_type_value < 21 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_tonbi' )
             new_enemy.name = 'トビ';
@@ -93,5 +116,21 @@ export class EnemySurfaceGenerator {
             new_enemy.name = 'ドラゴン';
         }
         return new_enemy;
+    }
+    drop_material( image_name, name_list, amount_list ){
+        let new_item = new ResourceItem( this.game );
+        new_item.set_image( image_name );
+        for( let i = 0 ; i < name_list ; i++){
+            let amount = Math.floor( Math.max( amount_list[i] * (Math.random() * 1.5 + 0.5), 1) );
+            new_item.add_material( name_list[i], amount );
+        }
+        return new_item;
+    }
+    random_chicken(){
+        if( Math.random() < 0.5 ){
+            return new ChickenRawMoto( this.game );
+        } else {
+            return new ChickenRawSaki( this.game );
+        }
     }
 }

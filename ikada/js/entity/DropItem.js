@@ -80,6 +80,7 @@ export class DropItem extends Entity {
                 this.y = ( block_y - this.game.world.ship.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
                 this.vy = 0;
                 this.is_landing = true;
+                this.is_on_ship = true;
             }
         }
         // 海との当たり判定
@@ -89,13 +90,14 @@ export class DropItem extends Entity {
                 this.vy *= 0.8;
                 this.is_landing = false;
                 this.is_in_sea = true;
+                this.is_on_ship = false;
         } else {
             // 海の中にいない
             this.is_in_sea = false;
         }
 
         if( this.is_in_sea ) {
-            this.vx = -1;
+            this.vx = 1;
         }
 
     }

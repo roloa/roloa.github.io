@@ -96,8 +96,8 @@ export class Ship {
         return null;
     }
     put_ship_block_coodinate( new_block, cursor_x, cursor_y ){
-        let local_x_in_ship = cursor_x + (this.game.world.ship.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
-        let local_y_in_ship = cursor_y + (this.game.world.ship.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_x_in_ship = cursor_x + (this.ship_offset_x * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
+        let local_y_in_ship = cursor_y + (this.ship_offset_y * ShipBlock.BLOCK_SIZE) + ShipBlock.BLOCK_RADIUS;
 
         // 触れているブロックの座標
         let block_x = Math.floor( local_x_in_ship / ShipBlock.BLOCK_SIZE);
@@ -119,19 +119,19 @@ export class Ship {
         if( block_x < 0 ){
             // 左側に拡張する
             let new_col = [];
-            for( let y = 0 ; y < this.game.world.ship.block_array[0].length ; y++ ){
+            for( let y = 0 ; y < this.block_array[0].length ; y++ ){
                 new_col.push( null );
             }
-            this.game.world.ship.block_array.unshift( new_col );
+            this.block_array.unshift( new_col );
             block_x += 1;
             this.ship_offset_x += 1;
-        } else if( this.game.world.ship.block_array.length <= block_x){
+        } else if( this.block_array.length <= block_x){
             // 右側に拡張する
             let new_col = [];
-            for( let y = 0 ; y < this.game.world.ship.block_array[0].length ; y++ ){
+            for( let y = 0 ; y < this.block_array[0].length ; y++ ){
                 new_col.push( null );
             }
-            this.game.world.ship.block_array.push( new_col );
+            this.block_array.push( new_col );
         }
         if( block_y < 0 ){
             // 上側に拡張する
@@ -143,15 +143,15 @@ export class Ship {
         }
         // 下側には拡張できない(海の中にブロックを置けない)
 
-        if( 0 <= block_x && block_x < this.game.world.ship.block_array.length &&
-            0 <= block_y && block_y < this.game.world.ship.block_array[0].length){
+        if( 0 <= block_x && block_x < this.block_array.length &&
+            0 <= block_y && block_y < this.block_array[0].length){
                 // 範囲内なら、
-                if( this.game.world.ship.block_array[block_x][block_y] != null ){
+                if( this.block_array[block_x][block_y] != null ){
                     this.game.log('既にブロックがあります。');
                     return false;
                 }
 
-                this.game.world.ship.put_ship_block(　new_block, block_x, block_y);
+                this.put_ship_block(　new_block, block_x, block_y);
                 return true;
         } else {
             // 拡張できる限りここには来ないはず
@@ -162,13 +162,13 @@ export class Ship {
     put_ship_block( new_block, put_x, put_y, skip_calc_ship_status ){
         if( new_block != null){
             new_block.is_removed = false;
-            this.game.world.ship.block_array[ put_x ][ put_y ] = new_block;
+            this.block_array[ put_x ][ put_y ] = new_block;
             new_block.x = put_x * ShipBlock.BLOCK_SIZE - this.ship_offset_x * ShipBlock.BLOCK_SIZE + ShipBlock.BLOCK_RADIUS;
             new_block.y = put_y * ShipBlock.BLOCK_SIZE - this.ship_offset_y * ShipBlock.BLOCK_SIZE + ShipBlock.BLOCK_RADIUS;
             new_block.cell_x = put_x;
             new_block.cell_y = put_y;
         } else {
-            this.game.world.ship.block_array[ put_x ][ put_y ] = null;
+            this.block_array[ put_x ][ put_y ] = null;
         }
         if( skip_calc_ship_status != true ){
             this.calc_ship_status();
@@ -224,13 +224,13 @@ export class Ship {
         this.velocity += amount;
     }
     get_left_side_x(){
-        return -200;
+        return - ShipBlock.BLOCK_SIZE * this.ship_offset_x;
     }
     get_right_side_x(){
-        return 200;
+        return   ShipBlock.BLOCK_SIZE * ( - this.ship_offset_x + this.block_array.length );
     }
     get_top_y(){
-        return -200;
+        return - ShipBlock.BLOCK_SIZE * this.ship_offset_y;
     }
 
     calc_ship_status(){
@@ -276,6 +276,7 @@ export class Ship {
                 }
             }
         }
+
     }
     on_oar(){
         this.velocity = 3;
@@ -295,6 +296,13 @@ export class Ship {
                     canvas.restore()
                 }
             }
+        }
+        if( true ){
+            canvas.fillStyle = 'rgb(255,0,0)';
+            canvas.fillRect( this.get_left_side_x(),  this.get_top_y(), 10, 10 );
+            canvas.fillStyle = 'rgb(0,255,0)';
+            canvas.fillRect( this.get_right_side_x(), this.get_top_y(), 10, 10 );
+
         }
 
     }

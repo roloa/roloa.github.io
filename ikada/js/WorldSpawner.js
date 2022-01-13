@@ -123,8 +123,8 @@ export class WorldSpawner {
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof Kamome; }).length < 3 ){
                 let new_enemy = new Kamome( this.game );
                 new_enemy.x = this.world.camera.x + this.sight_distance + Math.random() * 100;
-                new_enemy.y = -200 - Math.random() * 100;
-                new_enemy.target_height = -200 - Math.random() * 100;
+                new_enemy.y = this.game.world.ship.get_top_y() - 100 - Math.random() * 100;
+                new_enemy.target_height = new_enemy.y;
                 this.world.push_enemy( new_enemy );
             }
         }

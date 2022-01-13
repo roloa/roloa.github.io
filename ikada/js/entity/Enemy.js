@@ -6,6 +6,7 @@ import {DeadBody} from './particle/DeadBody.js';
 import {DamageNumber} from './particle/DamageNumber.js';
 import {EnemyBullet} from './EnemyBullet.js';
 import {WeaponItem} from '../tool_item/WeaponItem.js';
+import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
 
 
 export class Enemy extends Entity {
@@ -180,9 +181,10 @@ export class Enemy extends Entity {
         return drop_item;
     }
     get_drop_tool_item(){
-        let new_drop_weapon = new WeaponItem( this.game );
-        new_drop_weapon.generate_random_weapon( this.strength_lv , null );
-        return new_drop_weapon;
+        // let new_drop_weapon = new WeaponItem( this.game );
+        // new_drop_weapon.generate_random_weapon( this.strength_lv , null );
+        // return new_drop_weapon;
+        return new FishKirimi( this.game );
     }
     get_distance_p2_to_player(){
         let vecx = this.game.world.player.x - this.x;

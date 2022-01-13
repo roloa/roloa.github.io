@@ -1,5 +1,6 @@
 
 import {Enemy} from './Enemy.js';
+import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
 
 export class EnemySurfaceBird extends Enemy {
     constructor( game ){
@@ -49,6 +50,8 @@ export class EnemySurfaceBird extends Enemy {
         // 裏取り型かどうか
         this.is_back_attack = false;
 
+        // 撃破報酬
+        this.drop_tool_item = new FishKirimi( this.game );
 
         this.reset_position();
     }
@@ -71,7 +74,9 @@ export class EnemySurfaceBird extends Enemy {
         this.position_x = this.game.world.ship.get_right_side_x() + this.distance_from_ship;
         this.position_y = Math.random() * -300 - 100;
     }
-
+    get_drop_tool_item(){
+        return this.drop_tool_item;
+    }
     enemy_move_ai(){
 
         // 前に決めた目的地に向かう
