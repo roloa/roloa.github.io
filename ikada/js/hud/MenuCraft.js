@@ -50,6 +50,7 @@ export class MenuCraft {
         this.cursor_index = 0;
         this.category_index = 0;
         this.menu_icon = this.game.image_library.get_image( 'kids_mokkou_kyoushitsu_boy' );
+        this.batsu_icon = this.game.image_library.get_image( 'batsu' );
 
         this.icon_next_category = this.game.image_library.get_image( 'arrow_color12_play_flip' );
         this.icon_prev_category = this.game.image_library.get_image( 'arrow_color12_play' );
@@ -143,8 +144,7 @@ export class MenuCraft {
         return true;
     }
     check_recipe_materials( recipe ){
-        // レシピの材料マテリアルが足りているかを調べ
-        // 足りている場合は必要数を消費してtrueを返す
+        // レシピの材料マテリアルが足りているかを調べるだけ
         for( let i = 0 ; i < recipe.material_list.length ; i++ ){
             if( this.game.materials.get_material( recipe.material_list[i] ) < recipe.material_count_list[i] ){
                 return false;
@@ -238,8 +238,17 @@ export class MenuCraft {
                 canvas.drawImage( this.icon_next_category ,
                 frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
             } else if( recipe ){
+                // レシピ
                 if( recipe.image ) {
                     canvas.drawImage( recipe.image ,
+                    frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+                    canvas.fillText( recipe.recipe_subtitle,
+                        frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
+                }
+                // 作れない場合はバツをつける
+                // TODO 毎フレームにレシピ材料チェックしたらぜったいおもい
+                if( !this.check_recipe_materials( recipe ) ){
+                    canvas.drawImage( this.batsu_icon ,
                     frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
                     canvas.fillText( recipe.recipe_subtitle,
                         frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
