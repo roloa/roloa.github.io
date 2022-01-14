@@ -1,10 +1,11 @@
 
 
 import {ToolItem} from '../ToolItem.js';
+import {GenericFood} from './GenericFood.js';
 import {CookedFish} from './CookedFish.js';
 import {DriedFish} from './DriedFish.js';
 
-export class FishKirimi extends ToolItem {
+export class FishKirimi extends GenericFood {
 
     constructor( game ){
         super( game )
@@ -18,19 +19,6 @@ export class FishKirimi extends ToolItem {
     }
     get_dried_item(){
         return new DriedFish( this.game );
-    }
-    on_click( cursor_x, cursor_y, player_x, player_y ){
-        // 満腹度を回復させる
-        let leftover = this.game.world.player.health.mod_hunger( 25 );
-        leftover += this.game.world.player.health.mod_thirst( 5 );
-
-        if( 10 < leftover ){
-            this.game.materials.put_material( 'leftover', Math.floor( leftover / 9 ) )
-        }
-        this.game.materials.put_material( 'bone', Math.floor( Math.random() * 1.5 + 1 ) )
-
-        this.is_consumed = true;
-
     }
 
 }
