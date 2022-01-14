@@ -142,12 +142,9 @@ export class World {
         // カメラ操作？
         if( this.game.input_controller.is_down_key['ShiftLeft']){
             if( this.game.input_controller.is_wheel_up ){
-                this.camera.zoom *= 1.1;
-
-                this.game.log('カメラ倍率:' + this.camera.zoom )
+                this.zoom_in( true );
             } else if( this.game.input_controller.is_wheel_down ){
-                this.camera.zoom *= 0.9;
-                this.game.log('カメラ倍率:' + this.camera.zoom )
+                this.zoom_out( true );
             }
 
         }
@@ -206,6 +203,26 @@ export class World {
             this.sea_offset_x += World.SEA_WAVE_SPACE_2
         }
 
+    }
+    zoom_in( is_non_limit ){
+        this.camera.zoom *= 1.4;
+        if( is_non_limit ){
+            this.game.log('カメラ倍率:' + this.camera.zoom )
+        } else {
+            if( 2 <= this.camera.zoom ){
+                this.camera.zoom = 2;
+            }
+        }
+    }
+    zoom_out( is_non_limit ){
+        this.camera.zoom *= 0.7;
+        if( is_non_limit ){
+            this.game.log('カメラ倍率:' + this.camera.zoom )
+        } else {
+            if( this.camera.zoom <= 0.5){
+                this.camera.zoom = 0.5;
+            }
+        }
     }
     draw_sea( canvas ){
         canvas.strokeStyle = 'rgb(0,100,200)'

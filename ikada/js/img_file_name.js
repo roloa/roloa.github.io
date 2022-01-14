@@ -21,6 +21,8 @@ export class ImgFileName {
   './img/catapult.png',
   './img/catapult_bullet.png',
   './img/catapult_ammo.png',
+  './img/menu.png',
+  './img/batsu.png',
 //  './img/.png',
   './img/ikada.png'
   ]

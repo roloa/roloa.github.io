@@ -12,9 +12,9 @@ export class HudMenu {
     static MENU_HEIGHT = 400;
     static MENU_MARGIN_TOP =  100;
     static MENU_MARGIN_LEFT = 130;
-    static MENU_ICON_SIZE = 50;
-    static MENU_ICON_MARGIN_LEFT = 130;
-    static MENU_ICON_MARGIN_TOP = 25;
+    static MENU_ICON_SIZE = 70;
+    static MENU_ICON_MARGIN_LEFT = 100;
+    static MENU_ICON_MARGIN_TOP = 20;
     static MENU_ICON_SPACING = 10;
 
     constructor( game ){
@@ -30,6 +30,9 @@ export class HudMenu {
         this.menu_list[3] = new MenuConfig( game )
 
         this.menu_list_cursor = 0
+
+        this.menu_open_icon = this.game.image_library.get_image('menu');
+        this.menu_close_icon = this.game.image_library.get_image('batsu');
 
     }
     on_update(){
@@ -120,6 +123,14 @@ export class HudMenu {
             HudMenu.MENU_ICON_MARGIN_TOP,
             HudMenu.MENU_ICON_SIZE,
             HudMenu.MENU_ICON_SIZE );
+        canvas.drawImage( this.menu_open_icon,
+            HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+            HudMenu.MENU_ICON_MARGIN_TOP,
+            HudMenu.MENU_ICON_SIZE,
+            HudMenu.MENU_ICON_SIZE );
+        canvas.fillText( '[Tab]',
+            HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+            HudMenu.MENU_ICON_MARGIN_TOP + HudMenu.MENU_ICON_SIZE + 20)
 
         if( this.is_menu_open ){
 
@@ -134,7 +145,14 @@ export class HudMenu {
             }
 
             canvas.restore()
+
             // 閉じるボタン
+            canvas.drawImage( this.menu_close_icon,
+                HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
+                HudMenu.MENU_ICON_MARGIN_TOP,
+                HudMenu.MENU_ICON_SIZE,
+                HudMenu.MENU_ICON_SIZE );
+
 
             // メニューのアイコン
             for( let i = 0 ; i < 4 ; i++ ){
