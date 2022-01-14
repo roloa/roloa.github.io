@@ -67,6 +67,14 @@ export class ItemSlot {
         }
 
     }
+    keep_activate_item( cursor_x, cursor_y, player_x, player_y ){
+        if( this.item_slot[ this.item_slot_cursor ] ){
+            this.item_slot[ this.item_slot_cursor ].on_keep_click( cursor_x, cursor_y, player_x, player_y );
+            if( this.item_slot[ this.item_slot_cursor ].is_consumed ) {
+                this.item_slot[ this.item_slot_cursor ] = null;
+            }
+        }
+    }
     get_active_item(){
          return this.item_slot[ this.item_slot_cursor ];
     }

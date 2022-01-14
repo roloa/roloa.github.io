@@ -220,7 +220,16 @@ export class WeaponItem extends ToolItem {
     }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         if( 0 < this.cool_time_count ){
-            this.game.log('武器はクールタイム中です。');
+            if( Math.random() < 0.01){
+                this.game.log('[Tips] 押しっぱなしでも連射できます。');
+            }
+        } else {
+            this.on_attack( cursor_x, cursor_y, player_x, player_y );
+            this.cool_time_count = this.saving_data.cool_time;
+        }
+    }
+    on_keep_click( cursor_x, cursor_y, player_x, player_y ) {
+        if( 0 < this.cool_time_count ){
         } else {
             this.on_attack( cursor_x, cursor_y, player_x, player_y );
             this.cool_time_count = this.saving_data.cool_time;

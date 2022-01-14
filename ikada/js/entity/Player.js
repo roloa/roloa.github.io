@@ -292,6 +292,8 @@ export class Player extends Entity {
         if( !this.game.hud.hud_menu.is_menu_open ){
             if( this.game.input_controller.get_mouse_press() ) {
                 this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
+            } else if( this.game.input_controller.get_mouse_down() ){
+                this.on_keep_click( this.game.world.cursor_x, this.game.world.cursor_y );
             }
             if( this.game.input_controller.is_down_key['KeyT']){
                 // アイテムの投棄
@@ -321,7 +323,9 @@ export class Player extends Entity {
         this.game.hud.item_slot.activate_item( cursor_x, cursor_y, this.x, this.y );
 
     }
-
+    on_keep_click( cursor_x, cursor_y ){
+        this.game.hud.item_slot.keep_activate_item( cursor_x, cursor_y, this.x, this.y );
+    }
     update_land(){
 
 
