@@ -43,7 +43,7 @@ export class Kamome extends Enemy {
         if( rand < 1){
             let new_tool_item = new ResourceItem( this.game );
             new_tool_item.set_image( 'feather_white' );
-            new_tool_item.add_material( 'feather',  Math.floor(Math.random() * 3) + 3 );
+            new_tool_item.add_material( 'feather',  Math.floor(Math.random() * 3) + 2 );
             return new_tool_item;
         } else {
             if( Math.random() < 0.5 ){

@@ -45,9 +45,9 @@ export class EnemySurfaceGenerator {
             new_enemy.direct_damage = 8;
 
             if( Math.random() < 0.5){
-                new_enemy.drop_tool_item = this.drop_material( 'feather_white',
-                    ['feather', 'seed'],
-                    [10, 1] );
+                new_enemy.drop_tool_item = this.drop_material( 'hachidori_wing',
+                    ['feather', 'seed', 'cloth'],
+                    [10, 10, 10] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -61,9 +61,9 @@ export class EnemySurfaceGenerator {
             new_enemy.bullet_damage = 4;
 
             if( Math.random() < 0.5){
-                new_enemy.drop_tool_item = this.drop_material( 'feather_green',
-                    ['feather', 'stone'],
-                    [10, 1] );
+                new_enemy.drop_tool_item = this.drop_material( 'toki_wing',
+                    ['feather', 'stone', 'cloth'],
+                    [10, 10, 10] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -75,35 +75,95 @@ export class EnemySurfaceGenerator {
             new_enemy.is_fly_above = true;
             new_enemy.do_fire_attack = true;
 
+            if( Math.random() < 0.8){
+                new_enemy.drop_tool_item = this.drop_material( 'tonbi_wing',
+                    ['feather', 'stone'],
+                    [100, 100] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
+
         } else if( enemy_type_value < 31 ){
             new_enemy.image = this.game.image_library.get_image( 'animal_washi' )
             new_enemy.name = 'ワシ';
             // 突撃射撃タイプ
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
+
+            if( Math.random() < 0.8){
+                new_enemy.drop_tool_item = this.drop_material( 'washi_wing',
+                    ['feather', 'stone'],
+                    [100, 100] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
         } else if( enemy_type_value < 41 ){
             new_enemy.image = this.game.image_library.get_image( 'dinosaur_quetzalcoatlus' )
             new_enemy.name = 'ケツァルコアトル';
             // 遠距離射撃タイプ
             new_enemy.do_fire_attack = true;
+
+            if( Math.random() < 0.9){
+                new_enemy.drop_tool_item = this.drop_material( 'quetzalcoatlus_beak',
+                ['parts', 'iron', 'lead'],
+                [10, 10, 10,] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
         } else if( enemy_type_value < 51 ){
             new_enemy.image = this.game.image_library.get_image( 'kodai_microraptor' )
             new_enemy.name = 'ミクロラプトル';
             // 後方射撃タイプ
             new_enemy.is_back_attack = true;
             new_enemy.do_fire_attack = true;
+
+            if( Math.random() < 0.9){
+                new_enemy.drop_tool_item = this.drop_material( 'microraptor_wing',
+                ['parts', 'iron', 'plastic'],
+                [10, 10, 10,] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
         } else if( enemy_type_value < 61 ){
             // レベル3
             new_enemy.image = this.game.image_library.get_image( 'fantasy_griffon' )
             new_enemy.name = 'グリフォン';
 
+            if( Math.random() < 0.8){
+                new_enemy.drop_tool_item = this.drop_material( 'griffon_wing',
+                ['circuit', 'silver'],
+                [10, 10] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
         } else if( enemy_type_value < 999 ){
             new_enemy.image = this.game.image_library.get_image( 'fantasy_peryton' )
             new_enemy.name = 'ペリュトン';
-            // レベル2
+
+            if( Math.random() < 0.9){
+                new_enemy.drop_tool_item = this.drop_material( 'peryton_wing',
+                ['circuit', 'silver'],
+                [10, 10] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
+
         } else if( enemy_type_value < 999 ){
             new_enemy.image = this.game.image_library.get_image( 'youkai_suzaku' )
             new_enemy.name = 'フェニックス';
+
+            if( Math.random() < 0.9){
+                new_enemy.drop_tool_item = this.drop_material( 'suzaku_wing',
+                ['circuit', 'silver'],
+                [10, 10] );
+            } else {
+                new_enemy.drop_tool_item = this.random_chicken();
+            }
 
         } else if( enemy_type_value < 999 ){
             new_enemy.image = this.game.image_library.get_image( 'fantasy_dragon_wyvern' )

@@ -43,8 +43,8 @@ export class RecipeTool extends Object {
 
         c_r.add_recipe( category,
             ['舟を漕ぐと、より多くの素材を持った敵が現れます。'],
-            ['wood'],
-            [5],
+            ['wood', 'feather'],
+            [10, 2],
             function( game ){ return new Oar( game ); },
             ''
         );

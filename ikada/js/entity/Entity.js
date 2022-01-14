@@ -14,6 +14,8 @@ export class Entity {
         this.x = 0;
         this.y = 0;
 
+        this.is_facing_right = true;
+
         this.is_alive = true;
 
         this.is_on_ship = false;
@@ -28,7 +30,13 @@ export class Entity {
             this.x -= this.game.world.ship.velocity;
         }
 
-
+        // vxによって向きを変える
+        if( 1 < this.vx ){
+            this.is_facing_right = true;
+        } else if( this.vx < -1 ){
+            this.is_facing_right = false;
+        }
+        
         // 消滅判定
         if( this.x < -this.despawn_distance_ship || this.despawn_distance_ship < this.x ||
             this.y < -this.despawn_distance_ship || this.despawn_distance_ship < this.y

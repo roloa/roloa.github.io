@@ -8,7 +8,7 @@ export class Materials {
 
         this.game = game;
 
-        this.balance = new MaterialBalance(  this.game );
+        this.balance = new MaterialBalance( this.game );
 
         this.list = {};
 

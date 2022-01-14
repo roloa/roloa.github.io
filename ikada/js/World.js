@@ -110,6 +110,19 @@ export class World {
         new_drop_item.y = this.game.world.player.y;
         this.entity_list.push( new_drop_item )
     }
+    drop_tool_item_at_player( new_tool_item ){
+        let new_drop_item = new DropItem( this.game );
+        new_drop_item.set_tool_item( new_tool_item );
+        new_drop_item.x = this.game.world.player.x;
+        if( this.game.world.player.is_facing_right ){
+            new_drop_item.x += 32;
+        } else {
+            new_drop_item.x -= 32;
+        }
+        new_drop_item.y = this.game.world.player.y;
+        this.entity_list.push( new_drop_item )
+    }
+
 
     on_update(){
 

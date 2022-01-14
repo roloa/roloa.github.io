@@ -499,16 +499,20 @@ export class Player extends Entity {
     }
     on_draw( canvas ){
 
-        canvas.strokeStyle = 'rgb(200,0,200)'
-        canvas.strokeRect( this.x - this.width_half, this.y - this.height_half, this.width, this.height)
+        canvas.save();
+        canvas.translate( this.x, this.y );
+        if( !this.is_facing_right ){
+            canvas.scale( -1, 1 );
+        }
+        canvas.strokeStyle = 'rgb(200,0,200)';
+        canvas.strokeRect( - this.width_half, - this.height_half, this.width, this.height);
 
         if( this.is_ghost ){
-            canvas.drawImage( this.image_ghost, this.x - this.width_half, this.y - this.height_half, this.width, this.height )
+            canvas.drawImage( this.image_ghost, - this.width_half, - this.height_half, this.width, this.height );
         } else {
-            canvas.drawImage( this.image, this.x - this.width_half, this.y - this.height_half, this.width, this.height )
+            canvas.drawImage( this.image, - this.width_half,  - this.height_half, this.width, this.height );
         }
 
-
-
+        canvas.restore();
     }
 }

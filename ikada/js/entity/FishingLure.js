@@ -91,7 +91,7 @@ export class FishingLure extends Entity {
 
                     // 釣った魚をプレイヤーの位置に生成
                     if( this.hit_item != null ){
-                        this.game.world.give_tool_item_player( this.hit_item );
+                        this.game.world.drop_tool_item_at_player( this.hit_item );
                     }
                     this.hit_item = null;
                 }
