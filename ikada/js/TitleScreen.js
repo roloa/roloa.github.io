@@ -20,7 +20,7 @@ export class TitleScreen extends Object {
         this.savedata_cursor = 1;
 
         this.load_menu_string = []
-        this.load_menu_string[0] = '新しく始める';
+        this.load_menu_string[0] = 'New Game';
         this.load_menu_string[1] = 'オートセーブをロード';
         this.load_menu_string[2] = 'データ[1]をロード';
         this.load_menu_string[3] = 'データ[2]をロード';
@@ -95,7 +95,7 @@ export class TitleScreen extends Object {
         canvas.font = 'bold 64px monospace';
         canvas.strokeStyle = 'rgb(250,250,250)';
         canvas.fillStyle = 'rgb(250,250,250)';
-        canvas.strokeText('Ikada',100,150)
+        canvas.strokeText('[ Ikada Builder ]', 150,150)
         canvas.font = TitleScreen.MENU_FONT;
         canvas.textBaseline = 'top'
         for( let i = 0 ; i < this.data_item_count ; i++){
