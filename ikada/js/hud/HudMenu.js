@@ -4,6 +4,8 @@ import {MenuInventory} from './MenuInventory.js'
 import {MenuCraft} from './MenuCraft.js'
 import {MenuMaterial} from './MenuMaterial.js'
 import {MenuConfig} from './MenuConfig.js'
+import {MenuTutorial} from './MenuTutorial.js'
+
 
 
 export class HudMenu {
@@ -24,10 +26,12 @@ export class HudMenu {
 
         this.menu_list = []
         this.menu_inventory = new MenuInventory( game )
-        this.menu_list[0] = this.menu_inventory;
-        this.menu_list[1] = new MenuCraft( game )
-        this.menu_list[2] = new MenuMaterial( game )
-        this.menu_list[3] = new MenuConfig( game )
+        this.menu_list[0] = new MenuTutorial( game );
+        this.menu_list[1] = this.menu_inventory;
+        this.menu_list[2] = new MenuCraft( game )
+        this.menu_list[3] = new MenuMaterial( game )
+        this.menu_list[4] = new MenuConfig( game )
+        this.menu_count = 5;
 
         this.menu_list_cursor = 0
 
@@ -155,7 +159,7 @@ export class HudMenu {
 
 
             // メニューのアイコン
-            for( let i = 0 ; i < 4 ; i++ ){
+            for( let i = 0 ; i < this.menu_list.length ; i++ ){
                 if( i == this.menu_list_cursor ){
                     canvas.strokeStyle = 'rgb(250,0,0)';
                 } else {

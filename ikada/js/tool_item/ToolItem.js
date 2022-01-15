@@ -30,6 +30,9 @@ export class ToolItem {
     get_image(){
         return this.image;
     }
+    set_name( new_name ){
+        this.saving_data.item_name = new_name;
+    }
     get_name(){
         return this.saving_data.item_name;
     }
