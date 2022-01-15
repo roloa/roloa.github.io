@@ -2,7 +2,7 @@
 
 export class HudLog {
 
-    static MARGIN_TOP   = 350;
+    static MARGIN_TOP   = 270;
     static MARGIN_LEFT = 10;
     static FONT = 'bold 16px monospace'
     static TEXT_COLOR = 'rgb(200,200,200)';

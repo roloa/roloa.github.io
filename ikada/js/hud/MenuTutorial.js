@@ -14,18 +14,18 @@ export class MenuTutorial {
     static LIST_WIDTH = 300;
     static LIST_HEIGHT = 320;
 
-    static LIST_TEXT_MARGIN_LEFT = 24;
+    static LIST_TEXT_MARGIN_LEFT = 32;
     static LIST_TEXT_MARGIN_TOP = 12;
     static LIST_TEXT_FONT = 'bold 20px monospace';
     static LIST_TEXT_COLOR = 'rgb(240,240,240)';
     static LIST_TEXT_COLOR_DISABLE = 'rgb(100,100,100)'
     static LIST_TEXT_HEIGHT = 30;
 
-    static LIST_CURSOR_COLOR = 'rgb(20,150,20)';
+    static LIST_CURSOR_COLOR = 'rgb(20,20,150)';
     static LIST_CURSOR_ADJUST = -6;
 
-    static DESC_TEXT_X = 380;
-    static DESC_TEXT_Y = 100;
+    static DESC_TEXT_X = 360;
+    static DESC_TEXT_Y = 80;
     static DESC_TEXT_FONT = 'bold 18px monospace';
     static DESC_TEXT_COLOR = 'rgb(20,20,20)';
     static DESC_TEXT_COLOR_GREEN = 'rgb(20,200,20)';
@@ -33,9 +33,9 @@ export class MenuTutorial {
     static DESC_TEXT_HEIGHT = 28;
 
     static REWORD_TEXT_X = 330;
-    static REWORD_TEXT_Y = 280;
+    static REWORD_TEXT_Y = 300;
     static REWORD_ICON_X = 420;
-    static REWORD_NAME_X = 480;
+    static REWORD_NAME_X = 470;
 
     static CONFIG_BUTTON_X = 400;
     static CONFIG_BUTTON_Y = 330;
@@ -55,7 +55,7 @@ export class MenuTutorial {
 
 
         this.tutorial_data = new TutorialData( this.game );
-        this.tutorial_list = this.tutorial_data.get_list();
+        this.tutorial_list = this.game.tutorial_data.get_list();
 
         this.config_cursor = 0;
         this.config_scroll = 0;
@@ -64,31 +64,6 @@ export class MenuTutorial {
         this.batsu_icon = this.game.image_library.get_image( 'batsu' );
         this.check_icon = this.game.image_library.get_image( 'check' );
 
-    }
-
-    toggle_virtual_key(){
-        this.game.hud_virtual_input.toggle_enable();
-    }
-    toggle_material_auto_destruct(){
-        if (this.game.hud.item_slot.is_config_auto_material_deconstruct){
-            this.game.hud.item_slot.is_config_auto_material_deconstruct = false;
-            this.game.log('マテリアル自動解体をオフにしました。');
-        } else {
-            this.game.hud.item_slot.is_config_auto_material_deconstruct = true;
-            this.game.log('マテリアル自動解体をオンにしました。');
-        }
-    }
-    save_game_auto(){
-        this.game.save_data_manager.save_game('save_data_auto')
-        this.game.log('オートセーブにセーブしました。')
-    }
-    save_game_1(){
-        this.game.save_data_manager.save_game('save_data_1')
-        this.game.log('データ[1]にセーブしました。')
-    }
-    save_game_2(){
-        this.game.save_data_manager.save_game('save_data_2')
-        this.game.log('データ[2]にセーブしました。')
     }
 
     get_menu_icon(){
@@ -116,6 +91,7 @@ export class MenuTutorial {
                 this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT,
                 this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP );
         }
+
     }
     on_click( mouse_x, mouse_y ){
         for( let i = 0 ; i < this.tutorial_list.length ; i++ ){
@@ -160,14 +136,23 @@ export class MenuTutorial {
                 canvas.fillText( this.tutorial_list[ i ].title ,
                     MenuTutorial.LIST_X + MenuTutorial.LIST_TEXT_MARGIN_LEFT,
                     MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i);
-
+                // 完了マーク
+                if( this.tutorial_list[ i ].cleared ){
+                    canvas.drawImage( this.check_icon,
+                        MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i,
+                        MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
+                } else {
+                    // canvas.drawImage( this.batsu_icon,
+                    //     MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i,
+                    //     MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
+                }
             }
         }
         // タイトル
         canvas.fillStyle = MenuTutorial.DESC_TEXT_COLOR;
         canvas.fillText( this.tutorial_list[ this.config_cursor ].title ,
         MenuTutorial.DESC_TEXT_X,
-        MenuTutorial.DESC_TEXT_Y );
+        MenuTutorial.DESC_TEXT_Y - 10);
 
         // 内容リスト
         canvas.font = MenuTutorial.DESC_TEXT_FONT;
@@ -186,7 +171,7 @@ export class MenuTutorial {
                     MenuTutorial.DESC_TEXT_Y + MenuTutorial.LIST_TEXT_HEIGHT * (row + 1) - MenuTutorial.LIST_TEXT_HEIGHT * 0.25,
                     MenuTutorial.LIST_TEXT_HEIGHT,  MenuTutorial.LIST_TEXT_HEIGHT );
                 } else {
-                    canvas.drawImage( this.check_icon ,
+                    canvas.drawImage( this.batsu_icon ,
                     MenuTutorial.DESC_TEXT_X - MenuTutorial.LIST_TEXT_HEIGHT,
                     MenuTutorial.DESC_TEXT_Y + MenuTutorial.LIST_TEXT_HEIGHT * (row + 1) - MenuTutorial.LIST_TEXT_HEIGHT * 0.25,
                     MenuTutorial.LIST_TEXT_HEIGHT,  MenuTutorial.LIST_TEXT_HEIGHT );
@@ -195,7 +180,7 @@ export class MenuTutorial {
         }
         // 達成報酬
         canvas.fillText(
-            '達成報酬: ',
+            '完了報酬: ',
             MenuTutorial.REWORD_TEXT_X,
             MenuTutorial.REWORD_TEXT_Y );
         canvas.drawImage(
@@ -204,13 +189,10 @@ export class MenuTutorial {
             MenuTutorial.REWORD_TEXT_Y - 16,
             32,32
         );
-
-
         canvas.fillText(
             this.tutorial_list[ this.config_cursor ].reword_tool_item.get_name(),
             MenuTutorial.REWORD_NAME_X,
             MenuTutorial.REWORD_TEXT_Y );
-
 
         // アップグレードボタン
         canvas.fillStyle = MenuTutorial.CONFIG_BUTTON_COLOR;

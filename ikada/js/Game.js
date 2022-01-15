@@ -9,6 +9,7 @@ import {TitleScreen} from './TitleScreen.js'
 import {SaveDataManager} from './SaveDataManager.js'
 import {HudVirtualInput} from './hud/HudVirtualInput.js';
 import {DebugCommands} from './DebugCommands.js';
+import {TutorialData} from './hud/TutorialData.js'
 
 
 
@@ -69,6 +70,7 @@ export class Game {
         this.image_library.load_images();
 
         this.input_controller = new InputController( this );
+        this.tutorial_data = new TutorialData( this );
         this.world = new World( this );
         this.hud = new Hud( this );
         this.inventory = new Inventory( this );
@@ -127,6 +129,7 @@ export class Game {
             } else {
                 this.hud.on_update();
                 this.world.on_update();
+                this.tutorial_data.on_update();
             }
 
             // デバッグチート
