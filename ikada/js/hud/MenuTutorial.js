@@ -43,6 +43,7 @@ export class MenuTutorial {
     static CONFIG_BUTTON_WIDTH =  200;
     static CONFIG_BUTTON_COLOR = 'rgb(160,160,160)';
     static CONFIG_BUTTON_TEXT_COLOR = 'rgb(20,20,20)';
+    static CONFIG_BUTTON_TEXT_COLOR_DISABLE = 'rgb(120,120,120)';
     static CONFIG_BUTTON_FONT = 'bold 24px monospace';
     static CONFIG_BUTTON_TEXT_Y = 12;
     static CONFIG_BUTTON_TEXT_X = 100;
@@ -94,6 +95,7 @@ export class MenuTutorial {
 
     }
     on_click( mouse_x, mouse_y ){
+        // リスト
         for( let i = 0 ; i < this.tutorial_list.length ; i++ ){
             let frame_y = MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_CURSOR_ADJUST +
             MenuTutorial.LIST_TEXT_HEIGHT * i;
@@ -107,6 +109,28 @@ export class MenuTutorial {
                 }
             }
         }
+        // 完了ボタン
+        if( MenuTutorial.CONFIG_BUTTON_X < mouse_x && mouse_x < MenuTutorial.CONFIG_BUTTON_X + MenuTutorial.CONFIG_BUTTON_WIDTH &&
+            MenuTutorial.CONFIG_BUTTON_Y < mouse_y && mouse_y < MenuTutorial.CONFIG_BUTTON_Y + MenuTutorial.CONFIG_BUTTON_HEIGHT ){
+            if( this.check_can_get_reword( this.tutorial_list[ this.config_cursor ] )){
+                this.tutorial_list[ this.config_cursor ].cleared = true;
+                this.game.world.give_tool_item_player( this.tutorial_list[ this.config_cursor ].reword_tool_item );
+            } else {
+
+            }
+        }
+    }
+    check_can_get_reword( tutorial_item ){
+        if( tutorial_item.cleared ){
+            return false;
+        }
+        for( let check_item of tutorial_item.check_list ){
+            if( check_item.is_need_check && !check_item.checked ){
+                // 完了してない
+                return false;
+            }
+        }
+        return true;
     }
     on_draw( canvas ){
 
@@ -139,7 +163,8 @@ export class MenuTutorial {
                 // 完了マーク
                 if( this.tutorial_list[ i ].cleared ){
                     canvas.drawImage( this.check_icon,
-                        MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i,
+                        MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i
+                        - MenuTutorial.LIST_TEXT_HEIGHT * 0.25,
                         MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
                 } else {
                     // canvas.drawImage( this.batsu_icon,
@@ -200,6 +225,9 @@ export class MenuTutorial {
         canvas.fillStyle = MenuTutorial.CONFIG_BUTTON_TEXT_COLOR;
         canvas.font = MenuTutorial.CONFIG_BUTTON_FONT;
         canvas.textAlign = 'center';
+        if( !this.check_can_get_reword( this.tutorial_list[ this.config_cursor ] ) ){
+            canvas.fillStyle = MenuTutorial.CONFIG_BUTTON_TEXT_COLOR_DISABLE;
+        }
         canvas.fillText(
             '完了! (Enter)',
             MenuTutorial.CONFIG_BUTTON_X + MenuTutorial.CONFIG_BUTTON_TEXT_X,
