@@ -93,4 +93,28 @@ export class TutorialData {
             }
         }
     }
+    save_data(){
+        let save_data = {};
+        save_data.tutorial_list = [];
+        for( let tutorial_index = 0 ; tutorial_index < this.tutorial_list.length ; tutorial_index++ ){
+            save_data.tutorial_list[ tutorial_index ] = {};
+            save_data.tutorial_list[ tutorial_index ].cleared = this.tutorial_list[ tutorial_index ].cleared;
+            save_data.tutorial_list[ tutorial_index ].check_list = [];
+            for( let check_index = 0 ; check_index < this.tutorial_list[ tutorial_index ].check_list.length ; check_index++ ){
+                save_data.tutorial_list[ tutorial_index ].check_list[ check_index ] = {};
+                save_data.tutorial_list[ tutorial_index ].check_list[ check_index ].checked = (
+                this.tutorial_list[ tutorial_index ].check_list[ check_index ].checked );
+            }
+        }
+        return save_data;
+    }
+    load_data( load_data ){
+        for( let tutorial_index = 0 ; tutorial_index < load_data.tutorial_list.length ; tutorial_index++ ){
+            this.tutorial_list[ tutorial_index ].cleared = load_data.tutorial_list[ tutorial_index ].cleared;
+            for( let check_index = 0 ; check_index < load_data.tutorial_list[ tutorial_index ].check_list.length ; check_index++ ){
+                this.tutorial_list[ tutorial_index ].check_list[ check_index ].checked = (
+                    load_data.tutorial_list[ tutorial_index ].check_list[ check_index ].checked );
+            }
+        }
+    }
 }

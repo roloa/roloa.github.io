@@ -23,6 +23,8 @@ export class SaveDataManager {
         data.ship = this.game.world.ship.save_data();
         data.materials = this.game.materials.save_data();
         data.player_health = this.game.world.player.health.save_data();
+        data.tutorial_data = this.game.tutorial_data.save_data();
+
         console.log( 'save' );
         console.log( data );
         localStorage.setItem( save_name , JSON.stringify(data));
@@ -46,6 +48,7 @@ export class SaveDataManager {
             this.game.world.ship.load_data( data.ship );
             this.game.materials.load_data( data.materials );
             this.game.world.player.health.load_data( data.player_health );
+            this.game.tutorial_data.load_data( data.tutorial_data );
 
             console.log( 'load' );
             console.log( data );
