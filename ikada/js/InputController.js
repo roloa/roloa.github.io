@@ -263,6 +263,9 @@ export class InputController {
 //        console.log('mouse_down', this.mouse_x, this.mouse_y);
         this.is_mouse_down = true;
         this.is_mouse_press_buffer = true;
+        // どこでもクリックされたら、サウンド読み込みを始める
+        this.game.sound_library.load_sounds();
+
         return false;
     }
 
@@ -304,6 +307,8 @@ export class InputController {
             this.game.log('**************');
             this.game.hud_virtual_input.is_enable = true;
         }
+        // どこでもクリックされたら、サウンド読み込みを始める
+        this.game.sound_library.load_sounds();
         event.preventDefault();
         return false;
     }

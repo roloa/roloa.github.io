@@ -58,9 +58,7 @@ export class TitleScreen extends Object {
                      }
                  }
             }
-            // どこでもクリックされたら、サウンド読み込みを始める
-            this.game.sound_library.load_sounds();
-            this.game.sound_library.play_sound('513/hat/D4');
+
         }
 
     }

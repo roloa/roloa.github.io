@@ -57,6 +57,7 @@ export class ImageLibrary {
                 simple_name = simple_name.replace('./img/illustya/', '');
                 simple_name = simple_name.replace('.png', '');
                 this.image_list[ simple_name ] = new_image;
+                //this.game.log('image: ' + simple_name);
             }
         }
     }

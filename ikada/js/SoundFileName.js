@@ -1,7 +1,7 @@
 
 export class SoundFileName {
   static FILE_NAME_LIST = [
-      './sound/keytap.wav',
+      './sound/keytap.mp3',
       //  './sound/.wav',
 
       './sound/513/cymbal/D1.mp3',

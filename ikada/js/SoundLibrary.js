@@ -26,8 +26,10 @@ export class SoundLibrary {
 
         } else {
             this.is_load_start = true;
+            this.context = new(window.AudioContext || window.webkitAudioContext);
 
-            this.context = new AudioContext();
+            this.context.createMediaElementSource( document.getElementById('audio_tag_c6') ).connect(this.context.destination);
+            document.getElementById('audio_tag_c6').play();
             this.load_files();
         }
 
@@ -51,6 +53,7 @@ export class SoundLibrary {
                         simple_name = simple_name.replace('.wav', '');
                         simple_name = simple_name.replace('.mp3', '');
                         this.sound_list[ simple_name ] = buffer;
+                        this.game.log('sound: ' + simple_name);
 
                     }.bind(this) );
                 }.bind(this);

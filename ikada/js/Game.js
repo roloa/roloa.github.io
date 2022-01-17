@@ -75,6 +75,7 @@ export class Game {
         this.tutorial_data = new TutorialData( this );
         this.world = new World( this );
         this.hud = new Hud( this );
+
         this.inventory = new Inventory( this );
         this.materials = new Materials( this );
         this.save_data_manager = new SaveDataManager( this );
@@ -87,6 +88,8 @@ export class Game {
 
         this.dc = new DebugCommands( this );
         this.interbal_handle = 0;
+
+
     }
 
     reset(){
@@ -178,6 +181,7 @@ export class Game {
             // なんかエラーが起きたら、ゲーム動作を止める
             clearInterval( this.interbal_handle );
             console.log('game halted on error!');
+            alert( e );
 
             // ダメ元でエラーメッセージを画面に表示
             this.display_canvas.fillStyle = Game.PROC_TIME_COLOR;
