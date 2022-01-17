@@ -3,6 +3,7 @@ import {World} from './World.js';
 import {Hud} from './hud/Hud.js';
 import {InputController} from './InputController.js'
 import {ImageLibrary} from './ImageLibrary.js'
+import {SoundLibrary} from './SoundLibrary.js'
 import {Inventory} from './Inventory.js'
 import {Materials} from './Materials.js'
 import {TitleScreen} from './TitleScreen.js'
@@ -68,6 +69,7 @@ export class Game {
 
         this.image_library = new ImageLibrary( this );
         this.image_library.load_images();
+        this.sound_library = new SoundLibrary( this );
 
         this.input_controller = new InputController( this );
         this.tutorial_data = new TutorialData( this );
@@ -113,6 +115,10 @@ export class Game {
     }
 
     log( message ){
+        if( !this.is_played_log_sound_in_frame ){
+            this.is_played_log_sound_in_frame = true;
+            this.sound_library.play_sound('keytap');
+        }
         this.hud.hud_log.push_log( message );
     }
     on_update(){
@@ -131,6 +137,7 @@ export class Game {
                 this.world.on_update();
                 this.tutorial_data.on_update();
             }
+            this.is_played_log_sound_in_frame = false;
 
             // デバッグチート
             if( this.input_controller.is_pressed_key['KeyP']){

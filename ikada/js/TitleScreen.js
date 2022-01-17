@@ -58,6 +58,9 @@ export class TitleScreen extends Object {
                      }
                  }
             }
+            // どこでもクリックされたら、サウンド読み込みを始める
+            this.game.sound_library.load_sounds();
+            this.game.sound_library.play_sound('513/hat/D4');
         }
 
     }
@@ -67,6 +70,7 @@ export class TitleScreen extends Object {
             // 新規データ
             this.game.is_there_title = false;
             this.game.log('新しく始めます。');
+            this.game.sound_library.play_sound('513/symbal/D2');
         } else if( cursor == 1 ){
             this.game.log('オートセーブデータをロードします。');
             if( this.game.save_data_manager.load_game('save_data_auto') ){

@@ -68,6 +68,7 @@ export class HudMenu {
                     // 閉じるボタン
                     if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
                         this.is_menu_open = false;
+                        this.game.sound_library.play_sound('513/kick/C5');
                     }
                     for( let i = 0 ; i < this.menu_list.length ; i++){
                         if( this.hittest_menu_tabs( i, this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
@@ -82,11 +83,13 @@ export class HudMenu {
             if( this.game.input_controller.get_press_tab() ){
                 // タブキーでメニューを開く
                 this.open_menu();
+                this.game.sound_library.play_sound('513/tom/G3');
             }
             // マウス操作
             if( this.game.input_controller.get_mouse_press() ){
                 if ( this.hittest_menu_open_button( this.game.input_controller.mouse_x, this.game.input_controller.mouse_y ) ){
                     this.open_menu();
+                    this.game.sound_library.play_sound('513/tom/G3');
                 }
             }
         }
