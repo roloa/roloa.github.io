@@ -1,3 +1,8 @@
 
 img/illustya_src
 *.wav
+
+
+node_modules/
+
+dist/
