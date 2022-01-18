@@ -21,9 +21,13 @@ a:active { color: #FAA; }
 }
 
 #game_container{
-    display: flex;
+
 }
 
+input{
+    height: 50px;
+    width: 50px;
+}
 #game_container_2{
     display: flex;
 }

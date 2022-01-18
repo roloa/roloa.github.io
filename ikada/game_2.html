@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+      <meta charset="utf-8"/>
+	  <title>イカダビルダー</title>
+	  <link href='style.css' rel='stylesheet' />
+	</head>
+	<body>
+    <div id='app'>
+        <div id='game_container'>
+            <div id='canvas_container'>
+                <canvas id='my_canvas' width='960' height='600' ></canvas>
+                <canvas id='my_buffer_canvas' width='960' height='600' hidden></canvas>
+            </div>
+            <audio id="audio_tag_c6" preload>
+                <source src="./sound/513/perc/C6.mp3" type="audio/mp3">
+            </audio>
+            <div>
+                <span id='span_1'>hoge</span>
+                <input type='button' id='button_1' value='[1]' onclick='window.game.start();' />
+            </div>
+        </div>
+
+    </div>
+</body>
+    <script src='./js/Main.js' type='module'></script>
+
+</html>
