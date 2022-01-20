@@ -26,6 +26,7 @@ export class ImgFileName {
   './img/check.png',
   './img/arrow_up.png',
   './img/arrow_down.png',
+  './img/ship_core.png',
 //  './img/.png',
   './img/ikada.png'
   ]

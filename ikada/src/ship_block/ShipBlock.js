@@ -29,6 +29,14 @@ export class ShipBlock {
         this.saving_data.hp = this.max_hp;
         this.saving_data.is_broken = false;
 
+        this.newest_heartbeat_id = 0;
+        this.heartbeat_time_limit_max = 150;
+        this.heartbeat_time_limit_count = this.heartbeat_time_limit_max;
+        this.heartbeat_update_span_max = 10;
+        this.heartbeat_update_span_count = this.heartbeat_update_span_max;
+        this.is_healthy_heartbeat = true;
+        this.is_core = false;
+
         this.accept_ammo_type = null;
     }
     is_need_operate(){
@@ -88,18 +96,75 @@ export class ShipBlock {
             this.saving_data.hp = 0;
         }
     }
+
+    give_heartbeat( beat_id ){
+        // 自分の持つ最新のハートビートidよりも大きいか、0のハートビートが来たら、
+        // ハートビートidを更新する
+        if( this.newest_heartbeat_id < beat_id ) {
+            this.newest_heartbeat_id = beat_id;
+            this.heartbeat_time_limit_count = this.heartbeat_time_limit_max;
+            this.is_healthy_heartbeat = true;
+        }
+    }
+    update_heartbeat(){
+        // 上下左右のブロックに、自分の持つハートビートを与える
+        let block = null;
+        block = this.game.world.ship.get_ship_block_by_index(  this.cell_x - 1 , this.cell_y, true );
+        if ( block ){
+            block.give_heartbeat( this.newest_heartbeat_id );
+        }
+        block = this.game.world.ship.get_ship_block_by_index( this.cell_x + 1 , this.cell_y, true );
+        if ( block ){
+            block.give_heartbeat( this.newest_heartbeat_id );
+        }
+        block = this.game.world.ship.get_ship_block_by_index(    this.cell_x , this.cell_y - 1, true );
+        if ( block ){
+            block.give_heartbeat( this.newest_heartbeat_id );
+        }
+        block = this.game.world.ship.get_ship_block_by_index(  this.cell_x , this.cell_y + 1, true );
+        if ( block ){
+            block.give_heartbeat( this.newest_heartbeat_id );
+        }
+    }
+
     on_update(){
 
-        // hpは微量に自然回復する
-        if( this.saving_data.hp < this.max_hp ){
-            this.saving_data.hp += 0.05;
-        } else if( this.saving_data.is_broken ){
-            this.saving_data.is_broken = false;
+        if( this.is_healthy_heartbeat ){
+            // hpは微量に自然回復する
+            if( this.saving_data.hp < this.max_hp ){
+                this.saving_data.hp += 0.05;
+            } else if( this.saving_data.is_broken ){
+                this.saving_data.is_broken = false;
+            } else {
+                this.saving_data.hp = this.max_hp;
+            }
         } else {
-            this.saving_data.hp = this.max_hp;
+            // ハートビートが健全でない場合は、hpが減っていく
+            this.take_damage( 1 );
         }
-
+        if( !this.is_core ){
+            // コア自体はハートビート処理をしない
+            if( !this.is_broken ){
+                // 壊れたブロックはハートビートを伝搬しない
+                if( 0 < this.heartbeat_update_span_count){
+                    this.heartbeat_update_span_count -= 1;
+                } else {
+                    // 1.0 ~ 0.8の範囲でランダム
+                    this.heartbeat_update_span_count = Math.floor(
+                        this.heartbeat_update_span_max * (Math.random() * 0.2 + 0.8));
+                    this.update_heartbeat();
+                }
+            }
+            // ハートビートを受け取らない時間が長いと、ハートビートの健全性が失われる
+            if ( 0 < this.heartbeat_time_limit_count ){
+                this.heartbeat_time_limit_count -= 1;
+            } else {
+                this.is_healthy_heartbeat = false;
+            }
+        }
     }
+
+
     get_image(){
         return this.image;
     }
@@ -131,6 +196,11 @@ export class ShipBlock {
             canvas.moveTo(0, 0);
             canvas.lineTo( -crack_length, -crack_length );
             canvas.stroke()
+        }
+        // デバッグ用、ハートビート状態を表示
+        if ( true ){
+            canvas.fillStyle = 'rgb(200,200,200)';
+            canvas.fillText(this.newest_heartbeat_id ,0,0);
         }
     }
     save_data(){
