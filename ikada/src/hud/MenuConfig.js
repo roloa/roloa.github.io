@@ -92,6 +92,7 @@ export class MenuConfig {
     save_game_1(){
         this.game.save_data_manager.save_game('save_data_1')
         this.game.log('データ[1]にセーブしました。')
+        this.game.tutorial_data.complete('データ[1]にセーブする');
     }
     save_game_2(){
         this.game.save_data_manager.save_game('save_data_2')

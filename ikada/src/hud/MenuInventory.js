@@ -12,7 +12,7 @@ export class MenuInventory {
     static LIST_Y = 80;
     static LIST_ICON_SIZE = 50;
     static LIST_SPACING = 10;
-    static LIST_X_COUNT = 10;
+    static LIST_X_COUNT = 5;
     static LIST_Y_COUNT = 4;
     static LIST_ICON_FRAME_COLOR = 'rgb(20,20,20)';
     static LIST_ICON_FRAME_COLOR_SELECTED = 'rgb(200,20,20)';
@@ -102,7 +102,7 @@ export class MenuInventory {
             let m_x = this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT;
             let m_y = this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP;
 
-            for( let i = 0 ; i < 25 ; i++ ){
+            for( let i = 0 ; i < this.game.inventory.item_inventory_size ; i++ ){
                 let x = i % MenuInventory.LIST_X_COUNT;
                 let y = Math.floor( i / MenuInventory.LIST_X_COUNT);
                 let frame_x = MenuInventory.LIST_X + x * (MenuInventory.LIST_ICON_SIZE + MenuInventory.LIST_SPACING);
@@ -201,7 +201,7 @@ export class MenuInventory {
             MenuInventory.TITLE_X ,MenuInventory.TITLE_Y);
 
         // インベントリのアイテムリスト
-        for( let i = 0 ; i < 25 ; i++ ){
+        for( let i = 0 ; i < this.game.inventory.item_inventory_size ; i++ ){
             if( this.cursor_index == i ){
                 canvas.strokeStyle = MenuInventory.LIST_ICON_FRAME_COLOR_SELECTED;
             } else {

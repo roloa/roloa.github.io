@@ -10,7 +10,7 @@ export class Inventory {
     constructor( game ){
         this.game = game;
 
-        this.item_inventory_size = 32;
+        this.item_inventory_size = 25;
 
         this.tool_item_inventory = []
         for( let i = 0 ; i < this.item_inventory_size ; i++ ){

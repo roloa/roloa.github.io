@@ -11,10 +11,15 @@ export class TutorialData {
         this.condition_check_timer_max = 10;
         this.condition_check_timer_count = this.condition_check_timer_max;
 
+        this.complete_flag_list = [];
+
         this.setup_tutorial();
     }
     get_list(){
         return this.tutorial_list;
+    }
+    complete( key ){
+        this.complete_flag_list[ key ] = true;
     }
     setup_tutorial(){
 
@@ -109,7 +114,15 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = 'インベントリ メニュー';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('アイテムの管理'));
+        tutorial.check_list.push( this.desc_only('持っているアイテムを管理する画面です。'));
+        tutorial.check_list.push( this.desc_only('クリックでアイテムを移動できます。'));
+        tutorial.check_list.push( this.desc_only('1-9キーでアイテムを枠に移動させます。'));
+        tutorial.check_list.push( this.desc_only('ゴミ箱にアイテムを置くと消去できます。'));
+        tutorial.check_list.push({
+            description: 'インベントリ メニューを開く',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.hud_menu.menu_list_cursor == 1;
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
@@ -120,7 +133,15 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = 'クラフト メニュー';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('アイテムの製作'));
+        tutorial.check_list.push( this.desc_only('マテリアルからアイテムを製作する画面です。'));
+        tutorial.check_list.push( this.desc_only('作りたいアイテムを選び、'));
+        tutorial.check_list.push( this.desc_only('右下の製作ボタンで、'));
+        tutorial.check_list.push( this.desc_only('マテリアルを消費してアイテムを作ります。'));
+        tutorial.check_list.push({
+            description: 'クラフト メニューを開く',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.hud_menu.menu_list_cursor == 2;
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
@@ -131,7 +152,15 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = 'マテリアル メニュー';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('マテリアルの確認'));
+        tutorial.check_list.push( this.desc_only('持っているマテリアルを確認する画面です。'));
+        tutorial.check_list.push( this.desc_only('マテリアルとは、'));
+        tutorial.check_list.push( this.desc_only('アイテムを作るための素材です。'));
+        tutorial.check_list.push( this.desc_only('所持上限は基本的にありません。'));
+        tutorial.check_list.push({
+            description: 'マテリアル メニューを開く',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.hud_menu.menu_list_cursor == 3;
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
@@ -142,7 +171,17 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = 'コンフィグ メニュー';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('セーブ、各種設定'));
+        tutorial.check_list.push( this.desc_only('ゲームの保存や設定変更をする画面です。'));
+        tutorial.check_list.push({
+            description: 'コンフィグ メニューを開く',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.hud_menu.menu_list_cursor == 4;
+        }});
+        tutorial.check_list.push({
+            description: 'データ[1]にセーブする',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return (game.tutorial_data.complete_flag_list[ this.description ] == true);
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');

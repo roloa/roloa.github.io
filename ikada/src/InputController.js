@@ -177,7 +177,12 @@ export class InputController {
     get_press_esc(){
         return this.is_press_esc || this.is_virtual_press_esc;
     }
-
+    get_wheel_up(){
+        return this.is_wheel_up;
+    }
+    get_wheel_down(){
+        return this.is_wheel_down;
+    }
 
     on_key_down(e) {
         if(!e.repeat){

@@ -61,7 +61,7 @@ export class MenuTutorial {
         this.tutorial_list = this.game.tutorial_data.get_list();
 
         this.config_cursor = 0;
-        this.config_scroll = 0;
+        this.config_scroll = -1;
         this.menu_icon = this.game.image_library.get_image( 'setsumeisyo_manual' );
 
         this.batsu_icon = this.game.image_library.get_image( 'batsu' );
@@ -98,8 +98,19 @@ export class MenuTutorial {
                 this.config_cursor += 1;
             }
         }
-        if( this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space() ){
-            // エンターキー
+        if( this.game.input_controller.get_wheel_up() ){
+            if ( 0 <= this.scroll_amount ){
+                this.scroll_amount -= 1;
+            } else if( 1 < this.config_cursor){
+                this.config_cursor -= 1;
+            }
+        }
+        if( this.game.input_controller.get_wheel_down() ){
+            if ( this.scroll_amount + MenuTutorial.DOWN_ARROW_INDEX < this.tutorial_list.length ){
+                this.scroll_amount += 1;
+            } else if( this.config_cursor < MenuTutorial.DOWN_ARROW_INDEX - 1 ){
+                this.config_cursor += 1;
+            }
         }
 
         if( this.game.input_controller.get_mouse_press() ){
@@ -117,19 +128,25 @@ export class MenuTutorial {
             if( MenuTutorial.LIST_X < mouse_x && mouse_x < MenuTutorial.LIST_X + MenuTutorial.LIST_WIDTH &&
                 frame_y < mouse_y && mouse_y < frame_y + MenuTutorial.LIST_TEXT_HEIGHT
             ){
-                if( i == this.config_cursor ){
-
-                } else {
-                    this.config_cursor = i;
-                }
                 // スクロール
                 if( i == 0 ){
                     if ( 0 <= this.scroll_amount ){
                         this.scroll_amount -= 1;
+                    } else if( 1 < this.config_cursor){
+                        this.config_cursor -= 1;
                     }
                 } else if( i == MenuTutorial.DOWN_ARROW_INDEX ) {
                     if ( this.scroll_amount + MenuTutorial.DOWN_ARROW_INDEX < this.tutorial_list.length ){
                         this.scroll_amount += 1;
+                    } else if( this.config_cursor < MenuTutorial.DOWN_ARROW_INDEX - 1 ){
+                        this.config_cursor += 1;
+                    }
+                } else {
+                    // カーソル移動
+                    if( i == this.config_cursor ){
+
+                    } else {
+                        this.config_cursor = i;
                     }
                 }
             }

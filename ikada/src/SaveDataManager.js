@@ -7,6 +7,8 @@ export class SaveDataManager {
         this.game = game;
         this.item_instance_maker = new ItemInstanceMaker( this.game );
         this.block_instance_maker = new BlockInstanceMaker( this.game );
+
+        this.is_data_saved = false;
     }
     delete_save_data(){
         let data = {};
