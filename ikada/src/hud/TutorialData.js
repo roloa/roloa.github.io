@@ -21,6 +21,17 @@ export class TutorialData {
         this.tutorial_list = [];
         let tutorial = null;
 
+        // tutorial = {};
+        // tutorial.title = '(この項目が見えたらバグです。)';
+        // tutorial.check_list = [];
+        // tutorial.check_list.push( this.desc_only('この文章が見えたらバグです。'));
+        //
+        // tutorial.reword_tool_item = new ResourceItem( this.game );
+        // tutorial.reword_tool_item.set_image('tree_ryuuboku');
+        // tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
+        // tutorial.reword_tool_item.add_material('wood', 1);
+        // this.tutorial_list.push( tutorial );
+
         tutorial = {};
         tutorial.title = 'チュートリアルの使い方';
         tutorial.check_list = [];

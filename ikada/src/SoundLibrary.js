@@ -8,31 +8,36 @@ export class SoundLibrary {
 
         this.sound_list = []
         this.is_load_start = false;
+
+        this.is_mute = true;
     }
 
     get_sound( name ){
         return this.sound_list[ name ];
     }
     play_sound( name ){
-        if( this.sound_list[ name ] ){
-            this.bufferSource = this.context.createBufferSource();
-            this.bufferSource.buffer = this.sound_list[ name ];
-            this.bufferSource.connect(this.context.destination);
-            this.bufferSource.start(0);
+        if( !this.is_mute ){
+            if( this.sound_list[ name ] ){
+                this.bufferSource = this.context.createBufferSource();
+                this.bufferSource.buffer = this.sound_list[ name ];
+                this.bufferSource.connect(this.context.destination);
+                this.bufferSource.start(0);
+            }
         }
     }
     load_sounds(){
-        if( this.is_load_start ){
+        if( !this.is_mute ){
+            if( this.is_load_start ){
 
-        } else {
-            this.is_load_start = true;
-            this.context = new(window.AudioContext || window.webkitAudioContext);
+            } else {
+                this.is_load_start = true;
+                this.context = new(window.AudioContext || window.webkitAudioContext);
 
-            this.context.createMediaElementSource( document.getElementById('audio_tag_c6') ).connect(this.context.destination);
-            document.getElementById('audio_tag_c6').play();
-            this.load_files();
+                this.context.createMediaElementSource( document.getElementById('audio_tag_c6') ).connect(this.context.destination);
+                document.getElementById('audio_tag_c6').play();
+                this.load_files();
+            }
         }
-
     }
 
     load_files(){

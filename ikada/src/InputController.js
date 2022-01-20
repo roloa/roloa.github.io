@@ -214,7 +214,7 @@ export class InputController {
             }
 
         }
-        if( e.code == 'F5' ){
+        if( e.code == 'F5' || e.code == 'F12' ){
             return false;
         }
         e.preventDefault();

@@ -24,6 +24,8 @@ export class ImgFileName {
   './img/menu.png',
   './img/batsu.png',
   './img/check.png',
+  './img/arrow_up.png',
+  './img/arrow_down.png',
 //  './img/.png',
   './img/ikada.png'
   ]
