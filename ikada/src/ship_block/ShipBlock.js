@@ -226,7 +226,7 @@ export class ShipBlock {
             canvas.stroke()
         }
         // デバッグ用、ハートビート状態を表示
-        if ( true ){
+        if ( false ){
             canvas.fillStyle = 'rgb(200,200,200)';
             canvas.fillText(this.newest_heartbeat_id ,0,0);
         }

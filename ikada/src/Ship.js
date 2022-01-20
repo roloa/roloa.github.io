@@ -24,33 +24,33 @@ export class Ship {
     init_block_array(){
         if( true ) {
             // デバッグ用初期配置
-            for( let x = 0 ; x < 9 ; x++ ){
+            for( let x = 0 ; x < 7 ; x++ ){
                 this.block_array[x] = [];
-                for( let y = 0 ; y < 9 ; y++ ){
+                for( let y = 0 ; y < 4 ; y++ ){
                     this.block_array[x][y] = null;
                 }
             }
-            this.ship_offset_x = 5
-            this.ship_offset_y = 8
+            this.ship_offset_x = 4
+            this.ship_offset_y = 3
 
-            this.put_ship_block(new ShipFloor( this.game ), 6, 5 );
-            this.put_ship_block(new ShipFrame( this.game ), 6, 6 );
-            this.put_ship_block(new ShipFrame( this.game ), 6, 7 );
+            this.put_ship_block(new ShipFloor( this.game ), 5, 0 );
+            this.put_ship_block(new ShipFrame( this.game ), 5, 1 );
+            this.put_ship_block(new ShipFrame( this.game ), 5, 2 );
 
-            this.put_ship_block(new ShipFloor( this.game ), 4, 6);
-            this.put_ship_block(new ShipFrame( this.game ), 4, 7);
+            this.put_ship_block(new ShipFloor( this.game ), 3, 1);
+            this.put_ship_block(new ShipFrame( this.game ), 3, 2);
 
-            this.put_ship_block(new ShipFloor( this.game ), 2, 7 );
+            this.put_ship_block(new ShipFloor( this.game ), 1, 2 );
 
-            this.put_ship_block(new ShipFloor( this.game ), 1, 8);
-            this.put_ship_block(new ShipFloor( this.game ), 2, 8);
-            this.put_ship_block(new ShipCore( this.game ), 3, 8);
+            this.put_ship_block(new ShipFloor( this.game ), 0, 3);
+            this.put_ship_block(new ShipFloor( this.game ), 1, 3);
+            this.put_ship_block(new ShipCore( this.game ),  2, 3);
             this.core_x = 3;
-            this.core_y = 8;
-            this.put_ship_block(new ShipFloor( this.game ), 4, 8);
-            this.put_ship_block(new ShipFloor( this.game ), 5, 8);
-            this.put_ship_block(new ShipFloor( this.game ), 6, 8);
-            this.put_ship_block(new ShipFloor( this.game ), 7, 8);
+            this.core_y = 3;
+            this.put_ship_block(new ShipFloor( this.game ), 3, 3);
+            this.put_ship_block(new ShipFloor( this.game ), 4, 3);
+            this.put_ship_block(new ShipFloor( this.game ), 5, 3);
+            this.put_ship_block(new ShipFloor( this.game ), 6, 3);
 
             // this.block_array[6][5] = new ShipFloor( this.game )
             // this.block_array[6][6] = new ShipFrame( this.game )
@@ -241,7 +241,7 @@ export class Ship {
         return - ShipBlock.BLOCK_SIZE * this.ship_offset_x;
     }
     get_right_side_x(){
-        return   ShipBlock.BLOCK_SIZE * ( - this.ship_offset_x + this.block_array.length );
+        return   ShipBlock.BLOCK_SIZE * ( - this.ship_offset_x + this.block_array.length - 1);
     }
     get_top_y(){
         return - ShipBlock.BLOCK_SIZE * this.ship_offset_y;

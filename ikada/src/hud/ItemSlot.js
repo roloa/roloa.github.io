@@ -81,19 +81,30 @@ export class ItemSlot {
     delete_active_item(){
          this.item_slot[ this.item_slot_cursor ] = null;
     }
-    put_pickup_item( new_item ){
+    put_pickup_item( new_item, is_put_back ){
         if( this.is_config_auto_material_deconstruct ){
             if( new_item instanceof ResourceItem ){
                 new_item.on_click(0,0,0,0);
                 return true;
             }
         }
-        // アイテムスロットの後側から入る場所を探す
-        for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
-            if( this.item_slot[ i ] == null ){
-                this.item_slot[ i ] = new_item;
-                this.refresh();
-                return true;
+        if( is_put_back ){
+            // アイテムスロットの後側から入る場所を探す
+            for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
+                if( this.item_slot[ i ] == null ){
+                    this.item_slot[ i ] = new_item;
+                    this.refresh();
+                    return true;
+                }
+            }
+        } else {
+            // アイテムスロットの前側から入る場所を探す
+            for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
+                if( this.item_slot[ i ] == null ){
+                    this.item_slot[ i ] = new_item;
+                    this.refresh();
+                    return true;
+                }
             }
         }
         // 入る場所が無かったらfalseを返す
@@ -104,6 +115,16 @@ export class ItemSlot {
         for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
             if( this.item_slot[ i ] == null ){
                 return true;
+            }
+        }
+        return false;
+    }
+    has_item_instanceof( item_class ){
+        for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
+            if( this.item_slot[ i ] != null ){
+                if( this.item_slot[ i ] instanceof item_class ){
+                    return true;
+                }
             }
         }
         return false;

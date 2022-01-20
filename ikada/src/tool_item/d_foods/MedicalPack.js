@@ -7,7 +7,7 @@ export class GenericFood extends ToolItem {
         super( game )
 
         this.image = this.game.image_library.get_image( 'wasyoku_yakizakana');
-        this.saving_data.item_name = '名もなき食べ物';
+        this.saving_data.item_name = '薬箱';
         this.saving_data.hunger_value = 5;
         this.saving_data.thirst_value = 5;
         this.saving_data.is_be_leftover = true;
