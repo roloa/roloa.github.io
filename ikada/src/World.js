@@ -2,6 +2,7 @@
 import {Entity} from './entity/Entity.js';
 import {Player} from './entity/Player.js';
 import {Ship} from './Ship.js';
+import {WorldBackGround} from './WorldBackGround.js';
 import {DropItem} from './entity/DropItem.js';
 import {FishingLure} from './entity/FishingLure.js';
 import {WorldSpawner} from './WorldSpawner.js';
@@ -33,6 +34,7 @@ export class World {
         this.player = new Player( this.game );
         this.ship = new Ship( this.game );
         this.lure = new FishingLure( this.game );
+        this.back_ground = new WorldBackGround( this.game );
 
         this.world_spawner = new WorldSpawner( this.game, this );
 
@@ -40,6 +42,8 @@ export class World {
         this.auto_save_timer = this.auto_save_timer_max ;
 
         this.sea_offset_x = 0;
+        this.sea_waving = 0;
+
 
         // 風のテスト
         let test_wind = new EffectWind( this.game );
@@ -202,6 +206,13 @@ export class World {
         if( this.sea_offset_x < -World.SEA_WAVE_SPACE_2 ){
             this.sea_offset_x += World.SEA_WAVE_SPACE_2
         }
+        this.sea_waving += 0.01;
+        if( Math.PI * 2 < this.sea_waving ){
+            this.sea_waving -= Math.PI * 2;
+        }
+
+        // 背景
+        this.back_ground.on_update();
 
     }
     zoom_in( is_non_limit ){
@@ -233,8 +244,12 @@ export class World {
 
         canvas.moveTo(start_x + this.sea_offset_x  , 0)
          for( let i = 0 ; i < World.SEA_WAVE_COUNT ; i++ ){
+             let wave_dir = 1;
+             if( i % 2 == 0 ){
+                 wave_dir = -1
+             }
              canvas.lineTo( World.SEA_WAVE_SPACE * i + start_x + this.sea_offset_x  ,
-                 (i % 2)*10)
+                 wave_dir * 5 * Math.max( -1, Math.min( 1 , Math.sin( this.sea_waving ) * 2 )));
         }
         canvas.lineTo( 2000 + start_x + this.sea_offset_x , 0)
         canvas.stroke()
@@ -242,6 +257,8 @@ export class World {
     }
     //
     on_draw( canvas ){
+
+        this.back_ground.on_draw( canvas );
 
         canvas.save();
 
