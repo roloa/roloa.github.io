@@ -280,6 +280,10 @@ export class Ship {
                 if( block != null ){
                     block.cell_x = x;
                     block.cell_y = y;
+                    if( block.is_core ){
+                        this.core_x = x;
+                        this.core_y = y;
+                    }
                 }
             }
         }
