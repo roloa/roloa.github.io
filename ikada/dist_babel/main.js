@@ -83,7 +83,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   class e {
     constructor(t) {
-      this.game = t, this.saving_data = {}, this.name = "木製ブロック", this.is_floor = !1, this.image = null, this.is_removed = !1, this.x = 0, this.y = 0, this.cell_x = 0, this.cell_y = 0, this.kickback_damage = 10, this.max_hp = 100, this.saving_data.hp = this.max_hp, this.saving_data.is_broken = !1, this.accept_ammo_type = null;
+      this.game = t, this.saving_data = {}, this.name = "木製ブロック", this.is_floor = !1, this.image = null, this.is_removed = !1, this.x = 0, this.y = 0, this.cell_x = 0, this.cell_y = 0, this.kickback_damage = 10, this.max_hp = 100, this.saving_data.hp = this.max_hp, this.saving_data.is_broken = !1, this.newest_heartbeat_id = 0, this.heartbeat_time_limit_max = 150, this.heartbeat_time_limit_count = this.heartbeat_time_limit_max, this.heartbeat_update_span_max = 10, this.heartbeat_update_span_count = this.heartbeat_update_span_max, this.is_healthy_heartbeat = !0, this.is_core = !1, this.accept_ammo_type = null;
     }
 
     is_need_operate() {}
@@ -111,15 +111,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_hit_bullet(t) {
-      this.take_damage(t.damage);
+      return this.take_damage(t.damage);
     }
 
     take_damage(t) {
-      this.saving_data.hp -= t, this.saving_data.hp <= 0 && (this.saving_data.is_broken = !0, this.saving_data.hp = 0);
+      if (this.is_core) {
+        if (this.game.world.ship.get_ship_block_by_index(this.cell_x - 1, this.cell_y) && this.game.world.ship.get_ship_block_by_index(this.cell_x + 1, this.cell_y)) return !1;
+      } else if (this.game.world.ship.ship_offset_y <= this.cell_y) {
+        if (this.game.world.ship.core_x < this.cell_x && this.game.world.ship.get_ship_block_by_index(this.cell_x + 1, this.cell_y)) return !1;
+        if (this.cell_x < this.game.world.ship.core_x && this.game.world.ship.get_ship_block_by_index(this.cell_x - 1, this.cell_y)) return !1;
+      }
+
+      if (this.saving_data.hp -= t, this.saving_data.hp <= 0) return this.saving_data.is_broken = !0, this.saving_data.hp = 0, !0;
+    }
+
+    give_heartbeat(t) {
+      this.newest_heartbeat_id < t && (this.newest_heartbeat_id = t, this.heartbeat_time_limit_count = this.heartbeat_time_limit_max, this.is_healthy_heartbeat = !0);
+    }
+
+    update_heartbeat() {
+      let t = null;
+      t = this.game.world.ship.get_ship_block_by_index(this.cell_x - 1, this.cell_y, !0), t && t.give_heartbeat(this.newest_heartbeat_id), t = this.game.world.ship.get_ship_block_by_index(this.cell_x + 1, this.cell_y, !0), t && t.give_heartbeat(this.newest_heartbeat_id), t = this.game.world.ship.get_ship_block_by_index(this.cell_x, this.cell_y - 1, !0), t && t.give_heartbeat(this.newest_heartbeat_id), t = this.game.world.ship.get_ship_block_by_index(this.cell_x, this.cell_y + 1, !0), t && t.give_heartbeat(this.newest_heartbeat_id);
     }
 
     on_update() {
-      this.saving_data.hp < this.max_hp ? this.saving_data.hp += .05 : this.saving_data.is_broken ? this.saving_data.is_broken = !1 : this.saving_data.hp = this.max_hp;
+      this.is_healthy_heartbeat ? this.saving_data.hp < this.max_hp ? this.saving_data.hp += .05 : this.saving_data.is_broken ? this.saving_data.is_broken = !1 : this.saving_data.hp = this.max_hp : this.take_damage(1), this.is_core || (this.saving_data.is_broken || (0 < this.heartbeat_update_span_count ? this.heartbeat_update_span_count -= 1 : (this.heartbeat_update_span_count = Math.floor(this.heartbeat_update_span_max * (.2 * Math.random() + .8)), this.update_heartbeat())), 0 < this.heartbeat_time_limit_count ? this.heartbeat_time_limit_count -= 1 : this.is_healthy_heartbeat = !1);
     }
 
     get_image() {
@@ -439,19 +455,45 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class l {
+  class l extends e {
+    constructor(t) {
+      super(t), this.name = "木製支柱", this.is_floor = !1, this.image = this.game.image_library.get_image("ship_frame");
+    }
+
+    on_update() {
+      super.on_update();
+    }
+
+  }
+
+  class m extends e {
+    constructor(t) {
+      super(t), this.name = "舟のコア", this.is_floor = !0, this.image = this.game.image_library.get_image("ship_core"), this.heartbeat_span_max = 50, this.heartbeat_span_count = this.heartbeat_span_max, this.is_core = !0, this.current_heartbeat_id = 1;
+    }
+
+    on_update() {
+      if (super.on_update(), 0 < this.heartbeat_span_count) this.heartbeat_span_count -= 1;else {
+        this.heartbeat_span_count = this.heartbeat_span_max, this.current_heartbeat_id += 1, this.newest_heartbeat_id = this.current_heartbeat_id;
+        let t = null;
+        t = this.game.world.ship.get_ship_block_by_index(this.cell_x - 1, this.cell_y, !0), t && t.give_heartbeat(this.current_heartbeat_id), t = this.game.world.ship.get_ship_block_by_index(this.cell_x + 1, this.cell_y, !0), t && t.give_heartbeat(this.current_heartbeat_id), t = this.game.world.ship.get_ship_block_by_index(this.cell_x, this.cell_y - 1, !0), t && t.give_heartbeat(this.current_heartbeat_id), t = this.game.world.ship.get_ship_block_by_index(this.cell_x, this.cell_y + 1, !0), t && t.give_heartbeat(this.current_heartbeat_id);
+      }
+    }
+
+  }
+
+  class g {
     constructor(t) {
       this.game = t, this.block_array = [], this.init_block_array(), this.velocity = 0, this.ship_level = 0;
     }
 
     init_block_array() {
-      for (let t = 0; t < 9; t++) {
+      for (let t = 0; t < 7; t++) {
         this.block_array[t] = [];
 
-        for (let i = 0; i < 9; i++) this.block_array[t][i] = null;
+        for (let i = 0; i < 4; i++) this.block_array[t][i] = null;
       }
 
-      this.ship_offset_x = 5, this.ship_offset_y = 8, this.block_array[6][5] = new r(this.game), this.block_array[4][6] = new r(this.game), this.block_array[2][7] = new r(this.game), this.block_array[1][8] = new r(this.game), this.block_array[2][8] = new r(this.game), this.block_array[3][8] = new r(this.game), this.block_array[4][8] = new r(this.game), this.block_array[5][8] = new r(this.game), this.block_array[6][8] = new r(this.game), this.block_array[7][8] = new r(this.game);
+      this.ship_offset_x = 4, this.ship_offset_y = 3, this.put_ship_block(new r(this.game), 5, 0), this.put_ship_block(new l(this.game), 5, 1), this.put_ship_block(new l(this.game), 5, 2), this.put_ship_block(new r(this.game), 3, 1), this.put_ship_block(new l(this.game), 3, 2), this.put_ship_block(new r(this.game), 1, 2), this.put_ship_block(new r(this.game), 0, 3), this.put_ship_block(new r(this.game), 1, 3), this.put_ship_block(new m(this.game), 2, 3), this.core_x = 3, this.core_y = 3, this.put_ship_block(new r(this.game), 3, 3), this.put_ship_block(new r(this.game), 4, 3), this.put_ship_block(new r(this.game), 5, 3), this.put_ship_block(new r(this.game), 6, 3);
     }
 
     get_ship_block(t, i, s) {
@@ -475,28 +517,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           n = this.get_ship_block_by_index(h - 1, o, !0),
           r = this.get_ship_block_by_index(h + 1, o, !0),
           l = this.get_ship_block_by_index(h, o - 1, !0),
-          g = this.get_ship_block_by_index(h, o + 1, !0);
+          m = this.get_ship_block_by_index(h, o + 1, !0);
 
-      if (0 == (null != n || null != r || null != l || null != g)) return this.game.log("隣接するブロックが無いと置けません。"), !1;
+      if (0 == (null != n || null != r || null != l || null != m)) return this.game.log("隣接するブロックが無いと置けません。"), !1;
 
       if (h < 0) {
         let t = [];
 
         for (let i = 0; i < this.block_array[0].length; i++) t.push(null);
 
-        this.block_array.unshift(t), h += 1, this.ship_offset_x += 1;
+        this.block_array.unshift(t), h += 1, this.ship_offset_x += 1, this.calc_ship_block_cell_xy();
       } else if (this.block_array.length <= h) {
         let t = [];
 
         for (let i = 0; i < this.block_array[0].length; i++) t.push(null);
 
-        this.block_array.push(t);
+        this.block_array.push(t), this.calc_ship_block_cell_xy();
       }
 
       if (o < 0) {
         for (let t = 0; t < this.block_array.length; t++) this.block_array[t].unshift(null);
 
-        o += 1, this.ship_offset_y += 1;
+        o += 1, this.ship_offset_y += 1, this.calc_ship_block_cell_xy();
       }
 
       return 0 <= h && h < this.block_array.length && 0 <= o && o < this.block_array[0].length ? null != this.block_array[h][o] ? (this.game.log("既にブロックがあります。"), !1) : (this.put_ship_block(t, h, o), !0) : (this.game.log("ブロックを置ける範囲外です。"), !1);
@@ -565,7 +607,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_right_side_x() {
-      return e.BLOCK_SIZE * (-this.ship_offset_x + this.block_array.length);
+      return e.BLOCK_SIZE * (-this.ship_offset_x + this.block_array.length - 1);
     }
 
     get_top_y() {
@@ -581,6 +623,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       this.ship_level < t ? (this.game.log("舟レベルアップ: "), this.game.log("Lv" + this.ship_level + " -> Lv" + t), this.ship_level = t) : t < this.ship_level && (this.game.log("舟レベルダウン: "), this.game.log("Lv" + this.ship_level + " -> Lv" + t), this.ship_level = t);
+    }
+
+    calc_ship_block_cell_xy() {
+      for (let t = 0; t < this.block_array.length; t++) for (let i = 0; i < this.block_array[t].length; i++) {
+        let e = this.block_array[t][i];
+        null != e && (e.cell_x = t, e.cell_y = i, e.is_core && (this.core_x = t, this.core_y = i));
+      }
     }
 
     on_update() {
@@ -629,7 +678,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class g extends s {
+  class c extends s {
     constructor(t) {
       super(t), this.game = t, this.name = "unknown item", this.x = 0, this.y = 0, this.vx = 0, this.vy = 0, this.is_landing = !1, this.is_in_sea = !1, this.is_working = !1, this.is_rewinding = !1, this.is_fish_hitting = !1, this.fish_hit_timer = 0, this.hit_item = null, this.image = this.game.image_library.get_image("fishing_lure");
     }
@@ -663,7 +712,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class m extends s {
+  class u extends s {
     constructor(t) {
       super(t), this.game = t, this.vx = -3, this.image = this.game.image_library.get_image("./img/wind_effect.png");
     }
@@ -680,7 +729,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class c extends s {
+  class d extends s {
     constructor(t) {
       super(t), this.game = t, this.vx = -.1, this.image = this.game.image_library.get_image("cloud");
     }
@@ -697,7 +746,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class u extends s {
+  class p extends s {
     constructor(t) {
       super(t), this.game = t, this.vx = 6 * Math.random() - 3, this.vy = -3 * Math.random() - 3, this.gravity = .2, this.number = 0, this.image = this.game.image_library.get_image("yurei_youngwoman3_sad"), this.height = 100, this.width = 100, this.life_time = 100;
     }
@@ -712,7 +761,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class d extends s {
+  class y extends s {
     constructor(t) {
       super(t), this.game = t, this.vx = 0, this.vy = 0, this.gravity = 0, this.line_x = 10, this.line_y = 10, this.life_time = 100, this.knock_back_rate = 1, this.weight = 50, this.is_blaster_bullet = !1, this.damage = 11;
     }
@@ -733,7 +782,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class p extends s {
+  class f extends s {
     constructor(t) {
       super(t), this.game = t, this.name = "名もなき弾丸", this.image = null, this.rotation = 0, this.image_size = 32, this.vx = 0, this.vy = 0, this.gravity = 0, this.line_x = 10, this.line_y = 10, this.life_time = 200, this.knock_back_rate = .2, this.weight = 50, this.is_blaster_bullet = !1, this.gun_data = {};
     }
@@ -748,7 +797,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (0 < this.life_time) this.life_time -= 1;else if (this.is_alive = !1, this.is_blaster_bullet) for (let t = 0; t < 8; t++) {
         let i = Math.PI * t * .25 + .125,
-            e = new p(this.game);
+            e = new f(this.game);
         e.x = this.x, e.y = this.y, e.vx = Math.cos(i) * this.gun_data.blast_velocity, e.vy = Math.sin(i) * this.gun_data.blast_velocity, e.life_time = this.gun_data.blast_lifetime, e.weight = this.weight, e.rotation = i, e.gun_data = this.gun_data, this.game.world.push_entity(e);
       }
     }
@@ -764,7 +813,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class y extends t {
+  class T extends t {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("text_mu"), this.saving_data.item_name = "無名の武器", this.bullet_image = this.game.image_library.get_image("bullet_arrow"), this.saving_data.basic_power = 10, this.saving_data.cool_time = 50, this.saving_data.fire_spread = 1, this.saving_data.fire_spread_angle = .1, this.saving_data.bullet_lifetime = 50, this.saving_data.bullet_velocity = 10, this.saving_data.bullet_weight = 50, this.saving_data.blast_lifetime = 0, this.saving_data.blast_velocity = 0, this.saving_data.critical_range_lifetime = 0, this.saving_data.critical_range_lifetime_window = 0, this.saving_data.critical_range_damage = 0, this.saving_data.critical_chance = 0, this.saving_data.critical_chance_damage = 1, this.saving_data.knockback_rate = 1, this.saving_data.poison_damage = 0, this.saving_data.slow_rate = 0, this.saving_data.life_leech = 0, this.saving_data.bullet_color = "rgb(250,0,250)", this.cool_time_count = 0;
     }
@@ -794,8 +843,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.saving_data.knockback_rate = .1 + Math.random() * Math.random(), Math.random() < .2 ? (this.saving_data.poison_damage = Math.floor(e * (.1 + .3 * Math.random() + Math.random() * Math.random() * .9)), e *= .8) : this.saving_data.poison_damage = 0, Math.random() < .2 ? this.saving_data.slow_rate = .1 + .1 * Math.random() + Math.random() * Math.random() * .5 : this.saving_data.slow_rate = 0, Math.random() < .2 ? (this.saving_data.life_leech = Math.floor(1 + 3 * Math.random() + Math.random() * Math.random() * 7), e *= .8) : this.saving_data.life_leech = 0;
       let a = Math.random() + .5;
       this.saving_data.cool_time = Math.floor(25 * a), e /= a, this.saving_data.basic_power = Math.floor(e), this.saving_data.bullet_color = "rgb(250,0,250)";
-      let h = Math.floor(Math.random() * y.IMAGE_NAME_LIST.length);
-      this.set_image(y.IMAGE_NAME_LIST[h]);
+      let h = Math.floor(Math.random() * T.IMAGE_NAME_LIST.length);
+      this.set_image(T.IMAGE_NAME_LIST[h]);
     }
 
     calc_damage() {
@@ -811,7 +860,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           a = this.game.world.player.get_radian_to_cursor();
 
       for (let t = 0; t < this.saving_data.fire_spread; t++) {
-        let i = new p(this.game);
+        let i = new f(this.game);
         i.x = this.game.world.player.x + 30 * _.x, i.y = this.game.world.player.y + 30 * _.y;
         let e = a;
 
@@ -876,15 +925,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  _defineProperty(y, "IMAGE_NAME_LIST", ["music_recorder", "shovel_scoop_ken", "gas_burner", "nokogiri", "itonokogiri", "souji_yuka_mop", "handagote", "water_gardening_hose", "cooking_dendou_mixer", "syousyuzai_spray", "harisen", "chain_saw", "muchi", "syousyuzai_spray_musyu", "smartphone_selfystick", "kouji_dendou_driver", "kaji_hikeshi_matoi", "tool_pickel", "dougu_micrometer_digital", "dougu_army_knife", "cooking_masher", "dougu_gluegun", "kouji_dendou_drill", "bug_haetataki_atack", "kouji_yuudoubou", "dougu_nogisu_digital", "cooking_houchou_chopper", "wood_hammer_100t", "wood_hammer_10t", "cooking_urokohiki", "dougu_bar", "hair_curl_dryer", "hair_drier", "machine_heat_gun", "nunchaku", "gardening_sentei_hasami", "cooking_hand_blender", "tosou_airbrush", "mizudeppou", "katana_shirasaya", "starter_starting_pistol", "game_ken", "hinawaju", "buki_morningstar_flail", "tozan_stick", "tsue_sennin", "music_alto_saxophone", "soccer_cheer_horn_music", "soccer_vuvuzela_music", "music_trumpet"]);
+  _defineProperty(T, "IMAGE_NAME_LIST", ["music_recorder", "shovel_scoop_ken", "gas_burner", "nokogiri", "itonokogiri", "souji_yuka_mop", "handagote", "water_gardening_hose", "cooking_dendou_mixer", "syousyuzai_spray", "harisen", "chain_saw", "muchi", "syousyuzai_spray_musyu", "smartphone_selfystick", "kouji_dendou_driver", "kaji_hikeshi_matoi", "tool_pickel", "dougu_micrometer_digital", "dougu_army_knife", "cooking_masher", "dougu_gluegun", "kouji_dendou_drill", "bug_haetataki_atack", "kouji_yuudoubou", "dougu_nogisu_digital", "cooking_houchou_chopper", "wood_hammer_100t", "wood_hammer_10t", "cooking_urokohiki", "dougu_bar", "hair_curl_dryer", "hair_drier", "machine_heat_gun", "nunchaku", "gardening_sentei_hasami", "cooking_hand_blender", "tosou_airbrush", "mizudeppou", "katana_shirasaya", "starter_starting_pistol", "game_ken", "hinawaju", "buki_morningstar_flail", "tozan_stick", "tsue_sennin", "music_alto_saxophone", "soccer_cheer_horn_music", "soccer_vuvuzela_music", "music_trumpet"]);
 
-  class f extends t {
+  class w extends t {
     constructor(t) {
-      super(t), this.image = this.game.image_library.get_image("wasyoku_yakizakana"), this.saving_data.item_name = "食べ物", this.saving_data.hunger_value = 5, this.saving_data.thirst_value = 5, this.saving_data.is_be_leftover = !0;
+      super(t), this.image = this.game.image_library.get_image("wasyoku_yakizakana"), this.saving_data.item_name = "名もなき食べ物", this.saving_data.hunger_value = 5, this.saving_data.thirst_value = 5, this.saving_data.is_be_leftover = !0;
     }
 
     on_click(t, i, e, s) {
-      this.game.log("養分: +" + this.saving_data.hunger_value + "%"), this.game.log("水分: +" + this.saving_data.thirst_value + "%");
+      this.saving_data.hunger_value < this.saving_data.thirst_value ? this.game.log(this.saving_data.item_name + "を飲みました。") : this.game.log(this.saving_data.item_name + "を食べました。"), this.game.log("養分: +" + this.saving_data.hunger_value + "%"), this.game.log("水分: +" + this.saving_data.thirst_value + "%");
 
       let _ = this.game.world.player.health.mod_hunger(this.saving_data.hunger_value);
 
@@ -893,7 +942,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class T extends t {
+  class v extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("food_yakisake"), this.saving_data.item_name = "焼き魚";
     }
@@ -904,7 +953,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class w extends t {
+  class b extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("wasyoku_himono"), this.saving_data.item_name = "干し魚";
     }
@@ -915,22 +964,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class v extends f {
+  class k extends w {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("./img/illustya/food_fish_kirimi_red.png"), this.saving_data.item_name = "生魚";
     }
 
     get_cooked_item() {
-      return new T(this.game);
+      return new v(this.game);
     }
 
     get_dried_item() {
-      return new w(this.game);
+      return new b(this.game);
     }
 
   }
 
-  class b extends s {
+  class I extends s {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("fish_sakana_iwashi"), this.name = "noname enemy", this.strength_lv = 1, this.is_scouted = !1, this.width = 128, this.height = 128, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.vx = 0, this.vy = 0, this.dash_speed = 2, this.target_vy = 2 * Math.random() - 1, this.target_vx = 2 * Math.random() - 1, this.is_angry = !1, this.angry_timer_max = 500, this.angry_timer_count = 0, this.gosya_forgive_count = 1, this.is_preparing_jump = !1, this.preparing_jump_minimum_time = 50, this.preparing_jump_timer = 0, this.max_hp = 100, this.hp = 100, this.direct_damage = 7, this.knock_back_rate = 1, this.bullet_damage = 5, this.bullet_knock_back_rate = 1, this.fire_spread = 3, this.fire_spread_angle = .1, this.bullet_lifetime = 100, this.bullet_velocity = 10, this.fire_cool_time = 100, this.fire_cool_time_count = 0, this.blast_lifetime = 0, this.poison_count = 0, this.poison_damage = 0, this.slow_count = 0, this.slow_rate = 1, this.showing_hp_timer = 0;
     }
@@ -974,7 +1023,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_dead_body() {
-      let t = new u(this.game);
+      let t = new p(this.game);
       return t.x = this.x, t.y = this.y, t.width = this.width, t.height = this.height, t.image = this.image, t;
     }
 
@@ -984,7 +1033,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_drop_tool_item() {
-      return new v(this.game);
+      return new k(this.game);
     }
 
     get_distance_p2_to_player() {
@@ -1035,7 +1084,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       let t = Math.atan2(this.game.world.player.y - this.y, this.game.world.player.x - this.x);
 
       for (let i = 0; i < this.fire_spread; i++) {
-        let e = new d(this.game);
+        let e = new y(this.game);
         e.owner_enemy = this, e.damage = this.bullet_damage, e.knock_back_rate = this.bullet_knock_back_rate;
         let s = t;
 
@@ -1064,7 +1113,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class I extends b {
+  class E extends I {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("fish_sakana_iwashi"), this.width = 128, this.height = 128, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.max_hp = 100, this.hp = 100, this.vx = 0, this.vy = 0, this.dash_speed = .1, this.is_angry = !1, this.showing_hp_timer = 0;
     }
@@ -1102,7 +1151,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class k extends b {
+  class x extends I {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("bird_kamome"), this.width = 128, this.height = 128, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.max_hp = 100, this.hp = 100, this.vx = 0, this.vy = 0, this.dash_speed = 2, this.is_angry = !1, this.showing_hp_timer = 0;
     }
@@ -1125,9 +1174,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class E extends b {
+  class S extends I {
     constructor(t) {
-      super(t), this.game = t, this.image = this.game.image_library.get_image("bird_kamome"), this.width = 64, this.height = 64, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.max_hp = 100, this.hp = 100, this.is_angry = !0, this.angry_timer_max = 500, this.angry_timer_count = this.angry_timer_max, this.showing_hp_timer = 0, this.vx = 0, this.vy = 0, this.dash_speed = .2, this.position_x = 0, this.position_y = 0, this.do_fire_attack = !1, this.fire_spread = 1, this.bullet_lifetime = 100, this.bullet_velocity = 5, this.do_tackle_attack = !1, this.tackle_timer_max = 200, this.tackle_timer_count = 0, this.is_in_tackle = !1, this.distance_from_ship = 100, this.is_fly_above = !1, this.is_back_attack = !1, this.drop_tool_item = new v(this.game), this.reset_position();
+      super(t), this.game = t, this.image = this.game.image_library.get_image("bird_kamome"), this.width = 64, this.height = 64, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.max_hp = 100, this.hp = 100, this.is_angry = !0, this.angry_timer_max = 500, this.angry_timer_count = this.angry_timer_max, this.showing_hp_timer = 0, this.vx = 0, this.vy = 0, this.dash_speed = .2, this.position_x = 0, this.position_y = 0, this.do_fire_attack = !1, this.fire_spread = 1, this.bullet_lifetime = 100, this.bullet_velocity = 5, this.do_tackle_attack = !1, this.tackle_timer_max = 200, this.tackle_timer_count = 0, this.is_in_tackle = !1, this.distance_from_ship = 100, this.is_fly_above = !1, this.is_back_attack = !1, this.drop_tool_item = new k(this.game), this.reset_position();
     }
 
     reset_position() {
@@ -1153,7 +1202,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class x extends t {
+  class O extends t {
     constructor(t) {
       super(t), this.saving_data.materials_id = [], this.saving_data.materials_count = [], this.saving_data.item_name = "noname resource";
     }
@@ -1170,67 +1219,67 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class S extends f {
+  class C extends w {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("food_tebasaki"), this.saving_data.item_name = "焼き鳥", this.saving_data.hunger_value = 40, this.saving_data.thirst_value = 0, this.saving_data.is_be_leftover = !0;
     }
 
   }
 
-  class O extends f {
+  class N extends w {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("yakitori_kawa"), this.saving_data.item_name = "鳥の干し肉", this.saving_data.hunger_value = 30, this.saving_data.thirst_value = 0, this.saving_data.is_be_leftover = !0;
     }
 
   }
 
-  class C extends f {
+  class L extends w {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("food_chicken_tebasaki_nama"), this.saving_data.item_name = "鳥肉", this.saving_data.hunger_value = 20, this.saving_data.thirst_value = 5, this.saving_data.is_be_leftover = !0;
     }
 
     get_cooked_item() {
-      return new S(this.game);
+      return new C(this.game);
     }
 
     get_dried_item() {
-      return new O(this.game);
+      return new N(this.game);
     }
 
   }
 
-  class N extends S {
+  class M extends C {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("food_chicken_tebamoto");
     }
 
   }
 
-  class L extends C {
+  class R extends L {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("food_chicken_tebamoto_nama");
     }
 
     get_cooked_item() {
-      return new N(this.game);
+      return new M(this.game);
     }
 
   }
 
-  class M {
+  class A {
     constructor(t) {
       this.game = t;
     }
 
     generate_by_ship_level(t) {
-      let i = new E(this.game);
+      let i = new S(this.game);
       i.strength_lv = 10 * (t + 1), i.max_hp = i.strength_lv * (10 - Math.random()), i.hp = i.max_hp, i.power = i.strength_lv;
       let e = 10;
       return e = 3 <= t ? 100 : 2 <= t ? 60 : 1 <= t ? 50 : 10, e *= Math.random(), e < 6 ? (i.image = this.game.image_library.get_image("bird_hachidori"), i.name = "ハチドリ", i.do_tackle_attack = !0, i.direct_damage = 8, Math.random() < .5 ? i.drop_tool_item = this.drop_material("hachidori_wing", ["feather", "seed", "cloth"], [10, 10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 11 ? (i.image = this.game.image_library.get_image("bird_toki_fly"), i.name = "トキ", i.do_fire_attack = !0, i.do_tackle_attack = !0, i.direct_damage = 4, i.bullet_damage = 4, Math.random() < .5 ? i.drop_tool_item = this.drop_material("toki_wing", ["feather", "stone", "cloth"], [10, 10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 21 ? (i.image = this.game.image_library.get_image("bird_tonbi"), i.name = "トビ", i.is_fly_above = !0, i.do_fire_attack = !0, Math.random() < .8 ? i.drop_tool_item = this.drop_material("tonbi_wing", ["feather", "stone"], [100, 100]) : i.drop_tool_item = this.random_chicken()) : e < 31 ? (i.image = this.game.image_library.get_image("animal_washi"), i.name = "ワシ", i.do_fire_attack = !0, i.do_tackle_attack = !0, Math.random() < .8 ? i.drop_tool_item = this.drop_material("washi_wing", ["feather", "stone"], [100, 100]) : i.drop_tool_item = this.random_chicken()) : e < 41 ? (i.image = this.game.image_library.get_image("dinosaur_quetzalcoatlus"), i.name = "ケツァルコアトル", i.do_fire_attack = !0, Math.random() < .9 ? i.drop_tool_item = this.drop_material("quetzalcoatlus_beak", ["parts", "iron", "lead"], [10, 10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 51 ? (i.image = this.game.image_library.get_image("kodai_microraptor"), i.name = "ミクロラプトル", i.is_back_attack = !0, i.do_fire_attack = !0, Math.random() < .9 ? i.drop_tool_item = this.drop_material("microraptor_wing", ["parts", "iron", "plastic"], [10, 10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 61 ? (i.image = this.game.image_library.get_image("fantasy_griffon"), i.name = "グリフォン", Math.random() < .8 ? i.drop_tool_item = this.drop_material("griffon_wing", ["circuit", "silver"], [10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 999 ? (i.image = this.game.image_library.get_image("fantasy_peryton"), i.name = "ペリュトン", Math.random() < .9 ? i.drop_tool_item = this.drop_material("peryton_wing", ["circuit", "silver"], [10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 999 ? (i.image = this.game.image_library.get_image("youkai_suzaku"), i.name = "フェニックス", Math.random() < .9 ? i.drop_tool_item = this.drop_material("suzaku_wing", ["circuit", "silver"], [10, 10]) : i.drop_tool_item = this.random_chicken()) : e < 999 ? (i.image = this.game.image_library.get_image("fantasy_dragon_wyvern"), i.name = "ワイバーン") : (enemy_type, i.image = this.game.image_library.get_image("fantasy_dragon"), i.name = "ドラゴン"), i;
     }
 
     drop_material(t, i, e) {
-      let s = new x(this.game);
+      let s = new O(this.game);
       s.set_image(t);
 
       for (let t = 0; t < i; t++) {
@@ -1243,23 +1292,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     random_chicken() {
-      return Math.random() < .5 ? new L(this.game) : new C(this.game);
+      return Math.random() < .5 ? new R(this.game) : new L(this.game);
     }
 
   }
 
-  class R extends b {
+  class G extends I {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("bird_kamome"), this.name = "カモメ", this.strength_lv = 3, this.width = 64, this.height = 40, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.max_hp = 100, this.hp = 100, this.vx = 0, this.vy = 0, this.dash_speed = .1, this.direct_damage = 9, this.knock_back_rate = 1, this.target_vx = -3, this.target_vy = 0, this.target_height = -200;
     }
 
     get_drop_tool_item() {
       if (2 * Math.random() < 1) {
-        let t = new x(this.game);
+        let t = new O(this.game);
         return t.set_image("feather_white"), t.add_material("feather", Math.floor(3 * Math.random()) + 2), t;
       }
 
-      return Math.random() < .5 ? new L(this.game) : new C(this.game);
+      return Math.random() < .5 ? new R(this.game) : new L(this.game);
     }
 
     enemy_move_ai() {
@@ -1286,18 +1335,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class A extends b {
+  class X extends I {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("fish_tobiuo2"), this.width = 64, this.height = 40, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.max_hp = 100, this.hp = 100, this.vx = 0, this.vy = 0, this.dash_speed = .1, this.is_angry = !1, this.showing_hp_timer = 0, this.is_angry = !1, this.is_preparing_jump = !1, this.preparing_jump_minimum_time = 50, this.preparing_jump_timer = 0, this.direct_damage = 9, this.knock_back_rate = 1, this.target_vy = 0, this.target_vx = -3;
     }
 
     get_drop_tool_item() {
       if (2 * Math.random() < 1) {
-        let t = new x(this.game);
+        let t = new O(this.game);
         return t.set_image("fish_fin"), t.add_material("fin", Math.floor(3 * Math.random()) + 3), t;
       }
 
-      return new v(this.game);
+      return new k(this.game);
     }
 
     enemy_move_ai() {
@@ -1329,7 +1378,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class G extends s {
+  class U extends s {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("small_star6_orange"), this.name = "noname breakobj", this.strength_lv = 1, this.is_scouted = !1, this.width = 128, this.height = 128, this.width_half = .5 * this.width, this.height_half = .5 * this.height, this.vx = 0, this.vy = 0, this.max_hp = 100, this.hp = 100;
     }
@@ -1363,7 +1412,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_dead_body() {
-      let t = new u(this.game);
+      let t = new p(this.game);
       return t.x = this.x, t.y = this.y, t.width = this.width, t.height = this.height, t.image = this.image, t;
     }
 
@@ -1373,7 +1422,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_drop_tool_item() {
-      let t = new y(this.game);
+      let t = new T(this.game);
       return t.generate_random_weapon(this.strength_lv, null), t;
     }
 
@@ -1392,9 +1441,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class U {
+  class H {
     constructor(t, i) {
-      this.game = t, this.world = i, this.drifting_spawn_interval = 400, this.drifting_spawn_timer = 0, this.sight_distance = 1100, this.despawn_distance = s.DESPAWN_DISTANCE, this.ship_progress = 0, this.surface_generator = new M(this.game);
+      this.game = t, this.world = i, this.drifting_spawn_interval = 400, this.drifting_spawn_timer = 0, this.sight_distance = 1100, this.despawn_distance = s.DESPAWN_DISTANCE, this.ship_progress = 0, this.surface_generator = new A(this.game);
 
       for (let t = 0; t < 100; t++) this.spawn_wind();
     }
@@ -1409,39 +1458,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       if (Math.random() < .1 && this.spawn_wind(), this.ship_progress += this.game.world.ship.velocity, 1 < this.ship_progress && (this.ship_progress -= 500, this.spawn_surface()), this.world.player.y < this.despawn_distance && Math.random() < .01 && this.world.enemy_list.filter(function (t) {
-        return t instanceof k;
+        return t instanceof x;
       }).length < 10) {
-        let t = new k(this.game);
+        let t = new x(this.game);
         if (this.set_coodinate_randomly(t), this.move_outsight_random(t), t.generate_enemy_bird(), -100 < t.y) return;
         this.world.push_enemy(t);
       }
 
       if (-this.despawn_distance < this.world.player.y && Math.random() < .1 && this.world.enemy_list.filter(function (t) {
-        return t instanceof I;
+        return t instanceof E;
       }).length < 10) {
-        let t = new I(this.game);
+        let t = new E(this.game);
         if (this.set_coodinate_randomly(t), this.move_outsight_random(t), t.generate_enemy_fish(), t.y < 100) return;
         this.world.push_enemy(t);
       }
 
       if (Math.random() < .1 && this.world.enemy_list.filter(function (t) {
-        return t instanceof G;
+        return t instanceof U;
       }).length < 20) {
-        let t = new G(this.game);
+        let t = new U(this.game);
         this.set_coodinate_randomly(t), this.move_outsight_random(t), t.generate_object(), this.world.push_enemy(t);
       }
 
       if (Math.random() < .01 && this.world.enemy_list.filter(function (t) {
-        return t instanceof A;
+        return t instanceof X;
       }).length < 3) {
-        let t = new A(this.game);
+        let t = new X(this.game);
         t.x = this.world.camera.x + this.sight_distance + 100 * Math.random(), t.y = 200 - 100 * Math.random(), this.world.push_enemy(t);
       }
 
       if (Math.random() < .01 && this.world.enemy_list.filter(function (t) {
-        return t instanceof R;
+        return t instanceof G;
       }).length < 3) {
-        let t = new R(this.game);
+        let t = new G(this.game);
         t.x = this.world.camera.x + this.sight_distance + 100 * Math.random(), t.y = this.game.world.ship.get_top_y() - 100 - 100 * Math.random(), t.target_height = t.y, this.world.push_enemy(t);
       }
     }
@@ -1453,9 +1502,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     spawn_wind() {
       if (this.world.entity_list.filter(function (t) {
-        return t instanceof m;
+        return t instanceof u;
       }).length < 100) {
-        let t = new m(this.game),
+        let t = new u(this.game),
             i = Math.random();
         if (t.x = i < .1 ? this.world.camera.x - 1200 : this.world.camera.x + 2e3 * Math.random() - 500, t.y = this.world.camera.y + 3e3 * Math.random() - 1500, -100 < t.y) return;
         this.check_is_in_sight(t.x, t.y) && (t.x = this.world.camera.x + this.sight_distance + 200 * Math.random()), this.world.entity_list.push(t);
@@ -1464,9 +1513,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     spawn_cloud() {
       if (this.world.entity_list.filter(function (t) {
-        return t instanceof c;
+        return t instanceof d;
       }).length < 10) {
-        let t = new c(this.game);
+        let t = new d(this.game);
         if (this.set_coodinate_randomly(t), this.move_outsight_right(t), -100 < t.y) return;
         this.world.entity_list.push(t);
       }
@@ -1503,18 +1552,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class X {
+  class D {
     constructor(t) {
-      this.name = "world", this.game = t, this.camera = {}, this.camera.x = 1e3, this.camera.y = 0, this.camera.zoom = 1, this.cursor_x = 0, this.cursor_y = 0, this.entity_list = [], this.enemy_list = [], this.player = new n(this.game), this.ship = new l(this.game), this.lure = new g(this.game), this.world_spawner = new U(this.game, this), this.auto_save_timer_max = 9e3, this.auto_save_timer = this.auto_save_timer_max, this.sea_offset_x = 0;
-      let i = new m(this.game);
+      this.name = "world", this.game = t, this.camera = {}, this.camera.x = 1e3, this.camera.y = 0, this.camera.zoom = 1, this.cursor_x = 0, this.cursor_y = 0, this.entity_list = [], this.enemy_list = [], this.player = new n(this.game), this.ship = new g(this.game), this.lure = new c(this.game), this.world_spawner = new H(this.game, this), this.auto_save_timer_max = 9e3, this.auto_save_timer = this.auto_save_timer_max, this.sea_offset_x = 0;
+      let i = new u(this.game);
       i.x = 500, i.y = -100, this.push_entity(i), this.newgame_gift();
     }
 
     newgame_gift() {
       let t = new h(this.game);
       t.x = -32, t.y = -100;
-      let i = new x(this.game);
-      i.saving_data.item_name = "流木", i.set_image("tree_ryuuboku"), i.add_material("wood", 5), t.set_tool_item(i), this.entity_list.push(t), t = new h(this.game), t.x = 32, t.y = -150, i = new x(this.game), i.saving_data.item_name = "古着", i.set_image("alohashirt_gray"), i.add_material("cloth", 3), t.set_tool_item(i), this.entity_list.push(t);
+      let i = new O(this.game);
+      i.saving_data.item_name = "流木", i.set_image("tree_ryuuboku"), i.add_material("wood", 5), t.set_tool_item(i), this.entity_list.push(t), t = new h(this.game), t.x = 32, t.y = -150, i = new O(this.game), i.saving_data.item_name = "古着", i.set_image("alohashirt_gray"), i.add_material("cloth", 3), t.set_tool_item(i), this.entity_list.push(t);
     }
 
     count_enemy() {
@@ -1562,7 +1611,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       for (let t = 0; t < this.enemy_list.length; t++) this.enemy_list[t] && (this.enemy_list[t].on_update(), this.enemy_list[t].is_alive || (this.enemy_list[t] = null));
 
-      this.cursor_x = (this.game.input_controller.mouse_x - this.game.SCREEN_WIDTH_HALF) / this.camera.zoom + this.camera.x, this.cursor_y = (this.game.input_controller.mouse_y - this.game.SCREEN_HEIGHT_HALF) / this.camera.zoom + this.camera.y, this.ship.on_update(), this.player.on_update(), this.lure.on_update(), this.sea_offset_x -= this.ship.velocity, this.sea_offset_x < -X.SEA_WAVE_SPACE_2 && (this.sea_offset_x += X.SEA_WAVE_SPACE_2);
+      this.cursor_x = (this.game.input_controller.mouse_x - this.game.SCREEN_WIDTH_HALF) / this.camera.zoom + this.camera.x, this.cursor_y = (this.game.input_controller.mouse_y - this.game.SCREEN_HEIGHT_HALF) / this.camera.zoom + this.camera.y, this.ship.on_update(), this.player.on_update(), this.lure.on_update(), this.sea_offset_x -= this.ship.velocity, this.sea_offset_x < -D.SEA_WAVE_SPACE_2 && (this.sea_offset_x += D.SEA_WAVE_SPACE_2);
     }
 
     zoom_in(t) {
@@ -1575,10 +1624,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     draw_sea(t) {
       t.strokeStyle = "rgb(0,100,200)", t.beginPath();
-      let i = Math.floor(this.camera.x / X.SEA_WAVE_SPACE_2) * X.SEA_WAVE_SPACE_2 - 1e3;
+      let i = Math.floor(this.camera.x / D.SEA_WAVE_SPACE_2) * D.SEA_WAVE_SPACE_2 - 1e3;
       t.moveTo(i + this.sea_offset_x, 0);
 
-      for (let e = 0; e < X.SEA_WAVE_COUNT; e++) t.lineTo(X.SEA_WAVE_SPACE * e + i + this.sea_offset_x, e % 2 * 10);
+      for (let e = 0; e < D.SEA_WAVE_COUNT; e++) t.lineTo(D.SEA_WAVE_SPACE * e + i + this.sea_offset_x, e % 2 * 10);
 
       t.lineTo(2e3 + i + this.sea_offset_x, 0), t.stroke();
     }
@@ -1595,13 +1644,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  _defineProperty(X, "SEA_WAVE_COUNT", 40);
+  _defineProperty(D, "SEA_WAVE_COUNT", 40);
 
-  _defineProperty(X, "SEA_WAVE_SPACE", 2e3 / X.SEA_WAVE_COUNT);
+  _defineProperty(D, "SEA_WAVE_SPACE", 2e3 / D.SEA_WAVE_COUNT);
 
-  _defineProperty(X, "SEA_WAVE_SPACE_2", 2 * X.SEA_WAVE_SPACE);
+  _defineProperty(D, "SEA_WAVE_SPACE_2", 2 * D.SEA_WAVE_SPACE);
 
-  class H {
+  class F {
     constructor(t) {
       this.game = t, this.cursor_index = 0, this.menu_icon = this.game.image_library.get_image("kaizoku_takarabako"), this.mouse_holding_index = -1, this.trashed_item = null, this.trash_icon = this.game.image_library.get_image("gomi_poribaketsu_close");
     }
@@ -1611,23 +1660,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_update() {
-      if (this.game.input_controller.get_press_right() && (this.cursor_index += 1), this.game.input_controller.get_press_left() && (this.cursor_index -= 1), this.game.input_controller.get_press_up() && H.LIST_X_COUNT < this.cursor_index && (this.cursor_index -= H.LIST_X_COUNT), this.game.input_controller.get_press_down() && H.LIST_X_COUNT + this.cursor_index < 25 && (this.cursor_index += H.LIST_X_COUNT), this.game.input_controller.is_pressed_key.Digit1 && (this.mouse_holding_index = -1, this.swap_item_slot(0)), this.game.input_controller.is_pressed_key.Digit2 && (this.mouse_holding_index = -1, this.swap_item_slot(1)), this.game.input_controller.is_pressed_key.Digit3 && (this.mouse_holding_index = -1, this.swap_item_slot(2)), this.game.input_controller.is_pressed_key.Digit4 && (this.mouse_holding_index = -1, this.swap_item_slot(3)), this.game.input_controller.is_pressed_key.Digit5 && (this.mouse_holding_index = -1, this.swap_item_slot(4)), this.game.input_controller.is_pressed_key.Digit6 && (this.mouse_holding_index = -1, this.swap_item_slot(5)), this.game.input_controller.is_pressed_key.Digit7 && (this.mouse_holding_index = -1, this.swap_item_slot(6)), this.game.input_controller.is_pressed_key.Digit8 && (this.mouse_holding_index = -1, this.swap_item_slot(7)), this.game.input_controller.is_pressed_key.Digit9 && (this.mouse_holding_index = -1, this.swap_item_slot(8)), (this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && (this.mouse_holding_index = -1, this.swap_item_slot(this.game.hud.item_slot.item_slot_cursor)), this.game.input_controller.get_mouse_press()) {
-        let t = this.game.input_controller.mouse_x - Rt.MENU_MARGIN_LEFT,
-            i = this.game.input_controller.mouse_y - Rt.MENU_MARGIN_TOP;
+      if (this.game.input_controller.get_press_right() && (this.cursor_index += 1), this.game.input_controller.get_press_left() && (this.cursor_index -= 1), this.game.input_controller.get_press_up() && F.LIST_X_COUNT < this.cursor_index && (this.cursor_index -= F.LIST_X_COUNT), this.game.input_controller.get_press_down() && F.LIST_X_COUNT + this.cursor_index < 25 && (this.cursor_index += F.LIST_X_COUNT), this.game.input_controller.is_pressed_key.Digit1 && (this.mouse_holding_index = -1, this.swap_item_slot(0)), this.game.input_controller.is_pressed_key.Digit2 && (this.mouse_holding_index = -1, this.swap_item_slot(1)), this.game.input_controller.is_pressed_key.Digit3 && (this.mouse_holding_index = -1, this.swap_item_slot(2)), this.game.input_controller.is_pressed_key.Digit4 && (this.mouse_holding_index = -1, this.swap_item_slot(3)), this.game.input_controller.is_pressed_key.Digit5 && (this.mouse_holding_index = -1, this.swap_item_slot(4)), this.game.input_controller.is_pressed_key.Digit6 && (this.mouse_holding_index = -1, this.swap_item_slot(5)), this.game.input_controller.is_pressed_key.Digit7 && (this.mouse_holding_index = -1, this.swap_item_slot(6)), this.game.input_controller.is_pressed_key.Digit8 && (this.mouse_holding_index = -1, this.swap_item_slot(7)), this.game.input_controller.is_pressed_key.Digit9 && (this.mouse_holding_index = -1, this.swap_item_slot(8)), (this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && (this.mouse_holding_index = -1, this.swap_item_slot(this.game.hud.item_slot.item_slot_cursor)), this.game.input_controller.get_mouse_press()) {
+        let t = this.game.input_controller.mouse_x - At.MENU_MARGIN_LEFT,
+            i = this.game.input_controller.mouse_y - At.MENU_MARGIN_TOP;
 
-        for (let e = 0; e < 25; e++) {
-          let s = e % H.LIST_X_COUNT,
-              _ = Math.floor(e / H.LIST_X_COUNT),
-              a = H.LIST_X + s * (H.LIST_ICON_SIZE + H.LIST_SPACING),
-              h = H.LIST_Y + _ * (H.LIST_ICON_SIZE + H.LIST_SPACING);
+        for (let e = 0; e < this.game.inventory.item_inventory_size; e++) {
+          let s = e % F.LIST_X_COUNT,
+              _ = Math.floor(e / F.LIST_X_COUNT),
+              a = F.LIST_X + s * (F.LIST_ICON_SIZE + F.LIST_SPACING),
+              h = F.LIST_Y + _ * (F.LIST_ICON_SIZE + F.LIST_SPACING);
 
-          if (a < t && t < a + H.LIST_ICON_SIZE && h < i && i < h + H.LIST_ICON_SIZE) {
+          if (a < t && t < a + F.LIST_ICON_SIZE && h < i && i < h + F.LIST_ICON_SIZE) {
             this.click_inventory(e);
             break;
           }
         }
 
-        H.TRASH_X < t && t < H.TRASH_X + H.LIST_ICON_SIZE && H.TRASH_Y < i && i < H.TRASH_Y + H.LIST_ICON_SIZE && (this.mouse_holding_index < 0 ? this.game.hud.item_slot.is_mouse_holding ? (this.trashed_item = this.game.hud.item_slot.item_slot[this.game.hud.item_slot.item_slot_cursor], this.game.hud.item_slot.item_slot[this.game.hud.item_slot.item_slot_cursor] = null, this.game.hud.item_slot.is_mouse_holding = !1) : null != this.trashed_item ? this.game.hud.item_slot.put_pickup_item(this.trashed_item) ? this.trashed_item = null : this.game.log("アイテムスロットに空きを作ってください。") : (this.game.log("それはゴミ箱スロットです。"), this.game.log("いらないアイテムを置いて消去できます。"), this.game.log("間違ったものを捨てた場合、次のゴミを捨てるまでは、"), this.game.log("クリックすることで取り戻せます。")) : (this.trashed_item = this.game.inventory.tool_item_inventory[this.mouse_holding_index], this.game.inventory.tool_item_inventory[this.mouse_holding_index] = null, this.mouse_holding_index = -1));
+        F.TRASH_X < t && t < F.TRASH_X + F.LIST_ICON_SIZE && F.TRASH_Y < i && i < F.TRASH_Y + F.LIST_ICON_SIZE && (this.mouse_holding_index < 0 ? this.game.hud.item_slot.is_mouse_holding ? (this.trashed_item = this.game.hud.item_slot.item_slot[this.game.hud.item_slot.item_slot_cursor], this.game.hud.item_slot.item_slot[this.game.hud.item_slot.item_slot_cursor] = null, this.game.hud.item_slot.is_mouse_holding = !1) : null != this.trashed_item ? this.game.hud.item_slot.put_pickup_item(this.trashed_item) ? this.trashed_item = null : this.game.log("アイテムスロットに空きを作ってください。") : (this.game.log("それはゴミ箱スロットです。"), this.game.log("いらないアイテムを置いて消去できます。"), this.game.log("間違ったものを捨てた場合、次のゴミを捨てるまでは、"), this.game.log("クリックすることで取り戻せます。")) : (this.trashed_item = this.game.inventory.tool_item_inventory[this.mouse_holding_index], this.game.inventory.tool_item_inventory[this.mouse_holding_index] = null, this.mouse_holding_index = -1));
       }
     }
 
@@ -1649,53 +1698,53 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_draw(t) {
-      t.fillStyle = H.TITLE_COLOR, t.font = H.TITLE_FONT, t.fillText("インベントリ Inventory", H.TITLE_X, H.TITLE_Y);
+      t.fillStyle = F.TITLE_COLOR, t.font = F.TITLE_FONT, t.fillText("インベントリ Inventory", F.TITLE_X, F.TITLE_Y);
 
-      for (let i = 0; i < 25; i++) {
-        this.cursor_index == i ? t.strokeStyle = H.LIST_ICON_FRAME_COLOR_SELECTED : t.strokeStyle = H.LIST_ICON_FRAME_COLOR;
+      for (let i = 0; i < this.game.inventory.item_inventory_size; i++) {
+        this.cursor_index == i ? t.strokeStyle = F.LIST_ICON_FRAME_COLOR_SELECTED : t.strokeStyle = F.LIST_ICON_FRAME_COLOR;
 
-        let e = i % H.LIST_X_COUNT,
-            s = Math.floor(i / H.LIST_X_COUNT),
-            _ = H.LIST_X + e * (H.LIST_ICON_SIZE + H.LIST_SPACING),
-            a = H.LIST_Y + s * (H.LIST_ICON_SIZE + H.LIST_SPACING);
+        let e = i % F.LIST_X_COUNT,
+            s = Math.floor(i / F.LIST_X_COUNT),
+            _ = F.LIST_X + e * (F.LIST_ICON_SIZE + F.LIST_SPACING),
+            a = F.LIST_Y + s * (F.LIST_ICON_SIZE + F.LIST_SPACING);
 
-        null != this.game.inventory.tool_item_inventory[i] && this.game.inventory.tool_item_inventory[i].image && i != this.mouse_holding_index && (t.drawImage(this.game.inventory.tool_item_inventory[i].image, _, a, H.LIST_ICON_SIZE, H.LIST_ICON_SIZE), t.font = "bold 16px monospace", t.fillStyle = "rgb(100,100,100)", t.fillText(this.game.inventory.tool_item_inventory[i].get_subtitle(), _ + 3, a + H.LIST_ICON_SIZE - 3)), t.strokeRect(_, a, H.LIST_ICON_SIZE, H.LIST_ICON_SIZE);
+        null != this.game.inventory.tool_item_inventory[i] && this.game.inventory.tool_item_inventory[i].image && i != this.mouse_holding_index && (t.drawImage(this.game.inventory.tool_item_inventory[i].image, _, a, F.LIST_ICON_SIZE, F.LIST_ICON_SIZE), t.font = "bold 16px monospace", t.fillStyle = "rgb(100,100,100)", t.fillText(this.game.inventory.tool_item_inventory[i].get_subtitle(), _ + 3, a + F.LIST_ICON_SIZE - 3)), t.strokeRect(_, a, F.LIST_ICON_SIZE, F.LIST_ICON_SIZE);
       }
 
-      null != this.trashed_item ? (t.drawImage(this.trashed_item.image, H.TRASH_X, H.TRASH_Y, H.LIST_ICON_SIZE, H.LIST_ICON_SIZE), t.font = "bold 16px monospace", t.fillStyle = "rgb(100,100,100)", t.fillText(this.trashed_item.get_subtitle(), H.TRASH_X + 3, H.TRASH_Y + H.LIST_ICON_SIZE - 3)) : t.drawImage(this.trash_icon, H.TRASH_X, H.TRASH_Y, H.LIST_ICON_SIZE, H.LIST_ICON_SIZE), t.strokeRect(H.TRASH_X, H.TRASH_Y, H.LIST_ICON_SIZE, H.LIST_ICON_SIZE), 0 <= this.mouse_holding_index && t.drawImage(this.game.inventory.tool_item_inventory[this.mouse_holding_index].image, this.game.input_controller.mouse_x - Rt.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - Rt.MENU_MARGIN_TOP, H.LIST_ICON_SIZE, H.LIST_ICON_SIZE);
+      null != this.trashed_item ? (t.drawImage(this.trashed_item.image, F.TRASH_X, F.TRASH_Y, F.LIST_ICON_SIZE, F.LIST_ICON_SIZE), t.font = "bold 16px monospace", t.fillStyle = "rgb(100,100,100)", t.fillText(this.trashed_item.get_subtitle(), F.TRASH_X + 3, F.TRASH_Y + F.LIST_ICON_SIZE - 3)) : t.drawImage(this.trash_icon, F.TRASH_X, F.TRASH_Y, F.LIST_ICON_SIZE, F.LIST_ICON_SIZE), t.strokeRect(F.TRASH_X, F.TRASH_Y, F.LIST_ICON_SIZE, F.LIST_ICON_SIZE), 0 <= this.mouse_holding_index && t.drawImage(this.game.inventory.tool_item_inventory[this.mouse_holding_index].image, this.game.input_controller.mouse_x - At.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - At.MENU_MARGIN_TOP, F.LIST_ICON_SIZE, F.LIST_ICON_SIZE);
     }
 
   }
 
-  _defineProperty(H, "TITLE_X", 100);
+  _defineProperty(F, "TITLE_X", 100);
 
-  _defineProperty(H, "TITLE_Y", 40);
+  _defineProperty(F, "TITLE_Y", 40);
 
-  _defineProperty(H, "TITLE_COLOR", "rgb(20,20,20)");
+  _defineProperty(F, "TITLE_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(H, "TITLE_FONT", "bold 32px monospace");
+  _defineProperty(F, "TITLE_FONT", "bold 32px monospace");
 
-  _defineProperty(H, "LIST_X", 20);
+  _defineProperty(F, "LIST_X", 20);
 
-  _defineProperty(H, "LIST_Y", 80);
+  _defineProperty(F, "LIST_Y", 80);
 
-  _defineProperty(H, "LIST_ICON_SIZE", 50);
+  _defineProperty(F, "LIST_ICON_SIZE", 50);
 
-  _defineProperty(H, "LIST_SPACING", 10);
+  _defineProperty(F, "LIST_SPACING", 10);
 
-  _defineProperty(H, "LIST_X_COUNT", 10);
+  _defineProperty(F, "LIST_X_COUNT", 5);
 
-  _defineProperty(H, "LIST_Y_COUNT", 4);
+  _defineProperty(F, "LIST_Y_COUNT", 4);
 
-  _defineProperty(H, "LIST_ICON_FRAME_COLOR", "rgb(20,20,20)");
+  _defineProperty(F, "LIST_ICON_FRAME_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(H, "LIST_ICON_FRAME_COLOR_SELECTED", "rgb(200,20,20)");
+  _defineProperty(F, "LIST_ICON_FRAME_COLOR_SELECTED", "rgb(200,20,20)");
 
-  _defineProperty(H, "TRASH_X", 560);
+  _defineProperty(F, "TRASH_X", 560);
 
-  _defineProperty(H, "TRASH_Y", 20);
+  _defineProperty(F, "TRASH_Y", 20);
 
-  class D extends Object {
+  class B extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
@@ -1736,18 +1785,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class F extends e {
-    constructor(t) {
-      super(t), this.name = "木製支柱", this.is_floor = !1, this.image = this.game.image_library.get_image("ship_frame");
-    }
-
-    on_update() {
-      super.on_update();
-    }
-
-  }
-
-  class B extends Object {
+  class P extends Object {
     constructor(t) {
       super(t), this.game = t, this.ship = this.game.world.ship, this.image_star = this.game.image_library.get_image("small_star7_yellow"), this.star_x = [], this.star_y = [], this.star_num = 10;
 
@@ -1768,7 +1806,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class P extends e {
+  class Y extends e {
     constructor(t) {
       super(t), this.name = "ヴィクトリーロケット", this.is_floor = !0, this.image = this.game.image_library.get_image("hanabi_rocket");
     }
@@ -1778,12 +1816,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_interact() {
-      this.game.movie_playing = new B(this.game);
+      this.game.movie_playing = new P(this.game);
     }
 
   }
 
-  class Y extends e {
+  class z extends e {
     constructor(t) {
       super(t), this.name = "レベルフラッグ[1]", this.image = this.game.image_library.get_image("undoukai_flag1_i"), this.is_active = !1, this.ship_level_value = 1;
     }
@@ -1792,14 +1830,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class z extends Y {
+  class W extends z {
     constructor(t) {
       super(t), this.name = "レベルフラッグ[2]", this.image = this.game.image_library.get_image("undoukai_flag2_i"), this.ship_level_value = 2;
     }
 
   }
 
-  class Z extends Y {
+  class Z extends z {
     constructor(t) {
       super(t), this.name = "レベルフラッグ[3]", this.image = this.game.image_library.get_image("undoukai_flag3_i"), this.ship_level_value = 3;
     }
@@ -1815,13 +1853,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       t.add_recipe(e, ["船の床ブロックです。", "使用して配置できます。"], ["wood"], [10], function (t) {
         return new i(t).set_ship_block(new r(t));
       }, ""), t.add_recipe(e, ["ヴィクトリーロケット。", "これを設置して作動させたら*勝利*です。"], ["fuel"], [99], function (t) {
-        return new i(t).set_ship_block(new P(t));
-      }, ""), t.add_recipe(e, ["舟の骨組みです。", "床と違って上に乗れません。"], ["wood"], [1], function (t) {
-        return new i(t).set_ship_block(new F(t));
-      }, ""), t.add_recipe(e, ["設置すると舟レベルを[1]に上げます。", "上位の敵が出現します。"], ["wood", "cloth", "feather"], [20, 15, 10], function (t) {
         return new i(t).set_ship_block(new Y(t));
-      }, ""), t.add_recipe(e, ["設置すると舟レベルを[2]に上げます。", "上位の敵が出現します。"], ["plastic", "lead"], [30, 15], function (t) {
+      }, ""), t.add_recipe(e, ["舟の骨組みです。", "床と違って上に乗れません。"], ["wood"], [1], function (t) {
+        return new i(t).set_ship_block(new l(t));
+      }, ""), t.add_recipe(e, ["設置すると舟レベルを[1]に上げます。", "上位の敵が出現します。"], ["wood", "cloth", "feather"], [20, 15, 10], function (t) {
         return new i(t).set_ship_block(new z(t));
+      }, ""), t.add_recipe(e, ["設置すると舟レベルを[2]に上げます。", "上位の敵が出現します。"], ["plastic", "lead"], [30, 15], function (t) {
+        return new i(t).set_ship_block(new W(t));
       }, ""), t.add_recipe(e, ["設置すると舟レベルを[3]に上げます。", "上位の敵が出現します。"], ["silver", "fur", "feather"], [50, 30, 100], function (t) {
         return new i(t).set_ship_block(new Z(t));
       }, "");
@@ -1829,7 +1867,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class W {
+  class j {
     constructor(t) {
       this.game = t, this.start = {}, this.goal = {}, this.start.x = 0, this.start.y = 0, this.goal.x = 0, this.goal.y = 0, this.path = [], this.ship_map = [], this.is_processing = !1, this.is_finding_success = !1, this.delay = 0, this.delay_count = this.delay;
     }
@@ -1890,7 +1928,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class j extends t {
+  class q extends t {
     constructor(t) {
       super(t), this.saving_data.item_name = "燃料", this.image = this.game.image_library.get_image("cooking_kokei_nenryou"), this.ammo_type = "fuel", this.ammo_value = 100, this.fuel_value = 100;
     }
@@ -1901,7 +1939,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class q extends t {
+  class Q extends t {
     constructor(t) {
       super(t), this.saving_data.item_name = "弾薬", this.image = this.game.image_library.get_image("bullet_item"), this.ammo_type = "gun", this.ammo_value = 100;
     }
@@ -1912,7 +1950,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Q extends t {
+  class V extends t {
     constructor(t) {
       super(t), this.saving_data.item_name = "砲弾", this.image = this.game.image_library.get_image("cannonball_item"), this.ammo_type = "cannon", this.ammo_value = 100;
     }
@@ -1923,9 +1961,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class V extends s {
+  class J extends s {
     constructor(t) {
-      super(t), this.name = "イヌ型ロボット", this.x = 0, this.y = 0, this.vx = 0, this.vy = 0, this.is_landing = !1, this.height = 32, this.height_half = .5 * this.height, this.image = this.game.image_library.get_image("pet_robot_dog"), this.home_cell_x = 1, this.home_cell_y = 1, this.home_block = null, this.current_work = 0, this.carrying_item = null, this.path_finding = new W(this.game), this.path_leading_index = 0, this.path_leading_time_limit_max = 50, this.path_leading_time_limit_count = this.path_leading_time_limit_max, this.cooldown_time_count = 0, this.cooldown_time_max = 50, this.dash_speed = 3, this.interact_range = 900, this.hp_max = 100, this.hp = this.hp_max;
+      super(t), this.name = "イヌ型ロボット", this.x = 0, this.y = 0, this.vx = 0, this.vy = 0, this.is_landing = !1, this.height = 32, this.height_half = .5 * this.height, this.image = this.game.image_library.get_image("pet_robot_dog"), this.home_cell_x = 1, this.home_cell_y = 1, this.home_block = null, this.current_work = 0, this.carrying_item = null, this.path_finding = new j(this.game), this.path_leading_index = 0, this.path_leading_time_limit_max = 50, this.path_leading_time_limit_count = this.path_leading_time_limit_max, this.cooldown_time_count = 0, this.cooldown_time_max = 50, this.dash_speed = 3, this.interact_range = 900, this.hp_max = 100, this.hp = this.hp_max;
     }
 
     on_update() {
@@ -1970,7 +2008,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         let i = this.game.world.ship.search_block_in_nearest_in_condition(this.x, this.y, function (t) {
           if (t == this.home_block) return !0;
         }.bind(this));
-        if (i) return this.check_block_is_in_range(i) ? (i == this.home_block && ("gun" == t.accept_ammo_type ? this.carrying_item = new q(this.game) : "cannon" == t.accept_ammo_type ? this.carrying_item = new Q(this.game) : "fuel" == t.accept_ammo_type && (this.carrying_item = new j(this.game))), !0) : (this.set_target_place(i.cell_x, i.cell_y), !0);
+        if (i) return this.check_block_is_in_range(i) ? (i == this.home_block && ("gun" == t.accept_ammo_type ? this.carrying_item = new Q(this.game) : "cannon" == t.accept_ammo_type ? this.carrying_item = new V(this.game) : "fuel" == t.accept_ammo_type && (this.carrying_item = new q(this.game))), !0) : (this.set_target_place(i.cell_x, i.cell_y), !0);
       }
 
       return !1;
@@ -2011,31 +2049,31 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  _defineProperty(V, "WORK_HEAL", 10);
+  _defineProperty(J, "WORK_HEAL", 10);
 
-  _defineProperty(V, "WORK_SUECIDE", 15);
+  _defineProperty(J, "WORK_SUECIDE", 15);
 
-  _defineProperty(V, "WORK_OPERATE", 20);
+  _defineProperty(J, "WORK_OPERATE", 20);
 
-  _defineProperty(V, "WORK_CRAFT", 40);
+  _defineProperty(J, "WORK_CRAFT", 40);
 
-  _defineProperty(V, "WORK_REPAIR", 50);
+  _defineProperty(J, "WORK_REPAIR", 50);
 
-  _defineProperty(V, "WORK_CARRY", 60);
+  _defineProperty(J, "WORK_CARRY", 60);
 
-  _defineProperty(V, "WORK_PICKUP", 70);
+  _defineProperty(J, "WORK_PICKUP", 70);
 
-  _defineProperty(V, "WORK_DROP_CHEST", 80);
+  _defineProperty(J, "WORK_DROP_CHEST", 80);
 
-  _defineProperty(V, "WORK_FISHING", 90);
+  _defineProperty(J, "WORK_FISHING", 90);
 
-  class J extends e {
+  class $ extends e {
     constructor(t) {
       super(t), this.name = "イヌハウス", this.image = this.game.image_library.get_image("inugoya_blue"), this.respawn_timer_max = 50, this.respawn_timer_count = this.respawn_timer_max, this.active_bot = null, this.spawn_new_bot();
     }
 
     create_new_bot() {
-      return new V(this.game);
+      return new J(this.game);
     }
 
     spawn_new_bot() {
@@ -2048,7 +2086,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class $ extends V {
+  class tt extends J {
     constructor(t) {
       super(t), this.name = "ネコ型ロボット", this.image = this.game.image_library.get_image("pet_robot_cat");
     }
@@ -2059,18 +2097,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class tt extends J {
+  class it extends $ {
     constructor(t) {
       super(t), this.name = "ネコハウス", this.image = this.game.image_library.get_image("inugoya");
     }
 
     create_new_bot() {
-      return new $(this.game);
+      return new tt(this.game);
     }
 
   }
 
-  class it extends e {
+  class et extends e {
     constructor(t) {
       super(t), this.name = "燃料式エンジン", this.image = this.game.image_library.get_image("car_engine"), this.saving_data.ammo_amount = 0, this.accept_ammo_type = "fuel";
     }
@@ -2089,7 +2127,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class et extends e {
+  class st extends e {
     constructor(t) {
       super(t), this.name = "燃料式空気砲", this.image = this.game.image_library.get_image("air_cannon"), this.bullet_image = this.game.image_library.get_image("air_ball"), this.accept_ammo_type = "fuel", this.angry_timer_max = 300, this.angry_timer_count = 0, this.saving_data.ammo_amount = 0, this.cool_time_count = 0, this.cool_time_max = 60, this.target_enemy = null, this.target_range = 320, this.target_range_p2 = this.target_range * this.target_range, this.setup_gun_data();
     }
@@ -2126,13 +2164,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       let t = this.get_radian_to_target(),
           i = Math.cos(t),
           e = Math.sin(t),
-          s = new p(this.game);
+          s = new f(this.game);
       s.x = this.x + 30 * i, s.y = this.y + 30 * e, s.vx = i * this.gun_data.bullet_velocity, s.vy = e * this.gun_data.bullet_velocity, s.rotation = t, s.image = this.bullet_image, s.life_time = this.gun_data.bullet_lifetime, s.weight = this.gun_data.bullet_weight, s.gun_data = this.gun_data, this.game.world.push_entity(s);
     }
 
   }
 
-  class st extends et {
+  class _t extends st {
     constructor(t) {
       super(t), this.name = "カタパルト", this.image = this.game.image_library.get_image("catapult"), this.bullet_image = this.game.image_library.get_image("catapult_bullet"), this.accept_ammo_type = "stone", this.saving_data.fuel_amount = 0, this.cool_time_count = 0, this.cool_time_max = 50, this.target_enemy = null, this.target_range = 320, this.target_range_p2 = this.target_range * this.target_range, this.setup_gun_data();
     }
@@ -2143,7 +2181,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class _t extends et {
+  class at extends st {
     constructor(t) {
       super(t), this.name = "オート機関銃", this.image = this.game.image_library.get_image("machine_gun"), this.bullet_image = this.game.image_library.get_image("bullet_right"), this.accept_ammo_type = "gun", this.saving_data.fuel_amount = 0, this.cool_time_count = 0, this.cool_time_max = 10, this.target_enemy = null, this.target_range = 320, this.target_range_p2 = this.target_range * this.target_range, this.setup_gun_data();
     }
@@ -2154,7 +2192,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class at extends et {
+  class ht extends st {
     constructor(t) {
       super(t), this.name = "大砲", this.image = this.game.image_library.get_image("mortor"), this.bullet_image = this.game.image_library.get_image("cannonball_right"), this.accept_ammo_type = "cannon", this.saving_data.fuel_amount = 0, this.cool_time_count = 0, this.cool_time_max = 60, this.target_enemy = null, this.target_range = 320, this.target_range_p2 = this.target_range * this.target_range, this.setup_gun_data();
     }
@@ -2165,7 +2203,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class ht extends e {
+  class ot extends e {
     constructor(t) {
       super(t), this.name = "水飲み場", this.is_floor = !1, this.image = this.game.image_library.get_image("fantasy_gargoyle_water"), this.image_empty = this.game.image_library.get_image("fantasy_gargoyle"), this.saving_data.is_water_filled = !0, this.saving_data.water_fill_timer = 0, this.water_fill_timer_max = 500;
     }
@@ -2184,21 +2222,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class ot extends ht {
+  class nt extends ot {
     constructor(t) {
       super(t), this.name = "給水バケツ", this.is_floor = !1, this.image = this.game.image_library.get_image("bucket_iron_water_up"), this.image_empty = this.game.image_library.get_image("bucket_iron_empty_up"), this.saving_data.is_water_filled = !0, this.saving_data.water_fill_timer = 0, this.water_fill_timer_max = 5e3;
     }
 
   }
 
-  class nt extends f {
+  class rt extends w {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("tomato_red"), this.saving_data.item_name = "トマト", this.saving_data.hunger_value = 20, this.saving_data.thirst_value = 20, this.saving_data.is_be_leftover = !0;
     }
 
   }
 
-  class rt extends e {
+  class lt extends e {
     constructor(t) {
       super(t), this.name = "プランター", this.is_floor = !1, this.image = this.game.image_library.get_image("dougu_torobune_tsuchi"), this.food = null, this.saving_data.growing_timer = 0, this.growing_timer_max = 500;
     }
@@ -2214,7 +2252,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     generate_veggie() {
-      return new nt(this.game);
+      return new rt(this.game);
     }
 
     on_update() {
@@ -2236,7 +2274,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class lt extends rt {
+  class mt extends lt {
     constructor(t) {
       super(t), this.name = "上級プランター", this.is_floor = !1, this.image = this.game.image_library.get_image("dougu_torobune_tsuchi"), this.food = null, this.saving_data.growing_timer = 0, this.growing_timer_max = 500;
     }
@@ -2276,7 +2314,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class mt extends e {
+  class ct extends e {
     constructor(t) {
       super(t), this.name = "乾燥ラック", this.is_floor = !1, this.image = this.game.image_library.get_image("dry_lack"), this.food = null, this.cooking_count = 0;
     }
@@ -2309,7 +2347,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class ct extends Object {
+  class ut extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
@@ -2318,37 +2356,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       t.add_recipe(e, ["船に設置する焚き火です。", "配置して、生の食材を調理できます。"], ["wood", "stone"], [10, 5], function (t) {
         return new i(t).set_ship_block(new gt(t));
       }, ""), t.add_recipe(e, ["食材を乾燥させます。"], ["wood", "cloth"], [10, 5], function (t) {
-        return new i(t).set_ship_block(new mt(t));
+        return new i(t).set_ship_block(new ct(t));
       }, ""), t.add_recipe(e, ["自動で敵を撃つ空気砲です。", "燃料を投入すると、自動で敵を攻撃します。"], ["parts", "iron"], [3, 10], function (t) {
-        return new i(t).set_ship_block(new et(t));
-      }, ""), t.add_recipe(e, ["自動で敵を撃つ投石機です。", "カタパルト弾を投入すると、自動で敵を攻撃します。"], ["parts", "wood"], [3, 10], function (t) {
         return new i(t).set_ship_block(new st(t));
-      }, ""), t.add_recipe(e, ["自動で敵を撃つ機銃です。", "弾薬を投入すると、自動で敵を攻撃します。"], ["circuit", "parts", "iron"], [3, 3, 10], function (t) {
+      }, ""), t.add_recipe(e, ["自動で敵を撃つ投石機です。", "カタパルト弾を投入すると、自動で敵を攻撃します。"], ["parts", "wood"], [3, 10], function (t) {
         return new i(t).set_ship_block(new _t(t));
-      }, ""), t.add_recipe(e, ["自動で敵を撃つ大砲です。", "砲弾を投入すると、自動で敵を攻撃します。"], ["parts", "lead", "silver"], [5, 10, 5], function (t) {
+      }, ""), t.add_recipe(e, ["自動で敵を撃つ機銃です。", "弾薬を投入すると、自動で敵を攻撃します。"], ["circuit", "parts", "iron"], [3, 3, 10], function (t) {
         return new i(t).set_ship_block(new at(t));
-      }, ""), t.add_recipe(e, ["燃料式のエンジンです。", "燃料を投入すると、舟を前に進めます。"], ["iron", "parts"], [10, 2], function (t) {
-        return new i(t).set_ship_block(new it(t));
-      }, ""), t.add_recipe(e, ["水飲み場です。", "より短い時間経過で飲み水がたまります。"], ["parts", "stone", "jar"], [1, 15, 1], function (t) {
+      }, ""), t.add_recipe(e, ["自動で敵を撃つ大砲です。", "砲弾を投入すると、自動で敵を攻撃します。"], ["parts", "lead", "silver"], [5, 10, 5], function (t) {
         return new i(t).set_ship_block(new ht(t));
-      }, ""), t.add_recipe(e, ["水が自然にたまるバケツです。", "時間経過で飲み水がたまります。"], ["iron", "stone"], [5, 1], function (t) {
+      }, ""), t.add_recipe(e, ["燃料式のエンジンです。", "燃料を投入すると、舟を前に進めます。"], ["iron", "parts"], [10, 2], function (t) {
+        return new i(t).set_ship_block(new et(t));
+      }, ""), t.add_recipe(e, ["水飲み場です。", "より短い時間経過で飲み水がたまります。"], ["parts", "stone", "jar"], [1, 15, 1], function (t) {
         return new i(t).set_ship_block(new ot(t));
+      }, ""), t.add_recipe(e, ["水が自然にたまるバケツです。", "時間経過で飲み水がたまります。"], ["iron", "stone"], [5, 1], function (t) {
+        return new i(t).set_ship_block(new nt(t));
       }, ""), t.add_recipe(e, ["食用の作物を育てます。"], ["leftover", "wood"], [10, 5], function (t) {
-        return new i(t).set_ship_block(new lt(t));
+        return new i(t).set_ship_block(new mt(t));
       }, "1"), t.add_recipe(e, ["食用の作物を育てます。"], ["leftover", "plastic"], [10, 5], function (t) {
-        return new i(t).set_ship_block(new lt(t));
+        return new i(t).set_ship_block(new mt(t));
       }, "2"), t.add_recipe(e, ["木材を育てます。"], ["leftover", "iron", "stone"], [30, 10, 10], function (t) {
-        return new i(t).set_ship_block(new rt(t));
+        return new i(t).set_ship_block(new lt(t));
       }, "3"), t.add_recipe(e, ["イヌ型ロボットです。", "砲撃を優先して手伝ってくれます。"], ["parts", "circuit", "plastic", "silver"], [10, 5, 10, 3], function (t) {
-        return new i(t).set_ship_block(new J(t));
+        return new i(t).set_ship_block(new $(t));
       }, ""), t.add_recipe(e, ["ネコ型ロボットです。", "弾薬や燃料の補給を優先して手伝ってくれます。"], ["parts", "circuit", "plastic", "silver"], [10, 5, 10, 3], function (t) {
-        return new i(t).set_ship_block(new tt(t));
+        return new i(t).set_ship_block(new it(t));
       }, "");
     }
 
   }
 
-  class ut extends t {
+  class dt extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("megane_3d_blue_red"), this.saving_data.item_name = "スカウター";
     }
@@ -2359,20 +2397,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class dt extends Object {
+  class pt extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
 
     setup_recipe(t, i) {
       t.add_recipe(i, ["クリックした敵の情報を調べることが出来ます。"], ["mech_parts"], [3], function (t) {
-        return new ut(t);
+        return new dt(t);
       }, "");
     }
 
   }
 
-  class pt extends t {
+  class yt extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("tonkachi"), this.is_hammer = !0, this.saving_data.item_name = "撤去ハンマー";
     }
@@ -2381,7 +2419,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class yt extends t {
+  class ft extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("science_senjoubin_empty"), this.image_filled = this.game.image_library.get_image("science_senjoubin"), this.saving_data.item_name = "蒸留ボトル", this.saving_data.is_filled = !1;
     }
@@ -2400,7 +2438,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class ft extends t {
+  class Tt extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("fishing_tsurizao_nobezao"), this.saving_data.item_name = "釣り竿";
     }
@@ -2411,7 +2449,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Tt extends t {
+  class wt extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("syamoji_mokusei"), this.saving_data.item_name = "オール", this.cool_time_count = 10, this.cool_time_max = 10;
     }
@@ -2426,7 +2464,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class wt extends t {
+  class vt extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("monkey_wrench"), this.is_wrench = !0, this.saving_data.item_name = "修理レンチ";
     }
@@ -2435,79 +2473,79 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class vt extends Object {
+  class bt extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
 
     setup_recipe(t, i) {
       t.add_recipe(i, ["魚釣りができます。", "海に浮いているものを引き揚げることも出来ます。"], ["wood", "cloth"], [3, 1], function (t) {
-        return new ft(t);
-      }, "Lv1"), t.add_recipe(i, ["魚釣りができます。", "海に浮いているものを引き揚げることも出来ます。"], ["wood", "cloth", "feather"], [30, 10, 10], function (t) {
-        return new ft(t);
-      }, "Lv2"), t.add_recipe(i, ["蒸留ボトル", "焚き火にかけることで飲み水を得られます。"], ["jar"], [1], function (t) {
-        return new yt(t);
-      }, ""), t.add_recipe(i, ["舟を漕ぐと、より多くの素材を持った敵が現れます。"], ["wood", "feather"], [10, 2], function (t) {
         return new Tt(t);
-      }, ""), t.add_recipe(i, ["撤去ハンマー", "船のブロックを撤去できます。"], ["wood", "iron"], [10, 5], function (t) {
-        return new pt(t);
-      }, ""), t.add_recipe(i, ["修理レンチ", "船のブロックを修理できます。"], ["iron"], [7], function (t) {
+      }, "Lv1"), t.add_recipe(i, ["魚釣りができます。", "海に浮いているものを引き揚げることも出来ます。"], ["wood", "cloth", "feather"], [30, 10, 10], function (t) {
+        return new Tt(t);
+      }, "Lv2"), t.add_recipe(i, ["蒸留ボトル", "焚き火にかけることで飲み水を得られます。"], ["jar"], [1], function (t) {
+        return new ft(t);
+      }, ""), t.add_recipe(i, ["舟を漕ぐと、より多くの素材を持った敵が現れます。"], ["wood", "feather"], [10, 2], function (t) {
         return new wt(t);
+      }, ""), t.add_recipe(i, ["撤去ハンマー", "船のブロックを撤去できます。"], ["wood", "iron"], [10, 5], function (t) {
+        return new yt(t);
+      }, ""), t.add_recipe(i, ["修理レンチ", "船のブロックを修理できます。"], ["iron"], [7], function (t) {
+        return new vt(t);
       }, ""), t.add_recipe(i, ["クリックした敵の情報を調べることが出来ます。"], ["parts"], [1], function (t) {
-        return new ut(t);
+        return new dt(t);
       }, "");
     }
 
   }
 
-  class bt extends y {
+  class kt extends T {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("buki_yari"), this.saving_data.item_name = "槍", this.saving_data.power = 10, this.saving_data.cool_time = 10;
     }
 
     on_attack(t, i, e, s) {
       let _ = this.game.world.player.get_vector_to_cursor(),
-          a = new p(this.game);
+          a = new f(this.game);
 
       a.x = this.game.world.player.x + 10 * _.x, a.y = this.game.world.player.y + 10 * _.y - 16, a.vx = 15 * _.x, a.vy = 15 * _.y, a.line_x = 30 * _.x, a.line_y = 30 * _.y, a.gravity = 0, a.life_time = 10, a.damage = this.calc_damage(), this.game.world.push_entity(a);
     }
 
   }
 
-  class It extends y {
+  class It extends T {
     constructor(t) {
       super(t), this.game = t, this.saving_data.item_name = "クロスボウ", this.image = this.game.image_library.get_image("yumiya_bowgun");
     }
 
   }
 
-  class kt extends Object {
+  class Et extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
 
     setup_recipe(t, i) {
       t.add_recipe(i, ["最も弱い遠距離武器です。", "Lv1"], ["wood", "cloth"], [5, 3], function (t) {
-        let i = new y(t);
+        let i = new T(t);
         return i.saving_data.name = "弓矢", i.set_image("yumiya"), i.saving_data.basic_power = 12, i;
       }, ""), t.add_recipe(i, ["遠距離武器です。", "Lv2"], ["wood", "cloth", "feather"], [10, 5, 3], function (t) {
-        let i = new y(t);
+        let i = new T(t);
         return i.saving_data.name = "クロスボウ", i.set_image("yumiya_bowgun"), i.saving_data.basic_power = 35, i;
       }, ""), t.add_recipe(i, ["遠距離武器です。", "Lv5"], ["parts", "iron", "lead"], [2, 10, 10], function (t) {
-        let i = new y(t);
+        let i = new T(t);
         return i.saving_data.name = "ライフル", i.set_image("hinawaju"), i.saving_data.basic_power = 150, i;
       }, ""), t.add_recipe(i, ["近距離武器です。", ""], ["wood", "stone"], [5, 1], function (t) {
-        let i = new y(t);
+        let i = new T(t);
         return i.saving_data.name = "槍", i.set_image("buki_yari"), i.saving_data.basic_power = 35, i.saving_data.bullet_lifetime = 10, i;
       }, ""), t.add_recipe(i, ["近距離武器です。", "3方向に一度に攻撃できます。"], ["wood", "iron", "feather"], [15, 5, 3], function (t) {
-        let i = new y(t);
+        let i = new T(t);
         return i.saving_data.name = "三叉槍", i.set_image("war_trident"), i.saving_data.basic_power = 35, i.saving_data.fire_spread = 3, i.saving_data.fire_spread_angle = .3, i.saving_data.bullet_lifetime = 10, i;
       }, "");
     }
 
   }
 
-  class Et extends t {
+  class xt extends t {
     constructor(t) {
       super(t), this.saving_data.item_name = "カタパルト用小石", this.image = this.game.image_library.get_image("catapult_ammo"), this.ammo_type = "stone", this.ammo_value = 100;
     }
@@ -2518,36 +2556,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class xt extends Object {
+  class St extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
 
     setup_recipe(t, i) {
       t.add_recipe(i, ["さまざまな設備に補充するための燃料です。"], ["fuel"], [10], function (t) {
-        return new j(t);
-      }, ""), t.add_recipe(i, ["カタパルトから撃ち出すための小石です。"], ["stone"], [3], function (t) {
-        return new Et(t);
-      }, ""), t.add_recipe(i, ["機銃に補充するための弾薬です。"], ["metal", "fuel"], [2, 10], function (t) {
         return new q(t);
-      }, ""), t.add_recipe(i, ["大砲に補充するための砲弾です。"], ["metal", "fuel"], [10, 2], function (t) {
+      }, ""), t.add_recipe(i, ["カタパルトから撃ち出すための小石です。"], ["stone"], [3], function (t) {
+        return new xt(t);
+      }, ""), t.add_recipe(i, ["機銃に補充するための弾薬です。"], ["metal", "fuel"], [2, 10], function (t) {
         return new Q(t);
+      }, ""), t.add_recipe(i, ["大砲に補充するための砲弾です。"], ["metal", "fuel"], [10, 2], function (t) {
+        return new V(t);
       }, ""), t.add_recipe(i, ["木材を燃料マテリアルに変換します。"], ["wood"], [10], function (t) {
-        let i = new x(t);
+        let i = new O(t);
         return i.set_image("cooking_kokei_nenryou_fire"), i.add_material("fuel", 10), i;
       }, "wood");
     }
 
   }
 
-  class St extends Object {
+  class Ot extends Object {
     constructor(t) {
-      super(t), this.game = t, this.recipe_list = [], this.recipe_list[St.CATEGORY_TOOL] = [], this.recipe_list[St.CATEGORY_SHIP] = [], this.recipe_list[St.CATEGORY_SHIP2] = [], this.recipe_list[St.CATEGORY_SHIP3] = [], this.recipe_list[St.CATEGORY_WEAPON] = [], this.recipe_list[St.CATEGORY_EQUIP] = [], this.recipe_list[St.CATEGORY_SUPPLY] = [], this.category_icon_list = [], this.category_icon_list[St.CATEGORY_TOOL] = this.game.image_library.get_image("fishing_tsurizao_nobezao"), this.category_icon_list[St.CATEGORY_SHIP] = this.game.image_library.get_image("fune_ikada"), this.category_icon_list[St.CATEGORY_SHIP2] = this.game.image_library.get_image("fune_ikada"), this.category_icon_list[St.CATEGORY_SHIP3] = this.game.image_library.get_image("fune_ikada"), this.category_icon_list[St.CATEGORY_WEAPON] = this.game.image_library.get_image("yumiya_bowgun"), this.category_icon_list[St.CATEGORY_EQUIP] = this.game.image_library.get_image("snorkel_goods"), this.category_icon_list[St.CATEGORY_SUPPLY] = this.game.image_library.get_image("cooking_kokei_nenryou_fire"), this.category_name_list = [], this.category_name_list[St.CATEGORY_TOOL] = "道具", this.category_name_list[St.CATEGORY_SHIP] = "舟", this.category_name_list[St.CATEGORY_SHIP2] = "舟2", this.category_name_list[St.CATEGORY_SHIP3] = "舟3", this.category_name_list[St.CATEGORY_WEAPON] = "武器", this.category_name_list[St.CATEGORY_EQUIP] = "装備", this.category_name_list[St.CATEGORY_SUPPLY] = "補給品", this.setup();
+      super(t), this.game = t, this.recipe_list = [], this.recipe_list[Ot.CATEGORY_TOOL] = [], this.recipe_list[Ot.CATEGORY_SHIP] = [], this.recipe_list[Ot.CATEGORY_SHIP2] = [], this.recipe_list[Ot.CATEGORY_SHIP3] = [], this.recipe_list[Ot.CATEGORY_WEAPON] = [], this.recipe_list[Ot.CATEGORY_EQUIP] = [], this.recipe_list[Ot.CATEGORY_SUPPLY] = [], this.category_icon_list = [], this.category_icon_list[Ot.CATEGORY_TOOL] = this.game.image_library.get_image("fishing_tsurizao_nobezao"), this.category_icon_list[Ot.CATEGORY_SHIP] = this.game.image_library.get_image("fune_ikada"), this.category_icon_list[Ot.CATEGORY_SHIP2] = this.game.image_library.get_image("fune_ikada"), this.category_icon_list[Ot.CATEGORY_SHIP3] = this.game.image_library.get_image("fune_ikada"), this.category_icon_list[Ot.CATEGORY_WEAPON] = this.game.image_library.get_image("yumiya_bowgun"), this.category_icon_list[Ot.CATEGORY_EQUIP] = this.game.image_library.get_image("snorkel_goods"), this.category_icon_list[Ot.CATEGORY_SUPPLY] = this.game.image_library.get_image("cooking_kokei_nenryou_fire"), this.category_name_list = [], this.category_name_list[Ot.CATEGORY_TOOL] = "道具", this.category_name_list[Ot.CATEGORY_SHIP] = "舟", this.category_name_list[Ot.CATEGORY_SHIP2] = "舟2", this.category_name_list[Ot.CATEGORY_SHIP3] = "舟3", this.category_name_list[Ot.CATEGORY_WEAPON] = "武器", this.category_name_list[Ot.CATEGORY_EQUIP] = "装備", this.category_name_list[Ot.CATEGORY_SUPPLY] = "補給品", this.setup();
     }
 
     setup() {
       let t = null;
-      t = new vt(this.game), t.setup_recipe(this, St.CATEGORY_TOOL), t = new K(this.game), t.setup_recipe(this, St.CATEGORY_SHIP), t = new ct(this.game), t.setup_recipe(this, St.CATEGORY_SHIP2), t = new dt(this.game), t.setup_recipe(this, St.CATEGORY_SHIP3), t = new kt(this.game), t.setup_recipe(this, St.CATEGORY_WEAPON), t = new D(this.game), t.setup_recipe(this, St.CATEGORY_EQUIP), t = new xt(this.game), t.setup_recipe(this, St.CATEGORY_SUPPLY);
+      t = new bt(this.game), t.setup_recipe(this, Ot.CATEGORY_TOOL), t = new K(this.game), t.setup_recipe(this, Ot.CATEGORY_SHIP), t = new ut(this.game), t.setup_recipe(this, Ot.CATEGORY_SHIP2), t = new pt(this.game), t.setup_recipe(this, Ot.CATEGORY_SHIP3), t = new Et(this.game), t.setup_recipe(this, Ot.CATEGORY_WEAPON), t = new B(this.game), t.setup_recipe(this, Ot.CATEGORY_EQUIP), t = new St(this.game), t.setup_recipe(this, Ot.CATEGORY_SUPPLY);
     }
 
     get_recipe(t, i) {
@@ -2555,7 +2593,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_category_index_with_looping(t) {
-      return t < 0 ? St.CATEGORY_COUNT - 1 : St.CATEGORY_COUNT <= t ? 0 : t;
+      return t < 0 ? Ot.CATEGORY_COUNT - 1 : Ot.CATEGORY_COUNT <= t ? 0 : t;
     }
 
     get_category_name(t) {
@@ -2573,25 +2611,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  _defineProperty(St, "CATEGORY_TOOL", 0);
+  _defineProperty(Ot, "CATEGORY_TOOL", 0);
 
-  _defineProperty(St, "CATEGORY_SHIP", 1);
+  _defineProperty(Ot, "CATEGORY_SHIP", 1);
 
-  _defineProperty(St, "CATEGORY_SHIP2", 2);
+  _defineProperty(Ot, "CATEGORY_SHIP2", 2);
 
-  _defineProperty(St, "CATEGORY_SHIP3", 3);
+  _defineProperty(Ot, "CATEGORY_SHIP3", 3);
 
-  _defineProperty(St, "CATEGORY_WEAPON", 4);
+  _defineProperty(Ot, "CATEGORY_WEAPON", 4);
 
-  _defineProperty(St, "CATEGORY_EQUIP", 5);
+  _defineProperty(Ot, "CATEGORY_EQUIP", 5);
 
-  _defineProperty(St, "CATEGORY_SUPPLY", 6);
+  _defineProperty(Ot, "CATEGORY_SUPPLY", 6);
 
-  _defineProperty(St, "CATEGORY_COUNT", 7);
+  _defineProperty(Ot, "CATEGORY_COUNT", 7);
 
-  class Ot {
+  class Ct {
     constructor(t) {
-      this.game = t, this.craft_recipe = new St(this.game), this.cursor_index = 0, this.category_index = 0, this.menu_icon = this.game.image_library.get_image("kids_mokkou_kyoushitsu_boy"), this.batsu_icon = this.game.image_library.get_image("batsu"), this.icon_next_category = this.game.image_library.get_image("arrow_color12_play_flip"), this.icon_prev_category = this.game.image_library.get_image("arrow_color12_play");
+      this.game = t, this.craft_recipe = new Ot(this.game), this.cursor_index = 0, this.category_index = 0, this.menu_icon = this.game.image_library.get_image("kids_mokkou_kyoushitsu_boy"), this.batsu_icon = this.game.image_library.get_image("batsu"), this.icon_next_category = this.game.image_library.get_image("arrow_color12_play_flip"), this.icon_prev_category = this.game.image_library.get_image("arrow_color12_play");
     }
 
     get_menu_icon() {
@@ -2599,11 +2637,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_update() {
-      this.game.input_controller.get_press_right() && this.cursor_index < Ot.LIST_COUNT - 1 && (this.cursor_index += 1), this.game.input_controller.get_press_left() && 0 < this.cursor_index && (this.cursor_index -= 1), this.game.input_controller.get_press_up() && Ot.LIST_X_COUNT <= this.cursor_index && (this.cursor_index -= Ot.LIST_X_COUNT), this.game.input_controller.get_press_down() && Ot.LIST_X_COUNT + this.cursor_index < Ot.LIST_COUNT && (this.cursor_index += Ot.LIST_X_COUNT), this.game.input_controller.get_mouse_press() && this.on_click(this.game.input_controller.mouse_x - Rt.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - Rt.MENU_MARGIN_TOP), (this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && (0 == this.cursor_index || 1 == this.cursor_index ? 0 < this.category_index ? this.category_index -= 1 : this.category_index = St.CATEGORY_COUNT - 1 : 4 == this.cursor_index || 3 == this.cursor_index ? this.category_index < St.CATEGORY_COUNT - 1 ? this.category_index += 1 : this.category_index = 0 : this.execute_craft());
+      this.game.input_controller.get_press_right() && this.cursor_index < Ct.LIST_COUNT - 1 && (this.cursor_index += 1), this.game.input_controller.get_press_left() && 0 < this.cursor_index && (this.cursor_index -= 1), this.game.input_controller.get_press_up() && Ct.LIST_X_COUNT <= this.cursor_index && (this.cursor_index -= Ct.LIST_X_COUNT), this.game.input_controller.get_press_down() && Ct.LIST_X_COUNT + this.cursor_index < Ct.LIST_COUNT && (this.cursor_index += Ct.LIST_X_COUNT), this.game.input_controller.get_mouse_press() && this.on_click(this.game.input_controller.mouse_x - At.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - At.MENU_MARGIN_TOP), (this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && (0 == this.cursor_index || 1 == this.cursor_index ? 0 < this.category_index ? this.category_index -= 1 : this.category_index = Ot.CATEGORY_COUNT - 1 : 4 == this.cursor_index || 3 == this.cursor_index ? this.category_index < Ot.CATEGORY_COUNT - 1 ? this.category_index += 1 : this.category_index = 0 : this.execute_craft());
     }
 
     execute_craft() {
-      let t = this.craft_recipe.get_recipe(this.category_index, this.cursor_index - Ot.LIST_X_COUNT);
+      let t = this.craft_recipe.get_recipe(this.category_index, this.cursor_index - Ct.LIST_X_COUNT);
       t && (this.game.hud.item_slot.has_empty_space() ? this.take_recipe_materials(t) ? (this.game.hud.item_slot.put_pickup_item(t.result_func(this.game)), this.game.log("クラフトしました。")) : this.game.log("マテリアルが足りません。") : this.game.log("アイテムスロットがいっぱいです。"));
     }
 
@@ -2622,116 +2660,116 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_click(t, i) {
-      for (let e = 0; e < Ot.LIST_COUNT; e++) {
-        let s = e % Ot.LIST_X_COUNT,
-            _ = Math.floor(e / Ot.LIST_X_COUNT),
-            a = Ot.LIST_X + s * (Ot.LIST_ICON_SIZE + Ot.LIST_SPACING),
-            h = Ot.LIST_Y + _ * (Ot.LIST_ICON_SIZE + Ot.LIST_SPACING);
+      for (let e = 0; e < Ct.LIST_COUNT; e++) {
+        let s = e % Ct.LIST_X_COUNT,
+            _ = Math.floor(e / Ct.LIST_X_COUNT),
+            a = Ct.LIST_X + s * (Ct.LIST_ICON_SIZE + Ct.LIST_SPACING),
+            h = Ct.LIST_Y + _ * (Ct.LIST_ICON_SIZE + Ct.LIST_SPACING);
 
-        if (a < t && t < a + Ot.LIST_ICON_SIZE && h < i && i < h + Ot.LIST_ICON_SIZE) {
-          this.cursor_index = e, 0 == this.cursor_index || 1 == this.cursor_index ? 0 < this.category_index ? this.category_index -= 1 : this.category_index = St.CATEGORY_COUNT - 1 : 4 != this.cursor_index && 3 != this.cursor_index || (this.category_index < St.CATEGORY_COUNT - 1 ? this.category_index += 1 : this.category_index = 0);
+        if (a < t && t < a + Ct.LIST_ICON_SIZE && h < i && i < h + Ct.LIST_ICON_SIZE) {
+          this.cursor_index = e, 0 == this.cursor_index || 1 == this.cursor_index ? 0 < this.category_index ? this.category_index -= 1 : this.category_index = Ot.CATEGORY_COUNT - 1 : 4 != this.cursor_index && 3 != this.cursor_index || (this.category_index < Ot.CATEGORY_COUNT - 1 ? this.category_index += 1 : this.category_index = 0);
           break;
         }
       }
 
-      Ot.CRAFT_BUTTON_X < t && t < Ot.CRAFT_BUTTON_X + Ot.CRAFT_BUTTON_WIDTH && Ot.CRAFT_BUTTON_Y < i && i < Ot.CRAFT_BUTTON_Y + Ot.CRAFT_BUTTON_HEIGHT && this.execute_craft();
+      Ct.CRAFT_BUTTON_X < t && t < Ct.CRAFT_BUTTON_X + Ct.CRAFT_BUTTON_WIDTH && Ct.CRAFT_BUTTON_Y < i && i < Ct.CRAFT_BUTTON_Y + Ct.CRAFT_BUTTON_HEIGHT && this.execute_craft();
     }
 
     on_draw(t) {
-      t.fillStyle = Ot.TITLE_COLOR, t.font = Ot.TITLE_FONT, t.fillText("クラフト Craft", Ot.TITLE_X, Ot.TITLE_Y), t.fillStyle = "rgb(20,20,20)";
+      t.fillStyle = Ct.TITLE_COLOR, t.font = Ct.TITLE_FONT, t.fillText("クラフト Craft", Ct.TITLE_X, Ct.TITLE_Y), t.fillStyle = "rgb(20,20,20)";
 
-      for (let i = 0; i < Ot.LIST_COUNT; i++) {
-        this.cursor_index == i ? t.strokeStyle = Ot.LIST_ICON_FRAME_COLOR_SELECTED : t.strokeStyle = Ot.LIST_ICON_FRAME_COLOR;
+      for (let i = 0; i < Ct.LIST_COUNT; i++) {
+        this.cursor_index == i ? t.strokeStyle = Ct.LIST_ICON_FRAME_COLOR_SELECTED : t.strokeStyle = Ct.LIST_ICON_FRAME_COLOR;
 
-        let e = i % Ot.LIST_X_COUNT,
-            s = Math.floor(i / Ot.LIST_X_COUNT),
-            _ = Ot.LIST_X + e * (Ot.LIST_ICON_SIZE + Ot.LIST_SPACING),
-            a = Ot.LIST_Y + s * (Ot.LIST_ICON_SIZE + Ot.LIST_SPACING),
-            h = this.craft_recipe.get_recipe(this.category_index, i - Ot.LIST_X_COUNT);
+        let e = i % Ct.LIST_X_COUNT,
+            s = Math.floor(i / Ct.LIST_X_COUNT),
+            _ = Ct.LIST_X + e * (Ct.LIST_ICON_SIZE + Ct.LIST_SPACING),
+            a = Ct.LIST_Y + s * (Ct.LIST_ICON_SIZE + Ct.LIST_SPACING),
+            h = this.craft_recipe.get_recipe(this.category_index, i - Ct.LIST_X_COUNT);
 
-        t.font = "bold 16px monospace", t.fillStyle = "rgb(50,50,50)", 0 == i ? t.drawImage(this.icon_prev_category, _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE) : 1 == i ? t.drawImage(this.craft_recipe.get_category_icon(this.category_index - 1), _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE) : 2 == i ? t.drawImage(this.craft_recipe.get_category_icon(this.category_index), _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE) : 3 == i ? t.drawImage(this.craft_recipe.get_category_icon(this.category_index + 1), _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE) : 4 == i ? t.drawImage(this.icon_next_category, _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE) : h && (h.image && (t.drawImage(h.image, _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE), t.fillText(h.recipe_subtitle, _, a + Ot.LIST_ICON_SIZE - 3)), this.check_recipe_materials(h) || (t.drawImage(this.batsu_icon, _, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE), t.fillText(h.recipe_subtitle, _, a + Ot.LIST_ICON_SIZE - 3))), t.strokeRect(_, a, Ot.LIST_ICON_SIZE, Ot.LIST_ICON_SIZE);
+        t.font = "bold 16px monospace", t.fillStyle = "rgb(50,50,50)", 0 == i ? t.drawImage(this.icon_prev_category, _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE) : 1 == i ? t.drawImage(this.craft_recipe.get_category_icon(this.category_index - 1), _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE) : 2 == i ? t.drawImage(this.craft_recipe.get_category_icon(this.category_index), _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE) : 3 == i ? t.drawImage(this.craft_recipe.get_category_icon(this.category_index + 1), _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE) : 4 == i ? t.drawImage(this.icon_next_category, _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE) : h && (h.image && (t.drawImage(h.image, _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE), t.fillText(h.recipe_subtitle, _, a + Ct.LIST_ICON_SIZE - 3)), this.check_recipe_materials(h) || (t.drawImage(this.batsu_icon, _, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE), t.fillText(h.recipe_subtitle, _, a + Ct.LIST_ICON_SIZE - 3))), t.strokeRect(_, a, Ct.LIST_ICON_SIZE, Ct.LIST_ICON_SIZE);
       }
 
-      if (t.font = Ot.DESC_TEXT_FONT, t.fillStyle = Ot.DESC_TEXT_COLOR, 0 == this.cursor_index) t.fillText("前のカテゴリ", Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 1 * Ot.DESC_TEXT_HEIGHT);else if (1 == this.cursor_index) t.fillText("前のカテゴリ", Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 1 * Ot.DESC_TEXT_HEIGHT), t.fillText(this.craft_recipe.get_category_name(this.category_index - 1), Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 2 * Ot.DESC_TEXT_HEIGHT);else if (2 == this.cursor_index) t.fillText("現在のカテゴリ", Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 1 * Ot.DESC_TEXT_HEIGHT), t.fillText(this.craft_recipe.get_category_name(this.category_index), Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 2 * Ot.DESC_TEXT_HEIGHT);else if (3 == this.cursor_index) t.fillText("次のカテゴリ", Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 1 * Ot.DESC_TEXT_HEIGHT), t.fillText(this.craft_recipe.get_category_name(this.category_index + 1), Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 2 * Ot.DESC_TEXT_HEIGHT);else if (4 == this.cursor_index) t.fillText("次のカテゴリ", Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 1 * Ot.DESC_TEXT_HEIGHT);else {
-        let i = this.craft_recipe.get_recipe(this.category_index, this.cursor_index - Ot.LIST_X_COUNT);
+      if (t.font = Ct.DESC_TEXT_FONT, t.fillStyle = Ct.DESC_TEXT_COLOR, 0 == this.cursor_index) t.fillText("前のカテゴリ", Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 1 * Ct.DESC_TEXT_HEIGHT);else if (1 == this.cursor_index) t.fillText("前のカテゴリ", Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 1 * Ct.DESC_TEXT_HEIGHT), t.fillText(this.craft_recipe.get_category_name(this.category_index - 1), Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 2 * Ct.DESC_TEXT_HEIGHT);else if (2 == this.cursor_index) t.fillText("現在のカテゴリ", Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 1 * Ct.DESC_TEXT_HEIGHT), t.fillText(this.craft_recipe.get_category_name(this.category_index), Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 2 * Ct.DESC_TEXT_HEIGHT);else if (3 == this.cursor_index) t.fillText("次のカテゴリ", Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 1 * Ct.DESC_TEXT_HEIGHT), t.fillText(this.craft_recipe.get_category_name(this.category_index + 1), Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 2 * Ct.DESC_TEXT_HEIGHT);else if (4 == this.cursor_index) t.fillText("次のカテゴリ", Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 1 * Ct.DESC_TEXT_HEIGHT);else {
+        let i = this.craft_recipe.get_recipe(this.category_index, this.cursor_index - Ct.LIST_X_COUNT);
 
         if (i) {
-          t.fillText(i.sample_item.get_name(), Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 1 * Ot.DESC_TEXT_HEIGHT), t.fillStyle = Ot.DESC_TEXT_COLOR, t.fillText(i.description_list[0], Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 2 * Ot.DESC_TEXT_HEIGHT), i.description_list[1] && (t.fillStyle = Ot.DESC_TEXT_COLOR, t.fillText(i.description_list[1], Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 3 * Ot.DESC_TEXT_HEIGHT)), t.fillStyle = Ot.DESC_TEXT_COLOR, t.fillText("・必要資材", Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + 4 * Ot.DESC_TEXT_HEIGHT);
+          t.fillText(i.sample_item.get_name(), Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 1 * Ct.DESC_TEXT_HEIGHT), t.fillStyle = Ct.DESC_TEXT_COLOR, t.fillText(i.description_list[0], Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 2 * Ct.DESC_TEXT_HEIGHT), i.description_list[1] && (t.fillStyle = Ct.DESC_TEXT_COLOR, t.fillText(i.description_list[1], Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 3 * Ct.DESC_TEXT_HEIGHT)), t.fillStyle = Ct.DESC_TEXT_COLOR, t.fillText("・必要資材", Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + 4 * Ct.DESC_TEXT_HEIGHT);
 
           for (let e = 0; e < i.material_list.length; e++) {
             let s = i.material_list[e];
-            t.fillStyle = Ot.DESC_TEXT_COLOR, t.fillText(this.game.materials.name_list[s], Ot.DESC_TEXT_X, Ot.DESC_TEXT_Y + Ot.DESC_TEXT_HEIGHT * (5 + e)), t.fillText(i.material_count_list[e], Ot.DESC_TEXT_X + 150, Ot.DESC_TEXT_Y + Ot.DESC_TEXT_HEIGHT * (5 + e)), t.fillText(this.game.materials.list[s], Ot.DESC_TEXT_X + 250, Ot.DESC_TEXT_Y + Ot.DESC_TEXT_HEIGHT * (5 + e));
+            t.fillStyle = Ct.DESC_TEXT_COLOR, t.fillText(this.game.materials.name_list[s], Ct.DESC_TEXT_X, Ct.DESC_TEXT_Y + Ct.DESC_TEXT_HEIGHT * (5 + e)), t.fillText(i.material_count_list[e], Ct.DESC_TEXT_X + 150, Ct.DESC_TEXT_Y + Ct.DESC_TEXT_HEIGHT * (5 + e)), t.fillText(this.game.materials.list[s], Ct.DESC_TEXT_X + 250, Ct.DESC_TEXT_Y + Ct.DESC_TEXT_HEIGHT * (5 + e));
           }
         }
       }
-      t.fillStyle = Ot.CRAFT_BUTTON_COLOR, t.fillRect(Ot.CRAFT_BUTTON_X, Ot.CRAFT_BUTTON_Y, Ot.CRAFT_BUTTON_WIDTH, Ot.CRAFT_BUTTON_HEIGHT), t.fillStyle = Ot.CRAFT_BUTTON_TEXT_COLOR, t.font = Ot.CRAFT_BUTTON_FONT, t.fillText("実行! (Enter)", Ot.CRAFT_BUTTON_X + Ot.CRAFT_BUTTON_TEXT_X, Ot.CRAFT_BUTTON_Y + Ot.CRAFT_BUTTON_TEXT_Y);
+      t.fillStyle = Ct.CRAFT_BUTTON_COLOR, t.fillRect(Ct.CRAFT_BUTTON_X, Ct.CRAFT_BUTTON_Y, Ct.CRAFT_BUTTON_WIDTH, Ct.CRAFT_BUTTON_HEIGHT), t.fillStyle = Ct.CRAFT_BUTTON_TEXT_COLOR, t.font = Ct.CRAFT_BUTTON_FONT, t.fillText("実行! (Enter)", Ct.CRAFT_BUTTON_X + Ct.CRAFT_BUTTON_TEXT_X, Ct.CRAFT_BUTTON_Y + Ct.CRAFT_BUTTON_TEXT_Y);
     }
 
   }
 
-  _defineProperty(Ot, "TITLE_X", 100);
+  _defineProperty(Ct, "TITLE_X", 100);
 
-  _defineProperty(Ot, "TITLE_Y", 40);
+  _defineProperty(Ct, "TITLE_Y", 40);
 
-  _defineProperty(Ot, "TITLE_COLOR", "rgb(20,20,20)");
+  _defineProperty(Ct, "TITLE_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Ot, "TITLE_FONT", "bold 32px monospace");
+  _defineProperty(Ct, "TITLE_FONT", "bold 32px monospace");
 
-  _defineProperty(Ot, "LIST_CURSOR_COLOR", "rgb(20,150,20)");
+  _defineProperty(Ct, "LIST_CURSOR_COLOR", "rgb(20,150,20)");
 
-  _defineProperty(Ot, "LIST_CURSOR_ADJUST", 6);
+  _defineProperty(Ct, "LIST_CURSOR_ADJUST", 6);
 
-  _defineProperty(Ot, "DESC_TEXT_X", 340);
+  _defineProperty(Ct, "DESC_TEXT_X", 340);
 
-  _defineProperty(Ot, "DESC_TEXT_Y", 60);
+  _defineProperty(Ct, "DESC_TEXT_Y", 60);
 
-  _defineProperty(Ot, "DESC_TEXT_FONT", "bold 18px monospace");
+  _defineProperty(Ct, "DESC_TEXT_FONT", "bold 18px monospace");
 
-  _defineProperty(Ot, "DESC_TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Ct, "DESC_TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Ot, "DESC_TEXT_COLOR_GREEN", "rgb(20,200,20)");
+  _defineProperty(Ct, "DESC_TEXT_COLOR_GREEN", "rgb(20,200,20)");
 
-  _defineProperty(Ot, "DESC_TEXT_COLOR_RED", "rgb(200,20,20)");
+  _defineProperty(Ct, "DESC_TEXT_COLOR_RED", "rgb(200,20,20)");
 
-  _defineProperty(Ot, "DESC_TEXT_HEIGHT", 28);
+  _defineProperty(Ct, "DESC_TEXT_HEIGHT", 28);
 
-  _defineProperty(Ot, "CRAFT_BUTTON_X", 400);
+  _defineProperty(Ct, "CRAFT_BUTTON_X", 400);
 
-  _defineProperty(Ot, "CRAFT_BUTTON_Y", 330);
+  _defineProperty(Ct, "CRAFT_BUTTON_Y", 330);
 
-  _defineProperty(Ot, "CRAFT_BUTTON_HEIGHT", 50);
+  _defineProperty(Ct, "CRAFT_BUTTON_HEIGHT", 50);
 
-  _defineProperty(Ot, "CRAFT_BUTTON_WIDTH", 200);
+  _defineProperty(Ct, "CRAFT_BUTTON_WIDTH", 200);
 
-  _defineProperty(Ot, "CRAFT_BUTTON_COLOR", "rgb(160,160,160)");
+  _defineProperty(Ct, "CRAFT_BUTTON_COLOR", "rgb(160,160,160)");
 
-  _defineProperty(Ot, "CRAFT_BUTTON_TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Ct, "CRAFT_BUTTON_TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Ot, "CRAFT_BUTTON_FONT", "bold 24px monospace");
+  _defineProperty(Ct, "CRAFT_BUTTON_FONT", "bold 24px monospace");
 
-  _defineProperty(Ot, "CRAFT_BUTTON_TEXT_Y", 32);
+  _defineProperty(Ct, "CRAFT_BUTTON_TEXT_Y", 32);
 
-  _defineProperty(Ot, "CRAFT_BUTTON_TEXT_X", 15);
+  _defineProperty(Ct, "CRAFT_BUTTON_TEXT_X", 15);
 
-  _defineProperty(Ot, "LIST_X", 20);
+  _defineProperty(Ct, "LIST_X", 20);
 
-  _defineProperty(Ot, "LIST_Y", 60);
+  _defineProperty(Ct, "LIST_Y", 60);
 
-  _defineProperty(Ot, "LIST_ICON_SIZE", 50);
+  _defineProperty(Ct, "LIST_ICON_SIZE", 50);
 
-  _defineProperty(Ot, "LIST_SPACING", 10);
+  _defineProperty(Ct, "LIST_SPACING", 10);
 
-  _defineProperty(Ot, "LIST_X_COUNT", 5);
+  _defineProperty(Ct, "LIST_X_COUNT", 5);
 
-  _defineProperty(Ot, "LIST_Y_COUNT", 5);
+  _defineProperty(Ct, "LIST_Y_COUNT", 5);
 
-  _defineProperty(Ot, "LIST_COUNT", Ot.LIST_X_COUNT * Ot.LIST_Y_COUNT);
+  _defineProperty(Ct, "LIST_COUNT", Ct.LIST_X_COUNT * Ct.LIST_Y_COUNT);
 
-  _defineProperty(Ot, "LIST_ICON_FRAME_COLOR", "rgb(20,20,20)");
+  _defineProperty(Ct, "LIST_ICON_FRAME_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Ot, "LIST_ICON_FRAME_COLOR_SELECTED", "rgb(200,20,20)");
+  _defineProperty(Ct, "LIST_ICON_FRAME_COLOR_SELECTED", "rgb(200,20,20)");
 
-  class Ct {
+  class Nt {
     constructor(t) {
       this.game = t, this.cursor_index = 0, this.menu_icon = this.game.image_library.get_image("kouji_shizai_okiba");
     }
@@ -2745,35 +2783,35 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_draw(t) {
-      t.fillStyle = Ct.TITLE_COLOR, t.font = Ct.TITLE_FONT, t.fillText("マテリアル Material", Ct.TITLE_X, Ct.TITLE_Y), t.font = Ct.TEXT_FONT, t.fillStyle = Ct.TEXT_COLOR;
+      t.fillStyle = Nt.TITLE_COLOR, t.font = Nt.TITLE_FONT, t.fillText("マテリアル Material", Nt.TITLE_X, Nt.TITLE_Y), t.font = Nt.TEXT_FONT, t.fillStyle = Nt.TEXT_COLOR;
       let i = 0;
 
-      for (let e in this.game.materials.name_list) 0 < this.game.materials.list[e] && (t.fillText(this.game.materials.name_list[e], Ct.TEXT_X, Ct.TEXT_Y + Ct.TEXT_HEIGHT * i), t.fillText(this.game.materials.list[e], Ct.TEXT_X_COUNT, Ct.TEXT_Y + Ct.TEXT_HEIGHT * i)), i += 1;
+      for (let e in this.game.materials.name_list) 0 < this.game.materials.list[e] && (t.fillText(this.game.materials.name_list[e], Nt.TEXT_X, Nt.TEXT_Y + Nt.TEXT_HEIGHT * i), t.fillText(this.game.materials.list[e], Nt.TEXT_X_COUNT, Nt.TEXT_Y + Nt.TEXT_HEIGHT * i)), i += 1;
     }
 
   }
 
-  _defineProperty(Ct, "TITLE_X", 100);
+  _defineProperty(Nt, "TITLE_X", 100);
 
-  _defineProperty(Ct, "TITLE_Y", 40);
+  _defineProperty(Nt, "TITLE_Y", 40);
 
-  _defineProperty(Ct, "TITLE_COLOR", "rgb(20,20,20)");
+  _defineProperty(Nt, "TITLE_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Ct, "TITLE_FONT", "bold 32px monospace");
+  _defineProperty(Nt, "TITLE_FONT", "bold 32px monospace");
 
-  _defineProperty(Ct, "TEXT_X", 60);
+  _defineProperty(Nt, "TEXT_X", 60);
 
-  _defineProperty(Ct, "TEXT_Y", 100);
+  _defineProperty(Nt, "TEXT_Y", 100);
 
-  _defineProperty(Ct, "TEXT_FONT", "bold 18px monospace");
+  _defineProperty(Nt, "TEXT_FONT", "bold 18px monospace");
 
-  _defineProperty(Ct, "TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Nt, "TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Ct, "TEXT_HEIGHT", 28);
+  _defineProperty(Nt, "TEXT_HEIGHT", 28);
 
-  _defineProperty(Ct, "TEXT_X_COUNT", 200);
+  _defineProperty(Nt, "TEXT_X_COUNT", 200);
 
-  class Nt {
+  class Lt {
     constructor(t) {
       this.game = t, this.config_list = [], this.config_list[0] = "---", this.config_list[1] = "オートセーブデータにセーブする", this.config_list[2] = "データ[1]にセーブする", this.config_list[3] = "データ[2]にセーブする", this.config_list[4] = "---", this.config_list[5] = "仮想キーボード(試作)", this.config_list[6] = "マテリアルの自動解体", this.config_list[7] = "---", this.function_list = [], this.function_list[0] = function () {}.bind(this), this.function_list[1] = this.save_game_auto.bind(this), this.function_list[2] = this.save_game_1.bind(this), this.function_list[3] = this.save_game_2.bind(this), this.function_list[4] = function () {}.bind(this), this.function_list[5] = this.toggle_virtual_key.bind(this), this.function_list[6] = this.toggle_material_auto_destruct.bind(this), this.function_list[7] = function () {}.bind(this), this.config_cursor = 0, this.config_scroll = 0, this.menu_icon = this.game.image_library.get_image("haguruma");
     }
@@ -2791,7 +2829,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     save_game_1() {
-      this.game.save_data_manager.save_game("save_data_1"), this.game.log("データ[1]にセーブしました。");
+      this.game.save_data_manager.save_game("save_data_1"), this.game.log("データ[1]にセーブしました。"), this.game.tutorial_data.complete("データ[1]にセーブする");
     }
 
     save_game_2() {
@@ -2803,97 +2841,101 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_update() {
-      this.game.input_controller.get_press_up() && 0 < this.config_cursor && (this.config_cursor -= 1), this.game.input_controller.get_press_down() && this.config_cursor < this.config_list.length - 1 && (this.config_cursor += 1), (this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && this.function_list[this.config_cursor](), this.game.input_controller.get_mouse_press() && this.on_click(this.game.input_controller.mouse_x - Rt.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - Rt.MENU_MARGIN_TOP);
+      this.game.input_controller.get_press_up() && 0 < this.config_cursor && (this.config_cursor -= 1), this.game.input_controller.get_press_down() && this.config_cursor < this.config_list.length - 1 && (this.config_cursor += 1), (this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && this.function_list[this.config_cursor](), this.game.input_controller.get_mouse_press() && this.on_click(this.game.input_controller.mouse_x - At.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - At.MENU_MARGIN_TOP);
     }
 
     on_click(t, i) {
       for (let e = 0; e < 10; e++) {
-        let s = Nt.LIST_Y + Nt.LIST_TEXT_MARGIN_TOP + Nt.LIST_CURSOR_ADJUST + Nt.LIST_TEXT_HEIGHT * e;
-        Nt.LIST_X < t && t < Nt.LIST_X + Nt.LIST_WIDTH && s - Nt.LIST_TEXT_HEIGHT < i && i < s && (e == this.config_cursor ? this.function_list[this.config_cursor]() : this.config_cursor = e);
+        let s = Lt.LIST_Y + Lt.LIST_TEXT_MARGIN_TOP + Lt.LIST_CURSOR_ADJUST + Lt.LIST_TEXT_HEIGHT * e;
+        Lt.LIST_X < t && t < Lt.LIST_X + Lt.LIST_WIDTH && s - Lt.LIST_TEXT_HEIGHT < i && i < s && (e == this.config_cursor ? this.function_list[this.config_cursor]() : this.config_cursor = e);
       }
     }
 
     on_draw(t) {
-      t.fillStyle = Nt.TITLE_COLOR, t.font = Nt.TITLE_FONT, t.fillText("コンフィグ Config", Nt.TITLE_X, Nt.TITLE_Y), t.fillStyle = "rgb(20,20,20)", t.fillRect(Nt.LIST_X, Nt.LIST_Y, Nt.LIST_WIDTH, Nt.LIST_HEIGHT);
+      t.fillStyle = Lt.TITLE_COLOR, t.font = Lt.TITLE_FONT, t.fillText("コンフィグ Config", Lt.TITLE_X, Lt.TITLE_Y), t.fillStyle = "rgb(20,20,20)", t.fillRect(Lt.LIST_X, Lt.LIST_Y, Lt.LIST_WIDTH, Lt.LIST_HEIGHT);
 
-      for (let i = 0; i < 10; i++) i == this.config_cursor && (t.fillStyle = Nt.LIST_CURSOR_COLOR, t.fillRect(Nt.LIST_X, Nt.LIST_Y + Nt.LIST_TEXT_MARGIN_TOP + Nt.LIST_CURSOR_ADJUST + Nt.LIST_TEXT_HEIGHT * i, Nt.LIST_WIDTH, -Nt.LIST_TEXT_HEIGHT)), this.config_list[i] && (t.fillStyle = Nt.LIST_TEXT_COLOR, t.font = Nt.LIST_TEXT_FONT, t.fillText(this.config_list[i], Nt.LIST_X + Nt.LIST_TEXT_MARGIN_LEFT, Nt.LIST_Y + Nt.LIST_TEXT_MARGIN_TOP + Nt.LIST_TEXT_HEIGHT * i));
+      for (let i = 0; i < 10; i++) i == this.config_cursor && (t.fillStyle = Lt.LIST_CURSOR_COLOR, t.fillRect(Lt.LIST_X, Lt.LIST_Y + Lt.LIST_TEXT_MARGIN_TOP + Lt.LIST_CURSOR_ADJUST + Lt.LIST_TEXT_HEIGHT * i, Lt.LIST_WIDTH, -Lt.LIST_TEXT_HEIGHT)), this.config_list[i] && (t.fillStyle = Lt.LIST_TEXT_COLOR, t.font = Lt.LIST_TEXT_FONT, t.fillText(this.config_list[i], Lt.LIST_X + Lt.LIST_TEXT_MARGIN_LEFT, Lt.LIST_Y + Lt.LIST_TEXT_MARGIN_TOP + Lt.LIST_TEXT_HEIGHT * i));
 
-      t.font = Nt.DESC_TEXT_FONT;
+      t.font = Lt.DESC_TEXT_FONT;
     }
 
   }
 
-  _defineProperty(Nt, "TITLE_X", 100);
+  _defineProperty(Lt, "TITLE_X", 100);
 
-  _defineProperty(Nt, "TITLE_Y", 40);
+  _defineProperty(Lt, "TITLE_Y", 40);
 
-  _defineProperty(Nt, "TITLE_COLOR", "rgb(20,20,20)");
+  _defineProperty(Lt, "TITLE_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Nt, "TITLE_FONT", "bold 32px monospace");
+  _defineProperty(Lt, "TITLE_FONT", "bold 32px monospace");
 
-  _defineProperty(Nt, "LIST_X", 20);
+  _defineProperty(Lt, "LIST_X", 20);
 
-  _defineProperty(Nt, "LIST_Y", 60);
+  _defineProperty(Lt, "LIST_Y", 60);
 
-  _defineProperty(Nt, "LIST_WIDTH", 400);
+  _defineProperty(Lt, "LIST_WIDTH", 400);
 
-  _defineProperty(Nt, "LIST_HEIGHT", 320);
+  _defineProperty(Lt, "LIST_HEIGHT", 320);
 
-  _defineProperty(Nt, "LIST_TEXT_MARGIN_LEFT", 24);
+  _defineProperty(Lt, "LIST_TEXT_MARGIN_LEFT", 24);
 
-  _defineProperty(Nt, "LIST_TEXT_MARGIN_TOP", 30);
+  _defineProperty(Lt, "LIST_TEXT_MARGIN_TOP", 30);
 
-  _defineProperty(Nt, "LIST_TEXT_FONT", "bold 20px monospace");
+  _defineProperty(Lt, "LIST_TEXT_FONT", "bold 20px monospace");
 
-  _defineProperty(Nt, "LIST_TEXT_COLOR", "rgb(240,240,240)");
+  _defineProperty(Lt, "LIST_TEXT_COLOR", "rgb(240,240,240)");
 
-  _defineProperty(Nt, "LIST_TEXT_COLOR_DISABLE", "rgb(100,100,100)");
+  _defineProperty(Lt, "LIST_TEXT_COLOR_DISABLE", "rgb(100,100,100)");
 
-  _defineProperty(Nt, "LIST_TEXT_HEIGHT", 30);
+  _defineProperty(Lt, "LIST_TEXT_HEIGHT", 30);
 
-  _defineProperty(Nt, "LIST_CURSOR_COLOR", "rgb(20,150,20)");
+  _defineProperty(Lt, "LIST_CURSOR_COLOR", "rgb(20,150,20)");
 
-  _defineProperty(Nt, "LIST_CURSOR_ADJUST", 6);
+  _defineProperty(Lt, "LIST_CURSOR_ADJUST", 6);
 
-  _defineProperty(Nt, "DESC_TEXT_X", 340);
+  _defineProperty(Lt, "DESC_TEXT_X", 340);
 
-  _defineProperty(Nt, "DESC_TEXT_Y", 60);
+  _defineProperty(Lt, "DESC_TEXT_Y", 60);
 
-  _defineProperty(Nt, "DESC_TEXT_FONT", "bold 18px monospace");
+  _defineProperty(Lt, "DESC_TEXT_FONT", "bold 18px monospace");
 
-  _defineProperty(Nt, "DESC_TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Lt, "DESC_TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Nt, "DESC_TEXT_COLOR_GREEN", "rgb(20,200,20)");
+  _defineProperty(Lt, "DESC_TEXT_COLOR_GREEN", "rgb(20,200,20)");
 
-  _defineProperty(Nt, "DESC_TEXT_COLOR_RED", "rgb(200,20,20)");
+  _defineProperty(Lt, "DESC_TEXT_COLOR_RED", "rgb(200,20,20)");
 
-  _defineProperty(Nt, "DESC_TEXT_HEIGHT", 28);
+  _defineProperty(Lt, "DESC_TEXT_HEIGHT", 28);
 
-  _defineProperty(Nt, "CONFIG_BUTTON_X", 400);
+  _defineProperty(Lt, "CONFIG_BUTTON_X", 400);
 
-  _defineProperty(Nt, "CONFIG_BUTTON_Y", 330);
+  _defineProperty(Lt, "CONFIG_BUTTON_Y", 330);
 
-  _defineProperty(Nt, "CONFIG_BUTTON_HEIGHT", 50);
+  _defineProperty(Lt, "CONFIG_BUTTON_HEIGHT", 50);
 
-  _defineProperty(Nt, "CONFIG_BUTTON_WIDTH", 200);
+  _defineProperty(Lt, "CONFIG_BUTTON_WIDTH", 200);
 
-  _defineProperty(Nt, "CONFIG_BUTTON_COLOR", "rgb(160,160,160)");
+  _defineProperty(Lt, "CONFIG_BUTTON_COLOR", "rgb(160,160,160)");
 
-  _defineProperty(Nt, "CONFIG_BUTTON_TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Lt, "CONFIG_BUTTON_TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Nt, "CONFIG_BUTTON_FONT", "bold 24px monospace");
+  _defineProperty(Lt, "CONFIG_BUTTON_FONT", "bold 24px monospace");
 
-  _defineProperty(Nt, "CONFIG_BUTTON_TEXT_Y", 32);
+  _defineProperty(Lt, "CONFIG_BUTTON_TEXT_Y", 32);
 
-  _defineProperty(Nt, "CONFIG_BUTTON_TEXT_X", 45);
+  _defineProperty(Lt, "CONFIG_BUTTON_TEXT_X", 45);
 
-  class Lt {
+  class Mt {
     constructor(t) {
-      this.game = t, this.tutorial_list = [], this.condition_check_timer_max = 10, this.condition_check_timer_count = this.condition_check_timer_max, this.setup_tutorial();
+      this.game = t, this.tutorial_list = [], this.condition_check_timer_max = 10, this.condition_check_timer_count = this.condition_check_timer_max, this.complete_flag_list = [], this.setup_tutorial();
     }
 
     get_list() {
       return this.tutorial_list;
+    }
+
+    complete(t) {
+      this.complete_flag_list[t] = !0;
     }
 
     setup_tutorial() {
@@ -2906,7 +2948,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         condition_func: function condition_func(t) {
           return !0;
         }
-      }), t.check_list.push(this.desc_only("全項目を達成したら")), t.check_list.push(this.desc_only("下の完了ボタンを押して")), t.check_list.push(this.desc_only("報酬を受け取れます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("tree_ryuuboku"), t.reword_tool_item.set_name("マテリアル: 木材 x 3"), t.reword_tool_item.add_material("wood", 3), this.tutorial_list.push(t), t = {}, t.title = "基本操作 1", t.check_list = [], t.check_list.push({
+      }), t.check_list.push(this.desc_only("全項目を達成したら")), t.check_list.push(this.desc_only("下の完了ボタンを押して")), t.check_list.push(this.desc_only("報酬を受け取れます。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("tree_ryuuboku"), t.reword_tool_item.set_name("マテリアル: 木材 x 10"), t.reword_tool_item.add_material("wood", 10), this.tutorial_list.push(t), t = {}, t.title = "基本操作 1", t.check_list = [], t.check_list.push({
         description: "左右移動: 矢印キー左右 or A,D",
         is_need_check: !0,
         checked: !1,
@@ -2934,7 +2976,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         condition_func: function condition_func(t) {
           return !0;
         }
-      }), t.check_list.push(this.desc_only(" 　　or 画面左上のメニューボタン")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("glass_bin6_clear"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "基本操作 2", t.check_list = [], t.check_list.push({
+      }), t.check_list.push(this.desc_only(" 　　or 画面左上のメニューボタン")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("glass_bin6_clear"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "基本操作 2", t.check_list = [], t.check_list.push({
         description: "アイテム使用: マウスクリック",
         is_need_check: !1,
         checked: !1,
@@ -2955,7 +2997,77 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         condition_func: function condition_func(t) {
           return 1 != t.world.camera.zoom;
         }
-      }), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("glass_bin6_clear"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "インベントリ メニュー", t.check_list = [], t.check_list.push(this.desc_only("アイテムの管理")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "クラフト メニュー", t.check_list = [], t.check_list.push(this.desc_only("アイテムの製作")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "マテリアル メニュー", t.check_list = [], t.check_list.push(this.desc_only("マテリアルの確認")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "コンフィグ メニュー", t.check_list = [], t.check_list.push(this.desc_only("セーブ、各種設定")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "ステータス 1", t.check_list = [], t.check_list.push(this.desc_only("左下のゲージ")), t.check_list.push(this.desc_only("体力")), t.check_list.push(this.desc_only("スタミナ")), t.check_list.push(this.desc_only("幸福度")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "ステータス 2", t.check_list = [], t.check_list.push(this.desc_only("左下のゲージ")), t.check_list.push(this.desc_only("食料")), t.check_list.push(this.desc_only("水分")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "海について", t.check_list = [], t.check_list.push(this.desc_only("海に落ちても水面を泳ぐことはできます。")), t.check_list.push(this.desc_only("泳ぐには、スタミナを消費します。")), t.check_list.push(this.desc_only("なくなると体力を消費し、")), t.check_list.push(this.desc_only("最後には死んでしまいます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "デスペナルティ", t.check_list = [], t.check_list.push(this.desc_only("敵の攻撃や溺れたりして死んでしまうと")), t.check_list.push(this.desc_only("幽霊になってしばらく動けません。")), t.check_list.push(this.desc_only("また、食料と水分が残り1割になります。")), t.check_list.push(this.desc_only("幽霊の間は体力が徐々に回復し、")), t.check_list.push(this.desc_only("満タンになると元の状態に戻ります。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "ブロックの設置", t.check_list = [], t.check_list.push(this.desc_only("ブロックの設置")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "食料の確保", t.check_list = [], t.check_list.push(this.desc_only("釣り竿の作成")), t.check_list.push(this.desc_only("クリックでルアーを投げる")), t.check_list.push(this.desc_only("ルアーが沈んだらクリックで引き上げる")), t.check_list.push(this.desc_only("魚が釣れます")), t.check_list.push(this.desc_only("魚以外のものも釣れます")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "飲み水の確保(蒸留)", t.check_list = [], t.check_list.push(this.desc_only("クラフトで蒸留ボトルを作成")), t.check_list.push(this.desc_only("蒸留ボトルを使用すると、水を飲めます。")), t.check_list.push(this.desc_only("焚き火を作成、設置")), t.check_list.push(this.desc_only("蒸留ボトルを持って焚き火をクリックする")), t.check_list.push(this.desc_only("しばらく待てば、")), t.check_list.push(this.desc_only("蒸留ボトルに再度、水が満たされます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "飲み水の確保(バケツ)", t.check_list = [], t.check_list.push(this.desc_only("クラフトで給水バケツを作成、設置")), t.check_list.push(this.desc_only("給水ボトルをクリックすれば、")), t.check_list.push(this.desc_only("水を飲むことができます。")), t.check_list.push(this.desc_only("長時間待てば、")), t.check_list.push(this.desc_only("給水ボトルに再度、水が満たされます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "焚き火の補充", t.check_list = [], t.check_list.push(this.desc_only("クラフトで燃料マテリアルを作成")), t.check_list.push(this.desc_only("クラフトで燃料アイテムを作成")), t.check_list.push(this.desc_only("燃料を持って焚き火をクリックする")), t.check_list.push(this.desc_only("焚き火が再度使えるようになります。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "鳥の狩猟", t.check_list = [], t.check_list.push(this.desc_only("クラフトで弓を作成")), t.check_list.push(this.desc_only("弓を使用すると、敵にダメージを与える")), t.check_list.push(this.desc_only("矢を発射することができます。")), t.check_list.push(this.desc_only("カモメ等を攻撃して狩りましょう。")), t.check_list.push(this.desc_only("羽根マテリアルを入手")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("feather_white"), t.reword_tool_item.set_name("マテリアル: 羽根 x 1"), t.reword_tool_item.add_material("feather", 1), this.tutorial_list.push(t), t = {}, t.title = "舟の前進", t.check_list = [], t.check_list.push(this.desc_only("クラフトでオールを作成")), t.check_list.push(this.desc_only("水面近くでオールを使うと、")), t.check_list.push(this.desc_only("舟が前に進みます。")), t.check_list.push(this.desc_only("舟を前に進めていると、")), t.check_list.push(this.desc_only("多くの素材を持った敵対的な鳥が来ます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "舟ブロックの撤去と修理", t.check_list = [], t.check_list.push(this.desc_only("クラフトで撤去ハンマーを作成")), t.check_list.push(this.desc_only("ハンマーで舟ブロックをクリックすると")), t.check_list.push(this.desc_only("そのブロックをアイテムに還元できます。")), t.check_list.push(this.desc_only("クラフトで修理レンチを作成")), t.check_list.push(this.desc_only("レンチで舟ブロックをクリックすると")), t.check_list.push(this.desc_only("敵の攻撃で減った耐久力を回復できます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "レベルフラッグ", t.check_list = [], t.check_list.push(this.desc_only("レベルフラッグ[1]を作成する")), t.check_list.push(this.desc_only("レベルフラッグを舟に設置する")), t.check_list.push(this.desc_only("より強い鳥が現れるようになります。")), t.check_list.push(this.desc_only("強い鳥を倒せば、")), t.check_list.push(this.desc_only("新しいマテリアルが入手できます。")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "", t.check_list = [], t.check_list.push(this.desc_only("")), t.reword_tool_item = new x(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t);
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("glass_bin6_clear"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "インベントリ メニュー", t.check_list = [], t.check_list.push(this.desc_only("持っているアイテムを管理する画面です。")), t.check_list.push(this.desc_only("クリックでアイテムを移動できます。")), t.check_list.push(this.desc_only("1-9キーでアイテムを枠に移動させます。")), t.check_list.push(this.desc_only("ゴミ箱にアイテムを置くと消去できます。")), t.check_list.push({
+        description: "インベントリ メニューを開く",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 1 == t.hud.hud_menu.menu_list_cursor;
+        }
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("alohashirt_gray"), t.reword_tool_item.set_name("マテリアル: 布切れ x 10"), t.reword_tool_item.add_material("cloth", 10), this.tutorial_list.push(t), t = {}, t.title = "クラフト メニュー", t.check_list = [], t.check_list.push(this.desc_only("マテリアルからアイテムを製作する画面です。")), t.check_list.push(this.desc_only("作りたいアイテムを選び、")), t.check_list.push(this.desc_only("右下の製作ボタンで、")), t.check_list.push(this.desc_only("マテリアルを消費してアイテムを作ります。")), t.check_list.push({
+        description: "クラフト メニューを開く",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 2 == t.hud.hud_menu.menu_list_cursor;
+        }
+      }), t.check_list.push({
+        description: "釣り竿 Lv1を製作する",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return t.hud.item_slot.has_item_instanceof(Tt);
+        }
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("gomi_can"), t.reword_tool_item.set_name("マテリアル: 鉄クズ x 10"), t.reword_tool_item.add_material("iron", 10), this.tutorial_list.push(t), t = {}, t.title = "マテリアル メニュー", t.check_list = [], t.check_list.push(this.desc_only("持っているマテリアルを確認する画面です。")), t.check_list.push(this.desc_only("マテリアルとは、")), t.check_list.push(this.desc_only("アイテムを作るための素材です。")), t.check_list.push(this.desc_only("所持上限は基本的にありません。")), t.check_list.push({
+        description: "マテリアル メニューを開く",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 3 == t.hud.hud_menu.menu_list_cursor;
+        }
+      }), t.check_list.push({
+        description: "鉄クズを30個以上集める",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 3 == t.materials.get_material("iron");
+        }
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("tree_ryuuboku"), t.reword_tool_item.set_name("マテリアル: 木材 x 20"), t.reword_tool_item.add_material("wood", 20), this.tutorial_list.push(t), t = {}, t.title = "コンフィグ メニュー", t.check_list = [], t.check_list.push(this.desc_only("ゲームの保存や設定変更をする画面です。")), t.check_list.push({
+        description: "コンフィグ メニューを開く",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 4 == t.hud.hud_menu.menu_list_cursor;
+        }
+      }), t.check_list.push({
+        description: "データ[1]にセーブする",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 1 == t.tutorial_data.complete_flag_list[this.description];
+        }
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "ステータス", t.check_list = [], t.check_list.push(this.desc_only("画面左下に並んだゲージは、")), t.check_list.push(this.desc_only("プレイヤーのステータスです。")), t.reword_tool_item = new M(this.game), this.tutorial_list.push(t), t = {}, t.title = "ステータス: 体力", t.check_list = [], t.check_list.push(this.desc_only("左下の赤いゲージは体力で、")), t.check_list.push(this.desc_only("なくなると死んでしまいます。")), t.check_list.push(this.desc_only("鳥の攻撃に当たったり、")), t.check_list.push(this.desc_only("食事を取らずに行動し続けると")), t.check_list.push(this.desc_only("減ってしまいます。")), t.check_list.push(this.desc_only("体力は少しずつ自然に回復します。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("tree_ryuuboku"), t.reword_tool_item.set_name("マテリアル: 木材 x 1"), t.reword_tool_item.add_material("wood", 1), this.tutorial_list.push(t), t = {}, t.title = "ステータス: スタミナ", t.check_list = [], t.check_list.push(this.desc_only("左下の黄色のゲージはスタミナで、")), t.check_list.push(this.desc_only("ジャンプやアイテム使用などの")), t.check_list.push(this.desc_only("行動によって減少します。")), t.check_list.push(this.desc_only("なくなるとスタミナを使う行動ができません。")), t.check_list.push(this.desc_only("スタミナは自然に回復しますが、")), t.check_list.push(this.desc_only("回復には食料と水分を消費します。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("tree_ryuuboku"), t.reword_tool_item.set_name("マテリアル: 木材 x 1"), t.reword_tool_item.add_material("wood", 1), this.tutorial_list.push(t), t = {}, t.title = "ステータス: 食料と水分", t.check_list = [], t.check_list.push(this.desc_only("左下の橙と青のゲージは食料と水分で、")), t.check_list.push(this.desc_only("スタミナを回復するために消費します。")), t.check_list.push(this.desc_only("なくなるとスタミナが徐々に減少し、")), t.check_list.push(this.desc_only("次に体力が減少し、最後には死んでしまいます。")), t.check_list.push(this.desc_only("食料や水を摂ることで回復できます。")), t.reword_tool_item = new w(this.game), t.reword_tool_item.set_image("petbottle_juice"), t.reword_tool_item.set_name("フルーツジュース"), t.reword_tool_item.saving_data.hunger_value = 5, t.reword_tool_item.saving_data.thirst_value = 35, this.tutorial_list.push(t), t = {}, t.title = "海について", t.check_list = [], t.check_list.push(this.desc_only("海に落ちても水面を泳ぐことはできます。")), t.check_list.push(this.desc_only("泳いでいる間、スタミナを消費します。")), t.check_list.push(this.desc_only("なくなると体力を消費し、")), t.check_list.push(this.desc_only("最後には死んでしまいます。")), t.check_list.push({
+        description: "海に飛び込んでみる",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 1 == t.world.player.is_in_sea;
+        }
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "デスペナルティ", t.check_list = [], t.check_list.push(this.desc_only("敵の攻撃や溺れたりして死んでしまうと")), t.check_list.push(this.desc_only("幽霊になってしばらく動けません。")), t.check_list.push(this.desc_only("また、食料と水分が残り1割になります。")), t.check_list.push(this.desc_only("幽霊の間は体力が徐々に回復し、")), t.check_list.push(this.desc_only("満タンになると元の状態に戻ります。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "舟ブロックの設置", t.check_list = [], t.check_list.push(this.desc_only("舟ブロックを持ってクリックすることで")), t.check_list.push(this.desc_only("ブロックを設置して舟を拡張できます。")), t.check_list.push(this.desc_only("隣にブロックがないと置けません。")), t.check_list.push({
+        description: "横方向に舟を大きくする",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 7 < t.world.ship.block_array.length;
+        }
+      }), t.check_list.push({
+        description: "上方向に舟を大きくする",
+        is_need_check: !0,
+        checked: !1,
+        condition_func: function condition_func(t) {
+          return 4 < t.world.ship.block_array[0].length;
+        }
+      }), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "食料の確保", t.check_list = [], t.check_list.push(this.desc_only("釣り竿の作成")), t.check_list.push(this.desc_only("クリックでルアーを投げる")), t.check_list.push(this.desc_only("ルアーが沈んだらクリックで引き上げる")), t.check_list.push(this.desc_only("魚が釣れます")), t.check_list.push(this.desc_only("魚以外のものも釣れます")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "飲み水の確保(蒸留)", t.check_list = [], t.check_list.push(this.desc_only("クラフトで蒸留ボトルを作成")), t.check_list.push(this.desc_only("蒸留ボトルを使用すると、水を飲めます。")), t.check_list.push(this.desc_only("焚き火を作成、設置")), t.check_list.push(this.desc_only("蒸留ボトルを持って焚き火をクリックする")), t.check_list.push(this.desc_only("しばらく待てば、")), t.check_list.push(this.desc_only("蒸留ボトルに再度、水が満たされます。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "飲み水の確保(バケツ)", t.check_list = [], t.check_list.push(this.desc_only("クラフトで給水バケツを作成、設置")), t.check_list.push(this.desc_only("給水ボトルをクリックすれば、")), t.check_list.push(this.desc_only("水を飲むことができます。")), t.check_list.push(this.desc_only("長時間待てば、")), t.check_list.push(this.desc_only("給水ボトルに再度、水が満たされます。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "焚き火の補充", t.check_list = [], t.check_list.push(this.desc_only("クラフトで燃料マテリアルを作成")), t.check_list.push(this.desc_only("クラフトで燃料アイテムを作成")), t.check_list.push(this.desc_only("燃料を持って焚き火をクリックする")), t.check_list.push(this.desc_only("焚き火が再度使えるようになります。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "鳥の狩猟", t.check_list = [], t.check_list.push(this.desc_only("クラフトで弓を作成")), t.check_list.push(this.desc_only("弓を使用すると、敵にダメージを与える")), t.check_list.push(this.desc_only("矢を発射することができます。")), t.check_list.push(this.desc_only("カモメ等を攻撃して狩りましょう。")), t.check_list.push(this.desc_only("羽根マテリアルを入手")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("feather_white"), t.reword_tool_item.set_name("マテリアル: 羽根 x 1"), t.reword_tool_item.add_material("feather", 1), this.tutorial_list.push(t), t = {}, t.title = "舟の前進", t.check_list = [], t.check_list.push(this.desc_only("クラフトでオールを作成")), t.check_list.push(this.desc_only("水面近くでオールを使うと、")), t.check_list.push(this.desc_only("舟が前に進みます。")), t.check_list.push(this.desc_only("舟を前に進めていると、")), t.check_list.push(this.desc_only("多くの素材を持った敵対的な鳥が来ます。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "舟ブロックの撤去と修理", t.check_list = [], t.check_list.push(this.desc_only("クラフトで撤去ハンマーを作成")), t.check_list.push(this.desc_only("ハンマーで舟ブロックをクリックすると")), t.check_list.push(this.desc_only("そのブロックをアイテムに還元できます。")), t.check_list.push(this.desc_only("クラフトで修理レンチを作成")), t.check_list.push(this.desc_only("レンチで舟ブロックをクリックすると")), t.check_list.push(this.desc_only("敵の攻撃で減った耐久力を回復できます。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "レベルフラッグ", t.check_list = [], t.check_list.push(this.desc_only("レベルフラッグ[1]を作成する")), t.check_list.push(this.desc_only("レベルフラッグを舟に設置する")), t.check_list.push(this.desc_only("より強い鳥が現れるようになります。")), t.check_list.push(this.desc_only("強い鳥を倒せば、")), t.check_list.push(this.desc_only("新しいマテリアルが入手できます。")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t), t = {}, t.title = "", t.check_list = [], t.check_list.push(this.desc_only("")), t.reword_tool_item = new O(this.game), t.reword_tool_item.set_image("present_box"), t.reword_tool_item.set_name("マテリアル: ビン x 1"), t.reword_tool_item.add_material("jar", 1), this.tutorial_list.push(t);
 
       for (let t of this.tutorial_list) t.cleared = !1;
     }
@@ -3003,9 +3115,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Mt {
+  class Rt {
     constructor(t) {
-      this.game = t, this.tutorial_data = new Lt(this.game), this.tutorial_list = this.game.tutorial_data.get_list(), this.config_cursor = 0, this.config_scroll = 0, this.menu_icon = this.game.image_library.get_image("setsumeisyo_manual"), this.batsu_icon = this.game.image_library.get_image("batsu"), this.check_icon = this.game.image_library.get_image("check");
+      this.game = t, this.tutorial_data = new Mt(this.game), this.tutorial_list = this.game.tutorial_data.get_list(), this.config_cursor = 0, this.config_scroll = -1, this.menu_icon = this.game.image_library.get_image("setsumeisyo_manual"), this.batsu_icon = this.game.image_library.get_image("batsu"), this.check_icon = this.game.image_library.get_image("check"), this.arrow_up_icon = this.game.image_library.get_image("arrow_up"), this.arrow_down_icon = this.game.image_library.get_image("arrow_down"), this.scroll_amount = 0;
     }
 
     get_menu_icon() {
@@ -3013,19 +3125,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_update() {
-      this.game.input_controller.get_press_up() && 0 < this.config_cursor && (this.config_cursor -= 1), this.game.input_controller.get_press_down() && this.config_cursor < this.tutorial_list.length - 1 && (this.config_cursor += 1), this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space(), this.game.input_controller.get_mouse_press() && this.on_click(this.game.input_controller.mouse_x - Rt.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - Rt.MENU_MARGIN_TOP);
+      this.game.input_controller.get_press_up() && (2 < this.config_cursor ? this.config_cursor -= 1 : 0 <= this.scroll_amount ? this.scroll_amount -= 1 : 0 < this.config_cursor && (this.config_cursor -= 1)), this.game.input_controller.get_press_down() && (this.config_cursor < Rt.DOWN_ARROW_INDEX - 2 ? this.config_cursor += 1 : this.scroll_amount + Rt.DOWN_ARROW_INDEX < this.tutorial_list.length ? this.scroll_amount += 1 : this.config_cursor < Rt.DOWN_ARROW_INDEX - 1 && (this.config_cursor += 1)), this.game.input_controller.get_wheel_up() && (0 <= this.scroll_amount ? this.scroll_amount -= 1 : 1 < this.config_cursor && (this.config_cursor -= 1)), this.game.input_controller.get_wheel_down() && (this.scroll_amount + Rt.DOWN_ARROW_INDEX < this.tutorial_list.length ? this.scroll_amount += 1 : this.config_cursor < Rt.DOWN_ARROW_INDEX - 1 && (this.config_cursor += 1)), this.game.input_controller.get_mouse_press() && this.on_click(this.game.input_controller.mouse_x - At.MENU_MARGIN_LEFT, this.game.input_controller.mouse_y - At.MENU_MARGIN_TOP);
     }
 
     on_click(t, i) {
-      for (let e = 0; e < this.tutorial_list.length; e++) {
-        let s = Mt.LIST_Y + Mt.LIST_TEXT_MARGIN_TOP + Mt.LIST_CURSOR_ADJUST + Mt.LIST_TEXT_HEIGHT * e;
-        Mt.LIST_X < t && t < Mt.LIST_X + Mt.LIST_WIDTH && s < i && i < s + Mt.LIST_TEXT_HEIGHT && (e == this.config_cursor || (this.config_cursor = e));
+      for (let e = 0; e <= Rt.DOWN_ARROW_INDEX; e++) {
+        let s = Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + Rt.LIST_CURSOR_ADJUST + Rt.LIST_TEXT_HEIGHT * e;
+        Rt.LIST_X < t && t < Rt.LIST_X + Rt.LIST_WIDTH && s < i && i < s + Rt.LIST_TEXT_HEIGHT && (0 == e ? 0 <= this.scroll_amount ? this.scroll_amount -= 1 : 1 < this.config_cursor && (this.config_cursor -= 1) : e == Rt.DOWN_ARROW_INDEX ? this.scroll_amount + Rt.DOWN_ARROW_INDEX < this.tutorial_list.length ? this.scroll_amount += 1 : this.config_cursor < Rt.DOWN_ARROW_INDEX - 1 && (this.config_cursor += 1) : e == this.config_cursor || (this.config_cursor = e));
       }
 
-      Mt.CONFIG_BUTTON_X < t && t < Mt.CONFIG_BUTTON_X + Mt.CONFIG_BUTTON_WIDTH && Mt.CONFIG_BUTTON_Y < i && i < Mt.CONFIG_BUTTON_Y + Mt.CONFIG_BUTTON_HEIGHT && this.check_can_get_reword(this.tutorial_list[this.config_cursor]) && (this.tutorial_list[this.config_cursor].cleared = !0, this.game.world.give_tool_item_player(this.tutorial_list[this.config_cursor].reword_tool_item));
+      Rt.CONFIG_BUTTON_X < t && t < Rt.CONFIG_BUTTON_X + Rt.CONFIG_BUTTON_WIDTH && Rt.CONFIG_BUTTON_Y < i && i < Rt.CONFIG_BUTTON_Y + Rt.CONFIG_BUTTON_HEIGHT && this.check_can_get_reword(this.tutorial_list[this.calc_cursor_in_scroll()]) && (this.tutorial_list[this.calc_cursor_in_scroll()].cleared = !0, this.game.world.give_tool_item_player(this.tutorial_list[this.calc_cursor_in_scroll()].reword_tool_item));
     }
 
     check_can_get_reword(t) {
+      if (this.config_cursor <= 0 || Rt.DOWN_ARROW_INDEX <= this.config_cursor) return !1;
       if (t.cleared) return !1;
 
       for (let i of t.check_list) if (i.is_need_check && !i.checked) return !1;
@@ -3033,97 +3146,110 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return !0;
     }
 
+    calc_cursor_in_scroll() {
+      return this.config_cursor + this.scroll_amount;
+    }
+
     on_draw(t) {
-      t.fillStyle = Mt.TITLE_COLOR, t.font = Mt.TITLE_FONT, t.fillText("チュートリアル Tutorial", Mt.TITLE_X, Mt.TITLE_Y), t.textBaseline = "top", t.fillStyle = "rgb(20,20,20)", t.fillRect(Mt.LIST_X, Mt.LIST_Y, Mt.LIST_WIDTH, Mt.LIST_HEIGHT);
+      t.fillStyle = Rt.TITLE_COLOR, t.font = Rt.TITLE_FONT, t.fillText("チュートリアル Tutorial", Rt.TITLE_X, Rt.TITLE_Y), t.textBaseline = "top", t.fillStyle = "rgb(20,20,20)", t.fillRect(Rt.LIST_X, Rt.LIST_Y, Rt.LIST_WIDTH, Rt.LIST_HEIGHT);
 
-      for (let i = 0; i < this.tutorial_list.length; i++) i == this.config_cursor && (t.fillStyle = Mt.LIST_CURSOR_COLOR, t.fillRect(Mt.LIST_X, Mt.LIST_Y + Mt.LIST_TEXT_MARGIN_TOP + Mt.LIST_CURSOR_ADJUST + Mt.LIST_TEXT_HEIGHT * i, Mt.LIST_WIDTH, Mt.LIST_TEXT_HEIGHT)), this.tutorial_list[i] && (t.fillStyle = Mt.LIST_TEXT_COLOR, t.font = Mt.LIST_TEXT_FONT, t.fillText(this.tutorial_list[i].title, Mt.LIST_X + Mt.LIST_TEXT_MARGIN_LEFT, Mt.LIST_Y + Mt.LIST_TEXT_MARGIN_TOP + Mt.LIST_TEXT_HEIGHT * i), this.tutorial_list[i].cleared && t.drawImage(this.check_icon, Mt.LIST_X, Mt.LIST_Y + Mt.LIST_TEXT_MARGIN_TOP + Mt.LIST_TEXT_HEIGHT * i - .25 * Mt.LIST_TEXT_HEIGHT, Mt.LIST_TEXT_HEIGHT, Mt.LIST_TEXT_HEIGHT));
+      for (let i = 0; i <= Rt.DOWN_ARROW_INDEX; i++) i == this.config_cursor && (t.fillStyle = Rt.LIST_CURSOR_COLOR, t.fillRect(Rt.LIST_X, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + Rt.LIST_CURSOR_ADJUST + Rt.LIST_TEXT_HEIGHT * i, Rt.LIST_WIDTH, Rt.LIST_TEXT_HEIGHT)), this.tutorial_list[i + this.scroll_amount] && 0 < i && i < Rt.DOWN_ARROW_INDEX && (t.fillStyle = Rt.LIST_TEXT_COLOR, t.font = Rt.LIST_TEXT_FONT, t.fillText(this.tutorial_list[i + this.scroll_amount].title, Rt.LIST_X + Rt.LIST_TEXT_MARGIN_LEFT, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + Rt.LIST_TEXT_HEIGHT * i), this.tutorial_list[i + this.scroll_amount].cleared && t.drawImage(this.check_icon, Rt.LIST_X, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + Rt.LIST_TEXT_HEIGHT * i - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT));
 
-      t.fillStyle = Mt.DESC_TEXT_COLOR, t.fillText(this.tutorial_list[this.config_cursor].title, Mt.DESC_TEXT_X, Mt.DESC_TEXT_Y - 10), t.font = Mt.DESC_TEXT_FONT;
+      if (t.font = Rt.DESC_TEXT_FONT, t.fillStyle = Rt.DESC_TEXT_COLOR, 0 == this.config_cursor) t.fillText("リストを上にスクロールします。", Rt.DESC_TEXT_X, Rt.DESC_TEXT_Y + 1 * Rt.LIST_TEXT_HEIGHT);else if (this.config_cursor == Rt.DOWN_ARROW_INDEX) t.fillText("リストを下にスクロールします。", Rt.DESC_TEXT_X, Rt.DESC_TEXT_Y + 1 * Rt.LIST_TEXT_HEIGHT);else {
+        t.fillStyle = Rt.DESC_TEXT_COLOR, t.fillText(this.tutorial_list[this.calc_cursor_in_scroll()].title, Rt.DESC_TEXT_X, Rt.DESC_TEXT_Y - 10);
 
-      for (let i = 0; i < this.tutorial_list[this.config_cursor].check_list.length; i++) t.fillStyle = Mt.DESC_TEXT_COLOR, t.fillText(this.tutorial_list[this.config_cursor].check_list[i].description, Mt.DESC_TEXT_X, Mt.DESC_TEXT_Y + Mt.LIST_TEXT_HEIGHT * (i + 1)), this.tutorial_list[this.config_cursor].check_list[i].is_need_check && (this.tutorial_list[this.config_cursor].check_list[i].checked ? t.drawImage(this.check_icon, Mt.DESC_TEXT_X - Mt.LIST_TEXT_HEIGHT, Mt.DESC_TEXT_Y + Mt.LIST_TEXT_HEIGHT * (i + 1) - .25 * Mt.LIST_TEXT_HEIGHT, Mt.LIST_TEXT_HEIGHT, Mt.LIST_TEXT_HEIGHT) : t.drawImage(this.batsu_icon, Mt.DESC_TEXT_X - Mt.LIST_TEXT_HEIGHT, Mt.DESC_TEXT_Y + Mt.LIST_TEXT_HEIGHT * (i + 1) - .25 * Mt.LIST_TEXT_HEIGHT, Mt.LIST_TEXT_HEIGHT, Mt.LIST_TEXT_HEIGHT));
+        for (let i = 0; i < this.tutorial_list[this.calc_cursor_in_scroll()].check_list.length; i++) t.fillText(this.tutorial_list[this.calc_cursor_in_scroll()].check_list[i].description, Rt.DESC_TEXT_X, Rt.DESC_TEXT_Y + Rt.LIST_TEXT_HEIGHT * (i + 1)), this.tutorial_list[this.calc_cursor_in_scroll()].check_list[i].is_need_check && (this.tutorial_list[this.calc_cursor_in_scroll()].check_list[i].checked ? t.drawImage(this.check_icon, Rt.DESC_TEXT_X - Rt.LIST_TEXT_HEIGHT, Rt.DESC_TEXT_Y + Rt.LIST_TEXT_HEIGHT * (i + 1) - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT) : t.drawImage(this.batsu_icon, Rt.DESC_TEXT_X - Rt.LIST_TEXT_HEIGHT, Rt.DESC_TEXT_Y + Rt.LIST_TEXT_HEIGHT * (i + 1) - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT));
 
-      t.fillText("完了報酬: ", Mt.REWORD_TEXT_X, Mt.REWORD_TEXT_Y), t.drawImage(this.tutorial_list[this.config_cursor].reword_tool_item.get_image(), Mt.REWORD_ICON_X, Mt.REWORD_TEXT_Y - 16, 32, 32), t.fillText(this.tutorial_list[this.config_cursor].reword_tool_item.get_name(), Mt.REWORD_NAME_X, Mt.REWORD_TEXT_Y), t.fillStyle = Mt.CONFIG_BUTTON_COLOR, t.fillRect(Mt.CONFIG_BUTTON_X, Mt.CONFIG_BUTTON_Y, Mt.CONFIG_BUTTON_WIDTH, Mt.CONFIG_BUTTON_HEIGHT), t.fillStyle = Mt.CONFIG_BUTTON_TEXT_COLOR, t.font = Mt.CONFIG_BUTTON_FONT, t.textAlign = "center", this.check_can_get_reword(this.tutorial_list[this.config_cursor]) || (t.fillStyle = Mt.CONFIG_BUTTON_TEXT_COLOR_DISABLE), t.fillText("完了! (Enter)", Mt.CONFIG_BUTTON_X + Mt.CONFIG_BUTTON_TEXT_X, Mt.CONFIG_BUTTON_Y + Mt.CONFIG_BUTTON_TEXT_Y);
+        t.fillText("完了報酬: ", Rt.REWORD_TEXT_X, Rt.REWORD_TEXT_Y), t.drawImage(this.tutorial_list[this.calc_cursor_in_scroll()].reword_tool_item.get_image(), Rt.REWORD_ICON_X, Rt.REWORD_TEXT_Y - 16, 32, 32), t.fillText(this.tutorial_list[this.calc_cursor_in_scroll()].reword_tool_item.get_name(), Rt.REWORD_NAME_X, Rt.REWORD_TEXT_Y);
+      }
+      t.drawImage(this.arrow_up_icon, Rt.LIST_X + Rt.ARROW_1_X, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + 0 * Rt.LIST_TEXT_HEIGHT - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT), t.drawImage(this.arrow_up_icon, Rt.LIST_X + Rt.ARROW_2_X, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + 0 * Rt.LIST_TEXT_HEIGHT - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT), t.drawImage(this.arrow_down_icon, Rt.LIST_X + Rt.ARROW_1_X, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + Rt.LIST_TEXT_HEIGHT * Rt.DOWN_ARROW_INDEX - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT), t.drawImage(this.arrow_down_icon, Rt.LIST_X + Rt.ARROW_2_X, Rt.LIST_Y + Rt.LIST_TEXT_MARGIN_TOP + Rt.LIST_TEXT_HEIGHT * Rt.DOWN_ARROW_INDEX - .25 * Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT, Rt.LIST_TEXT_HEIGHT), t.fillStyle = Rt.CONFIG_BUTTON_COLOR, t.fillRect(Rt.CONFIG_BUTTON_X, Rt.CONFIG_BUTTON_Y, Rt.CONFIG_BUTTON_WIDTH, Rt.CONFIG_BUTTON_HEIGHT), t.fillStyle = Rt.CONFIG_BUTTON_TEXT_COLOR, t.font = Rt.CONFIG_BUTTON_FONT, t.textAlign = "center", this.check_can_get_reword(this.tutorial_list[this.calc_cursor_in_scroll()]) || (t.fillStyle = Rt.CONFIG_BUTTON_TEXT_COLOR_DISABLE), t.fillText("完了! (Enter)", Rt.CONFIG_BUTTON_X + Rt.CONFIG_BUTTON_TEXT_X, Rt.CONFIG_BUTTON_Y + Rt.CONFIG_BUTTON_TEXT_Y);
     }
 
   }
 
-  _defineProperty(Mt, "TITLE_X", 100);
+  _defineProperty(Rt, "TITLE_X", 100);
 
-  _defineProperty(Mt, "TITLE_Y", 40);
+  _defineProperty(Rt, "TITLE_Y", 40);
 
-  _defineProperty(Mt, "TITLE_COLOR", "rgb(20,20,20)");
+  _defineProperty(Rt, "TITLE_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Mt, "TITLE_FONT", "bold 32px monospace");
+  _defineProperty(Rt, "TITLE_FONT", "bold 32px monospace");
 
-  _defineProperty(Mt, "LIST_X", 20);
+  _defineProperty(Rt, "LIST_X", 20);
 
-  _defineProperty(Mt, "LIST_Y", 60);
+  _defineProperty(Rt, "LIST_Y", 60);
 
-  _defineProperty(Mt, "LIST_WIDTH", 300);
+  _defineProperty(Rt, "LIST_WIDTH", 300);
 
-  _defineProperty(Mt, "LIST_HEIGHT", 320);
+  _defineProperty(Rt, "LIST_HEIGHT", 320);
 
-  _defineProperty(Mt, "LIST_TEXT_MARGIN_LEFT", 32);
+  _defineProperty(Rt, "LIST_TEXT_MARGIN_LEFT", 32);
 
-  _defineProperty(Mt, "LIST_TEXT_MARGIN_TOP", 12);
+  _defineProperty(Rt, "LIST_TEXT_MARGIN_TOP", 12);
 
-  _defineProperty(Mt, "LIST_TEXT_FONT", "bold 20px monospace");
+  _defineProperty(Rt, "LIST_TEXT_FONT", "bold 20px monospace");
 
-  _defineProperty(Mt, "LIST_TEXT_COLOR", "rgb(240,240,240)");
+  _defineProperty(Rt, "LIST_TEXT_COLOR", "rgb(240,240,240)");
 
-  _defineProperty(Mt, "LIST_TEXT_COLOR_DISABLE", "rgb(100,100,100)");
+  _defineProperty(Rt, "LIST_TEXT_COLOR_DISABLE", "rgb(100,100,100)");
 
-  _defineProperty(Mt, "LIST_TEXT_HEIGHT", 30);
+  _defineProperty(Rt, "LIST_TEXT_HEIGHT", 30);
 
-  _defineProperty(Mt, "LIST_CURSOR_COLOR", "rgb(20,20,150)");
+  _defineProperty(Rt, "LIST_CURSOR_COLOR", "rgb(20,20,150)");
 
-  _defineProperty(Mt, "LIST_CURSOR_ADJUST", -6);
+  _defineProperty(Rt, "LIST_CURSOR_ADJUST", -6);
 
-  _defineProperty(Mt, "DESC_TEXT_X", 360);
+  _defineProperty(Rt, "DESC_TEXT_X", 360);
 
-  _defineProperty(Mt, "DESC_TEXT_Y", 80);
+  _defineProperty(Rt, "DESC_TEXT_Y", 80);
 
-  _defineProperty(Mt, "DESC_TEXT_FONT", "bold 18px monospace");
+  _defineProperty(Rt, "DESC_TEXT_FONT", "bold 18px monospace");
 
-  _defineProperty(Mt, "DESC_TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Rt, "DESC_TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Mt, "DESC_TEXT_COLOR_GREEN", "rgb(20,200,20)");
+  _defineProperty(Rt, "DESC_TEXT_COLOR_GREEN", "rgb(20,200,20)");
 
-  _defineProperty(Mt, "DESC_TEXT_COLOR_RED", "rgb(200,20,20)");
+  _defineProperty(Rt, "DESC_TEXT_COLOR_RED", "rgb(200,20,20)");
 
-  _defineProperty(Mt, "DESC_TEXT_HEIGHT", 28);
+  _defineProperty(Rt, "DESC_TEXT_HEIGHT", 28);
 
-  _defineProperty(Mt, "REWORD_TEXT_X", 330);
+  _defineProperty(Rt, "REWORD_TEXT_X", 330);
 
-  _defineProperty(Mt, "REWORD_TEXT_Y", 300);
+  _defineProperty(Rt, "REWORD_TEXT_Y", 300);
 
-  _defineProperty(Mt, "REWORD_ICON_X", 420);
+  _defineProperty(Rt, "REWORD_ICON_X", 420);
 
-  _defineProperty(Mt, "REWORD_NAME_X", 470);
+  _defineProperty(Rt, "REWORD_NAME_X", 470);
 
-  _defineProperty(Mt, "CONFIG_BUTTON_X", 400);
+  _defineProperty(Rt, "CONFIG_BUTTON_X", 400);
 
-  _defineProperty(Mt, "CONFIG_BUTTON_Y", 330);
+  _defineProperty(Rt, "CONFIG_BUTTON_Y", 330);
 
-  _defineProperty(Mt, "CONFIG_BUTTON_HEIGHT", 50);
+  _defineProperty(Rt, "CONFIG_BUTTON_HEIGHT", 50);
 
-  _defineProperty(Mt, "CONFIG_BUTTON_WIDTH", 200);
+  _defineProperty(Rt, "CONFIG_BUTTON_WIDTH", 200);
 
-  _defineProperty(Mt, "CONFIG_BUTTON_COLOR", "rgb(160,160,160)");
+  _defineProperty(Rt, "CONFIG_BUTTON_COLOR", "rgb(160,160,160)");
 
-  _defineProperty(Mt, "CONFIG_BUTTON_TEXT_COLOR", "rgb(20,20,20)");
+  _defineProperty(Rt, "CONFIG_BUTTON_TEXT_COLOR", "rgb(20,20,20)");
 
-  _defineProperty(Mt, "CONFIG_BUTTON_TEXT_COLOR_DISABLE", "rgb(120,120,120)");
+  _defineProperty(Rt, "CONFIG_BUTTON_TEXT_COLOR_DISABLE", "rgb(120,120,120)");
 
-  _defineProperty(Mt, "CONFIG_BUTTON_FONT", "bold 24px monospace");
+  _defineProperty(Rt, "CONFIG_BUTTON_FONT", "bold 24px monospace");
 
-  _defineProperty(Mt, "CONFIG_BUTTON_TEXT_Y", 12);
+  _defineProperty(Rt, "CONFIG_BUTTON_TEXT_Y", 12);
 
-  _defineProperty(Mt, "CONFIG_BUTTON_TEXT_X", 100);
+  _defineProperty(Rt, "CONFIG_BUTTON_TEXT_X", 100);
 
-  class Rt {
+  _defineProperty(Rt, "ARROW_1_X", 30);
+
+  _defineProperty(Rt, "ARROW_2_X", 230);
+
+  _defineProperty(Rt, "DOWN_ARROW_INDEX", 9);
+
+  class At {
     constructor(t) {
-      this.game = t, this.is_menu_open = !1, this.is_menu_open_keep_press = !1, this.menu_list = [], this.menu_inventory = new H(t), this.menu_list[0] = new Mt(t), this.menu_list[1] = this.menu_inventory, this.menu_list[2] = new Ot(t), this.menu_list[3] = new Ct(t), this.menu_list[4] = new Nt(t), this.menu_count = 5, this.menu_list_cursor = 0, this.menu_open_icon = this.game.image_library.get_image("menu"), this.menu_close_icon = this.game.image_library.get_image("batsu");
+      this.game = t, this.is_menu_open = !1, this.is_menu_open_keep_press = !1, this.menu_list = [], this.menu_inventory = new F(t), this.menu_list[0] = new Rt(t), this.menu_list[1] = this.menu_inventory, this.menu_list[2] = new Ct(t), this.menu_list[3] = new Nt(t), this.menu_list[4] = new Lt(t), this.menu_count = 5, this.menu_list_cursor = 0, this.menu_open_icon = this.game.image_library.get_image("menu"), this.menu_close_icon = this.game.image_library.get_image("batsu");
     }
 
     on_update() {
@@ -3144,46 +3270,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     hittest_menu_open_button(t, i) {
-      let e = Rt.MENU_ICON_MARGIN_LEFT - (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING);
-      return e < t && t < e + Rt.MENU_ICON_SIZE && Rt.MENU_ICON_MARGIN_TOP < i && i < Rt.MENU_ICON_MARGIN_TOP + Rt.MENU_ICON_SIZE;
+      let e = At.MENU_ICON_MARGIN_LEFT - (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING);
+      return e < t && t < e + At.MENU_ICON_SIZE && At.MENU_ICON_MARGIN_TOP < i && i < At.MENU_ICON_MARGIN_TOP + At.MENU_ICON_SIZE;
     }
 
     hittest_menu_tabs(t, i, e) {
-      let s = Rt.MENU_ICON_MARGIN_LEFT + t * (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING);
-      return s < i && i < s + Rt.MENU_ICON_SIZE && Rt.MENU_ICON_MARGIN_TOP < e && e < Rt.MENU_ICON_MARGIN_TOP + Rt.MENU_ICON_SIZE;
+      let s = At.MENU_ICON_MARGIN_LEFT + t * (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING);
+      return s < i && i < s + At.MENU_ICON_SIZE && At.MENU_ICON_MARGIN_TOP < e && e < At.MENU_ICON_MARGIN_TOP + At.MENU_ICON_SIZE;
     }
 
     on_draw(t) {
-      if (-1 == this.menu_list_cursor ? t.strokeStyle = "rgb(250,0,0)" : t.strokeStyle = "rgb(200,200,200)", t.strokeRect(Rt.MENU_ICON_MARGIN_LEFT - (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING), Rt.MENU_ICON_MARGIN_TOP, Rt.MENU_ICON_SIZE, Rt.MENU_ICON_SIZE), t.drawImage(this.menu_open_icon, Rt.MENU_ICON_MARGIN_LEFT - (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING), Rt.MENU_ICON_MARGIN_TOP, Rt.MENU_ICON_SIZE, Rt.MENU_ICON_SIZE), t.fillText("[Tab]", Rt.MENU_ICON_MARGIN_LEFT - (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING), Rt.MENU_ICON_MARGIN_TOP + Rt.MENU_ICON_SIZE + 20), this.is_menu_open) {
-        t.save(), t.translate(Rt.MENU_MARGIN_LEFT, Rt.MENU_MARGIN_TOP), t.fillStyle = "rgb(200,200,200)", t.fillRect(0, 0, Rt.MENU_WIDTH, Rt.MENU_HEIGHT), this.menu_list[this.menu_list_cursor] && this.menu_list[this.menu_list_cursor].on_draw(t), t.restore(), t.drawImage(this.menu_close_icon, Rt.MENU_ICON_MARGIN_LEFT - (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING), Rt.MENU_ICON_MARGIN_TOP, Rt.MENU_ICON_SIZE, Rt.MENU_ICON_SIZE);
+      if (-1 == this.menu_list_cursor ? t.strokeStyle = "rgb(250,0,0)" : t.strokeStyle = "rgb(200,200,200)", t.strokeRect(At.MENU_ICON_MARGIN_LEFT - (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING), At.MENU_ICON_MARGIN_TOP, At.MENU_ICON_SIZE, At.MENU_ICON_SIZE), t.drawImage(this.menu_open_icon, At.MENU_ICON_MARGIN_LEFT - (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING), At.MENU_ICON_MARGIN_TOP, At.MENU_ICON_SIZE, At.MENU_ICON_SIZE), t.fillText("[Tab]", At.MENU_ICON_MARGIN_LEFT - (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING), At.MENU_ICON_MARGIN_TOP + At.MENU_ICON_SIZE + 20), this.is_menu_open) {
+        t.save(), t.translate(At.MENU_MARGIN_LEFT, At.MENU_MARGIN_TOP), t.fillStyle = "rgb(200,200,200)", t.fillRect(0, 0, At.MENU_WIDTH, At.MENU_HEIGHT), this.menu_list[this.menu_list_cursor] && this.menu_list[this.menu_list_cursor].on_draw(t), t.restore(), t.drawImage(this.menu_close_icon, At.MENU_ICON_MARGIN_LEFT - (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING), At.MENU_ICON_MARGIN_TOP, At.MENU_ICON_SIZE, At.MENU_ICON_SIZE);
 
-        for (let i = 0; i < this.menu_list.length; i++) i == this.menu_list_cursor ? t.strokeStyle = "rgb(250,0,0)" : t.strokeStyle = "rgb(200,200,200)", t.strokeRect(Rt.MENU_ICON_MARGIN_LEFT + i * (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING), Rt.MENU_ICON_MARGIN_TOP, Rt.MENU_ICON_SIZE, Rt.MENU_ICON_SIZE), null != this.menu_list[i] && t.drawImage(this.menu_list[i].get_menu_icon(), Rt.MENU_ICON_MARGIN_LEFT + i * (Rt.MENU_ICON_SIZE + Rt.MENU_ICON_SPACING), Rt.MENU_ICON_MARGIN_TOP, Rt.MENU_ICON_SIZE, Rt.MENU_ICON_SIZE);
+        for (let i = 0; i < this.menu_list.length; i++) i == this.menu_list_cursor ? t.strokeStyle = "rgb(250,0,0)" : t.strokeStyle = "rgb(200,200,200)", t.strokeRect(At.MENU_ICON_MARGIN_LEFT + i * (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING), At.MENU_ICON_MARGIN_TOP, At.MENU_ICON_SIZE, At.MENU_ICON_SIZE), null != this.menu_list[i] && t.drawImage(this.menu_list[i].get_menu_icon(), At.MENU_ICON_MARGIN_LEFT + i * (At.MENU_ICON_SIZE + At.MENU_ICON_SPACING), At.MENU_ICON_MARGIN_TOP, At.MENU_ICON_SIZE, At.MENU_ICON_SIZE);
       }
     }
 
   }
 
-  _defineProperty(Rt, "MENU_WIDTH", 700);
+  _defineProperty(At, "MENU_WIDTH", 700);
 
-  _defineProperty(Rt, "MENU_HEIGHT", 400);
+  _defineProperty(At, "MENU_HEIGHT", 400);
 
-  _defineProperty(Rt, "MENU_MARGIN_TOP", 100);
+  _defineProperty(At, "MENU_MARGIN_TOP", 100);
 
-  _defineProperty(Rt, "MENU_MARGIN_LEFT", 130);
+  _defineProperty(At, "MENU_MARGIN_LEFT", 130);
 
-  _defineProperty(Rt, "MENU_ICON_SIZE", 70);
+  _defineProperty(At, "MENU_ICON_SIZE", 70);
 
-  _defineProperty(Rt, "MENU_ICON_MARGIN_LEFT", 100);
+  _defineProperty(At, "MENU_ICON_MARGIN_LEFT", 100);
 
-  _defineProperty(Rt, "MENU_ICON_MARGIN_TOP", 20);
+  _defineProperty(At, "MENU_ICON_MARGIN_TOP", 20);
 
-  _defineProperty(Rt, "MENU_ICON_SPACING", 10);
+  _defineProperty(At, "MENU_ICON_SPACING", 10);
 
-  class At {
+  class Gt {
     constructor(t) {
       this.game = t, this.message_log = [];
 
-      for (let t = 0; t < At.LOG_ROWS; t++) this.message_log[t] = "~";
+      for (let t = 0; t < Gt.LOG_ROWS; t++) this.message_log[t] = "~";
     }
 
     push_log(t) {
@@ -3193,32 +3319,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     on_update() {}
 
     on_draw(t) {
-      t.fillStyle = At.TEXT_COLOR, t.textAlign = "start", t.font = At.FONT;
+      t.fillStyle = Gt.TEXT_COLOR, t.textAlign = "start", t.font = Gt.FONT;
 
-      for (let i = 0; i < At.LOG_ROWS; i++) t.fillText(this.message_log[i], At.MARGIN_LEFT, At.MARGIN_TOP + i * At.TEXT_HEIGHT);
+      for (let i = 0; i < Gt.LOG_ROWS; i++) t.fillText(this.message_log[i], Gt.MARGIN_LEFT, Gt.MARGIN_TOP + i * Gt.TEXT_HEIGHT);
 
       t.textAlign = "start";
     }
 
   }
 
-  _defineProperty(At, "MARGIN_TOP", 270);
+  _defineProperty(Gt, "MARGIN_TOP", 270);
 
-  _defineProperty(At, "MARGIN_LEFT", 10);
+  _defineProperty(Gt, "MARGIN_LEFT", 10);
 
-  _defineProperty(At, "FONT", "bold 16px monospace");
+  _defineProperty(Gt, "FONT", "bold 16px monospace");
 
-  _defineProperty(At, "TEXT_COLOR", "rgb(200,200,200)");
+  _defineProperty(Gt, "TEXT_COLOR", "rgb(200,200,200)");
 
-  _defineProperty(At, "TEXT_HEIGHT", 20);
+  _defineProperty(Gt, "TEXT_HEIGHT", 20);
 
-  _defineProperty(At, "LOG_ROWS", 12);
+  _defineProperty(Gt, "LOG_ROWS", 12);
 
-  class Gt {
+  class Xt {
     constructor(t) {
       this.game = t, this.itemslot_margin_bottom = 40, this.itemslot_size = 50, this.itemslot_spacing = 10, this.itemslot_count = 9, this.itemslot_start_x = 99, this.itemslot_start_y = 99, this.calc_itemslot_coodinate(), this.item_slot = [], this.is_equipped_slot = [];
 
-      for (let t = 0; t < Gt.ITEM_SLOT_COUNT; t++) this.item_slot[t] = null, this.is_equipped_slot[t] = !1;
+      for (let t = 0; t < Xt.ITEM_SLOT_COUNT; t++) this.item_slot[t] = null, this.is_equipped_slot[t] = !1;
 
       this.item_slot_cursor = 0, this.is_mouse_holding = !1, this.is_config_auto_material_deconstruct = !0;
     }
@@ -3226,7 +3352,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     refresh() {
       this.game.world.player.clear_equip_status();
 
-      for (let t = 0; t < Gt.ITEM_SLOT_COUNT; t++) if (this.item_slot[t] instanceof _) {
+      for (let t = 0; t < Xt.ITEM_SLOT_COUNT; t++) if (this.item_slot[t] instanceof _) {
         let i = this.game.world.player.equip_item(this.item_slot[t]);
         this.is_equipped_slot[t] = i;
       } else this.is_equipped_slot[t] = !1;
@@ -3248,16 +3374,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.item_slot[this.item_slot_cursor] = null;
     }
 
-    put_pickup_item(t) {
-      if (this.is_config_auto_material_deconstruct && t instanceof x) return t.on_click(0, 0, 0, 0), !0;
+    put_pickup_item(t, i) {
+      if (this.is_config_auto_material_deconstruct && t instanceof O) return t.on_click(0, 0, 0, 0), !0;
 
-      for (let i = Gt.ITEM_SLOT_COUNT - 1; 0 <= i; i--) if (null == this.item_slot[i]) return this.item_slot[i] = t, this.refresh(), !0;
+      if (i) {
+        for (let i = Xt.ITEM_SLOT_COUNT - 1; 0 <= i; i--) if (null == this.item_slot[i]) return this.item_slot[i] = t, this.refresh(), !0;
+      } else for (let i = 0; i < Xt.ITEM_SLOT_COUNT; i++) if (null == this.item_slot[i]) return this.item_slot[i] = t, this.refresh(), !0;
 
       return !1;
     }
 
     has_empty_space() {
-      for (let t = Gt.ITEM_SLOT_COUNT - 1; 0 <= t; t--) if (null == this.item_slot[t]) return !0;
+      for (let t = Xt.ITEM_SLOT_COUNT - 1; 0 <= t; t--) if (null == this.item_slot[t]) return !0;
+
+      return !1;
+    }
+
+    has_item_instanceof(t) {
+      for (let i = 0; i < Xt.ITEM_SLOT_COUNT; i++) if (null != this.item_slot[i] && this.item_slot[i] instanceof t) return !0;
 
       return !1;
     }
@@ -3271,9 +3405,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_update() {
-      for (let t = Gt.ITEM_SLOT_COUNT - 1; 0 <= t; t--) null != this.item_slot[t] && this.item_slot[t].on_update();
+      for (let t = Xt.ITEM_SLOT_COUNT - 1; 0 <= t; t--) null != this.item_slot[t] && this.item_slot[t].on_update();
 
-      if (this.game.input_controller.is_wheel_up && (this.is_mouse_holding = !1, this.item_slot_cursor -= 1, this.item_slot_cursor < 0 && (this.item_slot_cursor = Gt.ITEM_SLOT_COUNT - 1)), this.game.input_controller.is_wheel_down && (this.is_mouse_holding = !1, this.item_slot_cursor += 1, Gt.ITEM_SLOT_COUNT <= this.item_slot_cursor && (this.item_slot_cursor = 0)), this.game.input_controller.is_pressed_key.Digit1 && (this.is_mouse_holding = !1, this.item_slot_cursor = 0), this.game.input_controller.is_pressed_key.Digit2 && (this.is_mouse_holding = !1, this.item_slot_cursor = 1), this.game.input_controller.is_pressed_key.Digit3 && (this.is_mouse_holding = !1, this.item_slot_cursor = 2), this.game.input_controller.is_pressed_key.Digit4 && (this.is_mouse_holding = !1, this.item_slot_cursor = 3), this.game.input_controller.is_pressed_key.Digit5 && (this.is_mouse_holding = !1, this.item_slot_cursor = 4), this.game.input_controller.is_pressed_key.Digit6 && (this.is_mouse_holding = !1, this.item_slot_cursor = 5), this.game.input_controller.is_pressed_key.Digit7 && (this.is_mouse_holding = !1, this.item_slot_cursor = 6), this.game.input_controller.is_pressed_key.Digit8 && (this.is_mouse_holding = !1, this.item_slot_cursor = 7), this.game.input_controller.is_pressed_key.Digit9 && (this.is_mouse_holding = !1, this.item_slot_cursor = 8), this.game.input_controller.get_mouse_press()) {
+      if (this.game.input_controller.is_wheel_up && (this.is_mouse_holding = !1, this.item_slot_cursor -= 1, this.item_slot_cursor < 0 && (this.item_slot_cursor = Xt.ITEM_SLOT_COUNT - 1)), this.game.input_controller.is_wheel_down && (this.is_mouse_holding = !1, this.item_slot_cursor += 1, Xt.ITEM_SLOT_COUNT <= this.item_slot_cursor && (this.item_slot_cursor = 0)), this.game.input_controller.is_pressed_key.Digit1 && (this.is_mouse_holding = !1, this.item_slot_cursor = 0), this.game.input_controller.is_pressed_key.Digit2 && (this.is_mouse_holding = !1, this.item_slot_cursor = 1), this.game.input_controller.is_pressed_key.Digit3 && (this.is_mouse_holding = !1, this.item_slot_cursor = 2), this.game.input_controller.is_pressed_key.Digit4 && (this.is_mouse_holding = !1, this.item_slot_cursor = 3), this.game.input_controller.is_pressed_key.Digit5 && (this.is_mouse_holding = !1, this.item_slot_cursor = 4), this.game.input_controller.is_pressed_key.Digit6 && (this.is_mouse_holding = !1, this.item_slot_cursor = 5), this.game.input_controller.is_pressed_key.Digit7 && (this.is_mouse_holding = !1, this.item_slot_cursor = 6), this.game.input_controller.is_pressed_key.Digit8 && (this.is_mouse_holding = !1, this.item_slot_cursor = 7), this.game.input_controller.is_pressed_key.Digit9 && (this.is_mouse_holding = !1, this.item_slot_cursor = 8), this.game.input_controller.get_mouse_press()) {
         let t = this.game.input_controller.mouse_y,
             i = this.game.input_controller.mouse_x;
         if (this.itemslot_start_y < t && t < this.itemslot_start_y + this.itemslot_size) for (let t = 0; t <= 8; t++) {
@@ -3316,12 +3450,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     cheat() {
-      this.item_slot[1] = new ft(this.game), this.item_slot[2] = new v(this.game), this.refresh();
+      this.item_slot[1] = new Tt(this.game), this.item_slot[2] = new k(this.game), this.refresh();
     }
 
   }
 
-  _defineProperty(Gt, "ITEM_SLOT_COUNT", 9);
+  _defineProperty(Xt, "ITEM_SLOT_COUNT", 9);
 
   class Ut {
     constructor(t) {
@@ -3335,7 +3469,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_draw(t) {
-      t.save(), t.translate(Ut.MARGIN_LEFT, Ut.MARGIN_TOP), t.strokeStyle = "rgb(200,200,200)", t.fillStyle = "rgb(200,50,20)", t.drawImage(this.icon_hp, Ut.ICON_X, Ut.ICON_Y + 0 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 0, this.player.health.hp / this.player.health.max_hp), t.fillStyle = "rgb(250,250,20)", t.drawImage(this.icon_sp, Ut.ICON_X, Ut.ICON_Y + 1 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 1, this.player.health.sp / this.player.health.max_sp), t.fillStyle = "rgb(50,250,120)", t.drawImage(this.icon_happiness, Ut.ICON_X, Ut.ICON_Y + 2 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 2, this.player.health.happiness / this.player.health.max_happiness), t.fillStyle = "rgb(200,150,50)", t.drawImage(this.icon_hunger, Ut.ICON_X, Ut.ICON_Y + 3 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 3, this.player.health.hunger / this.player.health.max_hunger), t.fillStyle = "rgb(20,200,200)", t.drawImage(this.icon_thirst, Ut.ICON_X, Ut.ICON_Y + 4 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 4, this.player.health.thirst / this.player.health.max_thirst), t.restore();
+      t.save(), t.translate(Ut.MARGIN_LEFT, Ut.MARGIN_TOP), t.strokeStyle = "rgb(200,200,200)", t.fillStyle = "rgb(200,50,20)", t.drawImage(this.icon_hp, Ut.ICON_X, Ut.ICON_Y + 0 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 0, this.player.health.hp / this.player.health.max_hp), t.fillStyle = "rgb(250,250,20)", t.drawImage(this.icon_sp, Ut.ICON_X, Ut.ICON_Y + 1 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 1, this.player.health.sp / this.player.health.max_sp), t.fillStyle = "rgb(200,150,50)", t.drawImage(this.icon_hunger, Ut.ICON_X, Ut.ICON_Y + 3 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 3, this.player.health.hunger / this.player.health.max_hunger), t.fillStyle = "rgb(20,200,200)", t.drawImage(this.icon_thirst, Ut.ICON_X, Ut.ICON_Y + 4 * Ut.STATUS_HEIGHT, 24, 24), this.draw_guage(t, 4, this.player.health.thirst / this.player.health.max_thirst), t.restore();
     }
 
   }
@@ -3356,7 +3490,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   _defineProperty(Ut, "TEXT_X", 145);
 
-  class Xt {
+  class Ht {
     constructor(t) {
       this.game = t;
     }
@@ -3364,24 +3498,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     on_update() {}
 
     on_draw(t) {
-      t.save(), t.fillStyle = Xt.TEXT_COLOR, t.font = Xt.FONT, t.textAlign = "end", t.fillText(Math.floor(this.game.world.player.y / -32) + "m :高度", Xt.MARGIN_LEFT, Xt.MARGIN_TOP + 0 * Xt.TEXT_HEIGHT), 0 <= this.game.world.player.x ? t.fillText(Math.floor(this.game.world.player.x / 32) + "m :前方", Xt.MARGIN_LEFT, Xt.MARGIN_TOP + 1 * Xt.TEXT_HEIGHT) : t.fillText(Math.floor(this.game.world.player.x / -32) + "m :後方", Xt.MARGIN_LEFT, Xt.MARGIN_TOP + 1 * Xt.TEXT_HEIGHT), t.restore();
+      t.save(), t.fillStyle = Ht.TEXT_COLOR, t.font = Ht.FONT, t.textAlign = "end", t.fillText(Math.floor(this.game.world.player.y / -32) + "m :高度", Ht.MARGIN_LEFT, Ht.MARGIN_TOP + 0 * Ht.TEXT_HEIGHT), 0 <= this.game.world.player.x ? t.fillText(Math.floor(this.game.world.player.x / 32) + "m :前方", Ht.MARGIN_LEFT, Ht.MARGIN_TOP + 1 * Ht.TEXT_HEIGHT) : t.fillText(Math.floor(this.game.world.player.x / -32) + "m :後方", Ht.MARGIN_LEFT, Ht.MARGIN_TOP + 1 * Ht.TEXT_HEIGHT), t.restore();
     }
 
   }
 
-  _defineProperty(Xt, "MARGIN_TOP", 30);
+  _defineProperty(Ht, "MARGIN_TOP", 30);
 
-  _defineProperty(Xt, "MARGIN_LEFT", 940);
+  _defineProperty(Ht, "MARGIN_LEFT", 940);
 
-  _defineProperty(Xt, "FONT", "bold 16px monospace");
+  _defineProperty(Ht, "FONT", "bold 16px monospace");
 
-  _defineProperty(Xt, "TEXT_COLOR", "rgb(200,200,200)");
+  _defineProperty(Ht, "TEXT_COLOR", "rgb(200,200,200)");
 
-  _defineProperty(Xt, "TEXT_HEIGHT", 20);
+  _defineProperty(Ht, "TEXT_HEIGHT", 20);
 
-  _defineProperty(Xt, "LOG_ROWS", 12);
+  _defineProperty(Ht, "LOG_ROWS", 12);
 
-  class Ht {
+  class Dt {
     constructor(t) {
       this.game = t, this.button_size = 60, this.text_margin = 10, this.calc_button_position(), this.is_enable = !0;
     }
@@ -3412,9 +3546,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Dt {
+  class Ft {
     constructor(t) {
-      this.name = "hud", this.game = t, this.hud_menu = new Rt(t), this.item_slot = new Gt(t), this.hud_log = new At(t), this.hud_status = new Ut(t), this.hud_compass = new Xt(t), this.hud_camera_control = new Ht(t);
+      this.name = "hud", this.game = t, this.hud_menu = new At(t), this.item_slot = new Xt(t), this.hud_log = new Gt(t), this.hud_status = new Ut(t), this.hud_compass = new Ht(t), this.hud_camera_control = new Dt(t);
     }
 
     on_update() {
@@ -3427,7 +3561,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Ft {
+  class Bt {
     constructor(t) {
       this.game = t, this.mouse_x = 100, this.mouse_y = 100, this.is_mouse_holding = !1, this.is_down_left = !1, this.is_down_right = !1, this.is_down_up = !1, this.is_down_down = !1, this.is_down_space = !1, this.is_press_left = !1, this.is_press_right = !1, this.is_press_up = !1, this.is_press_down = !1, this.is_press_space = !1, this.is_press_enter = !1, this.is_press_tab = !1, this.is_press_esc = !1, this.is_buffer_left = !1, this.is_buffer_right = !1, this.is_buffer_up = !1, this.is_buffer_down = !1, this.is_buffer_space = !1, this.is_buffer_enter = !1, this.is_buffer_tab = !1, this.is_buffer_esc = !1, this.is_virtual_down_left = !1, this.is_virtual_down_right = !1, this.is_virtual_down_up = !1, this.is_virtual_down_down = !1, this.is_virtual_down_space = !1, this.is_virtual_press_left = !1, this.is_virtual_press_right = !1, this.is_virtual_press_up = !1, this.is_virtual_press_down = !1, this.is_virtual_press_space = !1, this.is_virtual_press_enter = !1, this.is_virtual_press_tab = !1, this.is_virtual_press_esc = !1, this.is_mouse_down = !1, this.is_mouse_press = !1, this.is_mouse_press_buffer = !1, this.is_wheel_up = !1, this.is_wheel_down = !1, this.is_wheel_up_buffer = !1, this.is_wheel_down_buffer = !1, this.active_touch = null, this.auto_virtual_input_enable = !0, this.is_enable_any_key_input = !0, this.is_down_key = [], this.is_pressed_key = [], this.is_pressed_key_buffer = [];
     }
@@ -3500,8 +3634,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.is_press_esc || this.is_virtual_press_esc;
     }
 
+    get_wheel_up() {
+      return this.is_wheel_up;
+    }
+
+    get_wheel_down() {
+      return this.is_wheel_down;
+    }
+
     on_key_down(t) {
-      return t.repeat || (this.is_enable_any_key_input && (this.is_down_key[t.code] = !0, this.is_pressed_key_buffer[t.code] = !0), "Space" == t.code ? (this.is_down_space = !0, this.is_buffer_space = !0) : "Escape" == t.code ? this.is_buffer_esc = !0 : "Tab" == t.code ? this.is_buffer_tab = !0 : "Enter" == t.code ? this.is_buffer_enter = !0 : "KeyA" == t.code || "ArrowLeft" == t.code ? (this.is_down_left = !0, this.is_buffer_left = !0) : "KeyD" == t.code || "ArrowRight" == t.code ? (this.is_down_right = !0, this.is_buffer_right = !0) : "KeyS" == t.code || "ArrowDown" == t.code ? (this.is_down_down = !0, this.is_buffer_down = !0) : "KeyW" != t.code && "ArrowUp" != t.code || (this.is_down_up = !0, this.is_buffer_up = !0)), "F5" == t.code || t.preventDefault(), !1;
+      return t.repeat || (this.is_enable_any_key_input && (this.is_down_key[t.code] = !0, this.is_pressed_key_buffer[t.code] = !0), "Space" == t.code ? (this.is_down_space = !0, this.is_buffer_space = !0) : "Escape" == t.code ? this.is_buffer_esc = !0 : "Tab" == t.code ? this.is_buffer_tab = !0 : "Enter" == t.code ? this.is_buffer_enter = !0 : "KeyA" == t.code || "ArrowLeft" == t.code ? (this.is_down_left = !0, this.is_buffer_left = !0) : "KeyD" == t.code || "ArrowRight" == t.code ? (this.is_down_right = !0, this.is_buffer_right = !0) : "KeyS" == t.code || "ArrowDown" == t.code ? (this.is_down_down = !0, this.is_buffer_down = !0) : "KeyW" != t.code && "ArrowUp" != t.code || (this.is_down_up = !0, this.is_buffer_up = !0)), "F5" == t.code || "F12" == t.code || t.preventDefault(), !1;
     }
 
     on_key_up(t) {
@@ -3560,15 +3702,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Bt {}
-
-  _defineProperty(Bt, "FILE_NAME_LIST", ["./img/illustya/cooking_agodashi.png", "./img/illustya/nunchaku.png", "./img/illustya/ninjin_carrot.png", "./img/illustya/fantasy_gargoyle_water.png", "./img/illustya/quetzalcoatlus_beak.png", "./img/illustya/food_yasaiitame.png", "./img/illustya/undoukai_flag2.png", "./img/illustya/junk_kikai.png", "./img/illustya/fish_sakana_iwashi.png", "./img/illustya/syousyuzai_spray_musyu.png", "./img/illustya/peryton_horn.png", "./img/illustya/fantasy_seiryu.png", "./img/illustya/bird_toki_fly.png", "./img/illustya/cooking_dendou_mixer.png", "./img/illustya/food_fish_kirimi_red.png", "./img/illustya/gomi_petbottle.png", "./img/illustya/quetzalcoatlus_crown.png", "./img/illustya/science_senjoubin.png", "./img/illustya/handagote.png", "./img/illustya/chain_saw.png", "./img/illustya/kids_mokkou_kyoushitsu_boy.png", "./img/illustya/yumiya.png", "./img/illustya/kouji_dendou_drill.png", "./img/illustya/souji_yuka_mop.png", "./img/illustya/beacon_denpa_hasshinki.png", "./img/illustya/dougu_torobune_tsuchi_yellow.png", "./img/illustya/norimono_boat.png", "./img/illustya/snorkel_goods.png", "./img/illustya/microraptor_beak.png", "./img/illustya/undoukai_flag5.png", "./img/illustya/fish_shark.png", "./img/illustya/tozan_stick.png", "./img/illustya/kaisou_wakame.png", "./img/illustya/tenshi_wing2.png", "./img/illustya/cooking_kokei_nenryou.png", "./img/illustya/wood_hammer_100t.png", "./img/illustya/petbottle_empty.png", "./img/illustya/kouji_yuudoubou.png", "./img/illustya/shovel_scoop_ken.png", "./img/illustya/music_alto_saxophone.png", "./img/illustya/syousyuzai_spray.png", "./img/illustya/fish_fugu2.png", "./img/illustya/sweets_yakiimo.png", "./img/illustya/mujintou_kojima.png", "./img/illustya/fish_kagokakidai.png", "./img/illustya/darts_ya.png", "./img/illustya/kaji_hikeshi_matoi.png", "./img/illustya/fune_ikada.png", "./img/illustya/fantasy_ryu_doragon_asia.png", "./img/illustya/buki_yari.png", "./img/illustya/undoukai_flag2_i.png", "./img/illustya/ofuro_oke_plastic.png", "./img/illustya/fantasy_genbu.png", "./img/illustya/bird_hayabusa.png", "./img/illustya/ofuro_oke_plastic_water.png", "./img/illustya/bucket_iron_water_up.png", "./img/illustya/fish_tai.png", "./img/illustya/yumiya_bowgun.png", "./img/illustya/inugoya.png", "./img/illustya/camp_chakkazai.png", "./img/illustya/present_box.png", "./img/illustya/feather_white.png", "./img/illustya/snorkel_fin.png", "./img/illustya/fish_salmon.png", "./img/illustya/cooking_houchou_chopper.png", "./img/illustya/gomi_can.png", "./img/illustya/bird_kamome.png", "./img/illustya/soccer_vuvuzela_music.png", "./img/illustya/tsuri_esa_kebari.png", "./img/illustya/katana_shirasaya.png", "./img/illustya/bullet_item.png", "./img/illustya/fantasy_peryton.png", "./img/illustya/cooking_hand_blender.png", "./img/illustya/megane_3d_blue_red.png", "./img/illustya/snorkel_goggle.png", "./img/illustya/arrow_color12_play_flip.png", "./img/illustya/battery_namari_chikudenchi.png", "./img/illustya/arrow_color12_play.png", "./img/illustya/science_senjoubin_empty.png", "./img/illustya/machine_heat_gun.png", "./img/illustya/fishing_lure.png", "./img/illustya/kodai_microraptor.png", "./img/illustya/small_star7_yellow.png", "./img/illustya/syamoji_mokusei.png", "./img/illustya/fish_pirarucu2.png", "./img/illustya/bird_hachidori.png", "./img/illustya/sports_sanso_bottle.png", "./img/illustya/tsuyu_mark09_ame.png", "./img/illustya/fish_maguro2.png", "./img/illustya/griffon_wing.png", "./img/illustya/dinosaur_quetzalcoatlus.png", "./img/illustya/alohashirt_gray.png", "./img/illustya/tree_seichou03.png", "./img/illustya/water_gardening_hose.png", "./img/illustya/dougu_micrometer_digital.png", "./img/illustya/dougu_nail_hammer.png", "./img/illustya/kaizoku_takarabako.png", "./img/illustya/toki_wing.png", "./img/illustya/tonbi_wing.png", "./img/illustya/kaden_wifi_router.png", "./img/illustya/smartphone_selfystick.png", "./img/illustya/food_beef_jerky.png", "./img/illustya/piman_greenpepper.png", "./img/illustya/gomi_poribaketsu_close.png", "./img/illustya/undoukai_flag1.png", "./img/illustya/motor_servo_motor.png", "./img/illustya/fantasy_griffon.png", "./img/illustya/fish_hokke.png", "./img/illustya/gas_burner.png", "./img/illustya/hachidori_wing.png", "./img/illustya/feather_green.png", "./img/illustya/pet_robot_cat.png", "./img/illustya/bullet_right.png", "./img/illustya/cooking_hera.png", "./img/illustya/bug_haetataki_atack.png", "./img/illustya/washi_wing.png", "./img/illustya/food_chicken_tebamoto_nama.png", "./img/illustya/tonkachi.png", "./img/illustya/fishing_tsurizao_nobezao.png", "./img/illustya/muchi.png", "./img/illustya/wood_maruta_single.png", "./img/illustya/mushi_mushitoriami.png", "./img/illustya/glass_bin6_clear.png", "./img/illustya/wasyoku_himono.png", "./img/illustya/denryoku_mark.png", "./img/illustya/rain_kasa_red.png", "./img/illustya/character_cthulhu_kuturufu.png", "./img/illustya/fish_sakana_sanma.png", "./img/illustya/feather_pink.png", "./img/illustya/tool_pickel.png", "./img/illustya/wood_hammer_10t.png", "./img/illustya/hanabi_rocket.png", "./img/illustya/bird_tonbi.png", "./img/illustya/dougu_bar.png", "./img/illustya/music_recorder.png", "./img/illustya/gardening_sentei_hasami.png", "./img/illustya/food_tebasaki.png", "./img/illustya/quadcopter_drone.png", "./img/illustya/hair_drier.png", "./img/illustya/youkai_byakko.png", "./img/illustya/petbottle_juice.png", "./img/illustya/dougu_army_knife.png", "./img/illustya/haguruma.png", "./img/illustya/cooking_masher.png", "./img/illustya/youkai_suzaku.png", "./img/illustya/small_star6_orange.png", "./img/illustya/fish_mola2.png", "./img/illustya/animal_shachi_killer_whale.png", "./img/illustya/itonokogiri.png", "./img/illustya/airplane_ornithopter.png", "./img/illustya/food_chicken_tebasaki_nama.png", "./img/illustya/dougu_torobune_tsuchi.png", "./img/illustya/war_taihou.png", "./img/illustya/suzaku_wing.png", "./img/illustya/bucket_iron_empty_up.png", "./img/illustya/pet_robot_dog.png", "./img/illustya/inugoya_blue.png", "./img/illustya/tree_ryuuboku.png", "./img/illustya/job_programmer.png", "./img/illustya/feather_brown.png", "./img/illustya/satsumaimo_sweetpotato.png", "./img/illustya/heart_blur.png", "./img/illustya/car_engine.png", "./img/illustya/fish_sakana_sake.png", "./img/illustya/buki_morningstar_flail.png", "./img/illustya/fantasy_dragon.png", "./img/illustya/kaisou_konbu.png", "./img/illustya/kouji_shizai_okiba.png", "./img/illustya/mizudeppou.png", "./img/illustya/yakitori_kawa.png", "./img/illustya/cannonball_right.png", "./img/illustya/hair_curl_dryer.png", "./img/illustya/shinkai_chouchinankou.png", "./img/illustya/hinawaju.png", "./img/illustya/peryton_wing.png", "./img/illustya/tsue_sennin.png", "./img/illustya/feather_red.png", "./img/illustya/mark_face_laugh.png", "./img/illustya/takibi_dai.png", "./img/illustya/starter_starting_pistol.png", "./img/illustya/cooking_urokohiki.png", "./img/illustya/tekkotsu_silver.png", "./img/illustya/otanjoubi_birthday_present_balloon.png", "./img/illustya/war_trident.png", "./img/illustya/undoukai_flag4_i.png", "./img/illustya/undoukai_flag3_i.png", "./img/illustya/harisen.png", "./img/illustya/dougu_nogisu_digital.png", "./img/illustya/cooking_kokei_nenryou_fire.png", "./img/illustya/tomato_red.png", "./img/illustya/kouji_dendou_driver.png", "./img/illustya/nokogiri.png", "./img/illustya/undoukai_flag1_i.png", "./img/illustya/dougu_torobune_tsuchi_red.png", "./img/illustya/cthulhu_deep_ones.png", "./img/illustya/dougu_gluegun.png", "./img/illustya/animal_washi.png", "./img/illustya/setsumeisyo_manual.png", "./img/illustya/yurei_youngwoman3_sad.png", "./img/illustya/game_ken.png", "./img/illustya/pellet_wood_mokusei.png", "./img/illustya/undoukai_flag4.png", "./img/illustya/text_mu.png", "./img/illustya/bin_tegami.png", "./img/illustya/fish_tobiuo2.png", "./img/illustya/engine_hatsudenki_small.png", "./img/illustya/music_trumpet.png", "./img/illustya/monkey_wrench.png", "./img/illustya/fantasy_dragon_wyvern.png", "./img/illustya/cardboard_open.png", "./img/illustya/bird_kakkou.png", "./img/illustya/wasyoku_yakizakana.png", "./img/illustya/boomerang.png", "./img/illustya/food_chicken_tebamoto.png", "./img/illustya/undoukai_flag5_i.png", "./img/illustya/fashion_maid.png", "./img/illustya/gin_dangan_silver_bullet.png", "./img/illustya/fish_minokasago.png", "./img/illustya/soccer_cheer_horn_music.png", "./img/illustya/kandume_tomato.png", "./img/illustya/food_yakitomorokoshi.png", "./img/illustya/undoukai_flag3.png", "./img/illustya/cannonball_item.png", "./img/illustya/microraptor_wing.png", "./img/illustya/fish_tobiuo.png", "./img/illustya/nature_stone_ishi.png", "./img/illustya/fishing_tsurizao_nagezao.png", "./img/illustya/vegetable_corn.png", "./img/illustya/takibi_dai_fire.png", "./img/illustya/fish_maguro.png", "./img/illustya/fantasy_gargoyle.png", "./img/illustya/car_battery_blue_red.png", "./img/illustya/tosou_airbrush.png", "./img/illustya/food_yakisake.png"]);
-
   class Pt {}
 
-  _defineProperty(Pt, "FILE_NAME_LIST", ["./img/wind_effect.png", "./img/ship_frame.png", "./img/ship_floor.png", "./img/dry_lack.png", "./img/fish_fin.png", "./img/cloud.png", "./img/laser_turret.png", "./img/mortor.png", "./img/machine_gun.png", "./img/air_cannon.png", "./img/mast_close.png", "./img/mast_open.png", "./img/spring_green.png", "./img/spring_red.png", "./img/air_ball.png", "./img/bullet_arrow.png", "./img/ladder.png", "./img/catapult.png", "./img/catapult_bullet.png", "./img/catapult_ammo.png", "./img/menu.png", "./img/batsu.png", "./img/check.png", "./img/ikada.png"]);
+  _defineProperty(Pt, "FILE_NAME_LIST", ["./img/illustya/cooking_agodashi.png", "./img/illustya/nunchaku.png", "./img/illustya/ninjin_carrot.png", "./img/illustya/fantasy_gargoyle_water.png", "./img/illustya/quetzalcoatlus_beak.png", "./img/illustya/food_yasaiitame.png", "./img/illustya/undoukai_flag2.png", "./img/illustya/junk_kikai.png", "./img/illustya/fish_sakana_iwashi.png", "./img/illustya/syousyuzai_spray_musyu.png", "./img/illustya/peryton_horn.png", "./img/illustya/fantasy_seiryu.png", "./img/illustya/bird_toki_fly.png", "./img/illustya/cooking_dendou_mixer.png", "./img/illustya/food_fish_kirimi_red.png", "./img/illustya/gomi_petbottle.png", "./img/illustya/quetzalcoatlus_crown.png", "./img/illustya/science_senjoubin.png", "./img/illustya/handagote.png", "./img/illustya/chain_saw.png", "./img/illustya/kids_mokkou_kyoushitsu_boy.png", "./img/illustya/yumiya.png", "./img/illustya/kouji_dendou_drill.png", "./img/illustya/souji_yuka_mop.png", "./img/illustya/beacon_denpa_hasshinki.png", "./img/illustya/dougu_torobune_tsuchi_yellow.png", "./img/illustya/norimono_boat.png", "./img/illustya/snorkel_goods.png", "./img/illustya/microraptor_beak.png", "./img/illustya/undoukai_flag5.png", "./img/illustya/fish_shark.png", "./img/illustya/tozan_stick.png", "./img/illustya/kaisou_wakame.png", "./img/illustya/tenshi_wing2.png", "./img/illustya/cooking_kokei_nenryou.png", "./img/illustya/wood_hammer_100t.png", "./img/illustya/petbottle_empty.png", "./img/illustya/kouji_yuudoubou.png", "./img/illustya/shovel_scoop_ken.png", "./img/illustya/music_alto_saxophone.png", "./img/illustya/syousyuzai_spray.png", "./img/illustya/fish_fugu2.png", "./img/illustya/sweets_yakiimo.png", "./img/illustya/mujintou_kojima.png", "./img/illustya/fish_kagokakidai.png", "./img/illustya/darts_ya.png", "./img/illustya/kaji_hikeshi_matoi.png", "./img/illustya/fune_ikada.png", "./img/illustya/fantasy_ryu_doragon_asia.png", "./img/illustya/buki_yari.png", "./img/illustya/undoukai_flag2_i.png", "./img/illustya/ofuro_oke_plastic.png", "./img/illustya/fantasy_genbu.png", "./img/illustya/bird_hayabusa.png", "./img/illustya/ofuro_oke_plastic_water.png", "./img/illustya/bucket_iron_water_up.png", "./img/illustya/fish_tai.png", "./img/illustya/yumiya_bowgun.png", "./img/illustya/inugoya.png", "./img/illustya/camp_chakkazai.png", "./img/illustya/present_box.png", "./img/illustya/feather_white.png", "./img/illustya/snorkel_fin.png", "./img/illustya/fish_salmon.png", "./img/illustya/cooking_houchou_chopper.png", "./img/illustya/gomi_can.png", "./img/illustya/bird_kamome.png", "./img/illustya/soccer_vuvuzela_music.png", "./img/illustya/tsuri_esa_kebari.png", "./img/illustya/katana_shirasaya.png", "./img/illustya/bullet_item.png", "./img/illustya/fantasy_peryton.png", "./img/illustya/cooking_hand_blender.png", "./img/illustya/megane_3d_blue_red.png", "./img/illustya/snorkel_goggle.png", "./img/illustya/arrow_color12_play_flip.png", "./img/illustya/battery_namari_chikudenchi.png", "./img/illustya/arrow_color12_play.png", "./img/illustya/science_senjoubin_empty.png", "./img/illustya/machine_heat_gun.png", "./img/illustya/fishing_lure.png", "./img/illustya/kodai_microraptor.png", "./img/illustya/small_star7_yellow.png", "./img/illustya/syamoji_mokusei.png", "./img/illustya/fish_pirarucu2.png", "./img/illustya/bird_hachidori.png", "./img/illustya/sports_sanso_bottle.png", "./img/illustya/tsuyu_mark09_ame.png", "./img/illustya/fish_maguro2.png", "./img/illustya/griffon_wing.png", "./img/illustya/dinosaur_quetzalcoatlus.png", "./img/illustya/alohashirt_gray.png", "./img/illustya/tree_seichou03.png", "./img/illustya/water_gardening_hose.png", "./img/illustya/dougu_micrometer_digital.png", "./img/illustya/dougu_nail_hammer.png", "./img/illustya/kaizoku_takarabako.png", "./img/illustya/toki_wing.png", "./img/illustya/tonbi_wing.png", "./img/illustya/kaden_wifi_router.png", "./img/illustya/smartphone_selfystick.png", "./img/illustya/food_beef_jerky.png", "./img/illustya/piman_greenpepper.png", "./img/illustya/gomi_poribaketsu_close.png", "./img/illustya/undoukai_flag1.png", "./img/illustya/motor_servo_motor.png", "./img/illustya/fantasy_griffon.png", "./img/illustya/fish_hokke.png", "./img/illustya/gas_burner.png", "./img/illustya/hachidori_wing.png", "./img/illustya/feather_green.png", "./img/illustya/pet_robot_cat.png", "./img/illustya/bullet_right.png", "./img/illustya/cooking_hera.png", "./img/illustya/bug_haetataki_atack.png", "./img/illustya/washi_wing.png", "./img/illustya/food_chicken_tebamoto_nama.png", "./img/illustya/tonkachi.png", "./img/illustya/fishing_tsurizao_nobezao.png", "./img/illustya/muchi.png", "./img/illustya/wood_maruta_single.png", "./img/illustya/mushi_mushitoriami.png", "./img/illustya/glass_bin6_clear.png", "./img/illustya/wasyoku_himono.png", "./img/illustya/denryoku_mark.png", "./img/illustya/rain_kasa_red.png", "./img/illustya/character_cthulhu_kuturufu.png", "./img/illustya/fish_sakana_sanma.png", "./img/illustya/feather_pink.png", "./img/illustya/tool_pickel.png", "./img/illustya/wood_hammer_10t.png", "./img/illustya/hanabi_rocket.png", "./img/illustya/bird_tonbi.png", "./img/illustya/dougu_bar.png", "./img/illustya/music_recorder.png", "./img/illustya/gardening_sentei_hasami.png", "./img/illustya/food_tebasaki.png", "./img/illustya/quadcopter_drone.png", "./img/illustya/hair_drier.png", "./img/illustya/youkai_byakko.png", "./img/illustya/petbottle_juice.png", "./img/illustya/dougu_army_knife.png", "./img/illustya/haguruma.png", "./img/illustya/cooking_masher.png", "./img/illustya/youkai_suzaku.png", "./img/illustya/small_star6_orange.png", "./img/illustya/fish_mola2.png", "./img/illustya/animal_shachi_killer_whale.png", "./img/illustya/itonokogiri.png", "./img/illustya/airplane_ornithopter.png", "./img/illustya/food_chicken_tebasaki_nama.png", "./img/illustya/dougu_torobune_tsuchi.png", "./img/illustya/war_taihou.png", "./img/illustya/suzaku_wing.png", "./img/illustya/bucket_iron_empty_up.png", "./img/illustya/pet_robot_dog.png", "./img/illustya/inugoya_blue.png", "./img/illustya/tree_ryuuboku.png", "./img/illustya/job_programmer.png", "./img/illustya/feather_brown.png", "./img/illustya/satsumaimo_sweetpotato.png", "./img/illustya/heart_blur.png", "./img/illustya/car_engine.png", "./img/illustya/fish_sakana_sake.png", "./img/illustya/buki_morningstar_flail.png", "./img/illustya/fantasy_dragon.png", "./img/illustya/kaisou_konbu.png", "./img/illustya/kouji_shizai_okiba.png", "./img/illustya/mizudeppou.png", "./img/illustya/yakitori_kawa.png", "./img/illustya/cannonball_right.png", "./img/illustya/hair_curl_dryer.png", "./img/illustya/shinkai_chouchinankou.png", "./img/illustya/hinawaju.png", "./img/illustya/peryton_wing.png", "./img/illustya/tsue_sennin.png", "./img/illustya/feather_red.png", "./img/illustya/mark_face_laugh.png", "./img/illustya/takibi_dai.png", "./img/illustya/starter_starting_pistol.png", "./img/illustya/cooking_urokohiki.png", "./img/illustya/tekkotsu_silver.png", "./img/illustya/otanjoubi_birthday_present_balloon.png", "./img/illustya/war_trident.png", "./img/illustya/undoukai_flag4_i.png", "./img/illustya/undoukai_flag3_i.png", "./img/illustya/harisen.png", "./img/illustya/dougu_nogisu_digital.png", "./img/illustya/cooking_kokei_nenryou_fire.png", "./img/illustya/tomato_red.png", "./img/illustya/kouji_dendou_driver.png", "./img/illustya/nokogiri.png", "./img/illustya/undoukai_flag1_i.png", "./img/illustya/dougu_torobune_tsuchi_red.png", "./img/illustya/cthulhu_deep_ones.png", "./img/illustya/dougu_gluegun.png", "./img/illustya/animal_washi.png", "./img/illustya/setsumeisyo_manual.png", "./img/illustya/yurei_youngwoman3_sad.png", "./img/illustya/game_ken.png", "./img/illustya/pellet_wood_mokusei.png", "./img/illustya/undoukai_flag4.png", "./img/illustya/text_mu.png", "./img/illustya/bin_tegami.png", "./img/illustya/fish_tobiuo2.png", "./img/illustya/engine_hatsudenki_small.png", "./img/illustya/music_trumpet.png", "./img/illustya/monkey_wrench.png", "./img/illustya/fantasy_dragon_wyvern.png", "./img/illustya/cardboard_open.png", "./img/illustya/bird_kakkou.png", "./img/illustya/wasyoku_yakizakana.png", "./img/illustya/boomerang.png", "./img/illustya/food_chicken_tebamoto.png", "./img/illustya/undoukai_flag5_i.png", "./img/illustya/fashion_maid.png", "./img/illustya/gin_dangan_silver_bullet.png", "./img/illustya/fish_minokasago.png", "./img/illustya/soccer_cheer_horn_music.png", "./img/illustya/kandume_tomato.png", "./img/illustya/food_yakitomorokoshi.png", "./img/illustya/undoukai_flag3.png", "./img/illustya/cannonball_item.png", "./img/illustya/microraptor_wing.png", "./img/illustya/fish_tobiuo.png", "./img/illustya/nature_stone_ishi.png", "./img/illustya/fishing_tsurizao_nagezao.png", "./img/illustya/vegetable_corn.png", "./img/illustya/takibi_dai_fire.png", "./img/illustya/fish_maguro.png", "./img/illustya/fantasy_gargoyle.png", "./img/illustya/car_battery_blue_red.png", "./img/illustya/tosou_airbrush.png", "./img/illustya/food_yakisake.png"]);
 
-  class Yt {
+  class Yt {}
+
+  _defineProperty(Yt, "FILE_NAME_LIST", ["./img/wind_effect.png", "./img/ship_frame.png", "./img/ship_floor.png", "./img/dry_lack.png", "./img/fish_fin.png", "./img/cloud.png", "./img/laser_turret.png", "./img/mortor.png", "./img/machine_gun.png", "./img/air_cannon.png", "./img/mast_close.png", "./img/mast_open.png", "./img/spring_green.png", "./img/spring_red.png", "./img/air_ball.png", "./img/bullet_arrow.png", "./img/ladder.png", "./img/catapult.png", "./img/catapult_bullet.png", "./img/catapult_ammo.png", "./img/menu.png", "./img/batsu.png", "./img/check.png", "./img/arrow_up.png", "./img/arrow_down.png", "./img/ship_core.png", "./img/ikada.png"]);
+
+  class zt {
     constructor(t) {
       this.game = t, this.image_list = [];
     }
@@ -3578,10 +3720,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     load_images() {
-      for (let t = 0; t < Pt.FILE_NAME_LIST.length; t++) {
+      for (let t = 0; t < Yt.FILE_NAME_LIST.length; t++) {
         let i = new Image();
-        i.src = Pt.FILE_NAME_LIST[t], this.image_list[Pt.FILE_NAME_LIST[t]] = i;
-        let e = Pt.FILE_NAME_LIST[t];
+        i.src = Yt.FILE_NAME_LIST[t], this.image_list[Yt.FILE_NAME_LIST[t]] = i;
+        let e = Yt.FILE_NAME_LIST[t];
         e = e.replace("./img/", ""), e = e.replace(".png", ""), this.image_list[e] = i;
       }
 
@@ -3597,23 +3739,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     load_illustya() {
-      for (let t = 0; t < Bt.FILE_NAME_LIST.length; t++) if (Bt.FILE_NAME_LIST[t]) {
+      for (let t = 0; t < Pt.FILE_NAME_LIST.length; t++) if (Pt.FILE_NAME_LIST[t]) {
         let i = new Image();
-        i.src = Bt.FILE_NAME_LIST[t], this.image_list[Bt.FILE_NAME_LIST[t]] = i;
-        let e = Bt.FILE_NAME_LIST[t];
+        i.src = Pt.FILE_NAME_LIST[t], this.image_list[Pt.FILE_NAME_LIST[t]] = i;
+        let e = Pt.FILE_NAME_LIST[t];
         e = e.replace("./img/illustya/", ""), e = e.replace(".png", ""), this.image_list[e] = i;
       }
     }
 
   }
 
-  class zt {}
+  class Wt {}
 
-  _defineProperty(zt, "FILE_NAME_LIST", ["./sound/keytap.mp3", "./sound/513/cymbal/D1.mp3", "./sound/513/cymbal/D2.mp3", "./sound/513/cymbal/E1.mp3", "./sound/513/cymbal/F4.mp3", "./sound/513/cymbal/D1.mp3", "./sound/513/cymbal/D2.mp3", "./sound/513/cymbal/E1.mp3", "./sound/513/cymbal/F4.mp3", "./sound/513/hat/A3.mp3", "./sound/513/hat/A5.mp3", "./sound/513/hat/B1.mp3", "./sound/513/hat/C2.mp3", "./sound/513/hat/C5.mp3", "./sound/513/hat/C6.mp3", "./sound/513/hat/D4.mp3", "./sound/513/hat/E3.mp3", "./sound/513/hat/F4.mp3", "./sound/513/hat/G3.mp3", "./sound/513/perc/A2.mp3", "./sound/513/perc/A3.mp3", "./sound/513/perc/A4.mp3", "./sound/513/perc/B2.mp3", "./sound/513/perc/C4.mp3", "./sound/513/perc/C5.mp3", "./sound/513/perc/C6.mp3", "./sound/513/perc/D5.mp3", "./sound/513/perc/E2.mp3", "./sound/513/perc/G2.mp3", "./sound/513/perc/G4.mp3", "./sound/513/perc/A2.mp3", "./sound/513/perc/A3.mp3", "./sound/513/perc/A4.mp3", "./sound/513/perc/B2.mp3", "./sound/513/perc/C4.mp3", "./sound/513/perc/C5.mp3", "./sound/513/perc/C6.mp3", "./sound/513/perc/D5.mp3", "./sound/513/perc/E2.mp3", "./sound/513/perc/G2.mp3", "./sound/513/perc/G4.mp3", "./sound/513/perc/A2.mp3", "./sound/513/perc/A3.mp3", "./sound/513/perc/A4.mp3", "./sound/513/perc/B2.mp3", "./sound/513/perc/C4.mp3", "./sound/513/perc/C5.mp3", "./sound/513/perc/C6.mp3", "./sound/513/perc/D5.mp3", "./sound/513/perc/E2.mp3", "./sound/513/perc/G2.mp3", "./sound/513/perc/G4.mp3", "./sound/513/hat/A3.mp3", "./sound/513/hat/A5.mp3", "./sound/513/hat/B1.mp3", "./sound/513/hat/C2.mp3", "./sound/513/hat/C5.mp3", "./sound/513/hat/C6.mp3", "./sound/513/hat/D4.mp3", "./sound/513/hat/E3.mp3", "./sound/513/hat/F4.mp3", "./sound/513/hat/G3.mp3", "./sound/513/cymbal/D1.mp3", "./sound/513/cymbal/D2.mp3", "./sound/513/cymbal/E1.mp3", "./sound/513/cymbal/F4.mp3", "./sound/513/snare/A1.mp3", "./sound/513/snare/A2.mp3", "./sound/513/snare/A3.mp3", "./sound/513/snare/C1.mp3", "./sound/513/snare/C2.mp3", "./sound/513/snare/C3.mp3", "./sound/513/snare/C4.mp3", "./sound/513/snare/D2.mp3", "./sound/513/snare/D4.mp3", "./sound/513/snare/E3.mp3", "./sound/513/snare/F2.mp3", "./sound/513/snare/F3.mp3", "./sound/513/tom/A3.mp3", "./sound/513/tom/B4.mp3", "./sound/513/tom/C6.mp3", "./sound/513/tom/E1.mp3", "./sound/513/tom/F4.mp3", "./sound/513/tom/F5.mp3", "./sound/513/tom/G1.mp3", "./sound/513/tom/G3.mp3", "./sound/513/kick/B4.mp3", "./sound/513/kick/B5.mp3", "./sound/513/kick/C4.mp3", "./sound/513/kick/C5.mp3", "./sound/513/kick/D1.mp3", "./sound/513/kick/D2.mp3", "./sound/513/clap/A1.mp3", "./sound/513/clap/A2.mp3", "./sound/513/clap/A3.mp3", "./sound/513/clap/B1.mp3", "./sound/513/clap/B2.mp3", "./sound/513/clap/B3.mp3", "./sound/513/clap/C1.mp3", "./sound/513/clap/C2.mp3", "./sound/513/clap/C3.mp3", "./sound/513/clap/D1.mp3", "./sound/513/clap/D2.mp3", "./sound/513/clap/D3.mp3", "./sound/513/clap/E1.mp3", "./sound/513/clap/E2.mp3", "./sound/513/clap/E3.mp3", "./sound/513/clap/F1.mp3", "./sound/513/clap/F2.mp3", "./sound/513/clap/F3.mp3", "./sound/513/clap/G2.mp3", "./sound/513/clap/G3.mp3"]);
+  _defineProperty(Wt, "FILE_NAME_LIST", ["./sound/keytap.mp3", "./sound/513/cymbal/D1.mp3", "./sound/513/cymbal/D2.mp3", "./sound/513/cymbal/E1.mp3", "./sound/513/cymbal/F4.mp3", "./sound/513/cymbal/D1.mp3", "./sound/513/cymbal/D2.mp3", "./sound/513/cymbal/E1.mp3", "./sound/513/cymbal/F4.mp3", "./sound/513/hat/A3.mp3", "./sound/513/hat/A5.mp3", "./sound/513/hat/B1.mp3", "./sound/513/hat/C2.mp3", "./sound/513/hat/C5.mp3", "./sound/513/hat/C6.mp3", "./sound/513/hat/D4.mp3", "./sound/513/hat/E3.mp3", "./sound/513/hat/F4.mp3", "./sound/513/hat/G3.mp3", "./sound/513/perc/A2.mp3", "./sound/513/perc/A3.mp3", "./sound/513/perc/A4.mp3", "./sound/513/perc/B2.mp3", "./sound/513/perc/C4.mp3", "./sound/513/perc/C5.mp3", "./sound/513/perc/C6.mp3", "./sound/513/perc/D5.mp3", "./sound/513/perc/E2.mp3", "./sound/513/perc/G2.mp3", "./sound/513/perc/G4.mp3", "./sound/513/perc/A2.mp3", "./sound/513/perc/A3.mp3", "./sound/513/perc/A4.mp3", "./sound/513/perc/B2.mp3", "./sound/513/perc/C4.mp3", "./sound/513/perc/C5.mp3", "./sound/513/perc/C6.mp3", "./sound/513/perc/D5.mp3", "./sound/513/perc/E2.mp3", "./sound/513/perc/G2.mp3", "./sound/513/perc/G4.mp3", "./sound/513/perc/A2.mp3", "./sound/513/perc/A3.mp3", "./sound/513/perc/A4.mp3", "./sound/513/perc/B2.mp3", "./sound/513/perc/C4.mp3", "./sound/513/perc/C5.mp3", "./sound/513/perc/C6.mp3", "./sound/513/perc/D5.mp3", "./sound/513/perc/E2.mp3", "./sound/513/perc/G2.mp3", "./sound/513/perc/G4.mp3", "./sound/513/hat/A3.mp3", "./sound/513/hat/A5.mp3", "./sound/513/hat/B1.mp3", "./sound/513/hat/C2.mp3", "./sound/513/hat/C5.mp3", "./sound/513/hat/C6.mp3", "./sound/513/hat/D4.mp3", "./sound/513/hat/E3.mp3", "./sound/513/hat/F4.mp3", "./sound/513/hat/G3.mp3", "./sound/513/cymbal/D1.mp3", "./sound/513/cymbal/D2.mp3", "./sound/513/cymbal/E1.mp3", "./sound/513/cymbal/F4.mp3", "./sound/513/snare/A1.mp3", "./sound/513/snare/A2.mp3", "./sound/513/snare/A3.mp3", "./sound/513/snare/C1.mp3", "./sound/513/snare/C2.mp3", "./sound/513/snare/C3.mp3", "./sound/513/snare/C4.mp3", "./sound/513/snare/D2.mp3", "./sound/513/snare/D4.mp3", "./sound/513/snare/E3.mp3", "./sound/513/snare/F2.mp3", "./sound/513/snare/F3.mp3", "./sound/513/tom/A3.mp3", "./sound/513/tom/B4.mp3", "./sound/513/tom/C6.mp3", "./sound/513/tom/E1.mp3", "./sound/513/tom/F4.mp3", "./sound/513/tom/F5.mp3", "./sound/513/tom/G1.mp3", "./sound/513/tom/G3.mp3", "./sound/513/kick/B4.mp3", "./sound/513/kick/B5.mp3", "./sound/513/kick/C4.mp3", "./sound/513/kick/C5.mp3", "./sound/513/kick/D1.mp3", "./sound/513/kick/D2.mp3", "./sound/513/clap/A1.mp3", "./sound/513/clap/A2.mp3", "./sound/513/clap/A3.mp3", "./sound/513/clap/B1.mp3", "./sound/513/clap/B2.mp3", "./sound/513/clap/B3.mp3", "./sound/513/clap/C1.mp3", "./sound/513/clap/C2.mp3", "./sound/513/clap/C3.mp3", "./sound/513/clap/D1.mp3", "./sound/513/clap/D2.mp3", "./sound/513/clap/D3.mp3", "./sound/513/clap/E1.mp3", "./sound/513/clap/E2.mp3", "./sound/513/clap/E3.mp3", "./sound/513/clap/F1.mp3", "./sound/513/clap/F2.mp3", "./sound/513/clap/F3.mp3", "./sound/513/clap/G2.mp3", "./sound/513/clap/G3.mp3"]);
 
   class Zt {
     constructor(t) {
-      this.game = t, this.sound_list = [], this.is_load_start = !1;
+      this.game = t, this.sound_list = [], this.is_load_start = !1, this.is_mute = !0;
     }
 
     get_sound(t) {
@@ -3621,17 +3763,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     play_sound(t) {
-      this.sound_list[t] && (this.bufferSource = this.context.createBufferSource(), this.bufferSource.buffer = this.sound_list[t], this.bufferSource.connect(this.context.destination), this.bufferSource.start(0));
+      this.is_mute || this.sound_list[t] && (this.bufferSource = this.context.createBufferSource(), this.bufferSource.buffer = this.sound_list[t], this.bufferSource.connect(this.context.destination), this.bufferSource.start(0));
     }
 
     load_sounds() {
-      this.is_load_start || (this.is_load_start = !0, this.context = new (window.AudioContext || window.webkitAudioContext)(), this.context.createMediaElementSource(document.getElementById("audio_tag_c6")).connect(this.context.destination), document.getElementById("audio_tag_c6").play(), this.load_files());
+      this.is_mute || this.is_load_start || (this.is_load_start = !0, this.context = new (window.AudioContext || window.webkitAudioContext)(), this.context.createMediaElementSource(document.getElementById("audio_tag_c6")).connect(this.context.destination), document.getElementById("audio_tag_c6").play(), this.load_files());
     }
 
     load_files() {
-      for (let t = 0; t < zt.FILE_NAME_LIST.length; t++) if (zt.FILE_NAME_LIST[t]) {
+      for (let t = 0; t < Wt.FILE_NAME_LIST.length; t++) if (Wt.FILE_NAME_LIST[t]) {
         let i = null,
-            e = zt.FILE_NAME_LIST[t];
+            e = Wt.FILE_NAME_LIST[t];
         i = new XMLHttpRequest(), i.open("GET", e, !0), i.responseType = "arraybuffer", i.onload = function () {
           this.context.decodeAudioData(i.response, function (t) {
             this.sound_list[e] = t;
@@ -3646,7 +3788,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   class Kt {
     constructor(t) {
-      this.game = t, this.item_inventory_size = 32, this.tool_item_inventory = [];
+      this.game = t, this.item_inventory_size = 25, this.tool_item_inventory = [];
 
       for (let t = 0; t < this.item_inventory_size; t++) this.tool_item_inventory[t] = null;
     }
@@ -3657,7 +3799,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     cheat() {
       let t = null;
-      t = new _(game), t.set_image("./img/illustya/rain_kasa_red.png"), t.equip_part = _.EQUIP_GLIDER, t.riseup_power = 10, this.tool_item_inventory[2] = t, t = new _(game), t.set_image("./img/illustya/feather_red.png"), t.equip_part = _.EQUIP_WING, t.midair_speed = 2, t.fall_speed = .8, this.tool_item_inventory[3] = t, t = new _(game), t.set_image("./img/illustya/snorkel_goggle.png"), t.equip_part = _.EQUIP_GOGGLE, t.underwater_speed = 1, this.tool_item_inventory[4] = t, t = new _(game), t.set_image("./img/illustya/snorkel_fin.png"), t.equip_part = _.EQUIP_FIN, t.underwater_speed = 1, this.tool_item_inventory[5] = t, t = new v(game), this.tool_item_inventory[8] = t, t = new v(game), this.tool_item_inventory[9] = t, t = new v(game), this.tool_item_inventory[10] = t;
+      t = new _(game), t.set_image("./img/illustya/rain_kasa_red.png"), t.equip_part = _.EQUIP_GLIDER, t.riseup_power = 10, this.tool_item_inventory[2] = t, t = new _(game), t.set_image("./img/illustya/feather_red.png"), t.equip_part = _.EQUIP_WING, t.midair_speed = 2, t.fall_speed = .8, this.tool_item_inventory[3] = t, t = new _(game), t.set_image("./img/illustya/snorkel_goggle.png"), t.equip_part = _.EQUIP_GOGGLE, t.underwater_speed = 1, this.tool_item_inventory[4] = t, t = new _(game), t.set_image("./img/illustya/snorkel_fin.png"), t.equip_part = _.EQUIP_FIN, t.underwater_speed = 1, this.tool_item_inventory[5] = t, t = new k(game), this.tool_item_inventory[8] = t, t = new k(game), this.tool_item_inventory[9] = t, t = new k(game), this.tool_item_inventory[10] = t;
     }
 
     load_data(t) {
@@ -3674,7 +3816,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Wt extends t {
+  class jt extends t {
     constructor(t) {
       super(t), this.image = this.game.image_library.get_image("kaizoku_takarabako"), this.saving_data.item_name = "名もなき箱", this.content_item = null;
     }
@@ -3689,7 +3831,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class jt {
+  class qt {
     constructor(t) {
       this.game = t;
     }
@@ -3698,30 +3840,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       let t = Math.floor(100 * Math.random());
 
       if (t < 30) {
-        let t = new x(this.game);
+        let t = new O(this.game);
         return t.saving_data.item_name = "流木", t.set_image("tree_ryuuboku"), t.add_material("wood", Math.floor(20 + 10 * Math.random())), t;
       }
 
       if (t < 60) {
-        let t = new x(this.game);
+        let t = new O(this.game);
         return t.saving_data.item_name = "石", t.set_image("nature_stone_ishi"), t.add_material("stone", Math.floor(10 + 10 * Math.random())), t;
       }
 
-      let i = new Wt(this.game);
-      return i.set_image("fish_sakana_iwashi"), i.set_content(new v(this.game)), i;
+      let i = new jt(this.game);
+      return i.set_image("fish_sakana_iwashi"), i.set_content(new k(this.game)), i;
     }
 
     get_drifting_item() {
       let t = null,
           i = Math.floor(100 * Math.random());
-      return i < 30 ? (t = new x(this.game), t.saving_data.item_name = "流木", t.set_image("tree_ryuuboku"), t.add_material("wood", Math.floor(20 + 10 * Math.random()))) : i < 60 ? (t = new x(this.game), t.saving_data.item_name = "古着", t.set_image("alohashirt_gray"), t.add_material("cloth", Math.floor(10 + 10 * Math.random()))) : i < 90 ? (t = new x(this.game), t.saving_data.item_name = "空き缶", t.set_image("gomi_can"), t.add_material("iron", Math.floor(10 + 10 * Math.random()))) : i < 100 ? (t = new x(this.game), t.set_image("glass_bin6_clear"), t.saving_data.item_name = "ビン", t.add_material("jar", 1)) : (t = new x(this.game), t.saving_data.item_name = "ボトル", t.set_image("glass_bin6_clear"), t.add_material("jar", 1)), t;
+      return i < 30 ? (t = new O(this.game), t.saving_data.item_name = "流木", t.set_image("tree_ryuuboku"), t.add_material("wood", Math.floor(20 + 10 * Math.random()))) : i < 60 ? (t = new O(this.game), t.saving_data.item_name = "古着", t.set_image("alohashirt_gray"), t.add_material("cloth", Math.floor(10 + 10 * Math.random()))) : i < 90 ? (t = new O(this.game), t.saving_data.item_name = "空き缶", t.set_image("gomi_can"), t.add_material("iron", Math.floor(10 + 10 * Math.random()))) : i < 100 ? (t = new O(this.game), t.set_image("glass_bin6_clear"), t.saving_data.item_name = "ビン", t.add_material("jar", 1)) : (t = new O(this.game), t.saving_data.item_name = "ボトル", t.set_image("glass_bin6_clear"), t.add_material("jar", 1)), t;
     }
 
   }
 
-  class qt {
+  class Qt {
     constructor(t) {
-      this.game = t, this.balance = new jt(this.game), this.list = {}, this.name_list = [], this.name_list.fuel = "燃料", this.name_list.leftover = "残飯", this.name_list.wood = "木", this.name_list.stone = "石", this.name_list.cloth = "布切れ", this.name_list.iron = "鉄クズ", this.name_list.feather = "鳥の羽根", this.name_list.seed = "種", this.name_list.jar = "ビン", this.name_list.parts = "機械部品", this.name_list.circuit = "電子回路", this.name_list.lead = "鉛の塊", this.name_list.plastic = "プラスチック", this.name_list.silver = "銀の欠片", this.name_list.fur = "毛皮", this.name_list.metal = "金属", this.name_list.bone = "骨", this.name_list.fin = "魚のヒレ";
+      this.game = t, this.balance = new qt(this.game), this.list = {}, this.name_list = [], this.name_list.fuel = "燃料", this.name_list.leftover = "残飯", this.name_list.wood = "木", this.name_list.stone = "石", this.name_list.cloth = "布切れ", this.name_list.iron = "鉄クズ", this.name_list.feather = "鳥の羽根", this.name_list.seed = "種", this.name_list.jar = "ビン", this.name_list.parts = "機械部品", this.name_list.circuit = "電子回路", this.name_list.lead = "鉛の塊", this.name_list.plastic = "プラスチック", this.name_list.silver = "銀の欠片", this.name_list.fur = "毛皮", this.name_list.metal = "金属", this.name_list.bone = "骨", this.name_list.fin = "魚のヒレ";
 
       for (let t in this.name_list) this.list[t] = 0;
     }
@@ -3757,13 +3899,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Qt extends Object {
+  class Vt extends Object {
     constructor(t) {
       super(t), this.game = t, this.savedata_cursor = 1, this.load_menu_string = [], this.load_menu_string[0] = "New Game", this.load_menu_string[1] = "オートセーブをロード", this.load_menu_string[2] = "データ[1]をロード", this.load_menu_string[3] = "データ[2]をロード", this.data_item_count = 4;
     }
 
     on_update() {
-      if ((this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && this.select_menu(this.savedata_cursor), this.game.input_controller.get_press_up() && 0 < this.savedata_cursor && (this.savedata_cursor -= 1), this.game.input_controller.get_press_down() && this.savedata_cursor < this.data_item_count - 1 && (this.savedata_cursor += 1), this.game.input_controller.get_mouse_press() && Qt.MENU_MARGIN_LEFT - Qt.MENU_ARROW_X < this.game.input_controller.mouse_x && Qt.MENU_MARGIN_LEFT + Qt.MENU_ITEM_WIDTH > this.game.input_controller.mouse_x) for (let t = 0; t < this.data_item_count; t++) if (Qt.MENU_MARGIN_TOP + Qt.MENU_ITEM_HEIGHT * t < this.game.input_controller.mouse_y && Qt.MENU_MARGIN_TOP + Qt.MENU_ITEM_HEIGHT * (t + 1) > this.game.input_controller.mouse_y) {
+      if ((this.game.input_controller.get_press_enter() || this.game.input_controller.get_press_space()) && this.select_menu(this.savedata_cursor), this.game.input_controller.get_press_up() && 0 < this.savedata_cursor && (this.savedata_cursor -= 1), this.game.input_controller.get_press_down() && this.savedata_cursor < this.data_item_count - 1 && (this.savedata_cursor += 1), this.game.input_controller.get_mouse_press() && Vt.MENU_MARGIN_LEFT - Vt.MENU_ARROW_X < this.game.input_controller.mouse_x && Vt.MENU_MARGIN_LEFT + Vt.MENU_ITEM_WIDTH > this.game.input_controller.mouse_x) for (let t = 0; t < this.data_item_count; t++) if (Vt.MENU_MARGIN_TOP + Vt.MENU_ITEM_HEIGHT * t < this.game.input_controller.mouse_y && Vt.MENU_MARGIN_TOP + Vt.MENU_ITEM_HEIGHT * (t + 1) > this.game.input_controller.mouse_y) {
         this.select_menu(t);
         break;
       }
@@ -3774,34 +3916,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_draw(t) {
-      t.save(), t.font = "bold 64px monospace", t.strokeStyle = "rgb(250,250,250)", t.fillStyle = "rgb(250,250,250)", t.strokeText("[ Ikada Builder ]", 150, 150), t.font = Qt.MENU_FONT, t.textBaseline = "top";
+      t.save(), t.font = "bold 64px monospace", t.strokeStyle = "rgb(250,250,250)", t.fillStyle = "rgb(250,250,250)", t.strokeText("[ Ikada Builder ]", 150, 150), t.font = Vt.MENU_FONT, t.textBaseline = "top";
 
-      for (let i = 0; i < this.data_item_count; i++) t.fillStyle = Qt.MENU_COLOR, i == this.savedata_cursor && (t.fillStyle = Qt.MENU_COLOR_ACTIVE, t.fillText("->", Qt.MENU_MARGIN_LEFT - Qt.MENU_ARROW_X, Qt.MENU_MARGIN_TOP + Qt.MENU_ITEM_HEIGHT * i + Qt.MENU_TEXT_MARGIN)), t.fillText(this.load_menu_string[i], Qt.MENU_MARGIN_LEFT + Qt.MENU_TEXT_MARGIN, Qt.MENU_MARGIN_TOP + Qt.MENU_ITEM_HEIGHT * i + Qt.MENU_TEXT_MARGIN), t.strokeRect(Qt.MENU_MARGIN_LEFT, Qt.MENU_MARGIN_TOP + Qt.MENU_ITEM_HEIGHT * i, Qt.MENU_ITEM_WIDTH, Qt.MENU_ITEM_HEIGHT);
+      for (let i = 0; i < this.data_item_count; i++) t.fillStyle = Vt.MENU_COLOR, i == this.savedata_cursor && (t.fillStyle = Vt.MENU_COLOR_ACTIVE, t.fillText("->", Vt.MENU_MARGIN_LEFT - Vt.MENU_ARROW_X, Vt.MENU_MARGIN_TOP + Vt.MENU_ITEM_HEIGHT * i + Vt.MENU_TEXT_MARGIN)), t.fillText(this.load_menu_string[i], Vt.MENU_MARGIN_LEFT + Vt.MENU_TEXT_MARGIN, Vt.MENU_MARGIN_TOP + Vt.MENU_ITEM_HEIGHT * i + Vt.MENU_TEXT_MARGIN), t.strokeRect(Vt.MENU_MARGIN_LEFT, Vt.MENU_MARGIN_TOP + Vt.MENU_ITEM_HEIGHT * i, Vt.MENU_ITEM_WIDTH, Vt.MENU_ITEM_HEIGHT);
 
       t.restore();
     }
 
   }
 
-  _defineProperty(Qt, "MENU_MARGIN_TOP", 200);
+  _defineProperty(Vt, "MENU_MARGIN_TOP", 200);
 
-  _defineProperty(Qt, "MENU_MARGIN_LEFT", 300);
+  _defineProperty(Vt, "MENU_MARGIN_LEFT", 300);
 
-  _defineProperty(Qt, "MENU_FONT", "bold 24px monospace");
+  _defineProperty(Vt, "MENU_FONT", "bold 24px monospace");
 
-  _defineProperty(Qt, "MENU_COLOR", "rgb(250,250,250)");
+  _defineProperty(Vt, "MENU_COLOR", "rgb(250,250,250)");
 
-  _defineProperty(Qt, "MENU_COLOR_ACTIVE", "rgb(150,250,150)");
+  _defineProperty(Vt, "MENU_COLOR_ACTIVE", "rgb(150,250,150)");
 
-  _defineProperty(Qt, "MENU_ITEM_HEIGHT", 50);
+  _defineProperty(Vt, "MENU_ITEM_HEIGHT", 50);
 
-  _defineProperty(Qt, "MENU_ITEM_WIDTH", 300);
+  _defineProperty(Vt, "MENU_ITEM_WIDTH", 300);
 
-  _defineProperty(Qt, "MENU_TEXT_MARGIN", 10);
+  _defineProperty(Vt, "MENU_TEXT_MARGIN", 10);
 
-  _defineProperty(Qt, "MENU_ARROW_X", 50);
+  _defineProperty(Vt, "MENU_ARROW_X", 50);
 
-  class Vt extends t {
+  class Jt extends t {
     constructor(t) {
       super(t), this.saving_data.item_name = "虫あみ", this.image = this.game.image_library.get_image("./img/illustya/mushi_mushitoriami.png");
     }
@@ -3812,32 +3954,43 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class Jt extends t {
+  class $t extends t {
+    constructor(t) {
+      super(t), this.saving_data.item_name = "砲弾", this.image = this.game.image_library.get_image("cannonball_item"), this.ammo_type = "gun", this.ammo_value = 100;
+    }
+
+    on_click(t, i, e, s) {
+      this.game.log("これは弾薬です。"), this.game.log("弾薬を必要とする設備に補充できます。");
+    }
+
+  }
+
+  class ti extends t {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("boomerang"), this.saving_data.item_name = "ブーメラン";
     }
 
   }
 
-  class $t extends t {
+  class ii extends t {
     constructor(t) {
       super(t), this.game = t, this.image = this.game.image_library.get_image("darts_ya"), this.saving_data.item_name = "矢";
     }
 
   }
 
-  class ti {
+  class ei {
     constructor(t) {
       this.game = t;
     }
 
     make_instance(e) {
-      return null == e ? null : "ResourceItem" == e.class_name ? new x(this.game) : "FishRod" == e.class_name ? new ft(this.game) : "EquipmentItem" == e.class_name ? new _(this.game) : "CatchNet" == e.class_name ? new Vt(this.game) : "ToolItem" == e.class_name ? new t(this.game) : "CannonAmmoItem" == e.class_name ? new Q(this.game) : "WeaponItem" == e.class_name ? new y(this.game) : "SolidFuel" == e.class_name ? new j(this.game) : "Scouter" == e.class_name ? new ut(this.game) : "Spear" == e.class_name ? new bt(this.game) : "DistillBottle" == e.class_name ? new yt(this.game) : "RepairWrench" == e.class_name ? new wt(this.game) : "BuildBlock" == e.class_name ? new i(this.game) : "ItemBoomerang" == e.class_name ? new Jt(this.game) : "Arrow" == e.class_name ? new $t(this.game) : "Oar" == e.class_name ? new Tt(this.game) : "DeconstructHammer" == e.class_name ? new pt(this.game) : "AmmoItem" == e.class_name ? new q(this.game) : "Bow" == e.class_name ? new It(this.game) : "ChickenRawSaki" == e.class_name ? new C(this.game) : "ChickenRawMoto" == e.class_name ? new L(this.game) : "ChickenCookedSaki" == e.class_name ? new S(this.game) : "GenericFood" == e.class_name ? new f(this.game) : "CookedFish" == e.class_name ? new T(this.game) : "VeggieTomato" == e.class_name ? new nt(this.game) : "ChickenCookedMoto" == e.class_name ? new N(this.game) : "ChickenDried" == e.class_name ? new O(this.game) : "DriedFish" == e.class_name ? new w(this.game) : "FishKirimi" == e.class_name ? new v(this.game) : new t(this.game);
+      return null == e ? null : "ResourceItem" == e.class_name ? new O(this.game) : "FishRod" == e.class_name ? new Tt(this.game) : "EquipmentItem" == e.class_name ? new _(this.game) : "ContainerItem" == e.class_name ? new jt(this.game) : "CatchNet" == e.class_name ? new Jt(this.game) : "ToolItem" == e.class_name ? new t(this.game) : "CannonAmmoItem" == e.class_name ? new V(this.game) : "WeaponItem" == e.class_name ? new T(this.game) : "SolidFuel" == e.class_name ? new q(this.game) : "AmmoStone" == e.class_name ? new xt(this.game) : "Scouter" == e.class_name ? new dt(this.game) : "AmmoCannon" == e.class_name ? new $t(this.game) : "Spear" == e.class_name ? new kt(this.game) : "DistillBottle" == e.class_name ? new ft(this.game) : "RepairWrench" == e.class_name ? new vt(this.game) : "BuildBlock" == e.class_name ? new i(this.game) : "ItemBoomerang" == e.class_name ? new ti(this.game) : "Arrow" == e.class_name ? new ii(this.game) : "Oar" == e.class_name ? new wt(this.game) : "DeconstructHammer" == e.class_name ? new yt(this.game) : "AmmoItem" == e.class_name ? new Q(this.game) : "Bow" == e.class_name ? new It(this.game) : "ChickenRawSaki" == e.class_name ? new L(this.game) : "ChickenRawMoto" == e.class_name ? new R(this.game) : "ChickenCookedSaki" == e.class_name ? new C(this.game) : "GenericFood" == e.class_name ? new w(this.game) : "CookedFish" == e.class_name ? new v(this.game) : "VeggieTomato" == e.class_name ? new rt(this.game) : "ChickenCookedMoto" == e.class_name ? new M(this.game) : "ChickenDried" == e.class_name ? new N(this.game) : "DriedFish" == e.class_name ? new b(this.game) : "FishKirimi" == e.class_name ? new k(this.game) : new t(this.game);
     }
 
   }
 
-  class ii extends e {
+  class si extends e {
     constructor(t) {
       super(t), this.name = "ボットホーム", this.is_floor = !0, this.image = this.game.image_library.get_image("ship_floor");
     }
@@ -3848,7 +4001,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class ei extends e {
+  class _i extends e {
     constructor(t) {
       super(t), this.name = "ドローンホーム", this.is_floor = !0, this.image = this.game.image_library.get_image("kaden_wifi_router");
     }
@@ -3859,20 +4012,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class si {
+  class ai {
     constructor(t) {
       this.game = t;
     }
 
     make_instance(t) {
-      return null == t ? null : "ShipFarmWet" == t.class_name ? new lt(this.game) : "WaterPlace" == t.class_name ? new ht(this.game) : "ShipBlock" == t.class_name ? new e(this.game) : "BotHome" == t.class_name ? new ii(this.game) : "BotHouseDog" == t.class_name ? new J(this.game) : "BotHouseCat" == t.class_name ? new tt(this.game) : "WeaponMortorTube" == t.class_name ? new at(this.game) : "ShipFrame" == t.class_name ? new F(this.game) : "DryLack" == t.class_name ? new mt(this.game) : "ShipFloor" == t.class_name ? new r(this.game) : "LevelFlag2" == t.class_name ? new z(this.game) : "ShipFarm" == t.class_name ? new rt(this.game) : "WeaponAirCannon" == t.class_name ? new et(this.game) : "FuelEngine" == t.class_name ? new it(this.game) : "VictoryRocket" == t.class_name ? new P(this.game) : "DroneHome" == t.class_name ? new ei(this.game) : "WaterPlace2" == t.class_name ? new ot(this.game) : "WeaponMachineGun" == t.class_name ? new _t(this.game) : "LevelFlag1" == t.class_name ? new Y(this.game) : "LevelFlag3" == t.class_name ? new Z(this.game) : "FirePlace" == t.class_name ? new gt(this.game) : new e(this.game);
+      return null == t ? null : "ShipFarmWet" == t.class_name ? new mt(this.game) : "WaterPlace" == t.class_name ? new ot(this.game) : "ShipBlock" == t.class_name ? new e(this.game) : "BotHome" == t.class_name ? new si(this.game) : "BotHouseDog" == t.class_name ? new $(this.game) : "ShipCore" == t.class_name ? new m(this.game) : "BotHouseCat" == t.class_name ? new it(this.game) : "WeaponMortorTube" == t.class_name ? new ht(this.game) : "ShipFrame" == t.class_name ? new l(this.game) : "DryLack" == t.class_name ? new ct(this.game) : "ShipFloor" == t.class_name ? new r(this.game) : "LevelFlag2" == t.class_name ? new W(this.game) : "ShipFarm" == t.class_name ? new lt(this.game) : "WeaponAirCannon" == t.class_name ? new st(this.game) : "WeaponCatapult" == t.class_name ? new _t(this.game) : "FuelEngine" == t.class_name ? new et(this.game) : "VictoryRocket" == t.class_name ? new Y(this.game) : "DroneHome" == t.class_name ? new _i(this.game) : "WaterPlace2" == t.class_name ? new nt(this.game) : "WeaponMachineGun" == t.class_name ? new at(this.game) : "LevelFlag1" == t.class_name ? new z(this.game) : "LevelFlag3" == t.class_name ? new Z(this.game) : "FirePlace" == t.class_name ? new gt(this.game) : new e(this.game);
     }
 
   }
 
-  class _i {
+  class hi {
     constructor(t) {
-      this.game = t, this.item_instance_maker = new ti(this.game), this.block_instance_maker = new si(this.game);
+      this.game = t, this.item_instance_maker = new ei(this.game), this.block_instance_maker = new ai(this.game), this.is_data_saved = !1;
     }
 
     delete_save_data() {
@@ -3916,7 +4069,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class ai {
+  class oi {
     constructor(t) {
       this.game = t, this.button_size = 120, this.text_margin = 30, this.calc_button_position(), this.is_enable = !1;
     }
@@ -3955,7 +4108,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  class hi extends Object {
+  class ni extends Object {
     constructor(t) {
       super(t), this.game = t;
     }
@@ -3965,20 +4118,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     get_random_weapon() {
-      let t = new y(this.game);
+      let t = new T(this.game);
       t.generate_random_weapon(10, 10), this.game.world.give_tool_item_player(t);
     }
 
     get_effect_test_weapon() {
-      let t = new y(this.game);
+      let t = new T(this.game);
       t.set_image("dougu_nail_hammer"), t.saving_data.item_name = "デバッグ武器", t.saving_data.power = 10, t.saving_data.cool_time = 50, t.saving_data.fire_burst = 5, t.saving_data.fire_spread = 3, t.saving_data.fire_spread_angle = .2, t.saving_data.bullet_lifetime = 50, t.saving_data.bullet_velocity = 10, t.saving_data.bullet_weight = 50, t.saving_data.blast_lifetime = 25, t.saving_data.blast_velocity = 5, t.saving_data.critical_range_lifetime = 45, t.saving_data.critical_range_damage = 3, t.saving_data.critical_chance = .1, t.saving_data.critical_chance_damage = 2, t.saving_data.knockback_rate = 1, t.saving_data.poison_damage = 10, t.saving_data.slow_rate = .5, t.saving_data.life_leech = 10, t.saving_data.bullet_color = "rgb(250,0,250)", this.game.world.give_tool_item_player(t);
     }
 
   }
 
-  class oi {
+  class ri {
     constructor() {
-      this.name = "ikada", this.version = "0.1", this.game = this, this.display_canvas_element = document.getElementById("my_canvas"), this.display_canvas = this.display_canvas_element.getContext("2d"), this.SCREEN_WIDTH = 960, this.SCREEN_HEIGHT = 600, this.SCREEN_WIDTH_HALF = this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT_HALF = this.SCREEN_HEIGHT / 2, this.buffer_canvas_element = document.getElementById("my_buffer_canvas"), this.buffer_canvas_element.width = this.SCREEN_WIDTH, this.buffer_canvas_element.height = this.SCREEN_HEIGHT, this.buffer_canvas = this.buffer_canvas_element.getContext("2d"), this.active_canvas = this.display_canvas, this.inactive_canvas = this.buffer_canvas, this.is_use_buffer = !1, this.performance_count = 0, this.update_process_time = 0, this.draw_process_time = 0, this.image_library = new Yt(this), this.image_library.load_images(), this.sound_library = new Zt(this), this.input_controller = new Ft(this), this.tutorial_data = new Lt(this), this.world = new X(this), this.hud = new Dt(this), this.inventory = new Kt(this), this.materials = new qt(this), this.save_data_manager = new _i(this), this.is_there_title = !0, this.title_screen = new Qt(this), this.movie_playing = null, this.hud_virtual_input = new ai(this), this.dc = new hi(this), this.interbal_handle = 0;
+      this.name = "ikada", this.version = "0.1", this.game = this, this.display_canvas_element = document.getElementById("my_canvas"), this.display_canvas = this.display_canvas_element.getContext("2d"), this.SCREEN_WIDTH = 960, this.SCREEN_HEIGHT = 600, this.SCREEN_WIDTH_HALF = this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT_HALF = this.SCREEN_HEIGHT / 2, this.buffer_canvas_element = document.getElementById("my_buffer_canvas"), this.buffer_canvas_element.width = this.SCREEN_WIDTH, this.buffer_canvas_element.height = this.SCREEN_HEIGHT, this.buffer_canvas = this.buffer_canvas_element.getContext("2d"), this.active_canvas = this.display_canvas, this.inactive_canvas = this.buffer_canvas, this.is_use_buffer = !1, this.performance_count = 0, this.update_process_time = 0, this.draw_process_time = 0, this.image_library = new zt(this), this.image_library.load_images(), this.sound_library = new Zt(this), this.input_controller = new Bt(this), this.tutorial_data = new Mt(this), this.world = new D(this), this.hud = new Ft(this), this.inventory = new Kt(this), this.materials = new Qt(this), this.save_data_manager = new hi(this), this.is_there_title = !0, this.title_screen = new Vt(this), this.movie_playing = null, this.hud_virtual_input = new oi(this), this.dc = new ni(this), this.interbal_handle = 0;
     }
 
     reset() {
@@ -4014,12 +4167,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.draw_process_time = Math.floor(10 * t), performance.clearMeasures();
         } else this.performance_count += 1;
       } catch (t) {
-        throw clearInterval(this.interbal_handle), console.log("game halted on error!"), alert(t), this.display_canvas.fillStyle = oi.PROC_TIME_COLOR, this.display_canvas.font = oi.PROC_TIME_FONT, this.display_canvas.fillText("エラー発生: " + t, 200, 200), t;
+        throw clearInterval(this.interbal_handle), console.log("game halted on error!"), alert(t), this.display_canvas.fillStyle = ri.PROC_TIME_COLOR, this.display_canvas.font = ri.PROC_TIME_FONT, this.display_canvas.fillText("エラー発生: " + t, 200, 200), t;
       }
     }
 
     draw_parformance(t) {
-      t.fillStyle = oi.PROC_TIME_COLOR, t.font = oi.PROC_TIME_FONT, t.fillText(" All: " + this.update_process_time + "[us]", oi.PROC_TIME_X, oi.PROC_TIME_Y + 0 * oi.PROC_TIME_SPACING), t.fillText("Draw: " + this.draw_process_time + "[us]", oi.PROC_TIME_X, oi.PROC_TIME_Y + 1 * oi.PROC_TIME_SPACING);
+      t.fillStyle = ri.PROC_TIME_COLOR, t.font = ri.PROC_TIME_FONT, t.fillText(" All: " + this.update_process_time + "[us]", ri.PROC_TIME_X, ri.PROC_TIME_Y + 0 * ri.PROC_TIME_SPACING), t.fillText("Draw: " + this.draw_process_time + "[us]", ri.PROC_TIME_X, ri.PROC_TIME_Y + 1 * ri.PROC_TIME_SPACING);
     }
 
     on_draw() {
@@ -4028,19 +4181,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   }
 
-  _defineProperty(oi, "PROC_TIME_X", 10);
+  _defineProperty(ri, "PROC_TIME_X", 10);
 
-  _defineProperty(oi, "PROC_TIME_Y", 10);
+  _defineProperty(ri, "PROC_TIME_Y", 10);
 
-  _defineProperty(oi, "PROC_TIME_SPACING", 12);
+  _defineProperty(ri, "PROC_TIME_SPACING", 12);
 
-  _defineProperty(oi, "PROC_TIME_COLOR", "rgb(222,222,222)");
+  _defineProperty(ri, "PROC_TIME_COLOR", "rgb(222,222,222)");
 
-  _defineProperty(oi, "PROC_TIME_FONT", "bold 12px monospace");
+  _defineProperty(ri, "PROC_TIME_FONT", "bold 12px monospace");
 
   try {
-    var ni = new oi();
-    window.game = ni, ni.reset(), ni.test(), ni.start();
+    var li = new ri();
+    window.game = li, li.reset(), li.test(), li.start();
   } catch (t) {
     throw alert(t), t;
   }
