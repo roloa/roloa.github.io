@@ -61,9 +61,10 @@ export class HudStatus {
         canvas.drawImage( this.icon_sp, HudStatus.ICON_X, HudStatus.ICON_Y + 1 * HudStatus.STATUS_HEIGHT, 24, 24 );
         this.draw_guage( canvas, 1, this.player.health.sp / this.player.health.max_sp )
 
-        canvas.fillStyle = 'rgb(50,250,120)';
-        canvas.drawImage( this.icon_happiness, HudStatus.ICON_X, HudStatus.ICON_Y + 2 * HudStatus.STATUS_HEIGHT, 24, 24 );
-        this.draw_guage( canvas, 2, this.player.health.happiness / this.player.health.max_happiness )
+        // 幸福度はオミット
+        // canvas.fillStyle = 'rgb(50,250,120)';
+        // canvas.drawImage( this.icon_happiness, HudStatus.ICON_X, HudStatus.ICON_Y + 2 * HudStatus.STATUS_HEIGHT, 24, 24 );
+        // this.draw_guage( canvas, 2, this.player.health.happiness / this.player.health.max_happiness )
 
         canvas.fillStyle = 'rgb(200,150,50)';
         canvas.drawImage( this.icon_hunger, HudStatus.ICON_X, HudStatus.ICON_Y + 3 * HudStatus.STATUS_HEIGHT, 24, 24 );

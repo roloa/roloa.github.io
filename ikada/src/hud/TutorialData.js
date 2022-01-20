@@ -190,12 +190,10 @@ export class TutorialData {
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
-        tutorial.title = 'ステータス 1';
+        tutorial.title = 'ステータス';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('左下のゲージ'));
-        tutorial.check_list.push( this.desc_only('体力'));
-        tutorial.check_list.push( this.desc_only('スタミナ'));
-        tutorial.check_list.push( this.desc_only('幸福度'));
+        tutorial.check_list.push( this.desc_only('画面左下に並んだゲージは、'));
+        tutorial.check_list.push( this.desc_only('プレイヤーのステータスです。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
@@ -204,25 +202,65 @@ export class TutorialData {
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
-        tutorial.title = 'ステータス 2';
+        tutorial.title = 'ステータス: 体力';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('左下のゲージ'));
-        tutorial.check_list.push( this.desc_only('食料'));
-        tutorial.check_list.push( this.desc_only('水分'));
+        tutorial.check_list.push( this.desc_only('左下の赤いゲージは体力で、'));
+        tutorial.check_list.push( this.desc_only('なくなると死んでしまいます。'));
+        tutorial.check_list.push( this.desc_only('鳥の攻撃に当たったり、'));
+        tutorial.check_list.push( this.desc_only('食事を取らずに行動し続けると'));
+        tutorial.check_list.push( this.desc_only('減ってしまいます。'));
+        tutorial.check_list.push( this.desc_only('体力は少しずつ自然に回復します。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item.set_image('tree_ryuuboku');
+        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
+        tutorial.reword_tool_item.add_material('wood', 1);
         this.tutorial_list.push( tutorial );
+
+        tutorial = {};
+        tutorial.title = 'ステータス: スタミナ';
+        tutorial.check_list = [];
+        tutorial.check_list.push( this.desc_only('左下の黄色のゲージはスタミナで、'));
+        tutorial.check_list.push( this.desc_only('ジャンプやアイテム使用などの'));
+        tutorial.check_list.push( this.desc_only('行動によって減少します。'));
+        tutorial.check_list.push( this.desc_only('なくなるとスタミナを使う行動ができません。'));
+        tutorial.check_list.push( this.desc_only('スタミナは自然に回復しますが、'));
+        tutorial.check_list.push( this.desc_only('回復には食料と水分を消費します。'));
+
+        tutorial.reword_tool_item = new ResourceItem( this.game );
+        tutorial.reword_tool_item.set_image('tree_ryuuboku');
+        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
+        tutorial.reword_tool_item.add_material('wood', 1);
+        this.tutorial_list.push( tutorial );
+
+        tutorial = {};
+        tutorial.title = 'ステータス: 食料と水分';
+        tutorial.check_list = [];
+        tutorial.check_list.push( this.desc_only('左下の橙と青のゲージは食料と水分で、'));
+        tutorial.check_list.push( this.desc_only('スタミナを回復するために消費します。'));
+        tutorial.check_list.push( this.desc_only('なくなるとスタミナが徐々に減少し、'));
+        tutorial.check_list.push( this.desc_only('次に体力が減少し、最後には死んでしまいます。'));
+        tutorial.check_list.push( this.desc_only('食料や水を摂ることで回復できます。'));
+
+        tutorial.reword_tool_item = new ResourceItem( this.game );
+        tutorial.reword_tool_item.set_image('tree_ryuuboku');
+        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
+        tutorial.reword_tool_item.add_material('wood', 1);
+        this.tutorial_list.push( tutorial );
+
 
         tutorial = {};
         tutorial.title = '海について';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('海に落ちても水面を泳ぐことはできます。'));
-        tutorial.check_list.push( this.desc_only('泳ぐには、スタミナを消費します。'));
+        tutorial.check_list.push( this.desc_only('泳いでいる間、スタミナを消費します。'));
         tutorial.check_list.push( this.desc_only('なくなると体力を消費し、'));
         tutorial.check_list.push( this.desc_only('最後には死んでしまいます。'));
+        tutorial.check_list.push({
+            description: '海に飛び込んでみる',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.world.player.is_in_sea == true;
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
