@@ -87,13 +87,41 @@ export class ShipBlock {
         return false;
     }
     on_hit_bullet( bullet ){
-        this.take_damage( bullet.damage );
+        return this.take_damage( bullet.damage );
     }
     take_damage( damage_amount ){
+
+        // ダメージを無効化する条件
+        if( this.is_core ){
+            // これがコアの場合
+            if( this.game.world.ship.get_ship_block_by_index( this.cell_x - 1, this.cell_y) &&
+                this.game.world.ship.get_ship_block_by_index( this.cell_x + 1, this.cell_y) ) {
+                // 左右両側にブロックがある
+                return false;
+            }
+        } else if( this.game.world.ship.ship_offset_y <= this.cell_y ){
+            // 一番下の場合
+            if( this.game.world.ship.core_x < this.cell_x){
+                // コアより右側
+                if( this.game.world.ship.get_ship_block_by_index( this.cell_x + 1, this.cell_y) ) {
+                    // 右側にブロックがある
+                    return false;
+                }
+            }
+            if( this.cell_x < this.game.world.ship.core_x){
+                // コアより左側
+                if( this.game.world.ship.get_ship_block_by_index( this.cell_x - 1, this.cell_y) ) {
+                    // 左側にブロックがある
+                    return false;
+                }
+            }
+        }
+
         this.saving_data.hp -= damage_amount;
         if( this.saving_data.hp <= 0){
             this.saving_data.is_broken = true;
             this.saving_data.hp = 0;
+            return true;
         }
     }
 
@@ -144,7 +172,7 @@ export class ShipBlock {
         }
         if( !this.is_core ){
             // コア自体はハートビート処理をしない
-            if( !this.is_broken ){
+            if( !this.saving_data.is_broken ){
                 // 壊れたブロックはハートビートを伝搬しない
                 if( 0 < this.heartbeat_update_span_count){
                     this.heartbeat_update_span_count -= 1;

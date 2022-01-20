@@ -2,12 +2,15 @@
 import {ResourceItem} from './tool_item/ResourceItem.js'
 import {FishRod} from './tool_item/FishRod.js'
 import {EquipmentItem} from './tool_item/EquipmentItem.js'
+import {ContainerItem} from './tool_item/ContainerItem.js'
 import {CatchNet} from './tool_item/CatchNet.js'
 import {ToolItem} from './tool_item/ToolItem.js'
 import {CannonAmmoItem} from './tool_item/CannonAmmoItem.js'
 import {WeaponItem} from './tool_item/WeaponItem.js'
 import {SolidFuel} from './tool_item/SolidFuel.js'
+import {AmmoStone} from './tool_item/AmmoStone.js'
 import {Scouter} from './tool_item/Scouter.js'
+import {AmmoCannon} from './tool_item/AmmoCannon.js'
 import {Spear} from './tool_item/Spear.js'
 import {DistillBottle} from './tool_item/DistillBottle.js'
 import {RepairWrench} from './tool_item/RepairWrench.js'
@@ -43,6 +46,8 @@ export class ItemInstanceMaker {
             return new FishRod( this.game );
         } else if( item_data.class_name == 'EquipmentItem' ){
             return new EquipmentItem( this.game );
+        } else if( item_data.class_name == 'ContainerItem' ){
+            return new ContainerItem( this.game );
         } else if( item_data.class_name == 'CatchNet' ){
             return new CatchNet( this.game );
         } else if( item_data.class_name == 'ToolItem' ){
@@ -53,8 +58,12 @@ export class ItemInstanceMaker {
             return new WeaponItem( this.game );
         } else if( item_data.class_name == 'SolidFuel' ){
             return new SolidFuel( this.game );
+        } else if( item_data.class_name == 'AmmoStone' ){
+            return new AmmoStone( this.game );
         } else if( item_data.class_name == 'Scouter' ){
             return new Scouter( this.game );
+        } else if( item_data.class_name == 'AmmoCannon' ){
+            return new AmmoCannon( this.game );
         } else if( item_data.class_name == 'Spear' ){
             return new Spear( this.game );
         } else if( item_data.class_name == 'DistillBottle' ){

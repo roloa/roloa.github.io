@@ -4,6 +4,7 @@ import {WaterPlace} from './ship_block/WaterPlace.js'
 import {ShipBlock} from './ship_block/ShipBlock.js'
 import {BotHome} from './ship_block/BotHome.js'
 import {BotHouseDog} from './ship_block/BotHouseDog.js'
+import {ShipCore} from './ship_block/ShipCore.js'
 import {BotHouseCat} from './ship_block/BotHouseCat.js'
 import {WeaponMortorTube} from './ship_block/WeaponMortorTube.js'
 import {ShipFrame} from './ship_block/ShipFrame.js'
@@ -12,6 +13,7 @@ import {ShipFloor} from './ship_block/ShipFloor.js'
 import {LevelFlag2} from './ship_block/LevelFlag2.js'
 import {ShipFarm} from './ship_block/ShipFarm.js'
 import {WeaponAirCannon} from './ship_block/WeaponAirCannon.js'
+import {WeaponCatapult} from './ship_block/WeaponCatapult.js'
 import {FuelEngine} from './ship_block/FuelEngine.js'
 import {VictoryRocket} from './ship_block/VictoryRocket.js'
 import {DroneHome} from './ship_block/DroneHome.js'
@@ -39,6 +41,8 @@ export class BlockInstanceMaker {
             return new BotHome( this.game );
         } else if( block_data.class_name == 'BotHouseDog' ){
             return new BotHouseDog( this.game );
+        } else if( block_data.class_name == 'ShipCore' ){
+            return new ShipCore( this.game );
         } else if( block_data.class_name == 'BotHouseCat' ){
             return new BotHouseCat( this.game );
         } else if( block_data.class_name == 'WeaponMortorTube' ){
@@ -55,6 +59,8 @@ export class BlockInstanceMaker {
             return new ShipFarm( this.game );
         } else if( block_data.class_name == 'WeaponAirCannon' ){
             return new WeaponAirCannon( this.game );
+        } else if( block_data.class_name == 'WeaponCatapult' ){
+            return new WeaponCatapult( this.game );
         } else if( block_data.class_name == 'FuelEngine' ){
             return new FuelEngine( this.game );
         } else if( block_data.class_name == 'VictoryRocket' ){

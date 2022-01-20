@@ -45,6 +45,8 @@ export class Ship {
             this.put_ship_block(new ShipFloor( this.game ), 1, 8);
             this.put_ship_block(new ShipFloor( this.game ), 2, 8);
             this.put_ship_block(new ShipCore( this.game ), 3, 8);
+            this.core_x = 3;
+            this.core_y = 8;
             this.put_ship_block(new ShipFloor( this.game ), 4, 8);
             this.put_ship_block(new ShipFloor( this.game ), 5, 8);
             this.put_ship_block(new ShipFloor( this.game ), 6, 8);
@@ -134,6 +136,7 @@ export class Ship {
             this.block_array.unshift( new_col );
             block_x += 1;
             this.ship_offset_x += 1;
+            this.calc_ship_block_cell_xy();
         } else if( this.block_array.length <= block_x){
             // 右側に拡張する
             let new_col = [];
@@ -141,6 +144,7 @@ export class Ship {
                 new_col.push( null );
             }
             this.block_array.push( new_col );
+            this.calc_ship_block_cell_xy();
         }
         if( block_y < 0 ){
             // 上側に拡張する
@@ -149,6 +153,7 @@ export class Ship {
             }
             block_y += 1;
             this.ship_offset_y += 1;
+            this.calc_ship_block_cell_xy();
         }
         // 下側には拡張できない(海の中にブロックを置けない)
 
@@ -265,6 +270,18 @@ export class Ship {
             this.game.log('舟レベルダウン: ');
             this.game.log( 'Lv' + this.ship_level +' -> Lv' + ship_level_value_max);
             this.ship_level = ship_level_value_max;
+        }
+    }
+    calc_ship_block_cell_xy(){
+        // 全舟ブロックのcell_x, cell_yを修正する
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                let block = this.block_array[x][y];
+                if( block != null ){
+                    block.cell_x = x;
+                    block.cell_y = y;
+                }
+            }
         }
 
     }

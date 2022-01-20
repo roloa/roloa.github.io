@@ -5,17 +5,17 @@ import glob
 
 folder_list = []
 
-for folder_path in glob.glob('./js/tool_item/d_*'):
-    folder_list.append( folder_path.replace( './js/tool_item/','' ) )
+for folder_path in glob.glob('./src/tool_item/d_*'):
+    folder_list.append( folder_path.replace( './src/tool_item/','' ) )
 
 classname_list = []
 path_list = []
 
-filename_list = glob.glob('./js/tool_item/**/*.js', recursive=True)
+filename_list = glob.glob('./src/tool_item/**/*.js', recursive=True)
 
 
 for filename in filename_list:
-    path = filename.replace('./js/tool_item/','').replace('.js','')
+    path = filename.replace('./src/tool_item/','').replace('.js','')
     path_list.append( path )
 
     classname = path

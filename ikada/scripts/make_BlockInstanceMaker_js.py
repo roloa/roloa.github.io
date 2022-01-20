@@ -3,11 +3,11 @@
 
 import glob
 
-filename_list = glob.glob('./js/ship_block/*.js')
+filename_list = glob.glob('./src/ship_block/*.js')
 classname_list = []
 
 for filename in filename_list:
-    classname = filename.replace('./js/ship_block/','').replace('.js','')
+    classname = filename.replace('./src/ship_block/','').replace('.js','')
     classname_list.append( classname )
 
 print()
