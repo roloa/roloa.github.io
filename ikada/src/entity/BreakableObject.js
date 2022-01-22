@@ -42,10 +42,10 @@ export class BreakableObject extends Entity {
         this.max_hp = 100
         this.hp = this.max_hp;
 
-        if( altitude < -50 ){
+        if( altitude < -10 ){
             this.image = this.game.image_library.get_image( 'cloud' )
             this.name = '雲';
-        } else if( 20 < altitude){
+        } else if( 5 < altitude){
             this.image = this.game.image_library.get_image( 'kaisou_wakame' )
             this.name = '海藻';
         } else {
@@ -93,7 +93,7 @@ export class BreakableObject extends Entity {
         // 死体
         this.game.world.push_entity( this.get_dead_body() );
         // ドロップアイテム生成
-        this.game.world.push_entity( this.get_drop_item() );
+        // this.game.world.push_entity( this.get_drop_item() );
     }
     get_dead_body(){
         let new_dead_body = new DeadBody( this.game );

@@ -65,38 +65,39 @@ export class WorldSpawner {
             this.spawn_surface();
         }
 
-        if( this.world.player.y < this.despawn_distance && Math.random() < 0.01){
-            // 空の敵
-            if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyBird; }).length < 10 ){
-                let new_enemy = new EnemyBird( this.game );
-                this.set_coodinate_randomly( new_enemy );
-                this.move_outsight_random( new_enemy );
-                new_enemy.generate_enemy_bird();
-                if( -100 < new_enemy.y){
-                    // 海の中はだめ
-                    return;
-                }
-                this.world.push_enemy( new_enemy )
-
-            }
-
-        }
-        if( -this.despawn_distance < this.world.player.y && Math.random() < 0.1){
-            // 海の敵
-            if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyFish; }).length < 10 ){
-                let new_enemy = new EnemyFish( this.game );
-                this.set_coodinate_randomly( new_enemy );
-                this.move_outsight_random( new_enemy );
-                new_enemy.generate_enemy_fish();
-                if( new_enemy.y < 100){
-                    // 海の外はだめ
-                    return;
-                }
-                this.world.push_enemy( new_enemy )
-
-            }
-
-        }
+        // 一旦オミット
+        // if( this.world.player.y < this.despawn_distance && Math.random() < 0.01){
+        //     // 空の敵
+        //     if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyBird; }).length < 10 ){
+        //         let new_enemy = new EnemyBird( this.game );
+        //         this.set_coodinate_randomly( new_enemy );
+        //         this.move_outsight_random( new_enemy );
+        //         new_enemy.generate_enemy_bird();
+        //         if( -100 < new_enemy.y){
+        //             // 海の中はだめ
+        //             return;
+        //         }
+        //         this.world.push_enemy( new_enemy )
+        //
+        //     }
+        //
+        // }
+        // if( -this.despawn_distance < this.world.player.y && Math.random() < 0.1){
+        //     // 海の敵
+        //     if( this.world.enemy_list.filter(function( elem ){ return elem instanceof EnemyFish; }).length < 10 ){
+        //         let new_enemy = new EnemyFish( this.game );
+        //         this.set_coodinate_randomly( new_enemy );
+        //         this.move_outsight_random( new_enemy );
+        //         new_enemy.generate_enemy_fish();
+        //         if( new_enemy.y < 100){
+        //             // 海の外はだめ
+        //             return;
+        //         }
+        //         this.world.push_enemy( new_enemy )
+        // 
+        //     }
+        //
+        // }
         if( Math.random() < 0.1){
             // 破壊可能オブジェクト
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof BreakableObject; }).length < 20 ){
