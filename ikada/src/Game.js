@@ -222,7 +222,7 @@ export class Game {
             // グラフィックコンテキストの初期化
             this.display_canvas.lineWidth = 2;
 
-            this.display_canvas.fillStyle = 'rgb(0,0,30)';
+            this.display_canvas.fillStyle = 'rgb(10,10,30)';
             this.display_canvas.fillRect(0,0, this.SCREEN_WIDTH,  this.SCREEN_HEIGHT );
 
             if( this.movie_playing != null ){

@@ -27,6 +27,9 @@ export class ImgFileName {
   './img/arrow_up.png',
   './img/arrow_down.png',
   './img/ship_core.png',
+  './img/cloud_base.png',
+  './img/cloud_border.png',
+  './img/cloud_blur.png',
 //  './img/.png',
   './img/ikada.png'
   ]

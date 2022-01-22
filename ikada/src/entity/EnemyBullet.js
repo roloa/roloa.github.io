@@ -67,11 +67,13 @@ export class EnemyBullet extends Entity {
         }
     }
     on_draw( canvas ){
+        canvas.save();
         canvas.strokeStyle = 'rgb(250,250,20)';
         canvas.lineWidth = 5;
         canvas.beginPath();
         canvas.moveTo( this.x, this.y);
         canvas.lineTo( this.x + this.line_x, this.y + this.line_y);
         canvas.stroke();
+        canvas.restore();
     }
 }
