@@ -10,7 +10,7 @@ export class WorldBackGround {
         this.wave_list = [];
 
         this.world_zero_y = 0;
-        this.horizon_line_y = 300;
+        this.horizon_line_y = 250;
 
         for( let i = 0 ; i < 50 ; i++ ){
             let wave = {};
