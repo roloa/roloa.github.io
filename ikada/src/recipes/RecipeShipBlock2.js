@@ -87,14 +87,14 @@ export class RecipeShipBlock2 extends Object {
         c_r.add_recipe( category,
             ['水飲み場です。', 'より短い時間経過で飲み水がたまります。'],
             ['parts', 'stone', 'jar'],
-            [1, 15, 1],
+            [3, 50, 3],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace( game ) ); },
             ''
         );
         c_r.add_recipe( category,
             ['水が自然にたまるバケツです。', '時間経過で飲み水がたまります。'],
             ['iron', 'stone'],
-            [5, 1],
+            [10, 10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WaterPlace2( game ) ); },
             ''
         );

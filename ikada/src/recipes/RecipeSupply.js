@@ -54,12 +54,45 @@ export class RecipeSupply extends Object {
             [10],
             function( game ){
                 let new_item = new ResourceItem( game );
-                new_item.set_image( 'cooking_kokei_nenryou_fire' );
+                new_item.set_image( 'fuel_wood' );
                 new_item.add_material( 'fuel', 10);
                 return new_item; },
             'wood'
         );
+        c_r.add_recipe( category,
+            ['残飯を燃料マテリアルに変換します。'],
+            ['leftover'],
+            [10],
+            function( game ){
+                let new_item = new ResourceItem( game );
+                new_item.set_image( 'fuel_leftover' );
+                new_item.add_material( 'fuel', 10);
+                return new_item; },
+            'lo'
+        );
+        c_r.add_recipe( category,
+            ['羽根を燃料マテリアルに変換します。'],
+            ['feather'],
+            [10],
+            function( game ){
+                let new_item = new ResourceItem( game );
+                new_item.set_image( 'fuel_feather' );
+                new_item.add_material( 'fuel', 10);
+                return new_item; },
+            'fea'
+        );
 
+        c_r.add_recipe( category,
+            ['布切れを燃料マテリアルに変換します。'],
+            ['cloth'],
+            [10],
+            function( game ){
+                let new_item = new ResourceItem( game );
+                new_item.set_image( 'fuel_cloth' );
+                new_item.add_material( 'fuel', 10);
+                return new_item; },
+            'cloth'
+        );
 
     }
 }

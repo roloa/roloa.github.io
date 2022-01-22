@@ -37,6 +37,8 @@ export class WaterPlace extends ShipBlock {
     on_interact(){
 
         if( this.saving_data.is_water_filled ){
+            this.game.log( this.get_name() + 'の水を飲みました。');
+            this.game.log('水分: +50%');
             this.game.world.player.health.mod_thirst(50);
             this.saving_data.is_water_filled = false;
             this.saving_data.water_fill_timer = this.water_fill_timer_max;

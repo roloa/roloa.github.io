@@ -4,7 +4,10 @@ import {FishRod} from '../tool_item/FishRod.js';
 import {GenericFood} from '../tool_item/d_foods/GenericFood.js';
 import {ChickenCookedMoto} from '../tool_item/d_foods/ChickenCookedMoto.js';
 import {FirePlace} from '../ship_block/FirePlace.js';
+import {WaterPlace2} from '../ship_block/WaterPlace2.js';
 import {DistillBottle} from '../tool_item/DistillBottle.js';
+import {SolidFuel} from '../tool_item/SolidFuel.js';
+
 
 
 export class TutorialData {
@@ -369,11 +372,15 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = '飲み水の確保(バケツ)';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('クラフトで給水バケツを作成、設置'));
-        tutorial.check_list.push( this.desc_only('給水ボトルをクリックすれば、'));
+        tutorial.check_list.push({
+            description: 'クラフトで給水バケツを製作・設置',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.world.ship.has_block_instanceof( WaterPlace2 );
+        }});
+        tutorial.check_list.push( this.desc_only('給水バケツをクリックすれば、'));
         tutorial.check_list.push( this.desc_only('水を飲むことができます。'));
-        tutorial.check_list.push( this.desc_only('長時間待てば、'));
-        tutorial.check_list.push( this.desc_only('給水ボトルに再度、水が満たされます。'));
+        tutorial.check_list.push( this.desc_only('(かなり) 長時間待てば、'));
+        tutorial.check_list.push( this.desc_only('給水バケツに再度、水が満たされます。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
@@ -382,17 +389,27 @@ export class TutorialData {
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
-        tutorial.title = '焚き火の補充';
+        tutorial.title = '燃料: 焚き火の補充';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('クラフトで燃料マテリアルを作成'));
-        tutorial.check_list.push( this.desc_only('クラフトで燃料アイテムを作成'));
-        tutorial.check_list.push( this.desc_only('燃料を持って焚き火をクリックする'));
-        tutorial.check_list.push( this.desc_only('焚き火が再度使えるようになります。'));
+        tutorial.check_list.push( this.desc_only('焚き火1回につき固形燃料が1つ必要です。'));
+        tutorial.check_list.push( this.desc_only('固形燃料の材料は燃料マテリアルです。'));
+        tutorial.check_list.push( this.desc_only('燃料マテリアルはクラフトで、'));
+        tutorial.check_list.push( this.desc_only('木材や残飯などから製作できます。'));
+        tutorial.check_list.push({
+            description: 'クラフトで燃料マテリアルを製作する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return 1 <= game.materials.get_material('fuel');
+        }});
+        tutorial.check_list.push({
+            description: 'クラフトで固形燃料を製作する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.item_slot.has_item_instanceof( SolidFuel );
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item.set_image('cooking_kokei_nenryou_fire');
+        tutorial.reword_tool_item.set_name('マテリアル: 燃料 x 30');
+        tutorial.reword_tool_item.add_material('fuel', 30);
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
