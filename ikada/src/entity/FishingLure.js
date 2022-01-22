@@ -3,6 +3,7 @@ import {Entity} from './Entity.js';
 import {DropItem} from './DropItem.js';
 import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
 import {ResourceItem} from '../tool_item/ResourceItem.js';
+import {ContainerItem} from '../tool_item/ContainerItem.js';
 
 export class FishingLure extends Entity {
 
@@ -22,16 +23,28 @@ export class FishingLure extends Entity {
         this.is_in_sea = false;
 
         this.is_working = false;
+        this.is_first_fishing = true;
         this.is_rewinding = false;
         this.is_fish_hitting = false;
         this.fish_hit_timer = 0;
         this.hit_item = null;
 
+        this.waiting_hit_timer_base = 100;
+        this.waiting_hit_timer = this.waiting_hit_timer_base;
+
         this.image = this.game.image_library.get_image( 'fishing_lure' );
 
     }
     generate_hit_item(){
-        return this.game.materials.balance.get_fishing_result();
+        if( this.is_first_fishing ){
+            this.is_first_fishing = false;
+            let fishing_result = new ContainerItem( this.game );
+            fishing_result.set_image('fish_sakana_iwashi');
+            fishing_result.set_content( new FishKirimi( this.game ) );
+            return fishing_result;
+        } else {
+            return this.game.materials.balance.get_fishing_result();
+        }
     }
     catch_drop_item(){
         // ドロップアイテムをキャッチする
@@ -117,7 +130,11 @@ export class FishingLure extends Entity {
                             this.is_fish_hitting = false;
                         }
                     } else {
-                        if( Math.random() < 0.005 ){
+                        if( 0 < this.waiting_hit_timer ){
+                            this.waiting_hit_timer -= 1;
+                        } else {
+                            this.waiting_hit_timer = this.waiting_hit_timer_base * (Math.random() + 0.2);
+
                             this.is_fish_hitting = true;
                             this.vy += 6;
                             this.fish_hit_timer = 200;

@@ -31,5 +31,11 @@ export class GenericFood extends ToolItem {
         }
         this.is_consumed = true;
     }
+    dump_information_to_log(){
+        this.game.log( this.saving_data.item_name );
+        this.game.log( '養分: +' + this.saving_data.hunger_value + '%')
+        this.game.log( '水分: +' + this.saving_data.thirst_value + '%')
+        this.game.log('何もない場所をクリックする事でこれを食べます。');
 
+    }
 }

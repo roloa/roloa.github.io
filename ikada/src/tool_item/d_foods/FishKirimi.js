@@ -12,7 +12,8 @@ export class FishKirimi extends GenericFood {
 
         this.image = this.game.image_library.get_image( './img/illustya/food_fish_kirimi_red.png');
         this.saving_data.item_name = '生魚';
-
+        this.saving_data.hunger_value = 25;
+        this.saving_data.thirst_value = 5;
     }
     get_cooked_item(){
         return new CookedFish( this.game );

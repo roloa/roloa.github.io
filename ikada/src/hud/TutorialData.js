@@ -323,10 +323,15 @@ export class TutorialData {
         tutorial.title = '食料の確保';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('釣り竿の作成'));
-        tutorial.check_list.push( this.desc_only('クリックでルアーを投げる'));
-        tutorial.check_list.push( this.desc_only('ルアーが沈んだらクリックで引き上げる'));
-        tutorial.check_list.push( this.desc_only('魚が釣れます'));
-        tutorial.check_list.push( this.desc_only('魚以外のものも釣れます'));
+        tutorial.check_list.push({
+            description: '釣り竿を使用して釣り針を投げる',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.world.lure.is_working == true;
+        }});
+        tutorial.check_list.push( this.desc_only('釣り針が沈んだらクリックで引き上げます。'));
+        tutorial.check_list.push( this.desc_only('おもに魚が釣れます。'));
+        tutorial.check_list.push( this.desc_only('魚を使用して、魚を食べます。'));
+        tutorial.check_list.push( this.desc_only('魚以外の便利なものもよく釣れます。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
