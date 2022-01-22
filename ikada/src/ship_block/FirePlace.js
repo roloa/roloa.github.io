@@ -11,11 +11,26 @@ export class FirePlace extends ShipBlock{
 
         this.is_floor = false;
         this.image = this.game.image_library.get_image('takibi_dai_fire');
+        this.image_no_fire = this.game.image_library.get_image('takibi_dai');
+
         this.food = null;
+
+        this.saving_data.ammo_amount = 100;
         this.cooking_count = 0;
 
+        this.accept_ammo_type = 'fuel';
     }
 
+    deposit_item( item ){
+        if( super.deposit_item( item ) ){
+            return true;
+        }
+        if( this.food == null && item && item.get_cooked_item ) {
+            this.food = item;
+            this.cooking_count = 0;
+            return true;
+        }
+    }
     on_interact(){
 
         if( this.food ){
@@ -24,13 +39,6 @@ export class FirePlace extends ShipBlock{
             this.food = null;
             return true;
         } else {
-            let item = this.game.hud.item_slot.get_active_item();
-            if( item && item.get_cooked_item ) {
-                this.food = item;
-                this.game.hud.item_slot.delete_active_item();
-                this.cooking_count = 0;
-                return true;
-            }
         }
         return false;
     }
@@ -38,14 +46,22 @@ export class FirePlace extends ShipBlock{
     on_update(){
         super.on_update();
 
-        if( this.food != null && this.food.get_cooked_item ){
-            //
+        if( 0 < this.saving_data.ammo_amount && this.food != null && this.food.get_cooked_item ){
+            // 料理タイマーが進む
             this.cooking_count += 1;
             if( this.food.cooking_finish_time < this.cooking_count ){
+                // 料理が完成
                 this.food = this.food.get_cooked_item();
+                this.saving_data.ammo_amount = 0;
                 this.cooking_count = 0;
             }
         }
+    }
+    get_image(){
+        if( this.saving_data.ammo_amount <= 0){
+            return this.image_no_fire;
+        }
+        return super.get_image();
     }
     on_draw( canvas ){
         super.on_draw( canvas );

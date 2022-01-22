@@ -12,7 +12,7 @@ export class DistillBottle extends ToolItem {
 
         this.saving_data.item_name = '蒸留ボトル';
 
-        this.saving_data.is_filled = false;
+        this.saving_data.is_filled = true;
     }
     get_cooked_item(){
         this.saving_data.is_filled = true;
@@ -27,6 +27,8 @@ export class DistillBottle extends ToolItem {
     on_click( cursor_x, cursor_y, player_x, player_y ){
         // 満腹度を回復させる
         if( this.saving_data.is_filled ){
+            this.game.log('ボトルの水を飲みました。');
+            this.game.log('水分: +50%');
             this.game.world.player.health.mod_thirst( 50 );
             this.saving_data.is_filled = false;
         } else {

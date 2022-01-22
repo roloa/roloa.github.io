@@ -56,12 +56,6 @@ export class WeaponAirCannon extends ShipBlock {
         this.gun_data.life_leech = 0;
         this.gun_data.bullet_color = 'rgb(250,0,250)';
     }
-    deposit_item( item ){
-        // アイテムを投入された時の反応
-        // アイテムを受け入れた場合はTrueを返す
-        this.saving_data.ammo_amount += item.ammo_value;
-        return true;
-    }
     on_interact(){
 
         this.game.log( '燃料の量: ' + this.saving_data.ammo_amount );

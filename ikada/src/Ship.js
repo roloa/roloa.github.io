@@ -233,7 +233,19 @@ export class Ship {
         }
         return nearest_block;
     }
-
+    has_block_instanceof( block_class ){
+        for( let x = 0 ; x < this.block_array.length ; x++ ){
+            for( let y = 0 ; y < this.block_array[x].length ; y++ ){
+                let block = this.block_array[x][y];
+                if( block != null ){
+                    if( block instanceof block_class ){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     impulse_velocity( amount ){
         this.velocity += amount;
     }

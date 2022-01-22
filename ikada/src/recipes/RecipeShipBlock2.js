@@ -32,15 +32,15 @@ export class RecipeShipBlock2 extends Object {
         c_r.add_recipe( category,
             ['船に設置する焚き火です。',
             '配置して、生の食材を調理できます。'],
-            ['wood', 'stone'],
-            [10, 5],
+            ['wood', 'iron', 'stone'],
+            [20, 10, 10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new FirePlace( game ) ); },
             ''
         );
         c_r.add_recipe( category,
             ['食材を乾燥させます。'],
             ['wood', 'cloth'],
-            [10, 5],
+            [20, 10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new DryLack( game ) ); },
             ''
         );

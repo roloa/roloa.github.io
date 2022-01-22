@@ -3,6 +3,9 @@ import {ResourceItem} from '../tool_item/ResourceItem.js';
 import {FishRod} from '../tool_item/FishRod.js';
 import {GenericFood} from '../tool_item/d_foods/GenericFood.js';
 import {ChickenCookedMoto} from '../tool_item/d_foods/ChickenCookedMoto.js';
+import {FirePlace} from '../ship_block/FirePlace.js';
+import {DistillBottle} from '../tool_item/DistillBottle.js';
+
 
 export class TutorialData {
 
@@ -172,7 +175,7 @@ export class TutorialData {
         tutorial.check_list.push({
             description: '鉄クズを30個以上集める',
             is_need_check: true, checked: false, condition_func: function( game ){
-                return game.materials.get_material('iron') == 3;
+                return 30 <= game.materials.get_material('iron');
         }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
@@ -342,11 +345,19 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = '飲み水の確保(蒸留)';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('クラフトで蒸留ボトルを作成'));
+        tutorial.check_list.push({
+            description: 'クラフトで蒸留ボトルを作成する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.item_slot.has_item_instanceof( DistillBottle );
+        }});
         tutorial.check_list.push( this.desc_only('蒸留ボトルを使用すると、水を飲めます。'));
-        tutorial.check_list.push( this.desc_only('焚き火を作成、設置'));
-        tutorial.check_list.push( this.desc_only('蒸留ボトルを持って焚き火をクリックする'));
-        tutorial.check_list.push( this.desc_only('しばらく待てば、'));
+        tutorial.check_list.push({
+            description: '焚き火を作成し、設置する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.world.ship.has_block_instanceof( FirePlace );
+        }});
+        tutorial.check_list.push( this.desc_only('蒸留ボトルで焚き火をクリックすると'));
+        tutorial.check_list.push( this.desc_only('ボトルを焚き火にかけます。しばらく待てば、'));
         tutorial.check_list.push( this.desc_only('蒸留ボトルに再度、水が満たされます。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );

@@ -68,18 +68,28 @@ export class ShipBlock {
             // 処理完了のため、trueを返す
             return true;
         }
-        if( item && this.accept_ammo_type && item.ammo_type &&
-            this.accept_ammo_type == item.ammo_type ) {
+        if( item && this.deposit_item( item ) ) {
             this.game.hud.item_slot.delete_active_item();
-            this.game.log( '補充しました。' );
-            this.saving_data.ammo_amount += item.ammo_value;
+            this.game.log( this.name+ ' に '+ item.get_name() +' を入れました。' );
             return true;
         }
         return this.on_interact();
     }
-    deposit_item(){
+    deposit_item( item ){
         // アイテムを投入された時の反応
         // アイテムを受け入れた場合はTrueを返す
+        if( this.deposit_fuel( item ) ) {
+            return true;
+        }
+        return false;
+    }
+    deposit_fuel( item ){
+        // デフォルトの燃料チェック＆受け入れ動作
+        if ( this.accept_ammo_type && item.ammo_type &&
+            this.accept_ammo_type == item.ammo_type ){
+            this.saving_data.ammo_amount += item.ammo_value;
+            return true;
+        }
         return false;
     }
     on_interact(){
