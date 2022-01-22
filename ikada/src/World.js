@@ -51,7 +51,7 @@ export class World {
         test_wind.y = -100;
         this.push_entity( test_wind );
 
-        this.newgame_gift();
+        // this.newgame_gift();
     }
 
     newgame_gift(){

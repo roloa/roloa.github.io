@@ -481,7 +481,12 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = 'レベルフラッグ[1]';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('レベルフラッグ[1]を作成して設置する'));
+        tutorial.check_list.push({
+            description: 'レベルフラッグ[1]を作成して設置する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return 1 <= game.world.ship.ship_level;
+        }});
+
         tutorial.check_list.push( this.desc_only('レベルフラッグを舟に設置すると、'));
         tutorial.check_list.push( this.desc_only('より強い鳥が現れるようになります。'));
         tutorial.check_list.push( this.desc_only('強い鳥を倒せば、'));

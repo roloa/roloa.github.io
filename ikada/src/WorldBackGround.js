@@ -266,10 +266,9 @@ export class WorldBackGround {
 
     }
     on_draw( canvas ){
-        canvas.save();
+
         canvas.fillStyle = 'rgb(255,0,0)';
         canvas.strokeStyle = 'rgb(50, 100, 250)'
-
 
         if( this.horizon_line_y < this.world_zero_y ){
             canvas.beginPath();
@@ -300,12 +299,7 @@ export class WorldBackGround {
             this.draw_cloud( canvas, cloud );
         }
 
-        canvas.restore();
-
-        canvas.fillRect(10,20,30,40);
-
-
-        canvas.fillRect(10,this.world_zero_y,30,40);
+        //canvas.fillRect(10,this.world_zero_y,30,40);
         canvas.restore();
     }
 
