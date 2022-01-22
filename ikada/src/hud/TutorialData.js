@@ -5,10 +5,14 @@ import {GenericFood} from '../tool_item/d_foods/GenericFood.js';
 import {ChickenCookedMoto} from '../tool_item/d_foods/ChickenCookedMoto.js';
 import {FirePlace} from '../ship_block/FirePlace.js';
 import {WaterPlace2} from '../ship_block/WaterPlace2.js';
+import {ShipFloor} from '../ship_block/ShipFloor.js';
 import {DistillBottle} from '../tool_item/DistillBottle.js';
 import {SolidFuel} from '../tool_item/SolidFuel.js';
-
-
+import {WeaponItem} from '../tool_item/WeaponItem.js';
+import {Oar} from '../tool_item/Oar.js';
+import {RepairWrench} from '../tool_item/RepairWrench.js';
+import {DeconstructHammer} from '../tool_item/DeconstructHammer.js';
+import {BuildBlock} from '../tool_item/BuildBlock.js';
 
 export class TutorialData {
 
@@ -317,12 +321,7 @@ export class TutorialData {
             is_need_check: true, checked: false, condition_func: function( game ){
                 return 4 < game.world.ship.block_array[0].length;
         }});
-
-
-        tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
@@ -415,24 +414,39 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = '鳥の狩猟';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('クラフトで弓を作成'));
+        tutorial.check_list.push({
+            description: 'クラフトで弓を製作する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.item_slot.has_item_instanceof( WeaponItem );
+        }});
         tutorial.check_list.push( this.desc_only('弓を使用すると、敵にダメージを与える'));
         tutorial.check_list.push( this.desc_only('矢を発射することができます。'));
         tutorial.check_list.push( this.desc_only('カモメ等を攻撃して狩りましょう。'));
-        tutorial.check_list.push( this.desc_only('羽根マテリアルを入手'));
+        tutorial.check_list.push({
+            description: '羽根マテリアルを入手する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return 1 <= game.materials.get_material('feather');
+        }});
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('feather_white');
-        tutorial.reword_tool_item.set_name('マテリアル: 羽根 x 1');
-        tutorial.reword_tool_item.add_material('feather', 1);
+        tutorial.reword_tool_item.set_name('マテリアル: 羽根 x 3');
+        tutorial.reword_tool_item.add_material('feather', 3);
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '舟の前進';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('クラフトでオールを作成'));
-        tutorial.check_list.push( this.desc_only('水面近くでオールを使うと、'));
-        tutorial.check_list.push( this.desc_only('舟が前に進みます。'));
+        tutorial.check_list.push({
+            description: 'クラフトでオールを製作する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.item_slot.has_item_instanceof( Oar );
+        }});
+        tutorial.check_list.push({
+            description: '水面近くでオールを使って舟を進める',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return 1 < game.world.ship.velocity;
+        }});
         tutorial.check_list.push( this.desc_only('舟を前に進めていると、'));
         tutorial.check_list.push( this.desc_only('多くの素材を持った敵対的な鳥が来ます。'));
 
@@ -446,44 +460,49 @@ export class TutorialData {
         tutorial = {};
         tutorial.title = '舟ブロックの撤去と修理';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('クラフトで撤去ハンマーを作成'));
+        tutorial.check_list.push({
+            description: 'クラフトで撤去ハンマーを製作する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.item_slot.has_item_instanceof( DeconstructHammer );
+        }});
         tutorial.check_list.push( this.desc_only('ハンマーで舟ブロックをクリックすると'));
         tutorial.check_list.push( this.desc_only('そのブロックをアイテムに還元できます。'));
-        tutorial.check_list.push( this.desc_only('クラフトで修理レンチを作成'));
+        tutorial.check_list.push({
+            description: 'クラフトで修理レンチを製作する',
+            is_need_check: true, checked: false, condition_func: function( game ){
+                return game.hud.item_slot.has_item_instanceof( RepairWrench );
+        }});
         tutorial.check_list.push( this.desc_only('レンチで舟ブロックをクリックすると'));
         tutorial.check_list.push( this.desc_only('敵の攻撃で減った耐久力を回復できます。'));
 
-        tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
         this.tutorial_list.push( tutorial );
 
         tutorial = {};
-        tutorial.title = 'レベルフラッグ';
+        tutorial.title = 'レベルフラッグ[1]';
         tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only('レベルフラッグ[1]を作成する'));
-        tutorial.check_list.push( this.desc_only('レベルフラッグを舟に設置する'));
+        tutorial.check_list.push( this.desc_only('レベルフラッグ[1]を作成して設置する'));
+        tutorial.check_list.push( this.desc_only('レベルフラッグを舟に設置すると、'));
         tutorial.check_list.push( this.desc_only('より強い鳥が現れるようになります。'));
         tutorial.check_list.push( this.desc_only('強い鳥を倒せば、'));
         tutorial.check_list.push( this.desc_only('新しいマテリアルが入手できます。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item.set_name('マテリアル: 機械部品 x 1');
+        tutorial.reword_tool_item.add_material('parts', 1);
         this.tutorial_list.push( tutorial );
 
-        tutorial = {};
-        tutorial.title = '';
-        tutorial.check_list = [];
-        tutorial.check_list.push( this.desc_only(''));
-
-        tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        // tutorial = {};
+        // tutorial.title = '';
+        // tutorial.check_list = [];
+        // tutorial.check_list.push( this.desc_only(''));
+        //
+        // tutorial.reword_tool_item = new ResourceItem( this.game );
+        // tutorial.reword_tool_item.set_image('present_box');
+        // tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
+        // tutorial.reword_tool_item.add_material('jar', 1);
+        // this.tutorial_list.push( tutorial );
 
 
         // クリアマークをfalseに設定しとく

@@ -23,6 +23,7 @@ export class RecipeWeapon extends Object {
                 new_item.set_image( 'yumiya' );
 
                 new_item.saving_data.basic_power = 12;
+                new_item.saving_data.cool_time = 25;
                 return new_item; },
             ''
         );
@@ -35,7 +36,8 @@ export class RecipeWeapon extends Object {
                 new_item.saving_data.name = 'クロスボウ';
                 new_item.set_image( 'yumiya_bowgun' );
 
-                new_item.saving_data.basic_power = 35;
+                new_item.saving_data.basic_power = 21;
+                new_item.saving_data.cool_time = 20;
                 return new_item; },
             ''
         );
