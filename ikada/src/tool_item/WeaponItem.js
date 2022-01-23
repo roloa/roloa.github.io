@@ -77,6 +77,13 @@ export class WeaponItem extends ToolItem {
             }
             bullet.vx = Math.cos(fire_rad) * this.saving_data.bullet_velocity;
             bullet.vy = Math.sin(fire_rad) * this.saving_data.bullet_velocity;
+
+            bullet.vx += this.game.world.player.vx;
+            bullet.vy += this.game.world.player.vy;
+
+            if( this.game.world.player.is_on_ship ){
+                bullet.vx += this.game.world.ship.velocity;
+            }
             bullet.life_time = this.saving_data.bullet_lifetime;
             bullet.weight = this.saving_data.bullet_weight;
 
