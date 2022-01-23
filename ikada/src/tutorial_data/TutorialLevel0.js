@@ -4,6 +4,7 @@ import {FishRod} from '../tool_item/FishRod.js';
 import {GenericFood} from '../tool_item/d_foods/GenericFood.js';
 import {ChickenCookedMoto} from '../tool_item/d_foods/ChickenCookedMoto.js';
 import {FirePlace} from '../ship_block/FirePlace.js';
+import {ShipFarm} from '../ship_block/ShipFarm.js';
 import {WaterPlace2} from '../ship_block/WaterPlace2.js';
 import {ShipFloor} from '../ship_block/ShipFloor.js';
 import {DistillBottle} from '../tool_item/DistillBottle.js';
@@ -474,6 +475,25 @@ export class TutorialLevel0 {
         tutorial.check_list.push( this.desc_only('敵の攻撃で減った耐久力を回復できます。'));
 
         tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
+        tutorial_list.push( tutorial );
+
+        tutorial = {};
+        tutorial.level = this.tutorial_level;
+        tutorial.title = '栽培プランター';
+        tutorial.check_list = [];
+        tutorial.check_list.push( this.need_cond( 'クラフトでプランターを製作・設置',
+            function( game ){
+                return game.world.ship.has_block_instanceof( ShipFarm );
+        }));
+        tutorial.check_list.push( this.desc_only('プランターを設置すれば、'));
+        tutorial.check_list.push( this.desc_only('いくつかの作物を栽培できます。'));
+        tutorial.check_list.push( this.desc_only('定期的に蒸留ボトルで水をかけると'));
+        tutorial.check_list.push( this.desc_only('成長を早めることができます。'));
+
+        tutorial.reword_tool_item = new ResourceItem( this.game );
+        tutorial.reword_tool_item.set_image('present_box');
+        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
+        tutorial.reword_tool_item.add_material('jar', 1);
         tutorial_list.push( tutorial );
 
         tutorial = {};

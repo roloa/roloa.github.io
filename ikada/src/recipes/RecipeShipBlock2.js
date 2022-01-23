@@ -12,8 +12,8 @@ import {WeaponMortorTube} from '../ship_block/WeaponMortorTube.js';
 
 import {WaterPlace} from '../ship_block/WaterPlace.js';
 import {WaterPlace2} from '../ship_block/WaterPlace2.js';
-import {ShipFarm} from '../ship_block/ShipFarm.js';
-import {ShipFarmWet} from '../ship_block/ShipFarmWet.js';
+import {ShipFarmFood} from '../ship_block/ShipFarmFood.js';
+import {ShipFarmWood} from '../ship_block/ShipFarmWood.js';
 
 import {FirePlace} from '../ship_block/FirePlace.js';
 import {DryLack} from '../ship_block/DryLack.js';
@@ -114,24 +114,17 @@ export class RecipeShipBlock2 extends Object {
 
         c_r.add_recipe( category,
             ['食用の作物を育てます。'],
-            ['leftover', 'wood'],
-            [10, 5],
-            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmWet( game ) ); },
-            '1'
-        );
-        c_r.add_recipe( category,
-            ['食用の作物を育てます。'],
             ['leftover', 'plastic'],
             [10, 5],
-            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmWet( game ) ); },
-            '2'
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmFood( game ) ); },
+            'Food'
         );
         c_r.add_recipe( category,
             ['木材を育てます。'],
             ['leftover', 'iron', 'stone'],
             [30, 10, 10],
-            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarm( game ) ); },
-            '3'
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmWood( game ) ); },
+            'Wood'
         );
 
 

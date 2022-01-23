@@ -1,5 +1,4 @@
 
-import {ShipFarmWet} from './ship_block/ShipFarmWet.js'
 import {WaterPlace} from './ship_block/WaterPlace.js'
 import {ShipBlock} from './ship_block/ShipBlock.js'
 import {BotHome} from './ship_block/BotHome.js'
@@ -10,6 +9,7 @@ import {WeaponMortorTube} from './ship_block/WeaponMortorTube.js'
 import {ShipFrame} from './ship_block/ShipFrame.js'
 import {DryLack} from './ship_block/DryLack.js'
 import {ShipFloor} from './ship_block/ShipFloor.js'
+import {ShipFarmWood} from './ship_block/ShipFarmWood.js'
 import {LevelFlag2} from './ship_block/LevelFlag2.js'
 import {ShipFarm} from './ship_block/ShipFarm.js'
 import {WeaponAirCannon} from './ship_block/WeaponAirCannon.js'
@@ -23,6 +23,7 @@ import {WeaponMachineGun} from './ship_block/WeaponMachineGun.js'
 import {LevelFlag1} from './ship_block/LevelFlag1.js'
 import {LevelFlag3} from './ship_block/LevelFlag3.js'
 import {FirePlace} from './ship_block/FirePlace.js'
+import {ShipFarmFood} from './ship_block/ShipFarmFood.js'
 
 export class BlockInstanceMaker {
     constructor( game ){
@@ -32,8 +33,6 @@ export class BlockInstanceMaker {
 
         if( block_data == null ){
             return null;
-        } else if( block_data.class_name == 'ShipFarmWet' ){
-            return new ShipFarmWet( this.game );
         } else if( block_data.class_name == 'WaterPlace' ){
             return new WaterPlace( this.game );
         } else if( block_data.class_name == 'ShipBlock' ){
@@ -54,6 +53,8 @@ export class BlockInstanceMaker {
             return new DryLack( this.game );
         } else if( block_data.class_name == 'ShipFloor' ){
             return new ShipFloor( this.game );
+        } else if( block_data.class_name == 'ShipFarmWood' ){
+            return new ShipFarmWood( this.game );
         } else if( block_data.class_name == 'LevelFlag2' ){
             return new LevelFlag2( this.game );
         } else if( block_data.class_name == 'ShipFarm' ){
@@ -80,6 +81,8 @@ export class BlockInstanceMaker {
             return new LevelFlag3( this.game );
         } else if( block_data.class_name == 'FirePlace' ){
             return new FirePlace( this.game );
+        } else if( block_data.class_name == 'ShipFarmFood' ){
+            return new ShipFarmFood( this.game );
         }
         return new ShipBlock( this.game );
     }

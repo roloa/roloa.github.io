@@ -54,6 +54,7 @@ export class RecipeSupply extends Object {
             [10],
             function( game ){
                 let new_item = new ResourceItem( game );
+                new_item.set_name('燃料マテリアル (木材)');
                 new_item.set_image( 'fuel_wood' );
                 new_item.add_material( 'fuel', 10);
                 return new_item; },
@@ -65,6 +66,7 @@ export class RecipeSupply extends Object {
             [10],
             function( game ){
                 let new_item = new ResourceItem( game );
+                new_item.set_name('燃料マテリアル (残飯)');
                 new_item.set_image( 'fuel_leftover' );
                 new_item.add_material( 'fuel', 10);
                 return new_item; },
@@ -76,6 +78,7 @@ export class RecipeSupply extends Object {
             [10],
             function( game ){
                 let new_item = new ResourceItem( game );
+                new_item.set_name('燃料マテリアル (羽根)');
                 new_item.set_image( 'fuel_feather' );
                 new_item.add_material( 'fuel', 10);
                 return new_item; },
@@ -88,6 +91,7 @@ export class RecipeSupply extends Object {
             [10],
             function( game ){
                 let new_item = new ResourceItem( game );
+                new_item.set_name('燃料マテリアル (布)');
                 new_item.set_image( 'fuel_cloth' );
                 new_item.add_material( 'fuel', 10);
                 return new_item; },
