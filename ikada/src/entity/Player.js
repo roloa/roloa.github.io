@@ -279,8 +279,8 @@ export class Player extends Entity {
             this.health.thirst = 20;
             this.is_ghost = true;
             this.ghost_timer = this.ghost_timer_max;
-            this.x = 0;
-            this.y = -20;
+            this.x = this.game.world.ship.core_x;
+            this.y = -40;
             this.vx = 0;
             this.vy = 0;
         }

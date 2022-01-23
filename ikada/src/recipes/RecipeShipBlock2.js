@@ -17,6 +17,7 @@ import {ShipFarmWet} from '../ship_block/ShipFarmWet.js';
 
 import {FirePlace} from '../ship_block/FirePlace.js';
 import {DryLack} from '../ship_block/DryLack.js';
+import {ShipMast} from '../ship_block/ShipMast.js';
 
 // import {} from '../tool_item/.js';
 
@@ -37,6 +38,18 @@ export class RecipeShipBlock2 extends Object {
             function( game ){ return new BuildBlock( game ).set_ship_block( new FirePlace( game ) ); },
             ''
         );
+
+        c_r.add_recipe( category,
+            ['舟の帆です。',
+            '風が当たると舟が前進します。'],
+            ['wood', 'cloth', 'feather'],
+            [10, 20, 3],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipMast( game ) ); },
+            ''
+        );
+
+
+
         c_r.add_recipe( category,
             ['食材を乾燥させます。'],
             ['wood', 'cloth'],

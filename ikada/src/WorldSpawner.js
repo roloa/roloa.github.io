@@ -94,7 +94,7 @@ export class WorldSpawner {
         //             return;
         //         }
         //         this.world.push_enemy( new_enemy )
-        // 
+        //
         //     }
         //
         // }
@@ -143,28 +143,14 @@ export class WorldSpawner {
         // 風
         // TODO 数え上げを節約
         if( this.world.entity_list.filter(function( elem ){ return elem instanceof EffectWind; }).length < 100 ){
-            let new_entity = new EffectWind( this.game )
-            let rand = Math.random();
-            if( rand < 0.1){
-                new_entity.x = this.world.camera.x - 1200;
-            // } else if( rand < 0.5 ){
-            //     new_entity.x = this.world.camera.x + Math.random() * 1000;
-            } else {
-                new_entity.x = this.world.camera.x + Math.random() * 2000 - 500
-            }
-            new_entity.y = this.world.camera.y + Math.random() * 3000 - 1500;
-
+            let new_entity = new EffectWind( this.game );
+            this.set_coodinate_randomly( new_entity );
+            this.move_outsight_left( new_entity );
             if( -100 < new_entity.y){
                 // 海の中はだめ
                 return;
             }
-            if( this.check_is_in_sight( new_entity.x, new_entity.y )){
-                // 視界内はだめ
-                new_entity.x = this.world.camera.x + this.sight_distance + Math.random() * 200;
-            }
-
-            this.world.entity_list.push( new_entity )
-
+            this.world.entity_list.push( new_entity );
         }
     }
     spawn_cloud(){
