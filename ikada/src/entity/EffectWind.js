@@ -21,7 +21,7 @@ export class EffectWind extends Entity {
         let block = this.game.world.ship.get_ship_block( this.x, this.y );
         if( block ){
             if( block.saving_data.is_mast_open ){
-                this.game.world.ship.impulse_velocity( this.vx );
+                this.game.world.ship.on_oar( 150 );
                 this.is_alive = false;
             }
             if( block.is_floor ){

@@ -113,6 +113,7 @@ export class WeaponAirCannon extends ShipBlock {
         bullet.y = this.y + vec_y * 30;
         bullet.vx = vec_x * this.gun_data.bullet_velocity;
         bullet.vy = vec_y * this.gun_data.bullet_velocity;
+        // bullet.vx += this.game.world.ship.velocity;
         bullet.rotation = rad;
         bullet.image = this.bullet_image;
         bullet.life_time = this.gun_data.bullet_lifetime;

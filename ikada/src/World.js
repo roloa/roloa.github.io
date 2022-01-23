@@ -52,6 +52,7 @@ export class World {
         this.push_entity( test_wind );
 
         // this.newgame_gift();
+        this.world_spawner.initial_placed_object();
     }
 
     newgame_gift(){
@@ -75,6 +76,7 @@ export class World {
         new_item.set_tool_item( new_tool_item );
         this.entity_list.push( new_item )
     }
+
 
     count_enemy(){
         let count = 0;

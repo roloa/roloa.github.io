@@ -42,10 +42,10 @@ export class BreakableObject extends Entity {
         this.max_hp = 100
         this.hp = this.max_hp;
 
-        if( altitude < -10 ){
+        if( altitude < -8 ){
             this.image = this.game.image_library.get_image( 'cloud' )
             this.name = '雲';
-        } else if( 5 < altitude){
+        } else if( 2 < altitude){
             this.image = this.game.image_library.get_image( 'kaisou_wakame' )
             this.name = '海藻';
         } else {

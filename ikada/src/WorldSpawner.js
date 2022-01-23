@@ -26,7 +26,7 @@ export class WorldSpawner {
 
         this.surface_generator = new EnemySurfaceGenerator( this.game )
 
-        for(let i = 0 ; i < 100 ; i++ ){
+        for(let i = 0 ; i < 10 ; i++ ){
             this.spawn_wind();
         }
     }
@@ -103,7 +103,11 @@ export class WorldSpawner {
             if( this.world.enemy_list.filter(function( elem ){ return elem instanceof BreakableObject; }).length < 20 ){
                 let new_enemy = new BreakableObject( this.game );
                 this.set_coodinate_randomly( new_enemy );
-                this.move_outsight_random( new_enemy );
+                if( this.game.world.player.is_in_ship){
+                    this.move_outsight_right( new_enemy );
+                } else {
+                    this.move_outsight_random( new_enemy );
+                }
                 new_enemy.generate_object();
                 this.world.push_enemy( new_enemy )
 
@@ -145,10 +149,15 @@ export class WorldSpawner {
         if( this.world.entity_list.filter(function( elem ){ return elem instanceof EffectWind; }).length < 100 ){
             let new_entity = new EffectWind( this.game );
             this.set_coodinate_randomly( new_entity );
-            this.move_outsight_left( new_entity );
+            this.move_outsight_random( new_entity );
             if( -100 < new_entity.y){
                 // 海の中はだめ
-                return;
+                new_entity.y = Math.random() * -200;
+                if( Math.random() < 0.3 ){
+                    this.move_outsight_left( new_entity );
+                } else {
+                    this.move_outsight_right( new_entity );
+                }
             }
             this.world.entity_list.push( new_entity );
         }
@@ -210,5 +219,23 @@ export class WorldSpawner {
         return (
         this.world.camera.x - this.sight_distance < x1 && x1 < this.world.camera.x + this.sight_distance &&
         this.world.camera.y - this.sight_distance < y1 && y1 < this.world.camera.y + this.sight_distance)
+    }
+
+    initial_placed_object(){
+        // 初期配置の雲とかワカメ
+        for( let i = -5 ; i <= 10 ; i++){
+            let new_obj  = null;
+            new_obj = new BreakableObject( this.game );
+            new_obj.x = i * 200 + Math.random() * 200;
+            new_obj.y = 100 + Math.random() * 600;
+            new_obj.generate_object();
+            this.world.push_enemy( new_obj );
+
+            new_obj = new BreakableObject( this.game );
+            new_obj.x = i * 200 + Math.random() * 200;
+            new_obj.y = -280 - Math.random() * 600;
+            new_obj.generate_object();
+            this.world.push_enemy( new_obj );
+        }
     }
 }

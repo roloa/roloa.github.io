@@ -17,6 +17,7 @@ export class Ship {
         this.init_block_array();
 
         this.velocity = 0;
+        this.oar_impulse = 0;
 
         this.ship_level = 0;
     }
@@ -246,9 +247,6 @@ export class Ship {
         }
         return false;
     }
-    impulse_velocity( amount ){
-        this.velocity += amount;
-    }
     get_left_side_x(){
         return - ShipBlock.BLOCK_SIZE * this.ship_offset_x;
     }
@@ -303,8 +301,21 @@ export class Ship {
         }
 
     }
+    on_oar( power ){
+        this.oar_impulse += power;
+        if( 300 < this.oar_impulse ){
+            this.oar_impulse = 300;
+        }
+    }
+    impulse_velocity( amount ){
+        this.velocity += amount;
+    }
     on_update(){
 
+        if( 0 < this.oar_impulse){
+            this.oar_impulse -= 1;
+            this.impulse_velocity( 0.1 );
+        }
         this.velocity *= 0.95;
 
         for( let x = 0 ; x < this.block_array.length ; x++ ){
@@ -321,9 +332,6 @@ export class Ship {
             }
         }
 
-    }
-    on_oar(){
-        this.velocity = 3;
     }
 
     on_draw( canvas ){
