@@ -58,6 +58,7 @@ export class TutorialLevel0 {
         // tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'チュートリアルの使い方';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('チュートリアルの項目を達成すると、'));
@@ -76,6 +77,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '基本操作 1';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( '左右移動: 矢印キー左右 or A,D',
@@ -102,6 +104,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '基本操作 2';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'アイテム使用: マウスクリック',
@@ -124,6 +127,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'インベントリ メニュー';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('持っているアイテムを管理する画面です。'));
@@ -142,6 +146,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'クラフト メニュー';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('マテリアルからアイテムを製作する画面です。'));
@@ -164,6 +169,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'マテリアル メニュー';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('持っているマテリアルを確認する画面です。'));
@@ -186,6 +192,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'コンフィグ メニュー';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('ゲームの保存や設定変更をする画面です。'));
@@ -205,6 +212,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'ステータス';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('画面左下に並んだゲージは、'));
@@ -214,6 +222,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'ステータス: 体力';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('左下の赤いゲージは体力で、'));
@@ -230,6 +239,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'ステータス: スタミナ';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('左下の黄色のゲージはスタミナで、'));
@@ -246,6 +256,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'ステータス: 食料と水分';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('左下の橙と青のゲージは食料と水分で、'));
@@ -263,6 +274,7 @@ export class TutorialLevel0 {
 
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '海について';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('海に落ちても水面を泳ぐことはできます。'));
@@ -281,6 +293,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'デスペナルティ';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('敵の攻撃や溺れたりして死んでしまうと'));
@@ -297,6 +310,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '舟ブロックの設置';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('舟ブロックを持ってクリックすることで'));
@@ -314,6 +328,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '食料の確保';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('釣り竿の作成'));
@@ -333,6 +348,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '飲み水の確保(蒸留)';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'クラフトで蒸留ボトルを作成する',
@@ -355,6 +371,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '飲み水の確保(バケツ)';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'クラフトで給水バケツを製作・設置',
@@ -373,6 +390,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '燃料: 焚き火の補充';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('焚き火1回につき固形燃料が1つ必要です。'));
@@ -395,6 +413,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '鳥の狩猟';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'クラフトで弓を製作する',
@@ -416,6 +435,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '舟の前進';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'クラフトでオールを製作する',
@@ -437,6 +457,7 @@ export class TutorialLevel0 {
 
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = '舟ブロックの撤去と修理';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'クラフトで撤去ハンマーを製作する',
@@ -456,6 +477,7 @@ export class TutorialLevel0 {
         tutorial_list.push( tutorial );
 
         tutorial = {};
+        tutorial.level = this.tutorial_level;
         tutorial.title = 'レベルフラッグ[1]';
         tutorial.check_list = [];
         tutorial.check_list.push( this.need_cond( 'レベルフラッグ[1]を作成して設置する',

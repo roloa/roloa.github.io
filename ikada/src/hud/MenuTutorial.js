@@ -207,19 +207,26 @@ export class MenuTutorial {
             if( this.tutorial_list[ i + this.scroll_amount ] && 0 < i && i < MenuTutorial.DOWN_ARROW_INDEX ){
                 canvas.fillStyle = MenuTutorial.LIST_TEXT_COLOR;
                 canvas.font = MenuTutorial.LIST_TEXT_FONT;
-                canvas.fillText( this.tutorial_list[  i + this.scroll_amount  ].title ,
-                    MenuTutorial.LIST_X + MenuTutorial.LIST_TEXT_MARGIN_LEFT,
-                    MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i);
-                // 完了マーク
-                if( this.tutorial_list[  i + this.scroll_amount  ].cleared ){
-                    canvas.drawImage( this.check_icon,
-                        MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i
-                        - MenuTutorial.LIST_TEXT_HEIGHT * 0.25,
-                        MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
+                if( this.tutorial_list[  i + this.scroll_amount  ].is_open ){
+                    canvas.fillText( this.tutorial_list[  i + this.scroll_amount  ].title ,
+                        MenuTutorial.LIST_X + MenuTutorial.LIST_TEXT_MARGIN_LEFT,
+                        MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i);
+                    // 完了マーク
+                    if( this.tutorial_list[  i + this.scroll_amount  ].cleared ){
+                        canvas.drawImage( this.check_icon,
+                            MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i
+                            - MenuTutorial.LIST_TEXT_HEIGHT * 0.25,
+                            MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
+                    } else {
+                        // canvas.drawImage( this.batsu_icon,
+                        //     MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i,
+                        //     MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
+                    }
                 } else {
-                    // canvas.drawImage( this.batsu_icon,
-                    //     MenuTutorial.LIST_X, MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i,
-                    //     MenuTutorial.LIST_TEXT_HEIGHT, MenuTutorial.LIST_TEXT_HEIGHT );
+                    // 未開放のチュートリアル
+                    canvas.fillText( '--- レベル['+ this.tutorial_list[  i + this.scroll_amount  ].level +']で開放 ---' ,
+                        MenuTutorial.LIST_X + MenuTutorial.LIST_TEXT_MARGIN_LEFT,
+                        MenuTutorial.LIST_Y + MenuTutorial.LIST_TEXT_MARGIN_TOP + MenuTutorial.LIST_TEXT_HEIGHT * i);
                 }
             }
         }
@@ -235,6 +242,11 @@ export class MenuTutorial {
             MenuTutorial.DESC_TEXT_Y + MenuTutorial.LIST_TEXT_HEIGHT * (1) );
         } else if( this.config_cursor == MenuTutorial.DOWN_ARROW_INDEX){
             canvas.fillText( 'リストを下にスクロールします。' ,
+            MenuTutorial.DESC_TEXT_X,
+            MenuTutorial.DESC_TEXT_Y + MenuTutorial.LIST_TEXT_HEIGHT * (1) );
+        } else if( this.tutorial_list[ this.calc_cursor_in_scroll() ].is_open == false ){
+            // 未開放
+            canvas.fillText( '未開放のチュートリアルです。' ,
             MenuTutorial.DESC_TEXT_X,
             MenuTutorial.DESC_TEXT_Y + MenuTutorial.LIST_TEXT_HEIGHT * (1) );
         } else {

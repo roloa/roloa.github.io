@@ -278,6 +278,8 @@ export class Ship {
             this.game.log('舟レベルアップ: ');
             this.game.log( 'Lv' + this.ship_level +' -> Lv' + ship_level_value_max);
             this.ship_level = ship_level_value_max;
+            // チュートリアル開放チェック
+            this.game.tutorial_data.update_tutorial_is_open();
         } else if( ship_level_value_max < this.ship_level ){
             this.game.log('舟レベルダウン: ');
             this.game.log( 'Lv' + this.ship_level +' -> Lv' + ship_level_value_max);
