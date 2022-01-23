@@ -180,7 +180,7 @@ export class EnemySurfaceGenerator {
     drop_material( image_name, name_list, amount_list ){
         let new_item = new ResourceItem( this.game );
         new_item.set_image( image_name );
-        for( let i = 0 ; i < name_list ; i++){
+        for( let i = 0 ; i < name_list.length ; i++){
             let amount = Math.floor( Math.max( amount_list[i] * (Math.random() * 1.5 + 0.5), 1) );
             new_item.add_material( name_list[i], amount );
         }
