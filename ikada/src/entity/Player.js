@@ -261,6 +261,7 @@ export class Player extends Entity {
             this.is_in_sea = true;
             this.is_flying = false;
             this.is_falling = false;
+            this.is_on_ship = false;
 
         } else {
             // 海の中にいない
