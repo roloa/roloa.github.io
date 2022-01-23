@@ -14,6 +14,7 @@ import {LevelFlag2} from './ship_block/LevelFlag2.js'
 import {ShipFarm} from './ship_block/ShipFarm.js'
 import {WeaponAirCannon} from './ship_block/WeaponAirCannon.js'
 import {WeaponCatapult} from './ship_block/WeaponCatapult.js'
+import {ShipMast} from './ship_block/ShipMast.js'
 import {FuelEngine} from './ship_block/FuelEngine.js'
 import {VictoryRocket} from './ship_block/VictoryRocket.js'
 import {DroneHome} from './ship_block/DroneHome.js'
@@ -61,6 +62,8 @@ export class BlockInstanceMaker {
             return new WeaponAirCannon( this.game );
         } else if( block_data.class_name == 'WeaponCatapult' ){
             return new WeaponCatapult( this.game );
+        } else if( block_data.class_name == 'ShipMast' ){
+            return new ShipMast( this.game );
         } else if( block_data.class_name == 'FuelEngine' ){
             return new FuelEngine( this.game );
         } else if( block_data.class_name == 'VictoryRocket' ){

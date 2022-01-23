@@ -10,7 +10,7 @@ import {TitleScreen} from './TitleScreen.js'
 import {SaveDataManager} from './SaveDataManager.js'
 import {HudVirtualInput} from './hud/HudVirtualInput.js';
 import {DebugCommands} from './DebugCommands.js';
-import {TutorialData} from './hud/TutorialData.js'
+import {TutorialData} from './tutorial_data/TutorialData.js'
 
 
 

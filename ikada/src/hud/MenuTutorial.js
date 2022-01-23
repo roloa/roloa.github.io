@@ -1,6 +1,6 @@
 
 import {HudMenu} from './HudMenu.js'
-import {TutorialData} from './TutorialData.js'
+import {TutorialData} from '../tutorial_data/TutorialData.js'
 
 export class MenuTutorial {
 

@@ -12,6 +12,7 @@ import {AmmoStone} from './tool_item/AmmoStone.js'
 import {Scouter} from './tool_item/Scouter.js'
 import {AmmoCannon} from './tool_item/AmmoCannon.js'
 import {Spear} from './tool_item/Spear.js'
+import {WeaponRandomItem} from './tool_item/WeaponRandomItem.js'
 import {DistillBottle} from './tool_item/DistillBottle.js'
 import {RepairWrench} from './tool_item/RepairWrench.js'
 import {BuildBlock} from './tool_item/BuildBlock.js'
@@ -29,6 +30,7 @@ import {CookedFish} from './tool_item/d_foods/CookedFish.js'
 import {VeggieTomato} from './tool_item/d_foods/VeggieTomato.js'
 import {ChickenCookedMoto} from './tool_item/d_foods/ChickenCookedMoto.js'
 import {ChickenDried} from './tool_item/d_foods/ChickenDried.js'
+import {MedicalPack} from './tool_item/d_foods/MedicalPack.js'
 import {DriedFish} from './tool_item/d_foods/DriedFish.js'
 import {FishKirimi} from './tool_item/d_foods/FishKirimi.js'
 
@@ -66,6 +68,8 @@ export class ItemInstanceMaker {
             return new AmmoCannon( this.game );
         } else if( item_data.class_name == 'Spear' ){
             return new Spear( this.game );
+        } else if( item_data.class_name == 'WeaponRandomItem' ){
+            return new WeaponRandomItem( this.game );
         } else if( item_data.class_name == 'DistillBottle' ){
             return new DistillBottle( this.game );
         } else if( item_data.class_name == 'RepairWrench' ){
@@ -100,6 +104,8 @@ export class ItemInstanceMaker {
             return new ChickenCookedMoto( this.game );
         } else if( item_data.class_name == 'ChickenDried' ){
             return new ChickenDried( this.game );
+        } else if( item_data.class_name == 'MedicalPack' ){
+            return new MedicalPack( this.game );
         } else if( item_data.class_name == 'DriedFish' ){
             return new DriedFish( this.game );
         } else if( item_data.class_name == 'FishKirimi' ){

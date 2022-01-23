@@ -14,29 +14,36 @@ import {RepairWrench} from '../tool_item/RepairWrench.js';
 import {DeconstructHammer} from '../tool_item/DeconstructHammer.js';
 import {BuildBlock} from '../tool_item/BuildBlock.js';
 
-export class TutorialData {
+export class TutorialLevel0 {
 
     constructor( game ){
 
         this.game = game;
-        this.tutorial_list = [];
 
-        this.condition_check_timer_max = 10;
-        this.condition_check_timer_count = this.condition_check_timer_max;
-
-        this.complete_flag_list = [];
-
-        this.setup_tutorial();
+        this.tutorial_level = 0;
     }
-    get_list(){
-        return this.tutorial_list;
+    desc_only( description ){
+        return {
+            description: description,
+            is_need_check: false,
+            checked: false,
+            level: this.tutorial_level,
+            is_open: true,
+            condition_func: function( game ){ return true; }
+        };
     }
-    complete( key ){
-        this.complete_flag_list[ key ] = true;
+    need_cond( description, condition_func ){
+        return {
+            description: description,
+            is_need_check: true,
+            checked: false,
+            level: this.tutorial_level,
+            is_open: true,
+            condition_func: condition_func
+        };
     }
-    setup_tutorial(){
+    setup_tutorial( tutorial_list ){
 
-        this.tutorial_list = [];
         let tutorial = null;
 
         // tutorial = {};
@@ -48,17 +55,16 @@ export class TutorialData {
         // tutorial.reword_tool_item.set_image('tree_ryuuboku');
         // tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
         // tutorial.reword_tool_item.add_material('wood', 1);
-        // this.tutorial_list.push( tutorial );
+        // tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'チュートリアルの使い方';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('チュートリアルの項目を達成すると、'));
-        tutorial.check_list.push({
-        description: '<-のアイコンがチェックになります。',
-        is_need_check: true, checked: true, condition_func: function( game ){
-            return true;
-        }});
+        tutorial.check_list.push( this.need_cond( '<-のアイコンがチェックになります。',
+            function( game ){
+                return true;
+        }));
         tutorial.check_list.push( this.desc_only('全項目を達成したら'));
         tutorial.check_list.push( this.desc_only('下の完了ボタンを押して'));
         tutorial.check_list.push( this.desc_only('報酬を受け取れます。'));
@@ -67,62 +73,55 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('tree_ryuuboku');
         tutorial.reword_tool_item.set_name('マテリアル: 木材 x 10');
         tutorial.reword_tool_item.add_material('wood', 10);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '基本操作 1';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: '左右移動: 矢印キー左右 or A,D',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( '左右移動: 矢印キー左右 or A,D',
+            function( game ){
                 return 1 < Math.abs(game.world.player.vx);
-        }});
-        tutorial.check_list.push({
-            description: 'ジャンプ: 矢印キー上, Space or W',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( 'ジャンプ: 矢印キー上, Space or W',
+            function( game ){
                 return game.world.player.vy < -2;
-        }});
-        tutorial.check_list.push({
-            description: '床を降りる: 矢印キー下 or S',
-            is_need_check: false, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( '床を降りる: 矢印キー下 or S',
+            function( game ){
                 return true;
-        }});
-        tutorial.check_list.push({
-            description: 'メニュー開閉: Tabキー',
-            is_need_check: false, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( 'メニュー開閉: Tabキー',
+            function( game ){
                 return true;
-        }});
+        }));
         tutorial.check_list.push( this.desc_only(' 　　or 画面左上のメニューボタン'));
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('glass_bin6_clear');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '基本操作 2';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'アイテム使用: マウスクリック',
-            is_need_check: false, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'アイテム使用: マウスクリック',
+            function( game ){
                 return true;
-        }});
-        tutorial.check_list.push({
-            description: 'アイテム選択: マウスホイール',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( 'アイテム選択: マウスホイール',
+            function( game ){
                 return game.hud.item_slot.item_slot_cursor != 0;
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('　　 or 画面下のアイテム欄クリック'));
-        tutorial.check_list.push({
-            description: 'カメラ操作: 画面左のカメラボタン',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'カメラ操作: 画面左のカメラボタン',
+            function( game ){
                 return game.world.camera.zoom != 1;
-        }});
+        }));
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('glass_bin6_clear');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'インベントリ メニュー';
@@ -131,17 +130,16 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('クリックでアイテムを移動できます。'));
         tutorial.check_list.push( this.desc_only('1-9キーでアイテムを枠に移動させます。'));
         tutorial.check_list.push( this.desc_only('ゴミ箱にアイテムを置くと消去できます。'));
-        tutorial.check_list.push({
-            description: 'インベントリ メニューを開く',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'インベントリ メニューを開く',
+            function( game ){
                 return game.hud.hud_menu.menu_list_cursor == 1;
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('alohashirt_gray');
         tutorial.reword_tool_item.set_name('マテリアル: 布切れ x 10');
         tutorial.reword_tool_item.add_material('cloth', 10);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'クラフト メニュー';
@@ -150,22 +148,20 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('作りたいアイテムを選び、'));
         tutorial.check_list.push( this.desc_only('右下の製作ボタンで、'));
         tutorial.check_list.push( this.desc_only('マテリアルを消費してアイテムを作ります。'));
-        tutorial.check_list.push({
-            description: 'クラフト メニューを開く',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフト メニューを開く',
+            function( game ){
                 return game.hud.hud_menu.menu_list_cursor == 2;
-        }});
-        tutorial.check_list.push({
-            description: '釣り竿 Lv1を製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( '釣り竿 Lv1を製作する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( FishRod );
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('gomi_can');
         tutorial.reword_tool_item.set_name('マテリアル: 鉄クズ x 10');
         tutorial.reword_tool_item.add_material('iron', 10);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'マテリアル メニュー';
@@ -174,43 +170,39 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('マテリアルとは、'));
         tutorial.check_list.push( this.desc_only('アイテムを作るための素材です。'));
         tutorial.check_list.push( this.desc_only('所持上限は基本的にありません。'));
-        tutorial.check_list.push({
-            description: 'マテリアル メニューを開く',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'マテリアル メニューを開く',
+            function( game ){
                 return game.hud.hud_menu.menu_list_cursor == 3;
-        }});
-        tutorial.check_list.push({
-            description: '鉄クズを30個以上集める',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( '鉄クズを30個以上集める',
+            function( game ){
                 return 30 <= game.materials.get_material('iron');
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('tree_ryuuboku');
         tutorial.reword_tool_item.set_name('マテリアル: 木材 x 20');
         tutorial.reword_tool_item.add_material('wood', 20);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'コンフィグ メニュー';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('ゲームの保存や設定変更をする画面です。'));
-        tutorial.check_list.push({
-            description: 'コンフィグ メニューを開く',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'コンフィグ メニューを開く',
+            function( game ){
                 return game.hud.hud_menu.menu_list_cursor == 4;
-        }});
-        tutorial.check_list.push({
-            description: 'データ[1]にセーブする',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( 'データ[1]にセーブする',
+            function( game ){
                 return (game.tutorial_data.complete_flag_list[ this.description ] == true);
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'ステータス';
@@ -219,7 +211,7 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('プレイヤーのステータスです。'));
 
         tutorial.reword_tool_item = new ChickenCookedMoto( this.game );
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'ステータス: 体力';
@@ -235,7 +227,7 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('tree_ryuuboku');
         tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
         tutorial.reword_tool_item.add_material('wood', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'ステータス: スタミナ';
@@ -251,7 +243,7 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('tree_ryuuboku');
         tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
         tutorial.reword_tool_item.add_material('wood', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'ステータス: 食料と水分';
@@ -267,7 +259,7 @@ export class TutorialData {
         tutorial.reword_tool_item.set_name('フルーツジュース');
         tutorial.reword_tool_item.saving_data.hunger_value = 5;
         tutorial.reword_tool_item.saving_data.thirst_value = 35;
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
 
         tutorial = {};
@@ -277,17 +269,16 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('泳いでいる間、スタミナを消費します。'));
         tutorial.check_list.push( this.desc_only('なくなると体力を消費し、'));
         tutorial.check_list.push( this.desc_only('最後には死んでしまいます。'));
-        tutorial.check_list.push({
-            description: '海に飛び込んでみる',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( '海に飛び込んでみる',
+            function( game ){
                 return game.world.player.is_in_sea == true;
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'デスペナルティ';
@@ -303,7 +294,7 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '舟ブロックの設置';
@@ -311,28 +302,25 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('舟ブロックを持ってクリックすることで'));
         tutorial.check_list.push( this.desc_only('ブロックを設置して舟を拡張できます。'));
         tutorial.check_list.push( this.desc_only('隣にブロックがないと置けません。'));
-        tutorial.check_list.push({
-            description: '横方向に舟を大きくする',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( '横方向に舟を大きくする',
+            function( game ){
                 return 7 < game.world.ship.block_array.length;
-        }});
-        tutorial.check_list.push({
-            description: '上方向に舟を大きくする',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( '上方向に舟を大きくする',
+            function( game ){
                 return 4 < game.world.ship.block_array[0].length;
-        }});
+        }));
         tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '食料の確保';
         tutorial.check_list = [];
         tutorial.check_list.push( this.desc_only('釣り竿の作成'));
-        tutorial.check_list.push({
-            description: '釣り竿を使用して釣り針を投げる',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( '釣り竿を使用して釣り針を投げる',
+            function( game ){
                 return game.world.lure.is_working == true;
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('釣り針が沈んだらクリックで引き上げます。'));
         tutorial.check_list.push( this.desc_only('おもに魚が釣れます。'));
         tutorial.check_list.push( this.desc_only('魚を使用して、魚を食べます。'));
@@ -342,22 +330,20 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '飲み水の確保(蒸留)';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'クラフトで蒸留ボトルを作成する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトで蒸留ボトルを作成する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( DistillBottle );
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('蒸留ボトルを使用すると、水を飲めます。'));
-        tutorial.check_list.push({
-            description: '焚き火を作成し、設置する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( '焚き火を作成し、設置する',
+            function( game ){
                 return game.world.ship.has_block_instanceof( FirePlace );
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('蒸留ボトルで焚き火をクリックすると'));
         tutorial.check_list.push( this.desc_only('ボトルを焚き火にかけます。しばらく待てば、'));
         tutorial.check_list.push( this.desc_only('蒸留ボトルに再度、水が満たされます。'));
@@ -366,16 +352,15 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '飲み水の確保(バケツ)';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'クラフトで給水バケツを製作・設置',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトで給水バケツを製作・設置',
+            function( game ){
                 return game.world.ship.has_block_instanceof( WaterPlace2 );
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('給水バケツをクリックすれば、'));
         tutorial.check_list.push( this.desc_only('水を飲むことができます。'));
         tutorial.check_list.push( this.desc_only('(かなり) 長時間待てば、'));
@@ -385,7 +370,7 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '燃料: 焚き火の補充';
@@ -394,59 +379,53 @@ export class TutorialData {
         tutorial.check_list.push( this.desc_only('固形燃料の材料は燃料マテリアルです。'));
         tutorial.check_list.push( this.desc_only('燃料マテリアルはクラフトで、'));
         tutorial.check_list.push( this.desc_only('木材や残飯などから製作できます。'));
-        tutorial.check_list.push({
-            description: 'クラフトで燃料マテリアルを製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトで燃料マテリアルを製作する',
+            function( game ){
                 return 1 <= game.materials.get_material('fuel');
-        }});
-        tutorial.check_list.push({
-            description: 'クラフトで固形燃料を製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( 'クラフトで固形燃料を製作する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( SolidFuel );
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('cooking_kokei_nenryou_fire');
         tutorial.reword_tool_item.set_name('マテリアル: 燃料 x 30');
         tutorial.reword_tool_item.add_material('fuel', 30);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '鳥の狩猟';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'クラフトで弓を製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトで弓を製作する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( WeaponItem );
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('弓を使用すると、敵にダメージを与える'));
         tutorial.check_list.push( this.desc_only('矢を発射することができます。'));
         tutorial.check_list.push( this.desc_only('カモメ等を攻撃して狩りましょう。'));
-        tutorial.check_list.push({
-            description: '羽根マテリアルを入手する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( '羽根マテリアルを入手する',
+            function( game ){
                 return 1 <= game.materials.get_material('feather');
-        }});
+        }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('feather_white');
         tutorial.reword_tool_item.set_name('マテリアル: 羽根 x 3');
         tutorial.reword_tool_item.add_material('feather', 3);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = '舟の前進';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'クラフトでオールを製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトでオールを製作する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( Oar );
-        }});
-        tutorial.check_list.push({
-            description: '水面近くでオールを使って舟を進める',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        }));
+        tutorial.check_list.push( this.need_cond( '水面近くでオールを使って舟を進める',
+            function( game ){
                 return 1 < game.world.ship.velocity;
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('舟を前に進めていると、'));
         tutorial.check_list.push( this.desc_only('多くの素材を持った敵対的な鳥が来ます。'));
 
@@ -454,38 +433,35 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         tutorial.reword_tool_item.add_material('jar', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
 
         tutorial = {};
         tutorial.title = '舟ブロックの撤去と修理';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'クラフトで撤去ハンマーを製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトで撤去ハンマーを製作する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( DeconstructHammer );
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('ハンマーで舟ブロックをクリックすると'));
         tutorial.check_list.push( this.desc_only('そのブロックをアイテムに還元できます。'));
-        tutorial.check_list.push({
-            description: 'クラフトで修理レンチを製作する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'クラフトで修理レンチを製作する',
+            function( game ){
                 return game.hud.item_slot.has_item_instanceof( RepairWrench );
-        }});
+        }));
         tutorial.check_list.push( this.desc_only('レンチで舟ブロックをクリックすると'));
         tutorial.check_list.push( this.desc_only('敵の攻撃で減った耐久力を回復できます。'));
 
         tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.title = 'レベルフラッグ[1]';
         tutorial.check_list = [];
-        tutorial.check_list.push({
-            description: 'レベルフラッグ[1]を作成して設置する',
-            is_need_check: true, checked: false, condition_func: function( game ){
+        tutorial.check_list.push( this.need_cond( 'レベルフラッグ[1]を作成して設置する',
+            function( game ){
                 return 1 <= game.world.ship.ship_level;
-        }});
+        }));
 
         tutorial.check_list.push( this.desc_only('レベルフラッグを舟に設置すると、'));
         tutorial.check_list.push( this.desc_only('より強い鳥が現れるようになります。'));
@@ -496,7 +472,7 @@ export class TutorialData {
         tutorial.reword_tool_item.set_image('present_box');
         tutorial.reword_tool_item.set_name('マテリアル: 機械部品 x 1');
         tutorial.reword_tool_item.add_material('parts', 1);
-        this.tutorial_list.push( tutorial );
+        tutorial_list.push( tutorial );
 
         // tutorial = {};
         // tutorial.title = '';
@@ -507,61 +483,10 @@ export class TutorialData {
         // tutorial.reword_tool_item.set_image('present_box');
         // tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
         // tutorial.reword_tool_item.add_material('jar', 1);
-        // this.tutorial_list.push( tutorial );
+        // tutorial_list.push( tutorial );
 
 
-        // クリアマークをfalseに設定しとく
-        for( let tutorial of this.tutorial_list ){
-            tutorial.cleared = false;
-        }
     }
-    desc_only( description ){
-        return { description: description, is_need_check: false, checked: false, condition_func: function( game ){ return true; }}
-    }
-    on_update(){
 
-        // クエスト条件達成チェック
-        if( this.condition_check_timer_count ){
-            this.condition_check_timer_count -= 1;
-        } else {
-            this.condition_check_timer_count = this.condition_check_timer_max;
-            for( let tutorial of this.tutorial_list ){
-                if( !tutorial.cleared ){
-                    for( let check_list of tutorial.check_list ){
-                        if( check_list.is_need_check && !check_list.checked ){
-                            if( check_list.condition_func( this.game ) ){
-                                check_list.checked = true;
-                                this.game.log('次のチュートリアル項目を達成しました:');
-                                this.game.log(tutorial.title + ': ' + check_list.description);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    save_data(){
-        let save_data = {};
-        save_data.tutorial_list = [];
-        for( let tutorial_index = 0 ; tutorial_index < this.tutorial_list.length ; tutorial_index++ ){
-            save_data.tutorial_list[ tutorial_index ] = {};
-            save_data.tutorial_list[ tutorial_index ].cleared = this.tutorial_list[ tutorial_index ].cleared;
-            save_data.tutorial_list[ tutorial_index ].check_list = [];
-            for( let check_index = 0 ; check_index < this.tutorial_list[ tutorial_index ].check_list.length ; check_index++ ){
-                save_data.tutorial_list[ tutorial_index ].check_list[ check_index ] = {};
-                save_data.tutorial_list[ tutorial_index ].check_list[ check_index ].checked = (
-                this.tutorial_list[ tutorial_index ].check_list[ check_index ].checked );
-            }
-        }
-        return save_data;
-    }
-    load_data( load_data ){
-        for( let tutorial_index = 0 ; tutorial_index < load_data.tutorial_list.length ; tutorial_index++ ){
-            this.tutorial_list[ tutorial_index ].cleared = load_data.tutorial_list[ tutorial_index ].cleared;
-            for( let check_index = 0 ; check_index < load_data.tutorial_list[ tutorial_index ].check_list.length ; check_index++ ){
-                this.tutorial_list[ tutorial_index ].check_list[ check_index ].checked = (
-                    load_data.tutorial_list[ tutorial_index ].check_list[ check_index ].checked );
-            }
-        }
-    }
+
 }

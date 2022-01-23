@@ -1,7 +1,7 @@
 
 import {ToolItem} from '../ToolItem.js';
 
-export class GenericFood extends ToolItem {
+export class MedicalPack extends ToolItem {
 
     constructor( game ){
         super( game )
