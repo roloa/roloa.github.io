@@ -73,12 +73,12 @@ export class EnemySurfaceBird extends Enemy {
         if( this.is_back_attack ){
             // 裏取り型
             this.position_x = this.game.world.ship.get_left_side_x() - this.distance_from_ship * 0.5 - this.distance_from_ship * Math.random();
-            this.position_y = Math.random() * -this.game.world.ship.get_top_y() - 10;
+            this.position_y = Math.random() * this.game.world.ship.get_top_y() - 10;
             return;
         }
         // それ以外、前方型
         this.position_x = this.game.world.ship.get_right_side_x() + this.distance_from_ship * 0.5 + this.distance_from_ship * Math.random();
-        this.position_y = Math.random() * -this.game.world.ship.get_top_y() - 10;
+        this.position_y = Math.random() * this.game.world.ship.get_top_y() - 10;
     }
     get_drop_tool_item(){
         return this.drop_tool_item;
