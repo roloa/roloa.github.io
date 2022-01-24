@@ -36,6 +36,9 @@ export class Kamome extends Enemy {
         this.target_vx = -3;
         this.target_vy = 0;
         this.target_height = -200;
+
+        // カモメは誤射を許さない(そもそもすぐ死ぬ)
+        this.gosya_forgive_count = 0;
     }
 
     get_drop_tool_item(){

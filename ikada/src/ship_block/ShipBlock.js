@@ -23,7 +23,7 @@ export class ShipBlock {
         this.cell_y = 0;
 
         // 敵が衝突したときのダメージ量
-        this.kickback_damage = 10;
+        this.kickback_damage = 3;
 
         this.max_hp = 100;
         this.saving_data.hp = this.max_hp;

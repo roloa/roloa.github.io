@@ -15,12 +15,12 @@ export class Tobiuo extends Enemy {
         this.height = 40;
         this.width_half = this.width * 0.5;
         this.height_half = this.height * 0.5;
-        this.max_hp = 100;
-        this.hp = 100;
+        this.max_hp = 30;
+        this.hp = 30;
 
         this.vx = 0;
         this.vy = 0;
-        this.dash_speed = 0.1;
+        this.dash_speed = 0.2;
         this.is_angry = false;
 
         this.showing_hp_timer = 0;
@@ -34,9 +34,18 @@ export class Tobiuo extends Enemy {
         this.knock_back_rate = 1.0;
 
         this.target_vy = 0;
-        this.target_vx = -3;
+        this.target_vx = -99;
+
+        this.reset_target_coodinate();
     }
 
+    reset_target_coodinate(){
+        this.target_x = Math.random() * 50 + 200 + this.game.world.ship.get_right_side_x();
+        this.target_y = Math.random() * 50 + 100;
+        if( this.x < 0 ){
+            this.target_x = Math.random() * -50 - 200 + this.game.world.ship.get_left_side_x();
+        }
+    }
     get_drop_tool_item(){
         let rand = Math.random() * 2
         if( rand < 1){
@@ -50,35 +59,46 @@ export class Tobiuo extends Enemy {
     }
 
     enemy_move_ai(){
-        // 怒っている場合
         if( this.is_angry ){
-
+            // 怒っている場合
             if( this.is_in_sea ){
-                if( this.is_preparing_jump || 0 < this.preparing_jump_timer ){
-                    this.preparing_jump_timer -= 1;
+                if( this.is_preparing_jump ){
                     // 助走をつけようとする状態
-                    // プレイヤーとは反対側に進む
-                    let vec = this.get_vector_to_player_with_bias(0, -64);
-                    this.vx += -vec.x * this.dash_speed * 0.7;
-                    this.vy += (-vec.y + 0.3) * this.dash_speed * 0.7;
-                    if( Math.random() < 0.1 ){
-                        if( 40000 < this.get_distance_p2_to_player() ){
-                            this.is_preparing_jump = false;
+
+                    let dist_x = this.target_x - this.x;
+                    let dist_y = this.target_y - this.y;
+                    if( Math.abs( dist_x ) < 10 && Math.abs( dist_y ) < 10){
+                        // 突進のスタート地点に着いた
+                        this.is_preparing_jump = false;
+                        this.target_vy = -99;
+                        this.target_vx = -99;
+                        if( this.x < 0 ){
+                            this.target_vx = 99;
                         }
+                    } else {
+                        // 突進のスタート地点に向かう
+                        this.target_vx = dist_x;
+                        this.target_vy = dist_y;
                     }
                 } else {
-                    // プレイヤーの方に向かう,すこし上を狙う
-                    let vec = this.get_vector_to_player_with_bias(0, -64)
-                    this.vx += vec.x * this.dash_speed;
-                    this.vy += vec.y * this.dash_speed;
+                    // 突進している
                 }
             } else {
                 this.is_preparing_jump = true;
-                this.preparing_jump_timer = this.preparing_jump_minimum_time;
             }
             // 弾を撃つ
         } else {
             // 平常時
+            if( this.target_vy < 10 && this.y < 300 && Math.random() < 0.1 ){
+                this.target_vy += 2;
+            }
+            if( -10 < this.target_vy && Math.random() < 0.1 ){
+                this.target_vy -= 2;
+            }
+            this.target_vx = -10;
+        }
+
+        if( this.is_in_sea ) {
             if( this.vx < this.target_vx ){
                 this.vx += this.dash_speed;
             } else {
@@ -89,35 +109,35 @@ export class Tobiuo extends Enemy {
             } else {
                 this.vy -= this.dash_speed;
             }
-
-            if( Math.random() < 0.3 ){
-                this.target_vy += this.dash_speed;
-            }
-            if( Math.random() < 0.3 ){
-                this.target_vy -= this.dash_speed;
-            }
         }
     }
-
+    take_damage( taken_damage ){
+        super.take_damage( taken_damage );
+        // ダメージを受けた時に助走のスタート地点を設定する
+        this.reset_target_coodinate();
+    }
+    on_hit_ship(){
+        this.is_preparing_jump = true;
+        this.target_vx = -this.target_vx;
+        this.target_vy = 10;
+    }
     on_update(){
         super.on_update();
 
         this.x += this.vx;
         this.y += this.vy;
-        this.vx *= 0.99;
-        this.vy *= 0.99;
 
         if( 0 < this.y ){
             this.is_in_sea = true;
-            this.vx *= 0.99;
-            this.vy *= 0.99;
+            this.vx *= 0.95;
+            this.vy *= 0.95;
 
         } else {
             this.is_in_sea = false;
-            let gravity = 0.2 - Math.abs( this.vx * 0.1)
+            let gravity = 0.1;
             gravity = Math.max( 0.01, gravity );
             this.vy += gravity;
-            this.target_vy = 1;
+            this.target_vy = 5;
         }
 
     }
