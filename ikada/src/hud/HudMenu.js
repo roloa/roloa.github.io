@@ -135,7 +135,7 @@ export class HudMenu {
             HudMenu.MENU_ICON_MARGIN_TOP,
             HudMenu.MENU_ICON_SIZE,
             HudMenu.MENU_ICON_SIZE );
-        canvas.fillText( '[Tab]',
+        canvas.fillText( '[Tab]: メニュー',
             HudMenu.MENU_ICON_MARGIN_LEFT - (HudMenu.MENU_ICON_SIZE + HudMenu.MENU_ICON_SPACING),
             HudMenu.MENU_ICON_MARGIN_TOP + HudMenu.MENU_ICON_SIZE + 20)
 

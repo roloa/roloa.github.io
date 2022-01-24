@@ -49,9 +49,9 @@ export class HudCameraControl {
             canvas.font = 'bold 24px monospace'
             canvas.textBaseline = 'top';
             canvas.strokeRect(this.down_x  , this.down_y  , this.button_size , this.button_size);
-            canvas.fillText('[+]', this.down_x + this.text_margin , this.down_y + this.text_margin);
+            canvas.fillText('[-]', this.down_x + this.text_margin , this.down_y + this.text_margin);
             canvas.strokeRect(this.up_x    , this.up_y    , this.button_size , this.button_size);
-            canvas.fillText('[-]', this.up_x + this.text_margin , this.up_y + this.text_margin);
+            canvas.fillText('[+]', this.up_x + this.text_margin , this.up_y + this.text_margin);
 
             canvas.restore();
         }

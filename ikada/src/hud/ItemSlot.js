@@ -247,10 +247,21 @@ export class ItemSlot {
 
     }
     on_draw( canvas ){
+
         for(let slot_no = 0 ; slot_no <= 8 ; slot_no++ ){
 
-            // アイテムの画像
+            // アイテムスロット番号
+            canvas.save();
+            canvas.font = 'bold 16px monospace';
+            canvas.textBaseline = 'top';
+            canvas.strokeStyle = 'rgb(188,188,188)';
+            canvas.fillText( slot_no + 1,
+                this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing) + 3,
+                this.itemslot_start_y + 3);
 
+            canvas.restore();
+
+            // アイテムの画像
             if( !(slot_no == this.item_slot_cursor && this.is_mouse_holding) ){
                 if( this.item_slot[ slot_no ] ){
                     canvas.drawImage(
