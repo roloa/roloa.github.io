@@ -30,6 +30,7 @@ export class ImgFileName {
   './img/cloud_base.png',
   './img/cloud_border.png',
   './img/cloud_blur.png',
+  './img/attack_effect.png',
 //  './img/.png',
   './img/ikada.png'
   ]

@@ -113,6 +113,7 @@ export class Illustya {
   './img/illustya/motor_servo_motor.png',
   './img/illustya/fantasy_griffon.png',
   './img/illustya/fish_hokke.png',
+  './img/illustya/kousenju.png',
   './img/illustya/gas_burner.png',
   './img/illustya/hachidori_wing.png',
   './img/illustya/feather_green.png',

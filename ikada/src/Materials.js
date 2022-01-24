@@ -77,7 +77,7 @@ export class Materials {
     }
     cheat(){
         for( let material_id in this.name_list ){
-            this.list[ material_id ] = 99;
+            this.list[ material_id ] = 999;
         }
     }
 }

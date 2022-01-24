@@ -45,7 +45,10 @@ export class WeaponItem extends ToolItem {
         this.cool_time_count = 0;
 
     }
-
+    set_bullet_image( file_name ){
+        this.bullet_image = this.game.image_library.get_image( file_name )
+        this.saving_data.bullet_image_name = file_name;
+    }
     calc_damage(){
         // TODO 攻撃力計算
         return this.saving_data.basic_power;
@@ -69,11 +72,12 @@ export class WeaponItem extends ToolItem {
             // bullet.vy = vec.y * 10;
             let fire_rad = rad;
             if( 0 < i){
-            let spread_direction = this.saving_data.fire_spread_angle;
-                for( let spread_num = 1 ; spread_num <= i ; spread_num++ ){
-                    spread_direction = spread_direction * -spread_num;
-                    fire_rad += spread_direction;
+                let spread_direction = 1; ;
+                if( i % 2 == 0 ){
+                    spread_direction = -1;
                 }
+                let spread_angle = this.saving_data.fire_spread_angle * Math.ceil( i * 0.5 );
+                fire_rad += spread_angle * spread_direction;
             }
             bullet.vx = Math.cos(fire_rad) * this.saving_data.bullet_velocity;
             bullet.vy = Math.sin(fire_rad) * this.saving_data.bullet_velocity;
@@ -157,5 +161,13 @@ export class WeaponItem extends ToolItem {
             this.game.log('自己回復効果: ' + this.saving_data.life_leech);
         }
 
+    }
+
+    load_data( data ){
+        super.load_data( data );
+
+        if( this.saving_data.bullet_image_name ){
+            this.set_bullet_image( this.saving_data.bullet_image_name );
+        }
     }
 }

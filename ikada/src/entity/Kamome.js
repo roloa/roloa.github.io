@@ -23,8 +23,8 @@ export class Kamome extends Enemy {
         this.width_half = this.width * 0.5;
         this.height_half = this.height * 0.5;
 
-        this.max_hp = 100;
-        this.hp = 100;
+        this.max_hp = 10;
+        this.hp = 10;
 
         this.vx = 0;
         this.vy = 0;
@@ -43,7 +43,7 @@ export class Kamome extends Enemy {
         if( rand < 1){
             let new_tool_item = new ResourceItem( this.game );
             new_tool_item.set_image( 'feather_white' );
-            new_tool_item.add_material( 'feather',  Math.floor(Math.random() * 3) + 2 );
+            new_tool_item.add_material( 'feather',  Math.floor(Math.random() * 2) + 1 );
             return new_tool_item;
         } else {
             if( Math.random() < 0.5 ){
