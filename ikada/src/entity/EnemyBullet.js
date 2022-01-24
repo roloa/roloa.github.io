@@ -7,12 +7,14 @@ export class EnemyBullet extends Entity {
         super( game );
         this.game = game;
 
+        this.image = null;
         this.vx = 0;
         this.vy = 0;
         this.gravity = 0;
 
         this.line_x = 10;
         this.line_y = 10;
+        this.rotation = 0;
 
         this.life_time = 100;
         this.knock_back_rate = 1.0;
@@ -67,13 +69,21 @@ export class EnemyBullet extends Entity {
         }
     }
     on_draw( canvas ){
+
         canvas.save();
-        canvas.strokeStyle = 'rgb(250,250,20)';
-        canvas.lineWidth = 5;
-        canvas.beginPath();
-        canvas.moveTo( this.x, this.y);
-        canvas.lineTo( this.x + this.line_x, this.y + this.line_y);
-        canvas.stroke();
+
+        if( this.image != null ){
+            canvas.translate( this.x, this.y );
+            canvas.rotate( this.rotation );
+            canvas.drawImage( this.image, -16, -16, 32, 32 );
+        } else {
+            canvas.strokeStyle = 'rgb(250,250,20)';
+            canvas.lineWidth = 5;
+            canvas.beginPath();
+            canvas.moveTo( this.x, this.y);
+            canvas.lineTo( this.x + this.line_x, this.y + this.line_y);
+            canvas.stroke();
+        }
         canvas.restore();
     }
 }

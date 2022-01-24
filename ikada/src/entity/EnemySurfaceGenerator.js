@@ -59,6 +59,7 @@ export class EnemySurfaceGenerator {
             new_enemy.do_tackle_attack = true;
             new_enemy.direct_damage = 4;
             new_enemy.bullet_damage = 4;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
             if( Math.random() < 0.5){
                 new_enemy.drop_tool_item = this.drop_material( 'toki_wing',
@@ -74,6 +75,7 @@ export class EnemySurfaceGenerator {
             // 頂点射撃タイプ
             new_enemy.is_fly_above = true;
             new_enemy.do_fire_attack = true;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
             if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'tonbi_wing',
@@ -90,6 +92,7 @@ export class EnemySurfaceGenerator {
             // 突撃射撃タイプ
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
             if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'washi_wing',
@@ -104,6 +107,7 @@ export class EnemySurfaceGenerator {
             new_enemy.name = 'ケツァルコアトル';
             // 遠距離射撃タイプ
             new_enemy.do_fire_attack = true;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
             if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'quetzalcoatlus_beak',
@@ -119,6 +123,7 @@ export class EnemySurfaceGenerator {
             // 後方射撃タイプ
             new_enemy.is_back_attack = true;
             new_enemy.do_fire_attack = true;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
             if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'microraptor_wing',

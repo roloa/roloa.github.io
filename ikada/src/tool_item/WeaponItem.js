@@ -81,7 +81,7 @@ export class WeaponItem extends ToolItem {
             bullet.vx += this.game.world.player.vx;
             bullet.vy += this.game.world.player.vy;
 
-            if( this.game.world.player.is_on_ship ){
+            if( this.game.world.player.is_in_ship_inertial ){
                 bullet.vx += this.game.world.ship.velocity;
             }
             bullet.life_time = this.saving_data.bullet_lifetime;

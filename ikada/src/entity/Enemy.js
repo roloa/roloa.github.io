@@ -60,6 +60,8 @@ export class Enemy extends Entity {
         this.fire_cool_time_count = 0;
         this.blast_lifetime = 0;
 
+        this.bullet_image = null;
+
         this.poison_count = 0;
         this.poison_damage = 0;
         this.slow_count = 0;
@@ -152,7 +154,14 @@ export class Enemy extends Entity {
                 this.vy *= -1.1;
                 this.y -= 16;
             }
+            this.on_hit_ship();
         }
+    }
+    on_hit_ship(){
+        // 舟に当たった時の処理を書く
+    }
+    on_hit_player(){
+        // プレイヤーに体当たりした時の処理
     }
     on_die(){
         // 生存フラグをなくす
@@ -253,6 +262,11 @@ export class Enemy extends Entity {
             }
 
             bullet.rotation = fire_rad;
+            bullet.image = this.bullet_image;
+
+            // 舟の慣性系の有無を引き継ぐ
+            bullet.is_in_ship_inertial = this.is_in_ship_inertial;
+
             this.game.world.push_entity( bullet );
         }
     }
@@ -284,6 +298,7 @@ export class Enemy extends Entity {
         if( this.game.world.player.test_hit_enemy( this ) ){
             this.vx = -this.vx;
             this.vy = -this.vy;
+            this.on_hit_player();
         }
         // 舟との当たり判定
         this.test_hit_ship();

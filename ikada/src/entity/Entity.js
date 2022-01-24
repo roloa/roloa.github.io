@@ -18,7 +18,7 @@ export class Entity {
 
         this.is_alive = true;
 
-        this.is_on_ship = false;
+        this.is_in_ship_inertial = false;
         this.despawn_distance = Entity.DESPAWN_DISTANCE;
         this.despawn_distance_ship = 500;
     }
@@ -26,7 +26,7 @@ export class Entity {
     on_update(){
 
         // 舟の速度によって逆行する
-        if( !this.is_on_ship ){
+        if( !this.is_in_ship_inertial ){
             this.x -= this.game.world.ship.velocity;
         }
 
@@ -36,7 +36,7 @@ export class Entity {
         } else if( this.vx < -1 ){
             this.is_facing_right = false;
         }
-        
+
         // 消滅判定
         if( this.x < -this.despawn_distance_ship || this.despawn_distance_ship < this.x ||
             this.y < -this.despawn_distance_ship || this.despawn_distance_ship < this.y

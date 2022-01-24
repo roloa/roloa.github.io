@@ -22,7 +22,7 @@ export class Oar extends ToolItem {
         }
         this.cool_time_count = this.cool_time_max;
 
-        if( this.game.world.player.is_on_ship == false ){
+        if( this.game.world.player.is_in_ship_inertial == false ){
             this.game.log( '舟の外では漕げません。' );
             return;
         }

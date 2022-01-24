@@ -171,11 +171,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   class s {
     constructor(t) {
-      this.name = "noname_entity", this.game = t, this.x = 0, this.y = 0, this.is_facing_right = !0, this.is_alive = !0, this.is_on_ship = !1, this.despawn_distance = s.DESPAWN_DISTANCE, this.despawn_distance_ship = 500;
+      this.name = "noname_entity", this.game = t, this.x = 0, this.y = 0, this.is_facing_right = !0, this.is_alive = !0, this.is_in_ship_inertial = !1, this.despawn_distance = s.DESPAWN_DISTANCE, this.despawn_distance_ship = 500;
     }
 
     on_update() {
-      this.is_on_ship || (this.x -= this.game.world.ship.velocity), 1 < this.vx ? this.is_facing_right = !0 : this.vx < -1 && (this.is_facing_right = !1), (this.x < -this.despawn_distance_ship || this.despawn_distance_ship < this.x || this.y < -this.despawn_distance_ship || this.despawn_distance_ship < this.y) && (this.x < this.game.world.camera.x - this.despawn_distance || this.game.world.camera.x + this.despawn_distance < this.x || this.y < this.game.world.camera.y - this.despawn_distance || this.game.world.camera.y + this.despawn_distance < this.y) && (this.is_alive = !1);
+      this.is_in_ship_inertial || (this.x -= this.game.world.ship.velocity), 1 < this.vx ? this.is_facing_right = !0 : this.vx < -1 && (this.is_facing_right = !1), (this.x < -this.despawn_distance_ship || this.despawn_distance_ship < this.x || this.y < -this.despawn_distance_ship || this.despawn_distance_ship < this.y) && (this.x < this.game.world.camera.x - this.despawn_distance || this.game.world.camera.x + this.despawn_distance < this.x || this.y < this.game.world.camera.y - this.despawn_distance || this.game.world.camera.y + this.despawn_distance < this.y) && (this.is_alive = !1);
     }
 
     on_draw(t) {
@@ -241,7 +241,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _ = Math.floor(i / e.BLOCK_SIZE),
           a = Math.floor(s / e.BLOCK_SIZE);
 
-      0 <= _ && _ < this.game.world.ship.block_array.length && 0 <= a && a < this.game.world.ship.block_array[0].length && s % e.BLOCK_SIZE < 8 && null != this.game.world.ship.block_array[_][a] && this.game.world.ship.block_array[_][a].is_floor && (this.y = (a - this.game.world.ship.ship_offset_y) * e.BLOCK_SIZE - e.BLOCK_RADIUS, this.vy = 0, this.is_landing = !0, this.is_on_ship = !0), 0 <= this.y ? (this.vy -= 1, this.vy *= .8, this.is_landing = !1, this.is_in_sea = !0, this.is_on_ship = !1) : this.is_in_sea = !1, this.is_in_sea && (this.vx = 1);
+      0 <= _ && _ < this.game.world.ship.block_array.length && 0 <= a && a < this.game.world.ship.block_array[0].length && s % e.BLOCK_SIZE < 8 && null != this.game.world.ship.block_array[_][a] && this.game.world.ship.block_array[_][a].is_floor && (this.y = (a - this.game.world.ship.ship_offset_y) * e.BLOCK_SIZE - e.BLOCK_RADIUS, this.vy = 0, this.is_landing = !0, this.is_in_ship_inertial = !0), 0 <= this.y ? (this.vy -= 1, this.vy *= .8, this.is_landing = !1, this.is_in_sea = !0, this.is_in_ship_inertial = !1) : this.is_in_sea = !1, this.is_in_sea && (this.vx = 1);
     }
 
     on_draw(t) {
@@ -434,7 +434,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           i = this.game.world.ship.get_ship_block(this.x, this.y + this.height_half);
       if (t % e.BLOCK_SIZE < 8 && null != i && i.is_floor) if (this.is_off_platform) ;else {
         let i = Math.floor(t / e.BLOCK_SIZE);
-        this.y = (i - this.game.world.ship.ship_offset_y) * e.BLOCK_SIZE - e.BLOCK_RADIUS - this.height_half, this.vy = 0, this.is_landing = !0, this.is_on_ship = !0;
+        this.y = (i - this.game.world.ship.ship_offset_y) * e.BLOCK_SIZE - e.BLOCK_RADIUS - this.height_half, this.vy = 0, this.is_landing = !0, this.is_in_ship_inertial = !0;
       }
     }
 
@@ -2081,7 +2081,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           i = this.game.world.ship.get_ship_block(this.x, this.y + this.height_half);
       if (t % e.BLOCK_SIZE < 8 && null != i && i.is_floor) if (this.is_off_platform) ;else {
         let i = Math.floor(t / e.BLOCK_SIZE);
-        this.y = (i - this.game.world.ship.ship_offset_y) * e.BLOCK_SIZE - e.BLOCK_RADIUS - this.height_half, this.vy = 0, this.is_landing = !0, this.is_on_ship = !0;
+        this.y = (i - this.game.world.ship.ship_offset_y) * e.BLOCK_SIZE - e.BLOCK_RADIUS - this.height_half, this.vy = 0, this.is_landing = !0, this.is_in_ship_inertial = !0;
       }
       this.is_off_platform = !1, 0 <= this.y && (this.is_alive = !1), 0 < this.cooldown_time_count ? this.cooldown_time_count -= 1 : this.path_finding.is_processing ? this.path_finding.process_finding() : this.path_finding.is_finding_success ? this.on_lead_path() : this.on_think_ai();
     }
@@ -2564,7 +2564,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     on_click(t, i, e, s) {
-      s < -50 ? this.game.log("舟を漕ぐには海面から遠すぎます。") : this.game.world.player.is_on_ship ? this.game.world.player.health.consume_sp(5) && this.game.world.ship.on_oar() : this.game.log("舟の外では漕げません。");
+      s < -50 ? this.game.log("舟を漕ぐには海面から遠すぎます。") : this.game.world.player.is_in_ship_inertial ? this.game.world.player.health.consume_sp(5) && this.game.world.ship.on_oar() : this.game.log("舟の外では漕げません。");
     }
 
     on_keep_click(t, i, e, s) {

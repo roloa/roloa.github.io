@@ -16,6 +16,8 @@ export class EnemySurfaceBird extends Enemy {
         this.max_hp = 100;
         this.hp = 100;
 
+        this.is_in_ship_inertial = true; // 鳥は影響を受けない
+
         this.is_angry = true;
         this.angry_timer_max = 500;
         this.angry_timer_count = this.angry_timer_max;
@@ -52,6 +54,7 @@ export class EnemySurfaceBird extends Enemy {
 
         // 撃破報酬
         this.drop_tool_item = new FishKirimi( this.game );
+        this.bullet_image = null;
 
         this.reset_position();
     }
@@ -119,6 +122,16 @@ export class EnemySurfaceBird extends Enemy {
             }
         }
     }
+    on_hit_ship(){
+        // 舟に当たった時の処理を書く
+        this.reset_position();
+        this.is_in_tackle = false;
+    }
+    on_hit_player(){
+        // プレイヤーに体当たりした時の処理
+        this.reset_position();
+        this.is_in_tackle = false;
+    }
     on_update(){
         super.on_update();
 
@@ -126,6 +139,11 @@ export class EnemySurfaceBird extends Enemy {
         this.y += this.vy;
         this.vx *= 0.95;
         this.vy *= 0.95;
+
+        if( this.vx < this.game.world.ship.velocity ){
+            // 舟の速度が早い時は、減速しない
+        } else {
+        }
 
     }
     on_draw( canvas ){
