@@ -144,8 +144,11 @@ export class HudMenu {
             // メニューの画面
             canvas.save()
             canvas.translate( HudMenu.MENU_MARGIN_LEFT, HudMenu.MENU_MARGIN_TOP )
-            canvas.fillStyle = 'rgb(200,200,200)';
+            canvas.fillStyle = 'rgb(210,205,200)';
             canvas.fillRect( 0, 0, HudMenu.MENU_WIDTH, HudMenu.MENU_HEIGHT );
+            canvas.strokeStyle = 'rgb(100,90,70)';
+            canvas.lineWidth = 2;
+            canvas.strokeRect( 0, 0, HudMenu.MENU_WIDTH, HudMenu.MENU_HEIGHT );
 
             if( this.menu_list[ this.menu_list_cursor ] ) {
                 this.menu_list[ this.menu_list_cursor ].on_draw( canvas );

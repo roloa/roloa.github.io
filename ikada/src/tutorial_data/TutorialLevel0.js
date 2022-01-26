@@ -73,7 +73,7 @@ export class TutorialLevel0 {
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('tree_ryuuboku');
-        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 10');
+        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 9');
         tutorial.reword_tool_item.add_material('wood', 10);
         tutorial_list.push( tutorial );
 
@@ -142,8 +142,8 @@ export class TutorialLevel0 {
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('alohashirt_gray');
-        tutorial.reword_tool_item.set_name('マテリアル: 布切れ x 10');
-        tutorial.reword_tool_item.add_material('cloth', 10);
+        tutorial.reword_tool_item.set_name('マテリアル: 布切れ x 9');
+        tutorial.reword_tool_item.add_material('cloth', 9);
         tutorial_list.push( tutorial );
 
         tutorial = {};
@@ -165,8 +165,8 @@ export class TutorialLevel0 {
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('gomi_can');
-        tutorial.reword_tool_item.set_name('マテリアル: 鉄クズ x 10');
-        tutorial.reword_tool_item.add_material('iron', 10);
+        tutorial.reword_tool_item.set_name('マテリアル: 鉄クズ x 9');
+        tutorial.reword_tool_item.add_material('iron', 9);
         tutorial_list.push( tutorial );
 
         tutorial = {};
@@ -188,8 +188,8 @@ export class TutorialLevel0 {
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
         tutorial.reword_tool_item.set_image('tree_ryuuboku');
-        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 20');
-        tutorial.reword_tool_item.add_material('wood', 20);
+        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 30');
+        tutorial.reword_tool_item.add_material('wood', 30);
         tutorial_list.push( tutorial );
 
         tutorial = {};
@@ -288,9 +288,9 @@ export class TutorialLevel0 {
         }));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item.set_image('tree_ryuuboku');
+        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 3');
+        tutorial.reword_tool_item.add_material('wood', 1);
         tutorial_list.push( tutorial );
 
         tutorial = {};
@@ -305,9 +305,9 @@ export class TutorialLevel0 {
         tutorial.check_list.push( this.desc_only('満タンになると元の状態に戻ります。'));
 
         tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('present_box');
-        tutorial.reword_tool_item.set_name('マテリアル: ビン x 1');
-        tutorial.reword_tool_item.add_material('jar', 1);
+        tutorial.reword_tool_item.set_image('alohashirt_gray');
+        tutorial.reword_tool_item.set_name('マテリアル: 布切れ x 3');
+        tutorial.reword_tool_item.add_material('cloth', 3);
         tutorial_list.push( tutorial );
 
         tutorial = {};

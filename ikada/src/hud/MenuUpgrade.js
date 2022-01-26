@@ -4,7 +4,7 @@ export class MenuUpgrade {
 
     static TITLE_X = 100;
     static TITLE_Y = 40;
-    static TITLE_COLOR = 'rgb(20,20,20)';
+    static TITLE_COLOR = 'rgb(40,30,20)';
     static TITLE_FONT = 'bold 32px monospace'
 
     static LIST_X = 20;
@@ -25,7 +25,7 @@ export class MenuUpgrade {
     static DESC_TEXT_X = 340;
     static DESC_TEXT_Y = 60;
     static DESC_TEXT_FONT = 'bold 18px monospace';
-    static DESC_TEXT_COLOR = 'rgb(20,20,20)';
+    static DESC_TEXT_COLOR = 'rgb(40,30,20)';
     static DESC_TEXT_COLOR_GREEN = 'rgb(20,200,20)';
     static DESC_TEXT_COLOR_RED = 'rgb(200,20,20)';
     static DESC_TEXT_HEIGHT = 28;
@@ -35,7 +35,7 @@ export class MenuUpgrade {
     static UPGRADE_BUTTON_HEIGHT = 50;
     static UPGRADE_BUTTON_WIDTH =  200;
     static UPGRADE_BUTTON_COLOR = 'rgb(160,160,160)';
-    static UPGRADE_BUTTON_TEXT_COLOR = 'rgb(20,20,20)';
+    static UPGRADE_BUTTON_TEXT_COLOR = 'rgb(40,30,20)';
     static UPGRADE_BUTTON_FONT = 'bold 24px monospace';
     static UPGRADE_BUTTON_TEXT_Y = 32;
     static UPGRADE_BUTTON_TEXT_X = 45;
@@ -78,7 +78,7 @@ export class MenuUpgrade {
             MenuUpgrade.TITLE_X ,MenuUpgrade.TITLE_Y);
 
         // アプグレリスト
-        canvas.fillStyle = 'rgb(20,20,20)';
+        canvas.fillStyle = 'rgb(40,30,20)';
         canvas.fillRect( MenuUpgrade.LIST_X, MenuUpgrade.LIST_Y, MenuUpgrade.LIST_WIDTH, MenuUpgrade.LIST_HEIGHT　);
 
         for( let i = 0 ; i < 10 ; i++ ){

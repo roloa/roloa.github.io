@@ -130,7 +130,7 @@ export class BreakableObject extends Entity {
             const center_y = this.y ;
 
             canvas.strokeStyle = 'rgb(200,200,200)'
-            canvas.fillStyle = 'rgb(20,20,20)'
+            canvas.fillStyle = 'rgb(40,30,20)'
             canvas.beginPath();
             canvas.arc( center_x, center_y, HP_RADIUS, 0, Math.PI*2, true );
             canvas.fill();

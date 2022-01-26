@@ -5,13 +5,13 @@ export class MenuMaterial {
 
     static TITLE_X = 100;
     static TITLE_Y = 40;
-    static TITLE_COLOR = 'rgb(20,20,20)';
+    static TITLE_COLOR = 'rgb(40,30,20)';
     static TITLE_FONT = 'bold 32px monospace'
 
     static TEXT_X = 60;
     static TEXT_Y = 100;
     static TEXT_FONT = 'bold 18px monospace';
-    static TEXT_COLOR = 'rgb(20,20,20)';
+    static TEXT_COLOR = 'rgb(40,30,20)';
     static TEXT_HEIGHT = 28;
     static TEXT_X_COUNT = 180;
 

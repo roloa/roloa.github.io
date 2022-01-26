@@ -5,7 +5,7 @@ export class MenuInventory {
 
     static TITLE_X = 100;
     static TITLE_Y = 40;
-    static TITLE_COLOR = 'rgb(20,20,20)';
+    static TITLE_COLOR = 'rgb(40,30,20)';
     static TITLE_FONT = 'bold 32px monospace'
 
     static LIST_X = 20;
@@ -14,7 +14,7 @@ export class MenuInventory {
     static LIST_SPACING = 10;
     static LIST_X_COUNT = 5;
     static LIST_Y_COUNT = 4;
-    static LIST_ICON_FRAME_COLOR = 'rgb(20,20,20)';
+    static LIST_ICON_FRAME_COLOR = 'rgb(40,30,20)';
     static LIST_ICON_FRAME_COLOR_SELECTED = 'rgb(200,20,20)';
 
     static TRASH_X = 560;

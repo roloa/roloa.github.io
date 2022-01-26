@@ -151,32 +151,8 @@ export class Game {
             this.on_draw();
 
             performance.mark('on_update_end')
-            performance.measure('update', 'on_update_start', 'on_update_end')
-            performance.measure('draw', 'on_draw_start', 'on_draw_end')
-            if( 100 < this.performance_count){
-                this.performance_count = 0;
 
-                let sum = 0;
-                let result = null;
-                result = performance.getEntriesByName('update')
-                sum = 0;
-                for( let i = 0 ; i < result.length ; i++ ){
-                    sum += result[i].duration;
-                }
-                this.update_process_time = Math.floor(sum * 10);
-
-                result = performance.getEntriesByName('draw')
-                sum = 0;
-                for( let i = 0 ; i < result.length ; i++ ){
-                    sum += result[i].duration;
-                }
-                this.draw_process_time = Math.floor(sum * 10);
-
-                //console.log( 'update',  );
-                performance.clearMeasures();
-            } else {
-                this.performance_count += 1;
-            }
+            this.calc_parformance();
         } catch ( e ) {
             // なんかエラーが起きたら、ゲーム動作を止める
             clearInterval( this.interbal_handle );
@@ -189,6 +165,34 @@ export class Game {
             this.display_canvas.fillText( 'エラー発生: ' + e ,
             200 ,200);
             throw e;
+        }
+    }
+    calc_parformance(){
+        performance.measure('update', 'on_update_start', 'on_update_end')
+        performance.measure('draw', 'on_draw_start', 'on_draw_end')
+        if( 100 < this.performance_count){
+            this.performance_count = 0;
+
+            let sum = 0;
+            let result = null;
+            result = performance.getEntriesByName('update')
+            sum = 0;
+            for( let i = 0 ; i < result.length ; i++ ){
+                sum += result[i].duration;
+            }
+            this.update_process_time = Math.floor(sum * 10);
+
+            result = performance.getEntriesByName('draw')
+            sum = 0;
+            for( let i = 0 ; i < result.length ; i++ ){
+                sum += result[i].duration;
+            }
+            this.draw_process_time = Math.floor(sum * 10);
+
+            //console.log( 'update',  );
+            performance.clearMeasures();
+        } else {
+            this.performance_count += 1;
         }
     }
     draw_parformance( canvas ){
@@ -239,7 +243,7 @@ export class Game {
                 this.title_screen.on_draw( this.display_canvas );
             }
 
-            this.draw_parformance( this.display_canvas );
+            // this.draw_parformance( this.display_canvas );
 
         }
         performance.mark('on_draw_end')

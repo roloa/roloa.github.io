@@ -6,7 +6,7 @@ export class MenuTutorial {
 
     static TITLE_X = 100;
     static TITLE_Y = 40;
-    static TITLE_COLOR = 'rgb(20,20,20)';
+    static TITLE_COLOR = 'rgb(40,30,20)';
     static TITLE_FONT = 'bold 32px monospace'
 
     static LIST_X = 20;
@@ -21,13 +21,13 @@ export class MenuTutorial {
     static LIST_TEXT_COLOR_DISABLE = 'rgb(100,100,100)'
     static LIST_TEXT_HEIGHT = 30;
 
-    static LIST_CURSOR_COLOR = 'rgb(20,20,150)';
+    static LIST_CURSOR_COLOR = 'rgb(50,50,150)';
     static LIST_CURSOR_ADJUST = -6;
 
     static DESC_TEXT_X = 360;
     static DESC_TEXT_Y = 80;
     static DESC_TEXT_FONT = 'bold 18px monospace';
-    static DESC_TEXT_COLOR = 'rgb(20,20,20)';
+    static DESC_TEXT_COLOR = 'rgb(40,30,20)';
     static DESC_TEXT_COLOR_GREEN = 'rgb(20,200,20)';
     static DESC_TEXT_COLOR_RED = 'rgb(200,20,20)';
     static DESC_TEXT_HEIGHT = 28;
@@ -42,7 +42,7 @@ export class MenuTutorial {
     static CONFIG_BUTTON_HEIGHT = 50;
     static CONFIG_BUTTON_WIDTH =  200;
     static CONFIG_BUTTON_COLOR = 'rgb(160,160,160)';
-    static CONFIG_BUTTON_TEXT_COLOR = 'rgb(20,20,20)';
+    static CONFIG_BUTTON_TEXT_COLOR = 'rgb(40,30,20)';
     static CONFIG_BUTTON_TEXT_COLOR_DISABLE = 'rgb(120,120,120)';
     static CONFIG_BUTTON_FONT = 'bold 24px monospace';
     static CONFIG_BUTTON_TEXT_Y = 12;
@@ -60,8 +60,8 @@ export class MenuTutorial {
         this.tutorial_data = new TutorialData( this.game );
         this.tutorial_list = this.game.tutorial_data.get_list();
 
-        this.config_cursor = 0;
-        this.config_scroll = -1;
+        this.config_cursor = 1;
+        this.scroll_amount = -1;
         this.menu_icon = this.game.image_library.get_image( 'setsumeisyo_manual' );
 
         this.batsu_icon = this.game.image_library.get_image( 'batsu' );
@@ -70,7 +70,6 @@ export class MenuTutorial {
         this.arrow_up_icon = this.game.image_library.get_image( 'arrow_up' );
         this.arrow_down_icon = this.game.image_library.get_image( 'arrow_down' );
 
-        this.scroll_amount = 0;
 
     }
 
@@ -193,7 +192,7 @@ export class MenuTutorial {
         canvas.textBaseline = 'top';
 
         // チュートリアル項目リスト
-        canvas.fillStyle = 'rgb(20,20,20)';
+        canvas.fillStyle =  'rgb(20,15,10)';
         canvas.fillRect( MenuTutorial.LIST_X, MenuTutorial.LIST_Y, MenuTutorial.LIST_WIDTH, MenuTutorial.LIST_HEIGHT　);
         for( let i = 0 ; i <= MenuTutorial.DOWN_ARROW_INDEX ; i++ ){
             // カーソル

@@ -6,7 +6,7 @@ export class MenuCraft {
 
     static TITLE_X = 100;
     static TITLE_Y = 40;
-    static TITLE_COLOR = 'rgb(20,20,20)';
+    static TITLE_COLOR = 'rgb(40,30,20)';
     static TITLE_FONT = 'bold 32px monospace'
 
 
@@ -16,7 +16,7 @@ export class MenuCraft {
     static DESC_TEXT_X = 340;
     static DESC_TEXT_Y = 60;
     static DESC_TEXT_FONT = 'bold 18px monospace';
-    static DESC_TEXT_COLOR = 'rgb(20,20,20)';
+    static DESC_TEXT_COLOR = 'rgb(40,30,20)';
     static DESC_TEXT_COLOR_GREEN = 'rgb(20,200,20)';
     static DESC_TEXT_COLOR_RED = 'rgb(200,20,20)';
     static DESC_TEXT_HEIGHT = 28;
@@ -26,7 +26,7 @@ export class MenuCraft {
     static CRAFT_BUTTON_HEIGHT = 50;
     static CRAFT_BUTTON_WIDTH =  200;
     static CRAFT_BUTTON_COLOR = 'rgb(160,160,160)';
-    static CRAFT_BUTTON_TEXT_COLOR = 'rgb(20,20,20)';
+    static CRAFT_BUTTON_TEXT_COLOR = 'rgb(40,30,20)';
     static CRAFT_BUTTON_FONT = 'bold 24px monospace';
     static CRAFT_BUTTON_TEXT_Y = 32;
     static CRAFT_BUTTON_TEXT_X = 15;
@@ -38,9 +38,9 @@ export class MenuCraft {
     static LIST_X_COUNT = 5;
     static LIST_Y_COUNT = 5;
     static LIST_COUNT = MenuCraft.LIST_X_COUNT * MenuCraft.LIST_Y_COUNT;
-    static LIST_ICON_FRAME_COLOR = 'rgb(20,20,20)';
+    static LIST_ICON_FRAME_COLOR = 'rgb(40,30,20)';
     static LIST_ICON_FRAME_COLOR_SELECTED = 'rgb(200,20,20)';
-
+    static LIST_ICON_FRAME_COLOR_ACTIVE_CATEGORY = 'rgb(20,200,20)';
 
     constructor( game ){
         this.game = game;
@@ -152,6 +152,13 @@ export class MenuCraft {
         }
         return true;
     }
+    check_recipe_unlocked( recipe ){
+        // レシピの最初の材料を1つ以上持っているか
+        if( 0 < this.game.materials.get_material( recipe.material_list[0] ) ){
+            return true;
+        }
+        return false;
+    }
     on_click( mouse_x, mouse_y ){
         // レシピリスト
         for( let i = 0 ; i < MenuCraft.LIST_COUNT ; i++){
@@ -199,7 +206,7 @@ export class MenuCraft {
         canvas.fillText( 'クラフト Craft' ,
             MenuCraft.TITLE_X ,MenuCraft.TITLE_Y);
 
-        canvas.fillStyle = 'rgb(20,20,20)';
+        canvas.fillStyle = 'rgb(40,30,20)';
 //        canvas.fillRect( MenuCraft.LIST_X, MenuCraft.LIST_Y, MenuCraft.LIST_WIDTH, MenuCraft.LIST_HEIGHT　);
 
         // インベントリのアイテムリスト
@@ -219,6 +226,9 @@ export class MenuCraft {
 
             canvas.font = 'bold 16px monospace';
             canvas.fillStyle = 'rgb(50,50,50)';
+            // 外枠
+            canvas.strokeRect( frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+
             if( i == 0 ){
                 // 前のレシピカテゴリ
                 canvas.drawImage( this.icon_prev_category ,
@@ -230,6 +240,9 @@ export class MenuCraft {
                 // レシピカテゴリアイコン
                 canvas.drawImage( this.craft_recipe.get_category_icon( this.category_index ) ,
                 frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+                canvas.strokeStyle = MenuCraft.LIST_ICON_FRAME_COLOR_ACTIVE_CATEGORY;
+                canvas.strokeRect( frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+
             } else if( i == 3) {
                 canvas.drawImage( this.craft_recipe.get_category_icon( this.category_index + 1) ,
                 frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
@@ -239,24 +252,30 @@ export class MenuCraft {
                 frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
             } else if( recipe ){
                 // レシピ
-                if( recipe.image ) {
-                    canvas.drawImage( recipe.image ,
-                    frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
-                    canvas.fillText( recipe.recipe_subtitle,
-                        frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
-                }
-                // 作れない場合はバツをつける
-                // TODO 毎フレームにレシピ材料チェックしたらぜったいおもい
-                if( !this.check_recipe_materials( recipe ) ){
-                    canvas.drawImage( this.batsu_icon ,
-                    frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
-                    canvas.fillText( recipe.recipe_subtitle,
-                        frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
+                if( this.check_recipe_unlocked( recipe )){
+
+                    if( recipe.image ) {
+                        canvas.drawImage( recipe.image ,
+                        frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+                        canvas.fillText( recipe.recipe_subtitle,
+                            frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
+                    }
+                    // TODO 毎フレームにレシピ材料チェックしたらぜったいおもい
+
+                    if( !this.check_recipe_materials( recipe ) ){
+                        // 作れない場合はバツをつける
+
+                        canvas.drawImage( this.batsu_icon ,
+                        frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
+                        canvas.fillText( recipe.recipe_subtitle,
+                            frame_x, frame_y + MenuCraft.LIST_ICON_SIZE- 3);
+                    }
+                } else {
+                    // 未開放レシピ
                 }
             } else {
                 // アイテムも機能もないところ
             }
-            canvas.strokeRect( frame_x, frame_y, MenuCraft.LIST_ICON_SIZE, MenuCraft.LIST_ICON_SIZE );
         }
         canvas.font = MenuCraft.DESC_TEXT_FONT;
         canvas.fillStyle = MenuCraft.DESC_TEXT_COLOR;
@@ -264,19 +283,23 @@ export class MenuCraft {
         if( this.cursor_index == 0 ){
             canvas.fillText( '前のカテゴリ' ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
         } else if( this.cursor_index == 1){
-            canvas.fillText( '前のカテゴリ' ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
-            canvas.fillText( this.craft_recipe.get_category_name( this.category_index - 1) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+            // canvas.fillText( '前のカテゴリ' ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
+            // canvas.fillText( this.craft_recipe.get_category_name( this.category_index - 1) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+            canvas.fillText( '現在のカテゴリ' , MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
+            canvas.fillText( this.craft_recipe.get_category_name( this.category_index ) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
         } else if( this.cursor_index == 2){
             canvas.fillText( '現在のカテゴリ' , MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
             canvas.fillText( this.craft_recipe.get_category_name( this.category_index ) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
         } else if( this.cursor_index == 3){
-            canvas.fillText( '次のカテゴリ' , MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
-            canvas.fillText( this.craft_recipe.get_category_name( this.category_index + 1) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+            // canvas.fillText( '次のカテゴリ' , MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
+            // canvas.fillText( this.craft_recipe.get_category_name( this.category_index + 1) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+            canvas.fillText( '現在のカテゴリ' , MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
+            canvas.fillText( this.craft_recipe.get_category_name( this.category_index ) ,MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
         } else if( this.cursor_index == 4){
             canvas.fillText( '次のカテゴリ' , MenuCraft.DESC_TEXT_X, MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
         } else {
             let current_recipe = this.craft_recipe.get_recipe( this.category_index, this.cursor_index - MenuCraft.LIST_X_COUNT );
-            if( current_recipe ){
+            if( current_recipe && this.check_recipe_unlocked( current_recipe ) ) {
                 // アプグレ説明文など
                 canvas.fillText( current_recipe.sample_item.get_name() ,
                 MenuCraft.DESC_TEXT_X,
@@ -316,6 +339,20 @@ export class MenuCraft {
                     MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * (5 + i));
 
                 }
+            } else {
+                canvas.fillText( 'レシピに必要なマテリアルのうち' ,
+                MenuCraft.DESC_TEXT_X,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 1);
+                canvas.fillText( '一番上の材料がキー素材になっています。' ,
+                MenuCraft.DESC_TEXT_X,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 2);
+                canvas.fillText( 'キー素材を1個でも所持することで' ,
+                MenuCraft.DESC_TEXT_X,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 4);
+                canvas.fillText( 'レシピが開放されます。' ,
+                MenuCraft.DESC_TEXT_X,
+                MenuCraft.DESC_TEXT_Y + MenuCraft.DESC_TEXT_HEIGHT * 5);
+
             }
         }
         // アップグレードボタン
