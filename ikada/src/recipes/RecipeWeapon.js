@@ -30,7 +30,7 @@ export class RecipeWeapon extends Object {
         c_r.add_recipe( category,
             ['基本的な遠距離武器です。','Lv2'],
             ['wood', 'cloth', 'feather'],
-            [20, 10, 3],
+            [20, 10, 1],
             function( game ){
                 let new_item = new WeaponItem( game );
                 new_item.saving_data.item_name = 'クロスボウ';

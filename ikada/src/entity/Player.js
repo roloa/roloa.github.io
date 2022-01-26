@@ -40,6 +40,11 @@ export class Player extends Entity {
 
         this.walk_speed = 3;
         this.walk_speed_down_rate = 0.5;
+
+        this.splint_speed = 5;
+        this.is_splinting = false;
+        this.splint_double_hit_timer = [0,0];
+        this.splint_double_hit_timer_max = 5;
         // 装備関係
         this.equip_list = []
         this.clear_equip_status()
@@ -236,6 +241,8 @@ export class Player extends Entity {
             if( !this.game.hud.hud_menu.is_menu_open ){
                 this.control_land();
             }
+            this.vx *= this.walk_speed_down_rate;
+
         }
 
 
@@ -331,16 +338,52 @@ export class Player extends Entity {
 
 
     }
+    splint_check( d ){
+
+        if( 0 == this.splint_double_hit_timer[d] ){
+            this.is_splinting = false;
+        } else if( this.splint_double_hit_timer_max <= this.splint_double_hit_timer[d]){
+
+        } else if( 0 < this.splint_double_hit_timer[d]){
+            this.is_splinting = true;
+        } else {
+            this.is_splinting = false;
+        }
+        this.splint_double_hit_timer[d] = this.splint_double_hit_timer_max + 1;
+    }
     control_land(){
         // WASDで移動
         if( this.game.input_controller.get_down_right() ){
-            this.vx += this.walk_speed;
+            this.splint_check( 1 );
+            if( this.is_splinting && this.health.consume_sp( 0.2 )) {
+                this.vx += this.splint_speed;
+            } else {
+                if( this.health.consume_sp( 0.1 )){
+                    this.vx += this.walk_speed;
+                } else {
+                    this.vx += this.walk_speed * 0.5;
+                }
+            }
         }
         if( this.game.input_controller.get_down_left() ){
-            this.vx -= this.walk_speed;
+            this.splint_check( 0 );
+            if( this.is_splinting && this.health.consume_sp( 0.2 )){
+                this.vx -= this.splint_speed;
+            } else {
+                if( this.health.consume_sp( 0.1 )){
+                    this.vx -= this.walk_speed;
+                } else {
+                    this.vx -= this.walk_speed * 0.5;
+                }
+            }
         }
-        this.vx *= this.walk_speed_down_rate;
-
+        // スプリント用カウントを減らす
+        if( 0 < this.splint_double_hit_timer[0] ){
+            this.splint_double_hit_timer[0] -= 1;
+        }
+        if( 0 < this.splint_double_hit_timer[1] ){
+            this.splint_double_hit_timer[1] -= 1;
+        }
         // ジャンプ　海面でも小さくジャンプできる
         if( this.game.input_controller.get_down_up() || this.game.input_controller.get_down_space()){
             if( -1 < this.vy ){
@@ -491,7 +534,7 @@ export class Player extends Entity {
             ship_block.is_floor
         ){
             // 着地判定を得る
-            if( this.is_off_platform ){
+            if( this.is_off_platform || this.vy < -1 ){
                 // 床すりぬけ状態
             } else {
                 let block_y = Math.floor( local_y_in_ship / ShipBlock.BLOCK_SIZE);

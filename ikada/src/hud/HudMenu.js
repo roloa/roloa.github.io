@@ -93,6 +93,11 @@ export class HudMenu {
                 }
             }
         }
+
+        // プレイヤーが海に落下したらメニューを閉じる
+        if( this.game.world.player.is_in_ship() == false) {
+            this.is_menu_open = false;
+        }
     }
     open_menu(){
         if( this.game.world.player.is_in_ship() || this.game.input_controller.is_down_key['KeyG']){
