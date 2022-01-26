@@ -17,7 +17,7 @@ export class FishRod extends ToolItem {
         this.game.world.player.health.mod_sp( -10 );
         this.game.world.lure.on_click_rod( cursor_x, cursor_y, player_x, player_y )
 
-
+        this.consume_durability();
     }
 
 }

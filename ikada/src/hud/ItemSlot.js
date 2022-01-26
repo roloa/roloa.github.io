@@ -255,6 +255,7 @@ export class ItemSlot {
             canvas.font = 'bold 16px monospace';
             canvas.textBaseline = 'top';
             canvas.strokeStyle = 'rgb(188,188,188)';
+            canvas.fillStyle = 'rgb(200,200,200)';
             canvas.fillText( slot_no + 1,
                 this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing) + 3,
                 this.itemslot_start_y + 3);
@@ -264,9 +265,10 @@ export class ItemSlot {
             // アイテムの画像
             if( !(slot_no == this.item_slot_cursor && this.is_mouse_holding) ){
                 if( this.item_slot[ slot_no ] ){
+                    let frame_x = this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing);
                     canvas.drawImage(
                         this.item_slot[ slot_no ].get_image(),
-                        this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing),
+                        frame_x,
                         this.itemslot_start_y,
                         this.itemslot_size,
                         this.itemslot_size );
@@ -275,6 +277,20 @@ export class ItemSlot {
                     canvas.fillText( this.item_slot[ slot_no ].get_subtitle(),
                         this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing) + 3,
                         this.itemslot_start_y + this.itemslot_size - 3);
+
+                    // アイテムの耐久値
+                    let dura_rate = this.item_slot[ slot_no ].get_durability_rate();
+                    if( dura_rate != 1 ){
+                        let dura_frame_x = frame_x + 5;
+                        let dura_width = this.itemslot_size - 10;
+                        let dura_height = 6;
+                        let dura_frame_y = this.itemslot_start_y + this.itemslot_size - dura_height - 4;
+                        let r = Math.min( 250, Math.max( 1, 500 - 500 * dura_rate ) );
+                        let g = Math.min( 250, Math.max( 1, 500 * dura_rate ) );
+                        canvas.fillStyle = 'rgb('+r+','+g+',30)';
+                        canvas.fillRect( dura_frame_x, dura_frame_y, dura_width * dura_rate , dura_height);
+                        canvas.strokeRect( dura_frame_x, dura_frame_y, dura_width, dura_height);
+                    }
                 }
             }
 

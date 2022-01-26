@@ -19,6 +19,26 @@ export class ToolItem {
         // 消費されたかどうか
         this.is_consumed = false;
 
+        this.saving_data.durability_max = 100;
+        this.saving_data.durability = this.saving_data.durability_max;
+        this.set_durability( 100 );
+    }
+    set_durability( du ){
+        this.saving_data.durability_max = du;
+        this.saving_data.durability = this.saving_data.durability_max;
+    }
+    get_durability_rate(){
+        return this.saving_data.durability / this.saving_data.durability_max;
+    }
+    consume_durability( amount ){
+        if( amount ){
+            this.saving_data.durability -= amount;
+        } else {
+            this.saving_data.durability -= 1;
+        }
+        if( this.saving_data.durability <= 0 ){
+            this.is_consumed = true;
+        }
     }
     get_subtitle(){
         return this.saving_data.item_subtitle;
