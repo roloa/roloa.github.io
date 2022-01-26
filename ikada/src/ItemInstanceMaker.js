@@ -3,6 +3,7 @@ import {ResourceItem} from './tool_item/ResourceItem.js'
 import {FishRod} from './tool_item/FishRod.js'
 import {EquipmentItem} from './tool_item/EquipmentItem.js'
 import {ContainerItem} from './tool_item/ContainerItem.js'
+import {SafetyRope} from './tool_item/SafetyRope.js'
 import {CatchNet} from './tool_item/CatchNet.js'
 import {ToolItem} from './tool_item/ToolItem.js'
 import {CannonAmmoItem} from './tool_item/CannonAmmoItem.js'
@@ -50,6 +51,8 @@ export class ItemInstanceMaker {
             return new EquipmentItem( this.game );
         } else if( item_data.class_name == 'ContainerItem' ){
             return new ContainerItem( this.game );
+        } else if( item_data.class_name == 'SafetyRope' ){
+            return new SafetyRope( this.game );
         } else if( item_data.class_name == 'CatchNet' ){
             return new CatchNet( this.game );
         } else if( item_data.class_name == 'ToolItem' ){

@@ -5,7 +5,7 @@ import {FishRod} from '../tool_item/FishRod.js';
 import {Oar} from '../tool_item/Oar.js';
 import {Scouter} from '../tool_item/Scouter.js';
 import {RepairWrench} from '../tool_item/RepairWrench.js';
-
+import {SafetyRope} from '../tool_item/SafetyRope.js';
 
 // import {} from '../tool_item/.js';
 
@@ -72,7 +72,13 @@ export class RecipeTool extends Object {
             ''
         );
 
-
+        c_r.add_recipe( category,
+            ['海に落ちた時にこれを構えると、','自動的に舟の方向に引っ張られます。'],
+            ['cloth'],
+            [ 10 ],
+            function( game ){ return new SafetyRope( game ); },
+            ''
+        );
 
     }
 }
