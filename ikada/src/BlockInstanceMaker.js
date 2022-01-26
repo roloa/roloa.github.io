@@ -6,6 +6,7 @@ import {BotHouseDog} from './ship_block/BotHouseDog.js'
 import {ShipCore} from './ship_block/ShipCore.js'
 import {BotHouseCat} from './ship_block/BotHouseCat.js'
 import {WeaponMortorTube} from './ship_block/WeaponMortorTube.js'
+import {CommonBlock} from './ship_block/CommonBlock.js'
 import {ShipFrame} from './ship_block/ShipFrame.js'
 import {DryLack} from './ship_block/DryLack.js'
 import {ShipFloor} from './ship_block/ShipFloor.js'
@@ -47,6 +48,8 @@ export class BlockInstanceMaker {
             return new BotHouseCat( this.game );
         } else if( block_data.class_name == 'WeaponMortorTube' ){
             return new WeaponMortorTube( this.game );
+        } else if( block_data.class_name == 'CommonBlock' ){
+            return new CommonBlock( this.game );
         } else if( block_data.class_name == 'ShipFrame' ){
             return new ShipFrame( this.game );
         } else if( block_data.class_name == 'DryLack' ){

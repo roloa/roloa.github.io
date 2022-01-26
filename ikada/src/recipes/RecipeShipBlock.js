@@ -1,7 +1,9 @@
 
 import {BuildBlock} from '../tool_item/BuildBlock.js'
 
+
 import {ShipFloor} from '../ship_block/ShipFloor.js';
+import {CommonBlock} from '../ship_block/CommonBlock.js';
 import {ShipFrame} from '../ship_block/ShipFrame.js';
 import {VictoryRocket} from '../ship_block/VictoryRocket.js';
 import {LevelFlag1} from '../ship_block/LevelFlag1.js';
@@ -27,6 +29,61 @@ export class RecipeShipBlock extends Object {
             ['wood'],
             [10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFloor( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['船の床ブロックです。',
+            '使用して配置できます。'],
+            ['stone'],
+            [10],
+            function( game ){
+                let block = new CommonBlock( game );
+                block.set_image( 'ship_floor_stone' );
+                return new BuildBlock( game ).set_ship_block( block ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['船の床ブロックです。',
+            '使用して配置できます。'],
+            ['jar'],
+            [10],
+            function( game ){
+                let block = new CommonBlock( game );
+                block.set_image( 'ship_floor_glass' );
+                return new BuildBlock( game ).set_ship_block( block ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['船の床ブロックです。',
+            '使用して配置できます。'],
+            ['iron'],
+            [10],
+            function( game ){
+                let block = new CommonBlock( game );
+                block.set_image( 'ship_floor_iron' );
+                return new BuildBlock( game ).set_ship_block( block ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['船の床ブロックです。',
+            '使用して配置できます。'],
+            ['plastic'],
+            [10],
+            function( game ){
+                let block = new CommonBlock( game );
+                block.set_image( 'ship_floor_plastic' );
+                return new BuildBlock( game ).set_ship_block( block ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['船の床ブロックです。',
+            '使用して配置できます。'],
+            ['silver'],
+            [10],
+            function( game ){
+                let block = new CommonBlock( game );
+                block.set_image( 'ship_floor_silver' );
+                return new BuildBlock( game ).set_ship_block( block ); },
             ''
         );
 

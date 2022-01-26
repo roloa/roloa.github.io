@@ -31,6 +31,12 @@ export class ImgFileName {
   './img/cloud_border.png',
   './img/cloud_blur.png',
   './img/attack_effect.png',
+  './img/ship_floor_stone.png',
+  './img/ship_floor_glass.png',
+  './img/ship_floor_plastic.png',
+  './img/ship_floor_bone.png',
+  './img/ship_floor_iron.png',
+  './img/ship_floor_silver.png',
 //  './img/.png',
   './img/ikada.png'
   ]

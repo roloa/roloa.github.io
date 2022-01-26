@@ -30,7 +30,7 @@ export class Materials {
         // レベル1素材
         this.name_list[ 'parts' ] = '機械部品';
         this.name_list[ 'circuit' ] = '電子回路';
-        this.name_list[ 'lead' ] = '鉛の塊';
+        this.name_list[ 'lead' ] = '鉛';
         this.name_list[ 'plastic' ] = 'プラスチック';
 
         // レベル2素材

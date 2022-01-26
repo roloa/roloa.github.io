@@ -317,16 +317,30 @@ export class TutorialLevel0 {
         tutorial.check_list.push( this.desc_only('舟ブロックを持ってクリックすることで'));
         tutorial.check_list.push( this.desc_only('ブロックを設置して舟を拡張できます。'));
         tutorial.check_list.push( this.desc_only('隣にブロックがないと置けません。'));
-        tutorial.check_list.push( this.need_cond( '横方向に舟を大きくする',
+        tutorial.check_list.push( this.need_cond( '舟に設置できるブロックを製作する',
             function( game ){
-                return 7 < game.world.ship.block_array.length;
-        }));
-        tutorial.check_list.push( this.need_cond( '上方向に舟を大きくする',
-            function( game ){
-                return 4 < game.world.ship.block_array[0].length;
+                return game.hud.item_slot.has_item_instanceof( BuildBlock );
         }));
         tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
         tutorial_list.push( tutorial );
+
+        // tutorial = {};
+        // tutorial.level = this.tutorial_level;
+        // tutorial.title = '舟の拡張について';
+        // tutorial.check_list = [];
+        // tutorial.check_list.push( this.desc_only(''));
+        // tutorial.check_list.push( this.desc_only(''));
+        // tutorial.check_list.push( this.desc_only(''));
+        // tutorial.check_list.push( this.need_cond( '横方向に舟を大きくする',
+        //     function( game ){
+        //         return 7 < game.world.ship.block_array.length;
+        // }));
+        // tutorial.check_list.push( this.need_cond( '上方向に舟を大きくする',
+        //     function( game ){
+        //         return 4 < game.world.ship.block_array[0].length;
+        // }));
+        // tutorial.reword_tool_item = new BuildBlock( this.game ).set_ship_block( new ShipFloor( this.game ) );
+        // tutorial_list.push( tutorial );
 
         tutorial = {};
         tutorial.level = this.tutorial_level;
