@@ -34,6 +34,7 @@ export class EnemySurfaceBird extends Enemy {
         // 射撃系ステータス
         this.do_fire_attack = false;
         this.fire_spread = 1;
+        this.fire_spread_angle = 0.1;
         this.bullet_lifetime = 100;
         this.bullet_velocity = 5;
 

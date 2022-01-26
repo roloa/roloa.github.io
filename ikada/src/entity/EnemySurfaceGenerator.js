@@ -30,12 +30,13 @@ export class EnemySurfaceGenerator {
         if( 3 <= ship_level ){
             enemy_type_value = 100;
         } else if( 2 <= ship_level ){
-            enemy_type_value = 60;
+            enemy_type_value = 100;
         } else if( 1 <= ship_level){
             enemy_type_value = 50;
         } else {
             enemy_type_value = 10;
         }
+
         enemy_type_value = enemy_type_value * Math.random();
         if( enemy_type_value < 6 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_hachidori' )
@@ -74,9 +75,11 @@ export class EnemySurfaceGenerator {
         } else if( enemy_type_value < 21 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_tonbi' )
             new_enemy.name = 'トビ';
-            // 頂点射撃タイプ
+            // 頂点突撃射撃タイプ
             new_enemy.is_fly_above = true;
             new_enemy.do_fire_attack = true;
+            new_enemy.do_tackle_attack = true;
+
             new_enemy.set_max_hp( 30 );
             new_enemy.direct_damage = 12;
             new_enemy.bullet_damage = 12;
@@ -149,12 +152,23 @@ export class EnemySurfaceGenerator {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
 
-        } else if( enemy_type_value < 61 ){
+        } else if( enemy_type_value < 67 ){
             // レベル3
             new_enemy.image = this.game.image_library.get_image( 'fantasy_griffon' )
             new_enemy.name = 'グリフォン';
+            // 頂点射撃タイプ
+            new_enemy.set_max_hp( 90 );
+            new_enemy.is_fly_above = true;
+            new_enemy.do_fire_attack = true;
+            new_enemy.direct_damage = 25;
+            new_enemy.bullet_damage = 7;
+            // グリフォンは3way弾
+            new_enemy.fire_spread = 3;
+            new_enemy.fire_spread_angle = 0.1;
 
-            new_enemy.set_max_hp( 100 );
+
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
+
 
             if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'griffon_wing',
@@ -164,11 +178,15 @@ export class EnemySurfaceGenerator {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
 
-        } else if( enemy_type_value < 999 ){
+        } else if( enemy_type_value < 83 ){
             new_enemy.image = this.game.image_library.get_image( 'fantasy_peryton' )
-            new_enemy.name = 'ペリュトン';
-
-            new_enemy.set_max_hp( 90 );
+            new_enemy.name = 'ペガシカ';
+            // 遠距離射撃タイプ
+            new_enemy.set_max_hp( 100 );
+            new_enemy.do_fire_attack = true;
+            new_enemy.direct_damage = 25;
+            new_enemy.bullet_damage = 7;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
             if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'peryton_wing',
@@ -178,11 +196,19 @@ export class EnemySurfaceGenerator {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
 
-        } else if( enemy_type_value < 999 ){
+        } else if( enemy_type_value < 101 ){
             new_enemy.image = this.game.image_library.get_image( 'youkai_suzaku' )
-            new_enemy.name = 'フェニックス';
-
+            new_enemy.name = '火の鳥';
+            // 突撃射撃タイプ
             new_enemy.set_max_hp( 80 );
+            new_enemy.do_fire_attack = true;
+            new_enemy.do_tackle_attack = true;
+            new_enemy.direct_damage = 25;
+            new_enemy.bullet_damage = 20;
+            // 火の鳥はブラスター弾
+            new_enemy.is_blaster_bullet = true;
+            new_enemy.bullet_image = this.game.image_library.get_image('bullet_fire');
+
 
             if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'suzaku_wing',

@@ -54,11 +54,12 @@ export class Enemy extends Entity {
 
         this.fire_spread = 3;
         this.fire_spread_angle = 0.1;
-        this.bullet_lifetime = 100;
+        this.is_blaster_bullet = false;
+
         this.bullet_velocity = 10;
+        this.bullet_lifetime = 100;
         this.fire_cool_time = 100;
         this.fire_cool_time_count = 0;
-        this.blast_lifetime = 0;
 
         this.bullet_image = null;
 
@@ -257,7 +258,7 @@ export class Enemy extends Entity {
             bullet.y = this.y + bullet.vy;
 
             bullet.life_time = this.bullet_lifetime;
-            if( 0 < this.blast_lifetime ){
+            if( 0 < this.is_blaster_bullet ){
                 bullet.is_blaster_bullet = true;
             }
 

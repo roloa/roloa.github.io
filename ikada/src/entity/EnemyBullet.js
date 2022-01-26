@@ -49,20 +49,18 @@ export class EnemyBullet extends Entity {
             this.is_alive = false;
             // ブラスター処理
             if( this.is_blaster_bullet ){
+                // 今の所、火の鳥のみなので火の鳥用のパラメータ固定
                 for(let i = 0 ; i < 8 ; i++){
                     let rad = (Math.PI * i * 0.25) + 0.125;
                     let bullet = new Bullet( this.game );
                     bullet.x = this.x;
                     bullet.y = this.y;
 
-                    bullet.vx = Math.cos(rad) * this.gun_data.blast_velocity;
-                    bullet.vy = Math.sin(rad) * this.gun_data.blast_velocity;
-                    bullet.life_time = this.gun_data.blast_lifetime;
+                    bullet.vx = Math.cos(rad) * 5;
+                    bullet.vy = Math.sin(rad) * 5;
+                    bullet.life_time = 25;
                     bullet.weight = this.weight;
-
-                    bullet.line_x = Math.cos(rad) * 30;
-                    bullet.line_y = Math.sin(rad) * 30;
-                    bullet.gun_data = this.gun_data;
+                    bullet.image = this.image;
                     this.game.world.push_entity( bullet );
                 }
             }
