@@ -56,7 +56,7 @@ export class ShipBlock {
             this.game.log('修復を待つか、レンチで修理できます。');
             return false;
         }
-        if( item && item.is_hammer ){
+        if( item && item.is_hammer && !this.is_core ){
             // プレイヤーがハンマーを構えているなら、自壊してアイテム化する
             // 撤去される前に修理される
             this.saving_data.hp = this.max_hp;
