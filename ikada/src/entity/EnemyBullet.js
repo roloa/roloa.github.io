@@ -52,7 +52,11 @@ export class EnemyBullet extends Entity {
                 // 今の所、火の鳥のみなので火の鳥用のパラメータ固定
                 for(let i = 0 ; i < 8 ; i++){
                     let rad = (Math.PI * i * 0.25) + 0.125;
-                    let bullet = new Bullet( this.game );
+                    let bullet = new EnemyBullet( this.game );
+                    bullet.owner_enemy = this.owner_enemy;
+                    bullet.damage = this.damage * 0.25;
+                    bullet.knock_back_rate = this.knock_back_rate;
+
                     bullet.x = this.x;
                     bullet.y = this.y;
 
@@ -60,7 +64,11 @@ export class EnemyBullet extends Entity {
                     bullet.vy = Math.sin(rad) * 5;
                     bullet.life_time = 25;
                     bullet.weight = this.weight;
+
+                    bullet.rotation = rad;
                     bullet.image = this.image;
+                    bullet.is_in_ship_inertial = this.is_in_ship_inertial;
+
                     this.game.world.push_entity( bullet );
                 }
             }

@@ -61,6 +61,9 @@ export class Enemy extends Entity {
         this.fire_cool_time = 100;
         this.fire_cool_time_count = 0;
 
+        this.burst_fire = 1;
+        this.burst_fire_count = this.burst_fire;
+
         this.bullet_image = null;
 
         this.poison_count = 0;
@@ -300,6 +303,7 @@ export class Enemy extends Entity {
             this.vx = -this.vx;
             this.vy = -this.vy;
             this.on_hit_player();
+            this.take_damage( this.game.world.player.kickback_damage );
         }
         // 舟との当たり判定
         this.test_hit_ship();

@@ -37,7 +37,7 @@ export class EnemySurfaceGenerator {
             enemy_type_value = 10;
         }
 
-        enemy_type_value = enemy_type_value * Math.random();
+        enemy_type_value = 50 + 50 * Math.random();
         if( enemy_type_value < 6 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_hachidori' )
             new_enemy.name = 'ハチドリ';
@@ -79,6 +79,7 @@ export class EnemySurfaceGenerator {
             new_enemy.is_fly_above = true;
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
+            new_enemy.distance_from_ship = 250;
 
             new_enemy.set_max_hp( 30 );
             new_enemy.direct_damage = 12;
@@ -160,11 +161,12 @@ export class EnemySurfaceGenerator {
             new_enemy.set_max_hp( 90 );
             new_enemy.is_fly_above = true;
             new_enemy.do_fire_attack = true;
+
             new_enemy.direct_damage = 25;
             new_enemy.bullet_damage = 7;
             // グリフォンは3way弾
             new_enemy.fire_spread = 3;
-            new_enemy.fire_spread_angle = 0.1;
+            new_enemy.fire_spread_angle = 0.2;
 
 
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
@@ -184,8 +186,13 @@ export class EnemySurfaceGenerator {
             // 遠距離射撃タイプ
             new_enemy.set_max_hp( 100 );
             new_enemy.do_fire_attack = true;
+            new_enemy.distance_from_ship = 250;
+
+
             new_enemy.direct_damage = 25;
             new_enemy.bullet_damage = 7;
+            // ペガシカは5連射
+            new_enemy.burst_fire = 5;
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
             if( Math.random() < 0.9){
@@ -205,6 +212,7 @@ export class EnemySurfaceGenerator {
             new_enemy.do_tackle_attack = true;
             new_enemy.direct_damage = 25;
             new_enemy.bullet_damage = 20;
+            new_enemy.bullet_lifetime = 20;
             // 火の鳥はブラスター弾
             new_enemy.is_blaster_bullet = true;
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_fire');

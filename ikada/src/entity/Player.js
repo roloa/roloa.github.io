@@ -26,6 +26,7 @@ export class Player extends Entity {
         this.health = new PlayerHealth( this.game );
 
         this.hit_invincible_timer = 0;
+        this.hit_invincible_timer_max = 10;
         this.is_ghost = 0;
         this.ghost_timer_max = 500;
         this.ghost_timer = 0;
@@ -37,6 +38,8 @@ export class Player extends Entity {
 
         this.is_landing = false;
         this.is_in_sea = false;
+
+        this.kickback_damage = 2;
 
         this.walk_speed = 3;
         this.walk_speed_down_rate = 0.5;
@@ -185,7 +188,7 @@ export class Player extends Entity {
         this.vx = Math.max( -20, Math.min(this.vx, 20) );
         this.vy += knockback_vy;
         this.vy = Math.max( -20, Math.min(this.vy, 20) );
-        this.hit_invincible_timer = 50;
+        this.hit_invincible_timer = this.hit_invincible_timer_max;
 
         let damage_number = new DamageNumber( this.game );
         damage_number.x = this.x;
@@ -208,6 +211,12 @@ export class Player extends Entity {
         if ( this.is_ghost ) {
             // 死んでリスポン待ちの幽霊
             this.ghost_timer -= 1;
+
+            this.x = 0;
+            this.y = -40;
+            this.vx = 0;
+            this.vy = 0;
+
             this.health.hp = (1-(this.ghost_timer / this.ghost_timer_max)) * this.health.max_hp;
             if( this.ghost_timer <= 0 ){
                 this.is_ghost = false;
@@ -297,7 +306,7 @@ export class Player extends Entity {
         this.health.always_process();
 
         // マウスクリック
-        if( !this.game.hud.hud_menu.is_menu_open ){
+        if( !this.game.hud.hud_menu.is_menu_open && !this.is_ghost){
             if( this.game.input_controller.get_mouse_press() ) {
                 this.on_click( this.game.world.cursor_x, this.game.world.cursor_y );
             } else if( this.game.input_controller.get_mouse_down() ){

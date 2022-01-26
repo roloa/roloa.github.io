@@ -65,7 +65,7 @@ export class EnemySurfaceBird extends Enemy {
         if( this.is_fly_above ){
             // 上空型
             this.position_x = (
-                this.game.world.ship.get_right_side_x() +
+                this.game.world.ship.get_left_side_x() +
                 ( this.game.world.ship.get_right_side_x() - this.game.world.ship.get_left_side_x() ) * Math.random()
             )
             this.position_y = this.game.world.ship.get_top_y() - this.distance_from_ship * 0.5 - this.distance_from_ship * Math.random();
@@ -90,6 +90,17 @@ export class EnemySurfaceBird extends Enemy {
     }
     enemy_move_ai(){
 
+        if( this.game.world.player.is_ghost ){
+            // プレイヤーが死んでいるなら、退散する
+            if( 0 < this.x ){
+                this.vx += this.dash_speed;
+                this.vy -= this.dash_speed;
+            } else {
+                this.vx -= this.dash_speed;
+                this.vy -= this.dash_speed;
+            }
+            return;
+        }
         // 前に決めた目的地に向かう
         let vec = this.get_vector_to_point( this.position_x, this.position_y );
         this.vx += vec.x * this.dash_speed;
@@ -126,7 +137,15 @@ export class EnemySurfaceBird extends Enemy {
                 this.fire_cool_time_count -= 1;
             } else {
                 this.fire_bullet();
+
                 this.fire_cool_time_count = this.fire_cool_time;
+                if( 1 < this.burst_fire_count ){
+                    // バースト射撃処理
+                    this.burst_fire_count -= 1;
+                    this.fire_cool_time_count = 10;
+                } else {
+                    this.burst_fire_count = this.burst_fire;
+                }
             }
         }
     }
