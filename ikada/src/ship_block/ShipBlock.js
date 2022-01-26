@@ -1,5 +1,6 @@
 
 import {BuildBlock} from '../tool_item/BuildBlock.js'
+import {DamageNumber} from '../entity/particle/DamageNumber.js';
 
 export class ShipBlock {
 
@@ -97,7 +98,17 @@ export class ShipBlock {
         return false;
     }
     on_hit_bullet( bullet ){
-        return this.take_damage( bullet.damage );
+        if( this.take_damage( bullet.damage ) ){
+            let damage_number = new DamageNumber( this.game );
+            damage_number.x = this.x;
+            damage_number.y = this.y;
+            damage_number.number = bullet.damage;
+            damage_number.color = 'rgb(200, 150, 50)';
+            damage_number.font = 'bold 16px monospace';
+            this.game.world.push_entity( damage_number );
+            return true;
+        }
+        return false;
     }
     take_damage( damage_amount ){
 
@@ -131,8 +142,8 @@ export class ShipBlock {
         if( this.saving_data.hp <= 0){
             this.saving_data.is_broken = true;
             this.saving_data.hp = 0;
-            return true;
         }
+        return true;
     }
 
     give_heartbeat( beat_id ){

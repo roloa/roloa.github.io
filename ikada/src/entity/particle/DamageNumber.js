@@ -11,7 +11,8 @@ export class DamageNumber extends Entity {
         this.gravity = 0.2;
 
         this.number = 0;
-
+        this.color = 'rgb(250,250,250)';
+        this.font = 'bold 20px monospace';
         this.life_time = 50;
 
     }
@@ -30,8 +31,8 @@ export class DamageNumber extends Entity {
         }
     }
     on_draw( canvas ){
-        canvas.fillStyle = 'rgb(250,20,20)';
-        canvas.font = 'bold 32px monospace'
+        canvas.fillStyle = this.color;
+        canvas.font = this.font;;
         canvas.fillText( this.number, this.x, this.y);
     }
 }

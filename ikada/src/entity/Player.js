@@ -194,6 +194,8 @@ export class Player extends Entity {
         damage_number.x = this.x;
         damage_number.y = this.y;
         damage_number.number = damage_amount;
+        damage_number.color = 'rgb(250, 30, 30)';
+        damage_number.font = 'bold 30px monospace';
         this.game.world.push_entity( damage_number );
 
         return true;
