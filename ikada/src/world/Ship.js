@@ -178,8 +178,8 @@ export class Ship {
         if( new_block != null){
             new_block.is_removed = false;
             this.block_array[ put_x ][ put_y ] = new_block;
-            new_block.x = (put_x - this.ship_offset_x) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
-            new_block.y = (put_y - this.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
+            new_block.x = (put_x - this.ship_offset_x) * ShipBlock.BLOCK_SIZE;
+            new_block.y = (put_y - this.ship_offset_y) * ShipBlock.BLOCK_SIZE;
             new_block.cell_x = put_x;
             new_block.cell_y = put_y;
         } else {
@@ -292,8 +292,8 @@ export class Ship {
                 if( block != null ){
                     block.cell_x = x;
                     block.cell_y = y;
-                    block.x = (x - this.ship_offset_x) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
-                    block.y = (y - this.ship_offset_y) * ShipBlock.BLOCK_SIZE - ShipBlock.BLOCK_RADIUS;
+                    block.x = (x - this.ship_offset_x) * ShipBlock.BLOCK_SIZE;
+                    block.y = (y - this.ship_offset_y) * ShipBlock.BLOCK_SIZE;
 
                     if( block.is_core ){
                         this.core_x = x;

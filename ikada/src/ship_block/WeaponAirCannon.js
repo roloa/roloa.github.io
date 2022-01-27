@@ -1,6 +1,7 @@
 
 import {ShipBlock} from './ShipBlock.js';
 import {Bullet} from '../entity/Bullet.js';
+import {OperateEffect} from '../entity/particle/OperateEffect.js';
 
 // TODO
 export class WeaponAirCannon extends ShipBlock {
@@ -82,10 +83,10 @@ export class WeaponAirCannon extends ShipBlock {
                     // オペレータが別の設備に触ってない
                     return true;
                 } else {
-                    this.game.log('オペレータが別の設備に移りました。');
+                    // this.game.log('オペレータが別の設備に移りました。');
                 }
             } else {
-                this.game.log('オペレータが範囲外に移動しました。');
+                // this.game.log('オペレータが範囲外に移動しました。');
             }
             // 操作が途切れてしまったオペレータを忘れる
             this.current_operator = null;
@@ -112,6 +113,8 @@ export class WeaponAirCannon extends ShipBlock {
                 if( this.check_connect_operator() ){
                     // オペレートされている場合は、クールタイムが1/3になる
                     this.cool_time_count *= 0.33;
+                    // オペレートエフェクトを生成する
+                    this.spawn_operate_effect();
                 }
                 // if( this.target_enemy == null || this.target_enemy.is_alive == false){
                 //     this.search_target();
@@ -126,6 +129,13 @@ export class WeaponAirCannon extends ShipBlock {
                 }
             }
         }
+    }
+    spawn_operate_effect(){
+        let new_effect = new OperateEffect( this.game );
+        new_effect.x = this.current_operator.x;
+        new_effect.y = this.current_operator.y;
+        new_effect.parent = this;
+        this.game.world.push_entity( new_effect );
     }
     get_radian_to_target(){
         return Math.atan2( this.target_enemy.y - this.y, this.target_enemy.x - this.x )
