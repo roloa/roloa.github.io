@@ -39,6 +39,7 @@ export class RecipeShipBlock extends Object {
             function( game ){
                 let block = new CommonBlock( game );
                 block.set_image( 'ship_floor_stone' );
+                block.name = '石製ブロック';
                 return new BuildBlock( game ).set_ship_block( block ); },
             ''
         );
@@ -50,6 +51,7 @@ export class RecipeShipBlock extends Object {
             function( game ){
                 let block = new CommonBlock( game );
                 block.set_image( 'ship_floor_glass' );
+                block.name = 'ガラスブロック';
                 return new BuildBlock( game ).set_ship_block( block ); },
             ''
         );
@@ -61,6 +63,7 @@ export class RecipeShipBlock extends Object {
             function( game ){
                 let block = new CommonBlock( game );
                 block.set_image( 'ship_floor_iron' );
+                block.name = '鉄製ブロック';
                 return new BuildBlock( game ).set_ship_block( block ); },
             ''
         );
@@ -72,6 +75,7 @@ export class RecipeShipBlock extends Object {
             function( game ){
                 let block = new CommonBlock( game );
                 block.set_image( 'ship_floor_plastic' );
+                block.name = 'プラ製ブロック';
                 return new BuildBlock( game ).set_ship_block( block ); },
             ''
         );
@@ -83,6 +87,7 @@ export class RecipeShipBlock extends Object {
             function( game ){
                 let block = new CommonBlock( game );
                 block.set_image( 'ship_floor_silver' );
+                block.name = '銀製ブロック';
                 return new BuildBlock( game ).set_ship_block( block ); },
             ''
         );

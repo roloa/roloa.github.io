@@ -12,6 +12,25 @@ export class BuildBlock extends ToolItem {
         this.ship_block = null;
         this.saving_data.item_name = '船の建材';
 
+        this.is_stackable = true;
+    }
+    additional_stack_condition( to_stack_item ) {
+        // 追加のスタック条件をオーバーライドできる
+        if( !this.ship_block ){
+            return false;
+        }
+        if( !to_stack_item.ship_block ){
+            return false;
+        }
+        if( this.ship_block.constructor.name != to_stack_item.ship_block.constructor.name ){
+            // 搭載しているブロックのクラスが違うとだめ
+            return false;
+        }
+        if( this.ship_block.name != to_stack_item.ship_block.name ){
+            // 搭載しているブロックの名前が違ってもだめ
+            return false;
+        }
+        return true;
     }
     set_ship_block( new_ship_block ){
         this.ship_block = new_ship_block;
@@ -37,6 +56,7 @@ export class BuildBlock extends ToolItem {
         return data;
     }
     load_data( data ){
+        super.load_data( data );
         this.set_ship_block( this.game.save_data_manager.deserialize_block( data.ship_block ));
     }
 }

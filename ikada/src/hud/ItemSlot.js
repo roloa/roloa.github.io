@@ -85,34 +85,38 @@ export class ItemSlot {
             this.item_slot[ this.item_slot_cursor ] = null;
         }
     }
-    put_pickup_item( new_item, with_inventory, is_put_back ){
+    delete_active_item_stack(){
+        // スタックごとまるまる消費する
+        this.item_slot[ this.item_slot_cursor ] = null;
+    }
+    put_pickup_item( new_item, with_inventory, not_stack ){
         if( this.is_config_auto_material_deconstruct ){
             if( new_item instanceof ResourceItem ){
                 new_item.on_click(0,0,0,0);
                 return true;
             }
         }
-        if( is_put_back ){
-            // アイテムスロットの後側から入る場所を探す
-            for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
-                if( this.item_slot[ i ] == null ){
-                    this.item_slot[ i ] = new_item;
-                    this.refresh();
-                    return true;
-                }
-            }
-        } else {
-            // アイテムスロットの前側から入る場所を探す
+        if( !not_stack ){
+            // スタック出来る場所を探す
             for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
-                if( this.item_slot[ i ] == null ){
-                    this.item_slot[ i ] = new_item;
-                    this.refresh();
-                    return true;
+                if( this.item_slot[ i ] ){
+                    if( this.item_slot[ i ].try_stack_marge( new_item ) ){
+                        this.refresh();
+                        return true;
+                    }
                 }
             }
         }
+        // アイテムスロットの前側から入る場所を探す
+        for( let i = 0 ; i < ItemSlot.ITEM_SLOT_COUNT ; i++ ){
+            if( this.item_slot[ i ] == null ){
+                this.item_slot[ i ] = new_item;
+                this.refresh();
+                return true;
+            }
+        }
         if( with_inventory ){
-            return this.game.inventory.put_pickup_item( new_item, is_put_back );
+            return this.game.inventory.put_pickup_item( new_item, not_stack );
         }
         // 入る場所が無かったらfalseを返す
         return false;

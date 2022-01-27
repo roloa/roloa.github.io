@@ -55,7 +55,15 @@ export class ToolItem {
             // スタックしようとする側の上限数
             return false;
         }
+        if( !this.additional_stack_condition( to_stack_item ) ){
+            // 下位クラスでオーバーライドできる追加の条件
+            return false;
+        }
         this.stack_to_last( to_stack_item );
+        return true;
+    }
+    additional_stack_condition( to_stack_item ) {
+        // 追加のスタック条件をオーバーライドできる
         return true;
     }
     stack_to_last( new_stack ){

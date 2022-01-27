@@ -323,7 +323,7 @@ export class Player extends Entity {
                     new_drop_item.x = this.x + 32;
                     new_drop_item.y = this.y;
                     this.game.world.push_entity( new_drop_item )
-                    this.game.hud.item_slot.delete_active_item()
+                    this.game.hud.item_slot.delete_active_item_stack();
                 }
             }
 
