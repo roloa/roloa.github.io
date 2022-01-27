@@ -87,45 +87,59 @@ export class RecipeShipBlock extends Object {
             ''
         );
 
-        c_r.add_recipe( category,
-            ['ヴィクトリーロケット。','これを設置して作動させたら*勝利*です。'],
-            ['fuel'],
-            [99],
-            function( game ){ return new BuildBlock( game ).set_ship_block( new VictoryRocket( game ) ); },
-            ''
-        );
 
         c_r.add_recipe( category,
             ['舟の骨組みです。','床と違って上に乗れません。'],
             ['wood'],
-            [1],
+            [5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFrame( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['舟の骨組みです。','床と違って上に乗れません。'],
+            ['iron'],
+            [5],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFrame( game ) ); },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['舟の骨組みです。','床と違って上に乗れません。'],
+            ['silver'],
+            [5],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFrame( game ) ); },
             ''
         );
 
-
         c_r.add_recipe( category,
             ['設置すると舟レベルを[1]に上げます。','上位の敵が出現します。'],
             ['wood', 'cloth', 'feather'],
-            [20, 15, 10],
+            [30, 20, 10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag1( game ) ); },
             ''
         );
         c_r.add_recipe( category,
             ['設置すると舟レベルを[2]に上げます。','上位の敵が出現します。'],
             ['plastic', 'lead'],
-            [30, 15],
+            [100, 100],
             function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag2( game ) ); },
             ''
         );
+        // レベル3はまだ
+        // c_r.add_recipe( category,
+        //     ['設置すると舟レベルを[3]に上げます。','上位の敵が出現します。'],
+        //     ['silver', 'fur', 'feather'],
+        //     [50, 30, 100],
+        //     function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag3( game ) ); },
+        //     ''
+        // );
+
         c_r.add_recipe( category,
-            ['設置すると舟レベルを[3]に上げます。','上位の敵が出現します。'],
-            ['silver', 'fur', 'feather'],
-            [50, 30, 100],
-            function( game ){ return new BuildBlock( game ).set_ship_block( new LevelFlag3( game ) ); },
+            ['ヴィクトリーロケット。','これを設置して作動させたら*勝利*です。'],
+            ['silver','wood','feather','fuel'],
+            [100, 300, 300, 1000],
+            function( game ){ return new BuildBlock( game ).set_ship_block( new VictoryRocket( game ) ); },
             ''
         );
-
 
     }
 }

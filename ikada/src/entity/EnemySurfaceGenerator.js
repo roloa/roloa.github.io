@@ -175,7 +175,7 @@ export class EnemySurfaceGenerator {
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
 
-            if( Math.random() < 0.8){
+            if( Math.random() < 0.99){
                 new_enemy.drop_tool_item = this.drop_material( 'griffon_wing',
                 ['circuit', 'lead', 'plastic'],
                 [3, 5, 25, 25] );
@@ -198,7 +198,7 @@ export class EnemySurfaceGenerator {
             new_enemy.burst_fire = 5;
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
-            if( Math.random() < 0.9){
+            if( Math.random() < 0.99){
                 new_enemy.drop_tool_item = this.drop_material( 'peryton_wing',
                 ['circuit', 'parts', 'silver' ],
                 [3, 5, 10 ] );
@@ -221,7 +221,7 @@ export class EnemySurfaceGenerator {
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_fire');
 
 
-            if( Math.random() < 0.9){
+            if( Math.random() < 0.99){
                 new_enemy.drop_tool_item = this.drop_material( 'suzaku_wing',
                 ['feather', 'silver', 'fuel'],
                 [ 30, 10, 20 ] );

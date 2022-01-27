@@ -32,8 +32,8 @@ export class CraftRecipe extends Object {
 
         this.category_icon_list = [];
         this.category_icon_list[ CraftRecipe.CATEGORY_TOOL ] = this.game.image_library.get_image( 'fishing_tsurizao_nobezao' );
-        this.category_icon_list[ CraftRecipe.CATEGORY_SHIP ] = this.game.image_library.get_image( 'fune_ikada' );
-        this.category_icon_list[ CraftRecipe.CATEGORY_SHIP2 ] = this.game.image_library.get_image( 'fune_ikada' );
+        this.category_icon_list[ CraftRecipe.CATEGORY_SHIP ] = this.game.image_library.get_image( 'ship_floor' );
+        this.category_icon_list[ CraftRecipe.CATEGORY_SHIP2 ] = this.game.image_library.get_image( 'mast_open' );
         this.category_icon_list[ CraftRecipe.CATEGORY_SHIP3 ] = this.game.image_library.get_image( 'fune_ikada' );
         this.category_icon_list[ CraftRecipe.CATEGORY_WEAPON ] = this.game.image_library.get_image( 'yumiya_bowgun' );
         this.category_icon_list[ CraftRecipe.CATEGORY_EQUIP ] = this.game.image_library.get_image( 'snorkel_goods' );

@@ -32,7 +32,7 @@ export class RecipeShipBlock2 extends Object {
 
         c_r.add_recipe( category,
             ['船に設置する焚き火です。',
-            '配置して、生の食材を調理できます。'],
+            '燃料を消費して、蒸留や調理ができます。'],
             ['wood', 'iron', 'stone'],
             [20, 10, 10],
             function( game ){ return new BuildBlock( game ).set_ship_block( new FirePlace( game ) ); },
@@ -43,20 +43,20 @@ export class RecipeShipBlock2 extends Object {
             ['舟の帆です。',
             '風が当たると舟が前進します。'],
             ['wood', 'cloth', 'feather'],
-            [10, 20, 3],
+            [10, 10, 3],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipMast( game ) ); },
             ''
         );
 
 
-
-        c_r.add_recipe( category,
-            ['食材を乾燥させます。'],
-            ['wood', 'cloth'],
-            [20, 10],
-            function( game ){ return new BuildBlock( game ).set_ship_block( new DryLack( game ) ); },
-            ''
-        );
+        // とりあえずオミット
+        // c_r.add_recipe( category,
+        //     ['食材を乾燥させます。'],
+        //     ['wood', 'cloth'],
+        //     [20, 10],
+        //     function( game ){ return new BuildBlock( game ).set_ship_block( new DryLack( game ) ); },
+        //     ''
+        // );
 
         c_r.add_recipe( category,
             ['自動で敵を撃つ空気砲です。','燃料を投入すると、自動で敵を攻撃します。'],
@@ -114,15 +114,15 @@ export class RecipeShipBlock2 extends Object {
 
         c_r.add_recipe( category,
             ['食用の作物を育てます。'],
-            ['leftover', 'plastic'],
-            [10, 5],
+            ['leftover', 'iron', 'stone'],
+            [20, 20, 20],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmFood( game ) ); },
             'Food'
         );
         c_r.add_recipe( category,
             ['木材を育てます。'],
-            ['leftover', 'iron', 'stone'],
-            [30, 10, 10],
+            ['leftover', 'plastic' 'stone'],
+            [20, 20, 20],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmWood( game ) ); },
             'Wood'
         );
