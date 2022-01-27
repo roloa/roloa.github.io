@@ -130,7 +130,7 @@ export class MenuInventory {
                     } else {
                         // ゴミ箱のアイテムをアイテムスロットに送ろうとする
                         if( this.trashed_item != null ){
-                            if ( this.game.hud.item_slot.put_pickup_item( this.trashed_item ) ){
+                            if ( this.game.hud.item_slot.put_pickup_item( this.trashed_item, true ) ){
                                 this.trashed_item = null;
                             } else {
                                 this.game.log('アイテムスロットに空きを作ってください。');

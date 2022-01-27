@@ -28,6 +28,35 @@ export class Inventory {
 
 
     }
+    put_pickup_item( new_item, is_put_back ){
+        if( is_put_back ){
+            // アイテムスロットの後側から入る場所を探す
+            for( let i = this.tool_item_inventory.length - 1 ; 0 <= i ; i-- ){
+                if( this.tool_item_inventory[ i ] == null ){
+                    this.tool_item_inventory[ i ] = new_item;
+                    return true;
+                }
+            }
+        } else {
+            // アイテムスロットの前側から入る場所を探す
+            for( let i = 0 ; i < this.tool_item_inventory.length ; i++ ){
+                if( this.tool_item_inventory[ i ] == null ){
+                    this.tool_item_inventory[ i ] = new_item;
+                    return true;
+                }
+            }
+        }
+        // 入る場所が無かったらfalseを返す
+        return false;
+    }
+    has_empty_space(){
+        // アイテムスロットがいっぱいならfalse
+        for( let i = this.tool_item_inventory.length - 1 ; 0 <= i ; i-- ){
+            if( this.tool_item_inventory[ i ] == null ){
+                return true;
+            }
+        }
+    }
     on_draw(){
 
     }

@@ -125,7 +125,7 @@ export class Player extends Entity {
 
     hit_drop_item( new_item ){
         // アイテムスロットの後側から入る場所を探す
-        return this.game.hud.item_slot.put_pickup_item( new_item.item_to_pickup )
+        return this.game.hud.item_slot.put_pickup_item( new_item.item_to_pickup,true );
 
     }
     test_hit_enemy( enemy ){

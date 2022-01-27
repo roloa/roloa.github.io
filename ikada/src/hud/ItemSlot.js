@@ -81,7 +81,7 @@ export class ItemSlot {
     delete_active_item(){
          this.item_slot[ this.item_slot_cursor ] = null;
     }
-    put_pickup_item( new_item, is_put_back ){
+    put_pickup_item( new_item, with_inventory, is_put_back ){
         if( this.is_config_auto_material_deconstruct ){
             if( new_item instanceof ResourceItem ){
                 new_item.on_click(0,0,0,0);
@@ -107,15 +107,21 @@ export class ItemSlot {
                 }
             }
         }
+        if( with_inventory ){
+            return this.game.inventory.put_pickup_item( new_item, is_put_back );
+        }
         // 入る場所が無かったらfalseを返す
         return false;
     }
-    has_empty_space(){
+    has_empty_space( with_inventory ){
         // アイテムスロットがいっぱいならfalse
         for( let i = ItemSlot.ITEM_SLOT_COUNT - 1 ; 0 <= i ; i-- ){
             if( this.item_slot[ i ] == null ){
                 return true;
             }
+        }
+        if( with_inventory ) {
+            return this.game.inventory.has_empty_space();
         }
         return false;
     }

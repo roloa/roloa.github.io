@@ -117,11 +117,11 @@ export class MenuCraft {
         let recipe = this.craft_recipe.get_recipe( this.category_index, this.cursor_index - MenuCraft.LIST_X_COUNT );
         if( recipe ){
             // カーソル位置にレシピが存在する
-            if( this.game.hud.item_slot.has_empty_space() ){
+            if( this.game.hud.item_slot.has_empty_space( true ) ){
                 if( this.take_recipe_materials( recipe ) ){
                     // マテリアルが十分にあり、消費できた
                     // アイテムを入手
-                    this.game.hud.item_slot.put_pickup_item( recipe.result_func( this.game) )
+                    this.game.hud.item_slot.put_pickup_item( recipe.result_func( this.game ), true )
 
                     this.game.log('クラフトしました。')
                 } else {
