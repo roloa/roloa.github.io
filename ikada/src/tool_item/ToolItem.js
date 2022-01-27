@@ -22,6 +22,51 @@ export class ToolItem {
         this.saving_data.durability_max = 100;
         this.saving_data.durability = this.saving_data.durability_max;
         this.set_durability( 100 );
+
+        // スタック関係
+        this.is_stackable = false;
+        this.max_stack_count = 9;
+        this.stack_next = null;
+    }
+    try_stack_marge( to_stack_item ){
+        // アイテムをスタックしようとする
+        // スタックできたらtrue
+        if( !to_stack_item ){
+            // 一応nullチェック
+            return false;
+        }
+        if( !this.is_stackable ){
+            // そもそもスタックできるアイテムじゃない
+            return false;
+        }
+        if( this.constructor.name != to_stack_item.constructor.name ){
+            // クラスが違う
+            return false;
+        }
+        if( this.max_stack_count <= this.count_stack() ){
+            // 自身のスタック上限数に達している
+            return false;
+        }
+        if( to_stack_item.max_stack_count <= to_stack_item.count_stack() ){
+            // スタックしようとする側の上限数
+            return false;
+        }
+        this.stack_to_last( to_stack_item );
+        return true;
+    }
+    stack_to_last( new_stack ){
+        if( this.stack_next ){
+            this.stack_next.stack_to_last( new_stack );
+        } else {
+            this.stack_next = new_stack;
+        }
+    }
+    count_stack(){
+        // 再帰でスタック数を数える
+        if( this.stack_next ){
+            return this.stack_next.count_stack() + 1;
+        }
+        return 1;
     }
     set_durability( du ){
         this.saving_data.durability_max = du;
@@ -67,6 +112,38 @@ export class ToolItem {
     }
     dump_information_to_log(){
         this.game.log( this.saving_data.item_name );
+    }
+    draw_item( canvas, frame_x, frame_y, width, height ){
+        canvas.drawImage(
+            this.get_image(),
+            frame_x,
+            frame_y,
+            width,
+            height );
+        canvas.font = 'bold 16px monospace';
+        canvas.fillStyle = 'rgb(200,200,200)';
+        canvas.fillText( this.get_subtitle(),
+            frame_x + 3,
+            frame_y + height - 3);
+        let stack_count = this.count_stack();
+        if( 1 < stack_count ){
+            canvas.fillText( stack_count,
+                frame_x + 3,
+                frame_y + height - 3);
+        }
+        // アイテムの耐久値
+        let dura_rate = this.get_durability_rate();
+        if( dura_rate != 1 ){
+            let dura_frame_x = frame_x + 5;
+            let dura_width = width - 10;
+            let dura_height = 6;
+            let dura_frame_y = frame_y + height - dura_height - 4;
+            let r = Math.min( 250, Math.max( 1, 500 - 500 * dura_rate ) );
+            let g = Math.min( 250, Math.max( 1, 500 * dura_rate ) );
+            canvas.fillStyle = 'rgb('+r+','+g+',30)';
+            canvas.fillRect( dura_frame_x, dura_frame_y, dura_width * dura_rate , dura_height);
+            canvas.strokeRect( dura_frame_x, dura_frame_y, dura_width, dura_height);
+        }
     }
     save_data(){
         let data = {};

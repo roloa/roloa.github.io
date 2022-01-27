@@ -13,6 +13,8 @@ export class SolidFuel extends ToolItem {
         this.ammo_type = 'fuel';
         this.ammo_value = 100;
         this.fuel_value = 100;
+
+        this.is_stackable = true;
     }
 
     on_click( cursor_x, cursor_y, player_x, player_y ){

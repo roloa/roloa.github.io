@@ -6,29 +6,19 @@ export class MedicalPack extends ToolItem {
     constructor( game ){
         super( game )
 
-        this.image = this.game.image_library.get_image( 'wasyoku_yakizakana');
-        this.saving_data.item_name = '薬箱';
-        this.saving_data.hunger_value = 5;
-        this.saving_data.thirst_value = 5;
-        this.saving_data.is_be_leftover = true;
+        this.image = this.game.image_library.get_image( 'iryou_kusuribako2');
+        this.saving_data.item_name = '救急箱';
+
+        this.is_stackable = true;
 
     }
     on_click( cursor_x, cursor_y, player_x, player_y ){
         // 満腹度を回復させる
-        if( this.saving_data.hunger_value < this.saving_data.thirst_value){
-            this.game.log( this.saving_data.item_name + 'を飲みました。');
-        } else {
-            this.game.log( this.saving_data.item_name + 'を食べました。');
-        }
-        this.game.log( '養分: +' + this.saving_data.hunger_value + '%')
-        this.game.log( '水分: +' + this.saving_data.thirst_value + '%')
+        this.game.log( '救急箱を使いました。');
+        this.game.log( '体力が回復します。');
 
-        let leftover = this.game.world.player.health.mod_hunger( this.saving_data.hunger_value );
-        this.game.world.player.health.mod_thirst( this.saving_data.thirst_value );
+        this.game.world.player.health.mod_hp( 100 );
 
-        if( this.saving_data.is_be_leftover && 10 < leftover ){
-            this.game.materials.put_material( 'leftover', Math.floor( leftover / 9 ) )
-        }
         this.is_consumed = true;
     }
 

@@ -215,13 +215,9 @@ export class MenuInventory {
             if( this.game.inventory.tool_item_inventory[ i ] != null ){
                 if( this.game.inventory.tool_item_inventory[ i ].image ) {
                     if( i != this.mouse_holding_index ){
-                        canvas.drawImage( this.game.inventory.tool_item_inventory[ i ].image ,
+                        this.game.inventory.tool_item_inventory[ i ].draw_item(
+                        canvas,
                         frame_x, frame_y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE );
-                        canvas.font = 'bold 16px monospace';
-                        canvas.fillStyle = 'rgb(100,100,100)';
-                        canvas.fillText( this.game.inventory.tool_item_inventory[ i ].get_subtitle(),
-                            frame_x + 3,
-                            frame_y + MenuInventory.LIST_ICON_SIZE - 3);
                     }
                 }
             }
@@ -232,7 +228,7 @@ export class MenuInventory {
 
         // ゴミ箱
         if( this.trashed_item != null ){
-            canvas.drawImage( this.trashed_item.image,
+            this.trashed_item.draw_item( canvas ,
             MenuInventory.TRASH_X, MenuInventory.TRASH_Y, MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE);
             canvas.font = 'bold 16px monospace';
             canvas.fillStyle = 'rgb(100,100,100)';
@@ -248,7 +244,8 @@ export class MenuInventory {
 
         // マウスでつかんでいるアイテム
         if( 0 <= this.mouse_holding_index ){
-            canvas.drawImage( this.game.inventory.tool_item_inventory[ this.mouse_holding_index ].image ,
+            this.game.inventory.tool_item_inventory[ this.mouse_holding_index ].draw_item(
+            canvas ,
             this.game.input_controller.mouse_x - HudMenu.MENU_MARGIN_LEFT,
             this.game.input_controller.mouse_y - HudMenu.MENU_MARGIN_TOP,
             MenuInventory.LIST_ICON_SIZE, MenuInventory.LIST_ICON_SIZE );

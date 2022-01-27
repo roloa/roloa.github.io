@@ -217,17 +217,32 @@ export class ItemSlot {
 
                         if( this.is_menu_open() ){
                             if( this.is_mouse_holding ){
-                                // アイテムを持ってる場合、マウスカーソル位置と交換する
-                                let swap = this.item_slot[ slot_no ];
-                                this.item_slot[ slot_no ] = this.item_slot[ this.item_slot_cursor ];
-                                this.item_slot[ this.item_slot_cursor ] = swap;
+                                if( this.item_slot[ slot_no ] && this.item_slot[ slot_no ].try_stack_marge( this.item_slot[ this.item_slot_cursor ] ) ){
+                                    // スタックを試み、成功したら
+                                    // スタックされたアイテムを消去
+                                    this.item_slot[ this.item_slot_cursor ] = null;
+                                } else {
+                                    // アイテムを持ってる場合、マウスカーソル位置と交換する
+                                    let swap = this.item_slot[ slot_no ];
+                                    this.item_slot[ slot_no ] = this.item_slot[ this.item_slot_cursor ];
+                                    this.item_slot[ this.item_slot_cursor ] = swap;
+                                }
+                                // どちらにしろつかみ状態を解除
                                 this.is_mouse_holding = false;
                             } else {
                                 // メニューインベントリがアイテムを持ってる場合、交換する
                                 if( 0 <= this.game.hud.hud_menu.menu_inventory.mouse_holding_index ){
-                                    let swap = this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ];
-                                    this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ] = this.item_slot[ slot_no ];
-                                    this.item_slot[ slot_no ] = swap;
+                                    if( this.item_slot[ slot_no ] && this.item_slot[ slot_no ].try_stack_marge( this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ] ) ){
+                                        // スタックを試み、成功したら
+                                        // スタックされたアイテムを消去
+                                        this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ] = null;
+                                    } else {
+                                        // スタック出来なかったら交換
+                                        let swap = this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ];
+                                        this.game.inventory.tool_item_inventory[ this.game.hud.hud_menu.menu_inventory.mouse_holding_index ] = this.item_slot[ slot_no ];
+                                        this.item_slot[ slot_no ] = swap;
+                                    }
+                                    // スタックのどちらにしろ、メニューインベントリのつかみ状態をリセット
                                     this.game.hud.hud_menu.menu_inventory.mouse_holding_index = -1;
                                 } else {
                                     if( this.item_slot[ slot_no ] != null ){
@@ -272,31 +287,12 @@ export class ItemSlot {
             if( !(slot_no == this.item_slot_cursor && this.is_mouse_holding) ){
                 if( this.item_slot[ slot_no ] ){
                     let frame_x = this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing);
-                    canvas.drawImage(
-                        this.item_slot[ slot_no ].get_image(),
+                        this.item_slot[ slot_no ].draw_item(
+                        canvas,
                         frame_x,
                         this.itemslot_start_y,
                         this.itemslot_size,
                         this.itemslot_size );
-                    canvas.font = 'bold 16px monospace';
-                    canvas.fillStyle = 'rgb(200,200,200)';
-                    canvas.fillText( this.item_slot[ slot_no ].get_subtitle(),
-                        this.itemslot_start_x + slot_no * (this.itemslot_size + this.itemslot_spacing) + 3,
-                        this.itemslot_start_y + this.itemslot_size - 3);
-
-                    // アイテムの耐久値
-                    let dura_rate = this.item_slot[ slot_no ].get_durability_rate();
-                    if( dura_rate != 1 ){
-                        let dura_frame_x = frame_x + 5;
-                        let dura_width = this.itemslot_size - 10;
-                        let dura_height = 6;
-                        let dura_frame_y = this.itemslot_start_y + this.itemslot_size - dura_height - 4;
-                        let r = Math.min( 250, Math.max( 1, 500 - 500 * dura_rate ) );
-                        let g = Math.min( 250, Math.max( 1, 500 * dura_rate ) );
-                        canvas.fillStyle = 'rgb('+r+','+g+',30)';
-                        canvas.fillRect( dura_frame_x, dura_frame_y, dura_width * dura_rate , dura_height);
-                        canvas.strokeRect( dura_frame_x, dura_frame_y, dura_width, dura_height);
-                    }
                 }
             }
 

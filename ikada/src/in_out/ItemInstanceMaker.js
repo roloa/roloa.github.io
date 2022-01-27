@@ -26,6 +26,7 @@ import {AmmoItem} from '../tool_item/AmmoItem.js'
 import {Bow} from '../tool_item/Bow.js'
 import {ChickenRawSaki} from '../tool_item/d_foods/ChickenRawSaki.js'
 import {ChickenRawMoto} from '../tool_item/d_foods/ChickenRawMoto.js'
+import {StaminaPack} from '../tool_item/d_foods/StaminaPack.js'
 import {ChickenCookedSaki} from '../tool_item/d_foods/ChickenCookedSaki.js'
 import {GenericFood} from '../tool_item/d_foods/GenericFood.js'
 import {CookedFish} from '../tool_item/d_foods/CookedFish.js'
@@ -96,6 +97,8 @@ export class ItemInstanceMaker {
             return new ChickenRawSaki( this.game );
         } else if( item_data.class_name == 'ChickenRawMoto' ){
             return new ChickenRawMoto( this.game );
+        } else if( item_data.class_name == 'StaminaPack' ){
+            return new StaminaPack( this.game );
         } else if( item_data.class_name == 'ChickenCookedSaki' ){
             return new ChickenCookedSaki( this.game );
         } else if( item_data.class_name == 'GenericFood' ){

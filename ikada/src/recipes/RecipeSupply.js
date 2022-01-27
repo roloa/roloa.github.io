@@ -4,6 +4,8 @@ import {SolidFuel} from '../tool_item/SolidFuel.js';
 import {AmmoItem} from '../tool_item/AmmoItem.js';
 import {AmmoStone} from '../tool_item/AmmoStone.js';
 import {CannonAmmoItem} from '../tool_item/CannonAmmoItem.js';
+import {MedicalPack} from '../tool_item/d_foods/MedicalPack.js';
+import {StaminaPack} from '../tool_item/d_foods/StaminaPack.js';
 
 
 // import {} from '../tool_item/.js';
@@ -98,5 +100,19 @@ export class RecipeSupply extends Object {
             'cloth'
         );
 
+        c_r.add_recipe( category,
+            ['消費すると体力を回復します。'],
+            ['jar', 'leftover','feather'],
+            [1, 10, 5],
+            function( game ){ return new MedicalPack( game ) },
+            ''
+        );
+        c_r.add_recipe( category,
+            ['消費するとスタミナを回復します。'],
+            ['jar', 'leftover', 'feather'],
+            [1, 5, 10],
+            function( game ){ return new StaminaPack( game ) },
+            ''
+        );
     }
 }

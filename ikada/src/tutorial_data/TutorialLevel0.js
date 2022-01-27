@@ -14,6 +14,9 @@ import {Oar} from '../tool_item/Oar.js';
 import {RepairWrench} from '../tool_item/RepairWrench.js';
 import {DeconstructHammer} from '../tool_item/DeconstructHammer.js';
 import {BuildBlock} from '../tool_item/BuildBlock.js';
+import {MedicalPack} from '../tool_item/d_foods/MedicalPack.js';
+import {StaminaPack} from '../tool_item/d_foods/StaminaPack.js';
+
 
 export class TutorialLevel0 {
 
@@ -233,10 +236,8 @@ export class TutorialLevel0 {
         tutorial.check_list.push( this.desc_only('減ってしまいます。'));
         tutorial.check_list.push( this.desc_only('体力は少しずつ自然に回復します。'));
 
-        tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('tree_ryuuboku');
-        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
-        tutorial.reword_tool_item.add_material('wood', 1);
+        tutorial.reword_tool_item = new MedicalPack( this.game );
+
         tutorial_list.push( tutorial );
 
         tutorial = {};
@@ -250,10 +251,7 @@ export class TutorialLevel0 {
         tutorial.check_list.push( this.desc_only('スタミナは自然に回復しますが、'));
         tutorial.check_list.push( this.desc_only('回復には食料と水分を消費します。'));
 
-        tutorial.reword_tool_item = new ResourceItem( this.game );
-        tutorial.reword_tool_item.set_image('tree_ryuuboku');
-        tutorial.reword_tool_item.set_name('マテリアル: 木材 x 1');
-        tutorial.reword_tool_item.add_material('wood', 1);
+        tutorial.reword_tool_item = new StaminaPack( this.game );
         tutorial_list.push( tutorial );
 
         tutorial = {};
