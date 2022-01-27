@@ -30,9 +30,9 @@ export class WeaponMortorTube extends WeaponAirCannon {
     setup_gun_data(){
         this.gun_data = {};
         // 基礎攻撃力
-        this.gun_data.basic_power = 100;
+        this.gun_data.basic_power = 25;
         // クールタイム(50=1秒)
-        this.gun_data.cool_time = 50
+        this.gun_data.cool_time = 100;
 
         //this.gun_data.fire_burst = 5;
         this.gun_data.fire_spread = 1;

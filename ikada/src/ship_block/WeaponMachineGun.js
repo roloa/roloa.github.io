@@ -30,7 +30,7 @@ export class WeaponMachineGun extends WeaponAirCannon {
     setup_gun_data(){
         this.gun_data = {};
         // 基礎攻撃力
-        this.gun_data.basic_power = 100;
+        this.gun_data.basic_power = 10;
         // クールタイム(50=1秒)
         this.gun_data.cool_time = 50
 
