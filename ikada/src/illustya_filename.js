@@ -198,6 +198,7 @@ export class Illustya {
   './img/illustya/cooking_urokohiki.png',
   './img/illustya/tekkotsu_silver.png',
   './img/illustya/otanjoubi_birthday_present_balloon.png',
+  './img/illustya/11_8bu_onpu.png',
   './img/illustya/war_trident.png',
   './img/illustya/undoukai_flag4_i.png',
   './img/illustya/undoukai_flag3_i.png',

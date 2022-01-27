@@ -37,7 +37,8 @@ export class EnemySurfaceGenerator {
             enemy_type_value = 10;
         }
 
-        enemy_type_value = 50 + 50 * Math.random();
+        // enemy_type_value = 50 + 50 * Math.random();
+        enemy_type_value = enemy_type_value * Math.random();
         if( enemy_type_value < 6 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_hachidori' )
             new_enemy.name = 'ハチドリ';

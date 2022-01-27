@@ -118,10 +118,10 @@ export class Game {
     }
 
     log( message ){
-        if( !this.is_played_log_sound_in_frame ){
-            this.is_played_log_sound_in_frame = true;
-            this.sound_library.play_sound('keytap');
-        }
+        // if( !this.is_played_log_sound_in_frame ){
+        //     this.is_played_log_sound_in_frame = true;
+        //     this.sound_library.play_sound('keytap');
+        // }
         this.hud.hud_log.push_log( message );
     }
     on_update(){
@@ -146,6 +146,10 @@ export class Game {
             if( this.input_controller.is_pressed_key['KeyP']){
                 this.game.log('デバッグチート');
                 this.game.materials.cheat();
+            }
+            if( this.input_controller.is_pressed_key['KeyL']){
+                this.game.log('ミュート切り替え');
+                this.game.sound_library.toggle_mute();
             }
 
             this.on_draw();

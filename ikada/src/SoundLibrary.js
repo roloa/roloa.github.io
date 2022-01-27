@@ -3,15 +3,35 @@ import {SoundFileName} from './SoundFileName.js';
 
 export class SoundLibrary {
 
+    static SAVE_MUTE = 1;
+    static SAVE_NOT_MUTE = 2;
+
     constructor( game ){
         this.game = game;
 
         this.sound_list = []
         this.is_load_start = false;
 
-        this.is_mute = true;
-    }
+        this.is_mute = false;
 
+        // セーブデータのロード
+        let saved_mute = localStorage.getItem( 'sound_mute' );
+        if( saved_mute ){
+            if( saved_mute == SoundLibrary.SAVE_MUTE ){
+                this.is_mute = true;
+            } else {
+                this.is_mute = false;
+            }
+        }
+    }
+    toggle_mute(){
+        this.is_mute = !this.is_mute;
+        if( this.is_mute ){
+            localStorage.setItem( 'sound_mute' , SoundLibrary.SAVE_MUTE );
+        } else {
+            localStorage.setItem( 'sound_mute' , SoundLibrary.SAVE_NOT_MUTE );
+        }
+    }
     get_sound( name ){
         return this.sound_list[ name ];
     }
