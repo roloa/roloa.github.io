@@ -44,13 +44,13 @@ export class EnemySurfaceGenerator {
             new_enemy.name = 'ハチドリ';
             // 突撃タイプ
             new_enemy.do_tackle_attack = true;
-            new_enemy.set_max_hp( 15 );
-            new_enemy.direct_damage = 8;
+            new_enemy.set_max_hp( 30 );
+            new_enemy.direct_damage = 7;
 
             if( Math.random() < 0.5){
                 new_enemy.drop_tool_item = this.drop_material( 'hachidori_wing',
                     ['feather', 'cloth'],
-                    [10, 3] );
+                    [3, 3] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -60,15 +60,15 @@ export class EnemySurfaceGenerator {
             // 突撃射撃タイプ
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
-            new_enemy.set_max_hp( 15 );
-            new_enemy.direct_damage = 4;
+            new_enemy.set_max_hp( 30 );
+            new_enemy.direct_damage = 5;
             new_enemy.bullet_damage = 4;
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
             if( Math.random() < 0.5){
                 new_enemy.drop_tool_item = this.drop_material( 'toki_wing',
                     ['feather', 'stone'],
-                    [10, 3] );
+                    [3, 3] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -82,16 +82,16 @@ export class EnemySurfaceGenerator {
             new_enemy.do_tackle_attack = true;
             new_enemy.distance_from_ship = 250;
 
-            new_enemy.set_max_hp( 30 );
-            new_enemy.direct_damage = 12;
-            new_enemy.bullet_damage = 12;
+            new_enemy.set_max_hp( 50 );
+            new_enemy.direct_damage = 10;
+            new_enemy.bullet_damage = 10;
 
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
             if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'tonbi_wing',
                     ['feather', 'stone'],
-                    [20, 10] );
+                    [10, 10] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -104,14 +104,14 @@ export class EnemySurfaceGenerator {
             // 後方射撃タイプ
             new_enemy.is_back_attack = true;
             new_enemy.do_fire_attack = true;
-            new_enemy.set_max_hp( 30 );
-            new_enemy.direct_damage = 12;
-            new_enemy.bullet_damage = 12;
+            new_enemy.set_max_hp( 50 );
+            new_enemy.direct_damage = 10;
+            new_enemy.bullet_damage = 10;
 
             if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'washi_wing',
                     ['feather', 'cloth'],
-                    [20, 10] );
+                    [10, 10] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -121,10 +121,12 @@ export class EnemySurfaceGenerator {
             new_enemy.name = 'ケツァルコアトル';
             // 遠距離射撃タイプ
             new_enemy.do_fire_attack = true;
+            new_enemy.distance_from_ship = 250;
+
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
-            new_enemy.set_max_hp( 40 );
-            new_enemy.direct_damage = 12;
-            new_enemy.bullet_damage = 12;
+            new_enemy.set_max_hp( 60 );
+            new_enemy.direct_damage = 10;
+            new_enemy.bullet_damage = 10;
 
             if( Math.random() < 0.99){
                 new_enemy.drop_tool_item = this.drop_material( 'quetzalcoatlus_beak',
@@ -140,9 +142,9 @@ export class EnemySurfaceGenerator {
             // 突撃射撃タイプ
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
-            new_enemy.set_max_hp( 40 );
-            new_enemy.direct_damage = 18;
-            new_enemy.bullet_damage = 7;
+            new_enemy.set_max_hp( 60 );
+            new_enemy.direct_damage = 10;
+            new_enemy.bullet_damage = 5;
 
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
@@ -159,12 +161,12 @@ export class EnemySurfaceGenerator {
             new_enemy.image = this.game.image_library.get_image( 'fantasy_griffon' )
             new_enemy.name = 'グリフォン';
             // 頂点射撃タイプ
-            new_enemy.set_max_hp( 90 );
+            new_enemy.set_max_hp( 110 );
             new_enemy.is_fly_above = true;
             new_enemy.do_fire_attack = true;
 
             new_enemy.direct_damage = 25;
-            new_enemy.bullet_damage = 7;
+            new_enemy.bullet_damage = 10;
             // グリフォンは3way弾
             new_enemy.fire_spread = 3;
             new_enemy.fire_spread_angle = 0.2;
@@ -175,8 +177,8 @@ export class EnemySurfaceGenerator {
 
             if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'griffon_wing',
-                ['circuit', 'silver'],
-                [10, 10] );
+                ['circuit', 'lead', 'plastic'],
+                [3, 5, 25, 25] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -185,21 +187,21 @@ export class EnemySurfaceGenerator {
             new_enemy.image = this.game.image_library.get_image( 'fantasy_peryton' )
             new_enemy.name = 'ペガシカ';
             // 遠距離射撃タイプ
-            new_enemy.set_max_hp( 100 );
+            new_enemy.set_max_hp( 120 );
             new_enemy.do_fire_attack = true;
             new_enemy.distance_from_ship = 250;
 
 
             new_enemy.direct_damage = 25;
-            new_enemy.bullet_damage = 7;
+            new_enemy.bullet_damage = 10;
             // ペガシカは5連射
             new_enemy.burst_fire = 5;
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_thunder');
 
             if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'peryton_wing',
-                ['circuit', 'silver'],
-                [10, 10] );
+                ['circuit', 'parts', 'silver' ],
+                [3, 5, 10 ] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -208,7 +210,7 @@ export class EnemySurfaceGenerator {
             new_enemy.image = this.game.image_library.get_image( 'youkai_suzaku' )
             new_enemy.name = '火の鳥';
             // 突撃射撃タイプ
-            new_enemy.set_max_hp( 80 );
+            new_enemy.set_max_hp( 100 );
             new_enemy.do_fire_attack = true;
             new_enemy.do_tackle_attack = true;
             new_enemy.direct_damage = 25;
@@ -221,8 +223,8 @@ export class EnemySurfaceGenerator {
 
             if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'suzaku_wing',
-                ['circuit', 'silver'],
-                [10, 10] );
+                ['feather', 'silver', 'fuel'],
+                [ 30, 10, 20 ] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
@@ -237,7 +239,25 @@ export class EnemySurfaceGenerator {
             new_enemy.image = this.game.image_library.get_image( 'fantasy_dragon' )
             new_enemy.name = 'ドラゴン';
         }
+
+        // 舟レベルに応じた強化を施す
+        this.rainforce_by_ship_level( new_enemy );
+
+
         return new_enemy;
+    }
+
+    rainforce_by_ship_level( new_enemy ){
+        // 舟レベルに応じた補正
+        let ship_level = this.game.world.ship.ship_level;
+
+        let hp_rate = 1.0 + ship_level * 0.25;
+        let attack_rate = 1.0 + ship_level * 0.1;
+
+        new_enemy.direct_damage = Math.floor( new_enemy.direct_damage * attack_rate );
+        new_enemy.bullet_damage = Math.floor( new_enemy.bullet_damage * attack_rate );
+
+        new_enemy.set_max_hp( Math.floor( new_enemy.max_hp * hp_rate ));
     }
     drop_material( image_name, name_list, amount_list ){
         let new_item = new ResourceItem( this.game );

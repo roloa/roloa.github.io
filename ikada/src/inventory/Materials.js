@@ -29,15 +29,15 @@ export class Materials {
 
         // レベル1素材
         this.name_list[ 'parts' ] = '機械部品';
-        this.name_list[ 'circuit' ] = '電子回路';
         this.name_list[ 'lead' ] = '鉛';
         this.name_list[ 'plastic' ] = 'プラスチック';
 
         // レベル2素材
+        this.name_list[ 'circuit' ] = '電子回路';
         this.name_list[ 'silver' ] = '銀の欠片';
-        this.name_list[ 'fur' ] = '毛皮';
 
         // 暫定未使用
+        this.name_list[ 'fur' ] = '毛皮';
         this.name_list[ 'metal' ] = '金属';
         this.name_list[ 'bone' ] = '骨';
         this.name_list[ 'fin' ] = '魚のヒレ';
