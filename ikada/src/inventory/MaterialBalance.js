@@ -1,7 +1,7 @@
 
-import {FishKirimi} from './tool_item/d_foods/FishKirimi.js';
-import {ResourceItem} from './tool_item/ResourceItem.js';
-import {ContainerItem} from './tool_item/ContainerItem.js';
+import {FishKirimi} from '../tool_item/d_foods/FishKirimi.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
+import {ContainerItem} from '../tool_item/ContainerItem.js';
 
 export class MaterialBalance {
 

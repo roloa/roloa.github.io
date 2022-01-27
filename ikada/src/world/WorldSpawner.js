@@ -1,15 +1,15 @@
 
-import {Entity} from './entity/Entity.js';
-import {DropItem} from './entity/DropItem.js';
-import {EffectWind} from './entity/EffectWind.js';
-import {Cloud} from './entity/Cloud.js';
-import {EnemyFish} from './entity/EnemyFish.js';
-import {EnemyBird} from './entity/EnemyBird.js';
-import {EnemySurfaceGenerator} from './entity/EnemySurfaceGenerator.js';
-import {Kamome} from './entity/Kamome.js';
-import {Tobiuo} from './entity/Tobiuo.js';
-import {ResourceItem} from './tool_item/ResourceItem.js';
-import {BreakableObject} from './entity/BreakableObject.js';
+import {Entity} from '../entity/Entity.js';
+import {DropItem} from '../entity/DropItem.js';
+import {EffectWind} from '../entity/EffectWind.js';
+import {Cloud} from '../entity/Cloud.js';
+import {EnemyFish} from '../entity/EnemyFish.js';
+import {EnemyBird} from '../entity/EnemyBird.js';
+import {EnemySurfaceGenerator} from '../entity/EnemySurfaceGenerator.js';
+import {Kamome} from '../entity/Kamome.js';
+import {Tobiuo} from '../entity/Tobiuo.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
+import {BreakableObject} from '../entity/BreakableObject.js';
 
 
 export class WorldSpawner {

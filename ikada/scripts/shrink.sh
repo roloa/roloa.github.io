@@ -6,4 +6,4 @@ cd ../256/
 mogrify -path ../../illustya/ -resize 256x256 *.png
 
 cd ../../../
-python scripts/make_illustya_filename_js.py > ./src/illustya_filename.js
+python scripts/make_illustya_filename_js.py > ./src/in_out/illustya_filename.js

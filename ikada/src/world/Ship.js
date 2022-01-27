@@ -1,8 +1,8 @@
 
-import {ShipBlock} from './ship_block/ShipBlock.js';
-import {ShipFloor} from './ship_block/ShipFloor.js';
-import {ShipFrame} from './ship_block/ShipFrame.js';
-import {ShipCore} from './ship_block/ShipCore.js';
+import {ShipBlock} from '../ship_block/ShipBlock.js';
+import {ShipFloor} from '../ship_block/ShipFloor.js';
+import {ShipFrame} from '../ship_block/ShipFrame.js';
+import {ShipCore} from '../ship_block/ShipCore.js';
 
 
 export class Ship {

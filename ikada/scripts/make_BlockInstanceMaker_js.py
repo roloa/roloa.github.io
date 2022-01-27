@@ -11,8 +11,9 @@ for filename in filename_list:
     classname_list.append( classname )
 
 print()
+print("// this is auto-generated file, see script directory.")
 for classname in classname_list:
-    print( "import {%s} from './ship_block/%s.js'" % ( classname, classname ) )
+    print( "import {%s} from '../ship_block/%s.js'" % ( classname, classname ) )
 
 print()
 

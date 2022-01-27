@@ -25,8 +25,9 @@ for filename in filename_list:
     classname_list.append( classname )
 
 print()
+print("// this is auto-generated file, see script directory.")
 for i in range(len(classname_list)):
-    print( "import {%s} from './tool_item/%s.js'" % ( classname_list[i], path_list[i] ) )
+    print( "import {%s} from '../tool_item/%s.js'" % ( classname_list[i], path_list[i] ) )
 
 print()
 

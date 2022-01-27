@@ -1,13 +1,13 @@
 
-import {Entity} from './entity/Entity.js';
-import {Player} from './entity/Player.js';
+import {Entity} from '../entity/Entity.js';
+import {Player} from '../entity/Player.js';
 import {Ship} from './Ship.js';
 import {WorldBackGround} from './WorldBackGround.js';
-import {DropItem} from './entity/DropItem.js';
-import {FishingLure} from './entity/FishingLure.js';
+import {DropItem} from '../entity/DropItem.js';
+import {FishingLure} from '../entity/FishingLure.js';
 import {WorldSpawner} from './WorldSpawner.js';
-import {ResourceItem} from './tool_item/ResourceItem.js';
-import {EffectWind} from './entity/EffectWind.js';
+import {ResourceItem} from '../tool_item/ResourceItem.js';
+import {EffectWind} from '../entity/EffectWind.js';
 
 export class World {
 
