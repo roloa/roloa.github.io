@@ -39,6 +39,10 @@ export class ToolItem {
             // そもそもスタックできるアイテムじゃない
             return false;
         }
+        if( this === to_stack_item ){
+            // 何かしらの原因で自身にスタックすると面白い事になるので却下
+            return false;
+        }
         if( this.constructor.name != to_stack_item.constructor.name ){
             // クラスが違う
             return false;
@@ -67,6 +71,13 @@ export class ToolItem {
             return this.stack_next.count_stack() + 1;
         }
         return 1;
+    }
+    stack_to_array( ary ){
+        if( this.stack_next ){
+            ary.push( this.stack_next );
+            this.stack_next.stack_to_array( ary );
+        }
+        return ary;
     }
     set_durability( du ){
         this.saving_data.durability_max = du;
@@ -122,11 +133,15 @@ export class ToolItem {
             height );
         canvas.font = 'bold 16px monospace';
         canvas.fillStyle = 'rgb(200,200,200)';
+        canvas.strokeStyle = 'rgb(30,30,30)';
         canvas.fillText( this.get_subtitle(),
             frame_x + 3,
             frame_y + height - 3);
         let stack_count = this.count_stack();
         if( 1 < stack_count ){
+            canvas.strokeText( stack_count,
+                frame_x + 3,
+                frame_y + height - 3);
             canvas.fillText( stack_count,
                 frame_x + 3,
                 frame_y + height - 3);
@@ -142,12 +157,24 @@ export class ToolItem {
             let g = Math.min( 250, Math.max( 1, 500 * dura_rate ) );
             canvas.fillStyle = 'rgb('+r+','+g+',30)';
             canvas.fillRect( dura_frame_x, dura_frame_y, dura_width * dura_rate , dura_height);
+            canvas.strokeStyle = 'rgb(150,150,150)';
             canvas.strokeRect( dura_frame_x, dura_frame_y, dura_width, dura_height);
         }
     }
-    save_data(){
+    save_data( is_skip_stack_data ){
         let data = {};
         data.class_name = this.constructor.name;
+
+        // スタック
+        data.item_stack = [];
+        if( !is_skip_stack_data ) {
+            let stack_array = [];
+            this.stack_to_array( stack_array );
+            for( let item of stack_array ){
+                data.item_stack.push( item.save_data( true ) );
+            }
+        }
+
         data.saving_data_serial = JSON.stringify( this.saving_data );
 
         return data;
@@ -157,5 +184,15 @@ export class ToolItem {
         if( this.saving_data.image_name ){
             this.set_image( this.saving_data.image_name )
         }
+        // スタック
+        let stack_last = null;
+        if( data.item_stack ){
+            for( let serialized_item of data.item_stack ){
+                let item = this.game.save_data_manager.deserialize_item( serialized_item );
+                item.stack_next = stack_last;
+                stack_last = item;
+            }
+        }
+        this.stack_next = stack_last;
     }
 }

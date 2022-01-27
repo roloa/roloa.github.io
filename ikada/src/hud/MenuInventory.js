@@ -165,10 +165,17 @@ export class MenuInventory {
             // アイテムを持ってない場合
             if( this.game.hud.item_slot.is_mouse_holding ){
                 // アイテムスロットがアイテムを持っている場合
-                // アイテムスロットとカーソル位置のアイテムを入れ替える
-                let swap = this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ];
-                this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ] = this.game.inventory.tool_item_inventory[ index ];
-                this.game.inventory.tool_item_inventory[ index ] = swap;
+                if( this.game.inventory.tool_item_inventory[ index ] &&
+                    this.game.inventory.tool_item_inventory[ index ].try_stack_marge( this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ] ) ) {
+                    // スタックできた
+                    this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ] = null;
+                } else {
+                    // アイテムスロットとカーソル位置のアイテムを入れ替える
+                    let swap = this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ];
+                    this.game.hud.item_slot.item_slot[ this.game.hud.item_slot.item_slot_cursor ] = this.game.inventory.tool_item_inventory[ index ];
+                    this.game.inventory.tool_item_inventory[ index ] = swap;
+                }
+                // アイテムスロットのつかみ状態を解除
                 this.game.hud.item_slot.is_mouse_holding = false;
             } else {
                 // カーソルのアイテムを拾い上げる
@@ -177,10 +184,17 @@ export class MenuInventory {
                 }
             }
         } else {
-            // アイテムを入れ替える
-            let swap = this.game.inventory.tool_item_inventory[ index ];
-            this.game.inventory.tool_item_inventory[ index ] = this.game.inventory.tool_item_inventory[ this.mouse_holding_index ];
-            this.game.inventory.tool_item_inventory[ this.mouse_holding_index ] = swap;
+            if( this.game.inventory.tool_item_inventory[ index ] &&
+                this.game.inventory.tool_item_inventory[ index ].try_stack_marge( this.game.inventory.tool_item_inventory[ this.mouse_holding_index ] ) ) {
+                // スタックできた
+                this.game.inventory.tool_item_inventory[ this.mouse_holding_index ] = null;
+            } else {
+                // アイテムを入れ替える
+                let swap = this.game.inventory.tool_item_inventory[ index ];
+                this.game.inventory.tool_item_inventory[ index ] = this.game.inventory.tool_item_inventory[ this.mouse_holding_index ];
+                this.game.inventory.tool_item_inventory[ this.mouse_holding_index ] = swap;
+            }
+            // つかみ状態解除
             this.mouse_holding_index = -1;
         }
     }

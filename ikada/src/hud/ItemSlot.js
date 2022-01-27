@@ -58,20 +58,18 @@ export class ItemSlot {
     }
 
     activate_item( cursor_x, cursor_y, player_x, player_y ){
-        ;
         if( this.item_slot[ this.item_slot_cursor ] ){
             this.item_slot[ this.item_slot_cursor ].on_click( cursor_x, cursor_y, player_x, player_y );
             if( this.item_slot[ this.item_slot_cursor ].is_consumed ) {
-                this.item_slot[ this.item_slot_cursor ] = null;
+                this.delete_active_item();
             }
         }
-
     }
     keep_activate_item( cursor_x, cursor_y, player_x, player_y ){
         if( this.item_slot[ this.item_slot_cursor ] ){
             this.item_slot[ this.item_slot_cursor ].on_keep_click( cursor_x, cursor_y, player_x, player_y );
             if( this.item_slot[ this.item_slot_cursor ].is_consumed ) {
-                this.item_slot[ this.item_slot_cursor ] = null;
+                this.delete_active_item();
             }
         }
     }
@@ -79,7 +77,13 @@ export class ItemSlot {
          return this.item_slot[ this.item_slot_cursor ];
     }
     delete_active_item(){
-         this.item_slot[ this.item_slot_cursor ] = null;
+        if( this.item_slot[ this.item_slot_cursor ].stack_next  ) {
+            // スタックの先頭を消費したので、次のスタック先を代わりに入手する
+            this.item_slot[ this.item_slot_cursor ] = this.item_slot[ this.item_slot_cursor ].stack_next;
+        } else {
+            // スタック先が無ければアイテムは消滅する
+            this.item_slot[ this.item_slot_cursor ] = null;
+        }
     }
     put_pickup_item( new_item, with_inventory, is_put_back ){
         if( this.is_config_auto_material_deconstruct ){
