@@ -27,7 +27,7 @@ export class DropItem extends Entity {
 
         this.item_to_pickup = null;
 
-
+        this.is_in_ship_inertial = true;
 
     }
     set_tool_item( new_item ){

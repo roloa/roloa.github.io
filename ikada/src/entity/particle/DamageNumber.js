@@ -15,6 +15,7 @@ export class DamageNumber extends Entity {
         this.font = 'bold 20px monospace';
         this.life_time = 50;
 
+        this.is_in_ship_inertial = true;
     }
     on_update(){
         super.on_update();
