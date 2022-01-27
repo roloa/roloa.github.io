@@ -121,7 +121,7 @@ export class RecipeShipBlock2 extends Object {
         );
         c_r.add_recipe( category,
             ['木材を育てます。'],
-            ['leftover', 'plastic' 'stone'],
+            ['leftover', 'plastic', 'stone'],
             [20, 20, 20],
             function( game ){ return new BuildBlock( game ).set_ship_block( new ShipFarmWood( game ) ); },
             'Wood'
