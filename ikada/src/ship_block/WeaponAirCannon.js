@@ -25,6 +25,8 @@ export class WeaponAirCannon extends ShipBlock {
         this.target_range = 320;
         this.target_range_p2 = this.target_range * this.target_range;
 
+        this.current_operator = null;
+
         this.setup_gun_data();
     }
 
@@ -33,7 +35,7 @@ export class WeaponAirCannon extends ShipBlock {
         // 基礎攻撃力
         this.gun_data.basic_power = 5;
         // クールタイム(50=1秒)
-        this.gun_data.cool_time = 50;
+        this.gun_data.cool_time = 150;
 
         //this.gun_data.fire_burst = 5;
         this.gun_data.fire_spread = 1;
@@ -50,7 +52,7 @@ export class WeaponAirCannon extends ShipBlock {
         this.gun_data.critical_range_damage = 0;
         this.gun_data.critical_chance = 0;
         this.gun_data.critical_chance_damage = 1.0;
-        this.gun_data.knockback_rate = 1.0;
+        this.gun_data.knockback_rate = 0.01;
         this.gun_data.poison_damage = 0;
         this.gun_data.slow_rate = 0.0;
         this.gun_data.life_leech = 0;
@@ -59,14 +61,40 @@ export class WeaponAirCannon extends ShipBlock {
     on_interact(){
 
         this.game.log( '燃料の量: ' + this.saving_data.ammo_amount );
-        this.on_operate();
+        this.on_operate( this.game.world.player );
         return true;
     }
-    on_operate(){
+    on_operate( new_operator ){
         this.game.log( '武器をオペレート。' );
+        // オペレーターを登録する
+        this.current_operator = new_operator;
+        this.current_operator.operating_weapon = this;
+    }
+    check_connect_operator(){
+
+        if( this.current_operator ){
+            // オペレータがいる
+            let xdist = this.current_operator.x - this.x;
+            let ydist = this.current_operator.y - this.y;
+            if( Math.abs( xdist ) < 100 && Math.abs( ydist) < 100 ){
+                // オペレータが近くにいる
+                if( this.current_operator.operating_weapon === this ){
+                    // オペレータが別の設備に触ってない
+                    return true;
+                } else {
+                    this.game.log('オペレータが別の設備に移りました。');
+                }
+            } else {
+                this.game.log('オペレータが範囲外に移動しました。');
+            }
+            // 操作が途切れてしまったオペレータを忘れる
+            this.current_operator = null;
+        }
+        return false;
     }
     on_update(){
         super.on_update();
+
 
         if( 0 < this.angry_timer_count ){
             // 戦闘状態継続の時間
@@ -79,9 +107,12 @@ export class WeaponAirCannon extends ShipBlock {
         } else {
             if( 0 < this.saving_data.ammo_amount ){
                 this.cool_time_count = this.cool_time_max;
-                // 燃料があるなら、燃料を消費して弾を撃つ
-                this.saving_data.ammo_amount -= 1;
+                // 燃料があるなら、索敵などを始める
 
+                if( this.check_connect_operator() ){
+                    // オペレートされている場合は、クールタイムが1/3になる
+                    this.cool_time_count *= 0.33;
+                }
                 // if( this.target_enemy == null || this.target_enemy.is_alive == false){
                 //     this.search_target();
                 // }
@@ -89,6 +120,7 @@ export class WeaponAirCannon extends ShipBlock {
 
                 if( this.target_enemy != null ){
                     this.on_fire();
+                    this.saving_data.ammo_amount -= 1;
                     // 発砲したら戦闘状態になり、イヌボットを呼ぶことになる
                     this.angry_timer_count = this.angry_timer_max;
                 }

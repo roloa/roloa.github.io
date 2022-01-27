@@ -28,32 +28,13 @@ export class WeaponMortorTube extends WeaponAirCannon {
     }
 
     setup_gun_data(){
-        this.gun_data = {};
+        super.setup_gun_data();
+
         // 基礎攻撃力
         this.gun_data.basic_power = 25;
         // クールタイム(50=1秒)
         this.gun_data.cool_time = 100;
 
-        //this.gun_data.fire_burst = 5;
-        this.gun_data.fire_spread = 1;
-        this.gun_data.fire_spread_angle = 0.1;
-
-        this.gun_data.bullet_lifetime = 50;
-        this.gun_data.bullet_velocity = 10;
-        this.gun_data.bullet_weight = 1;
-        this.gun_data.blast_lifetime = 0;
-        this.gun_data.blast_velocity = 0;
-
-        this.gun_data.critical_range_lifetime = 0;
-        this.gun_data.critical_range_lifetime_window = 0;
-        this.gun_data.critical_range_damage = 0;
-        this.gun_data.critical_chance = 0;
-        this.gun_data.critical_chance_damage = 1.0;
-        this.gun_data.knockback_rate = 1.0;
-        this.gun_data.poison_damage = 0;
-        this.gun_data.slow_rate = 0.0;
-        this.gun_data.life_leech = 0;
-        this.gun_data.bullet_color = 'rgb(250,0,250)';
     }
 
 

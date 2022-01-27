@@ -88,8 +88,12 @@ export class ShipBlock {
         // デフォルトの燃料チェック＆受け入れ動作
         if ( this.accept_ammo_type && item.ammo_type &&
             this.accept_ammo_type == item.ammo_type ){
-            this.saving_data.ammo_amount += item.ammo_value;
-            return true;
+            if( this.saving_data.ammo_amount <= item.ammo_value ){
+                this.saving_data.ammo_amount += item.ammo_value;
+                return true;
+            } else {
+                this.game.log( this.name + 'は、これ以上補充できません。');
+            }
         }
         return false;
     }

@@ -60,16 +60,16 @@ export class RecipeShipBlock2 extends Object {
 
         c_r.add_recipe( category,
             ['自動で敵を撃つ空気砲です。','燃料を投入すると、自動で敵を攻撃します。'],
-            ['parts', 'iron'],
-            [3, 10],
+            ['parts', 'iron', 'plastic'],
+            [20, 30, 30],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WeaponAirCannon( game ) ); },
             ''
         );
 
         c_r.add_recipe( category,
             ['自動で敵を撃つ投石機です。','カタパルト弾を投入すると、自動で敵を攻撃します。'],
-            ['parts', 'wood'],
-            [3, 10],
+            ['parts', 'wood', 'cloth'],
+            [20, 50, 50],
             function( game ){ return new BuildBlock( game ).set_ship_block( new WeaponCatapult( game ) ); },
             ''
         );
