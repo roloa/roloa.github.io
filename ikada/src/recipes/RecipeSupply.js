@@ -26,25 +26,25 @@ export class RecipeSupply extends Object {
             ''
         );
         c_r.add_recipe( category,
-            ['カタパルトから撃ち出すための小石です。'],
+            ['カタパルトから撃ち出すための石ころです。'],
             ['stone'],
-            [3],
+            [10],
             function( game ){
                 return new AmmoStone( game );},
             ''
         );
         c_r.add_recipe( category,
             ['機銃に補充するための弾薬です。'],
-            ['metal', 'fuel'],
-            [2, 10],
+            ['lead', 'fuel'],
+            [10, 10],
             function( game ){
                 return new AmmoItem( game );},
             ''
         );
         c_r.add_recipe( category,
             ['大砲に補充するための砲弾です。'],
-            ['metal', 'fuel'],
-            [10, 2],
+            ['iron', 'fuel'],
+            [10, 10],
             function( game ){
                 return new CannonAmmoItem( game );},
             ''

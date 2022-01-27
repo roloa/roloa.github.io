@@ -10,10 +10,10 @@ import {RecipeSupply} from './RecipeSupply.js';
 export class CraftRecipe extends Object {
 
     static CATEGORY_TOOL = 0;
-    static CATEGORY_SHIP = 1;
-    static CATEGORY_SHIP2 = 2;
-    static CATEGORY_SHIP3 = 3;
-    static CATEGORY_WEAPON = 4;
+    static CATEGORY_WEAPON = 1;
+    static CATEGORY_SHIP = 2;
+    static CATEGORY_SHIP2 = 3;
+    static CATEGORY_SHIP3 = 4;
     static CATEGORY_EQUIP = 5;
     static CATEGORY_SUPPLY = 6;
     static CATEGORY_COUNT = 7;
@@ -34,7 +34,7 @@ export class CraftRecipe extends Object {
         this.category_icon_list[ CraftRecipe.CATEGORY_TOOL ] = this.game.image_library.get_image( 'fishing_tsurizao_nobezao' );
         this.category_icon_list[ CraftRecipe.CATEGORY_SHIP ] = this.game.image_library.get_image( 'ship_floor' );
         this.category_icon_list[ CraftRecipe.CATEGORY_SHIP2 ] = this.game.image_library.get_image( 'mast_open' );
-        this.category_icon_list[ CraftRecipe.CATEGORY_SHIP3 ] = this.game.image_library.get_image( 'fune_ikada' );
+        this.category_icon_list[ CraftRecipe.CATEGORY_SHIP3 ] = this.game.image_library.get_image( 'undoukai_flag1_i' );
         this.category_icon_list[ CraftRecipe.CATEGORY_WEAPON ] = this.game.image_library.get_image( 'yumiya_bowgun' );
         this.category_icon_list[ CraftRecipe.CATEGORY_EQUIP ] = this.game.image_library.get_image( 'snorkel_goods' );
         this.category_icon_list[ CraftRecipe.CATEGORY_SUPPLY ] = this.game.image_library.get_image( 'cooking_kokei_nenryou_fire' );

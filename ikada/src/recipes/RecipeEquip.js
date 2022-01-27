@@ -57,8 +57,8 @@ export class RecipeEquip extends Object {
 
         c_r.add_recipe( category,
             ['空中で素早く移動するための翼です。'],
-            ['feather'],
-            [5],
+            ['plastic', 'feather'],
+            [5,5],
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/feather_red.png' );
@@ -119,8 +119,8 @@ export class RecipeEquip extends Object {
 
         c_r.add_recipe( category,
             ['水中で素早く移動するためのヒレです。'],
-            ['fin'],
-            [5],
+            ['plastic', 'fin'],
+            [5,5],
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/snorkel_fin.png' );
@@ -133,8 +133,8 @@ export class RecipeEquip extends Object {
         );
         c_r.add_recipe( category,
             ['水中で素早く移動するためのヒレです。'],
-            ['fin'],
-            [5],
+            ['plastic', 'fin'],
+            [5,5],
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/snorkel_fin.png' );
@@ -147,8 +147,8 @@ export class RecipeEquip extends Object {
         );
         c_r.add_recipe( category,
             ['水中で素早く移動するためのヒレです。'],
-            ['fin'],
-            [5],
+            ['plastic', 'fin'],
+            [5,5],
             function( game ){
                 let new_item = new EquipmentItem( game );
                 new_item.set_image( './img/illustya/snorkel_fin.png' );

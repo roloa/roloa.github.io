@@ -42,8 +42,8 @@ export class Kamome extends Enemy {
     }
 
     get_drop_tool_item(){
-        let rand = Math.random() * 2
-        if( rand < 1){
+        let rand = Math.random() * 10;
+        if( rand < 8 ){
             let new_tool_item = new ResourceItem( this.game );
             new_tool_item.set_image( 'feather_white' );
             new_tool_item.add_material( 'feather',  Math.floor(Math.random() * 2) + 1 );

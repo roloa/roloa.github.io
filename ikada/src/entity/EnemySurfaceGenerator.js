@@ -26,7 +26,7 @@ export class EnemySurfaceGenerator {
         // 攻撃力 = Lv
         new_enemy.power = new_enemy.strength_lv;
 
-        let enemy_type_value = 10;
+        let enemy_type_value = 6;
         if( 3 <= ship_level ){
             enemy_type_value = 100;
         } else if( 2 <= ship_level ){
@@ -34,12 +34,12 @@ export class EnemySurfaceGenerator {
         } else if( 1 <= ship_level){
             enemy_type_value = 50;
         } else {
-            enemy_type_value = 10;
+            enemy_type_value = 6;
         }
 
         // enemy_type_value = 50 + 50 * Math.random();
         enemy_type_value = enemy_type_value * Math.random();
-        if( enemy_type_value < 6 ){
+        if( enemy_type_value < 3 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_hachidori' )
             new_enemy.name = 'ハチドリ';
             // 突撃タイプ
@@ -47,14 +47,14 @@ export class EnemySurfaceGenerator {
             new_enemy.set_max_hp( 30 );
             new_enemy.direct_damage = 7;
 
-            if( Math.random() < 0.5){
+            if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'hachidori_wing',
                     ['feather', 'cloth'],
                     [3, 3] );
             } else {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
-        } else if( enemy_type_value < 11 ){
+        } else if( enemy_type_value < 6 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_toki_fly' )
             new_enemy.name = 'トキ';
             // 突撃射撃タイプ
@@ -65,7 +65,7 @@ export class EnemySurfaceGenerator {
             new_enemy.bullet_damage = 4;
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
-            if( Math.random() < 0.5){
+            if( Math.random() < 0.8){
                 new_enemy.drop_tool_item = this.drop_material( 'toki_wing',
                     ['feather', 'stone'],
                     [3, 3] );
@@ -73,7 +73,7 @@ export class EnemySurfaceGenerator {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
 
-        } else if( enemy_type_value < 21 ){
+        } else if( enemy_type_value < 13 ){
             new_enemy.image = this.game.image_library.get_image( 'bird_tonbi' )
             new_enemy.name = 'トビ';
             // 頂点突撃射撃タイプ
@@ -88,7 +88,7 @@ export class EnemySurfaceGenerator {
 
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
 
-            if( Math.random() < 0.8){
+            if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'tonbi_wing',
                     ['feather', 'stone'],
                     [10, 10] );
@@ -97,7 +97,7 @@ export class EnemySurfaceGenerator {
             }
 
 
-        } else if( enemy_type_value < 31 ){
+        } else if( enemy_type_value < 20 ){
             new_enemy.image = this.game.image_library.get_image( 'animal_washi' )
             new_enemy.name = 'ワシ';
             new_enemy.bullet_image = this.game.image_library.get_image('bullet_feather_white');
@@ -108,7 +108,7 @@ export class EnemySurfaceGenerator {
             new_enemy.direct_damage = 10;
             new_enemy.bullet_damage = 10;
 
-            if( Math.random() < 0.8){
+            if( Math.random() < 0.9){
                 new_enemy.drop_tool_item = this.drop_material( 'washi_wing',
                     ['feather', 'cloth'],
                     [10, 10] );
@@ -116,7 +116,7 @@ export class EnemySurfaceGenerator {
                 new_enemy.drop_tool_item = this.random_chicken();
             }
 
-        } else if( enemy_type_value < 41 ){
+        } else if( enemy_type_value < 36 ){
             new_enemy.image = this.game.image_library.get_image( 'dinosaur_quetzalcoatlus' )
             new_enemy.name = 'ケツァルコアトル';
             // 遠距離射撃タイプ
