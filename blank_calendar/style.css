@@ -1,0 +1,14 @@
+body{
+    background-color: #EEE;
+    color: #111;
+
+}
+h1{
+    background-color: #111;
+    color: #EEE;
+
+}
+li{
+  padding: 4px;
+  font: 20px monospace;
+}
