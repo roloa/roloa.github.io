@@ -15,6 +15,26 @@
             width: 80%;
             min-width: 300px;
             border: solid;
+            font-size: large;
+        }
+        input[type=checkbox] {
+	        transform: scale(2);
+	        margin: 0 6px 0 0;
+        }
+        ul#worker_list {
+          column-count: auto;
+          column-width: 250px;
+        }
+        li{
+            margin: 3px;
+        }
+        button {
+	        padding: 10px 30px;
+            font-size: large;
+            font-weight: bold;
+        }
+        #error_message{
+            color: brown;
         }
         #enter_container{
             margin-left: 30px;
@@ -27,10 +47,9 @@
     <div id="app">
 
         <div id="worker_list_container">
+            <h3>従業員リスト</h3>
             <ul id="worker_list">
-                <li>
-                    従業員リスト
-                </li>
+
             </ul>
         </div>
 
@@ -41,10 +60,9 @@
         </div>
 
         <div id="place_list_container">
+            <h3>場所リスト</h3>
             <ul id="place_list">
-                <li>
-                    場所リスト
-                </li>
+                    
             </ul>
         </div>
 
