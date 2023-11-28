@@ -66,12 +66,12 @@
             // ワーカーリストを全部読んだ
             // 全場所に1人ずつ以上いるか確認
 
-            for(const key in shift_table ){
-                if( shift_table[ key ].length === 0 ){
-                    // 0人の場所があったらダメ
-                    return false;
-                }
-            }
+            // for(const key in shift_table ){
+            //     if( shift_table[ key ].length === 0 ){
+            //         // 0人の場所があったらダメ
+            //         return false;
+            //     }
+            // }
             // シフト表が完成していたら完成リストに追加
             completed_table_list.push( shift_table );
             return false;
