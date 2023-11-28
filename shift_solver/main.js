@@ -51,7 +51,7 @@
             let new_span_result = document.createElement("span");
             new_span_result.textContent = "";
 
-            //　場所リストを保持しておく
+            // 場所リストを保持しておく
             place_result_list[ element ] = new_span_result ;
 
             new_list_item.appendChild(new_span);
@@ -71,7 +71,7 @@
         document.getElementById("error_message").textContent = "";
     }
 
-    recurse_search = function( shift_table, worker_list, worker_index ){
+    recurse_search = function( shift_table, worker_list, worker_index, completed_table_list ){
 
         if( worker_list.length <= worker_index ){
             // ワーカーリストを全部読んだ
@@ -83,8 +83,9 @@
                     return false;
                 }
             }
-            // シフト表が完成していたらそれを返す
-            return shift_table;
+            // シフト表が完成していたら完成リストに追加
+            completed_table_list.push( shift_table );
+            return false;
         }
 
         //console.log( shift_table );
@@ -99,12 +100,7 @@
                 let copy_shift_table = JSON.parse(JSON.stringify( shift_table ));
                 copy_shift_table[key].push( worker_list[worker_index] );
 
-                let ret = recurse_search( copy_shift_table, worker_list, worker_index + 1 );
-                if( ret == false ){
-                    continue;
-                } else {
-                    return ret;
-                }
+                let ret = recurse_search( copy_shift_table, worker_list, worker_index + 1, completed_table_list );
             }
 
         }
@@ -127,16 +123,46 @@
                 worker_list.push(cbox.worker);
             }
         }
-        let ret_val = recurse_search( shift_table, worker_list, 0 );
 
-        console.log(ret_val);
+        let completed_table_list = [];
+        let ret_val = recurse_search( shift_table, worker_list, 0 , completed_table_list);
 
-        if( ret_val == false ){
+        // console.log(completed_table_list);
+
+        // 最も人が多い場所の人数が最も少ないもの順にソート
+        completed_table_list.sort( function( a, b ){
+            let a_max_length = 0;
+            for (const key in a) {
+               a_max_length = Math.max( a[key].length, a_max_length );
+            }
+            let b_max_length = 0;
+            for (const key in b) {
+               b_max_length = Math.max( b[key].length, b_max_length );
+            }
+            return a_max_length - b_max_length;
+        } );
+
+        // 最も人が少ない場所の人数が最も多いもの順にソート
+        completed_table_list.sort( function( a, b ){
+            let a_min_length = 99;
+            for (const key in a) {
+               a_min_length = Math.min( a[key].length, a_min_length );
+            }
+            let b_min_length = 99;
+            for (const key in b) {
+               b_min_length = Math.min( b[key].length, b_min_length );
+            }
+            return b_min_length - a_min_length ;
+        } );
+
+        // console.log(completed_table_list);
+
+        if( completed_table_list.length == 0 ){
             document.getElementById("error_message").textContent = "有効な組み合わせが見つかりませんでした。";
         } else {
 
-            for (const key in ret_val) {
-                for (const worker of ret_val[ key ]) {
+            for ( const key in completed_table_list[0] ) {
+                for (const worker of completed_table_list[0][ key ]) {
                     place_result_list[ key ].textContent += (worker.名前) + ", ";
                 }
                 
