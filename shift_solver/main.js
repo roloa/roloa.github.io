@@ -1,6 +1,6 @@
 (function(){
 
-    var worker_json = {};
+    
     var place_list = {}
     var checkbox_list = [];
     var place_result_list = {};
@@ -12,56 +12,45 @@
     window.onload = function(){
         console.log("onload!");
 
-        // 辞書ファイルの読み込み
-        fetch('normal.json')
-        .then(response => response.json())
-        .then(function(data){
-            worker_json = data
-            console.log('loaded!')
-
-            worker_json.forEach(element => {
-                // ワーカーリストUIをつくる
-                let worker_list = document.getElementById("worker_list");
-                let new_list_item = document.createElement("li");
-                let new_check_box = document.createElement("input")
-                new_check_box.type = "checkbox";
-                new_check_box.id = element.名前;
-                let new_label = document.createElement("label");
-                new_label.textContent = element.名前;
-                new_label.htmlFor = new_check_box.id;
-                
-                // チェックボックスにワーカー情報を関連づける
-                new_check_box.worker = element;
-                // チェックボックスをリストに追加
-                checkbox_list.push( new_check_box )
-
-                new_list_item.appendChild(new_check_box);
-                new_list_item.appendChild(new_label);
-                
-                worker_list.appendChild(new_list_item);              
-            });
-        
-        // 最初のワーカー要素から場所のリストを作る
-       place_list =  Object.keys( worker_json[0] ).slice(1);
-       place_list.forEach(element => {
-            let place_ul = document.getElementById("place_list");
+        worker_json.forEach(element => {
+            // ワーカーリストUIをつくる
+            let worker_list = document.getElementById("worker_list");
             let new_list_item = document.createElement("li");
-            let new_span = document.createElement("span");
-            new_span.textContent = element + ": ";
-            let new_span_result = document.createElement("span");
-            new_span_result.textContent = "";
-
-            // 場所リストを保持しておく
-            place_result_list[ element ] = new_span_result ;
-
-            new_list_item.appendChild(new_span);
-            new_list_item.appendChild(new_span_result);
+            let new_check_box = document.createElement("input")
+            new_check_box.type = "checkbox";
+            new_check_box.id = element.名前;
+            let new_label = document.createElement("label");
+            new_label.textContent = element.名前;
+            new_label.htmlFor = new_check_box.id;
             
-            place_ul.appendChild(new_list_item);              
-        });
-    
+            // チェックボックスにワーカー情報を関連づける
+            new_check_box.worker = element;
+            // チェックボックスをリストに追加
+            checkbox_list.push( new_check_box )
 
+            new_list_item.appendChild(new_check_box);
+            new_list_item.appendChild(new_label);
+            
+            worker_list.appendChild(new_list_item);              
         });
+        // 最初のワーカー要素から場所のリストを作る
+        place_list =  Object.keys( worker_json[0] ).slice(1);
+        place_list.forEach(element => {
+             let place_ul = document.getElementById("place_list");
+             let new_list_item = document.createElement("li");
+             let new_span = document.createElement("span");
+             new_span.textContent = element + ": ";
+             let new_span_result = document.createElement("span");
+             new_span_result.textContent = "";
+ 
+             // 場所リストを保持しておく
+             place_result_list[ element ] = new_span_result ;
+ 
+             new_list_item.appendChild(new_span);
+             new_list_item.appendChild(new_span_result);
+             
+             place_ul.appendChild(new_list_item);              
+         });
     }
 
     clear_results = function(){
