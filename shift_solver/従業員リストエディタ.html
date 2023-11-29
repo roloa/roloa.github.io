@@ -17,18 +17,37 @@
             border: solid;
             font-size: large;
         }
-        input[type=checkbox] {
-	        transform: scale(2);
-	        margin: 0 6px 0 0;
+        #interface_container{
+            display: flex;
+        }
+        #worker_list_and_add_button_container{
+            display: block;
+            min-width: 400px;
+        }
+        #control_panel{
+            display: block;
         }
         .worker_div{
             border: solid 1px;
             padding: 5px;
+            max-width: 400px;
+            margin: 2px;
         }
         button {
-	        padding: 10px 30px;
+	        padding: 3px 10px;
+            margin: 1px;
+        }
+        #add_worker_button{
+            padding: 5px 10px;
+            margin: 5px;
             font-size: large;
-            font-weight: bold;
+        }
+        input[type=text ]{
+            font-size: large;
+            margin-right: 20px;
+        }
+        select{
+            margin-right: 10px;
         }
         #error_message{
             color: brown;
@@ -43,26 +62,33 @@
 <body>
     <div id="app">
 
-        <h3>従業員リスト</h3>
-        <div id="worker_list_container">
+        <h3>従業員リストエディタ</h3>
+        <div id="interface_container">
+            <div id="worker_list_and_add_button_container">
+                <div id="worker_list_container"></div>
 
+                <div id="add_worker_container">
+                    <button class="add_worker_button" id="add_worker_button">新しい従業員を追加</button>
+                </div>
+            </div>
+            <div id="control_panel">
+                <div id="download_container">
+                    <span id="import_label">リストを保存</span>
+                    <button id="download_button">リストを保存</button>
+                </div>
+
+                <div id="import_container">
+                    <span id="import_label">リストを読み込み</span>
+                    <input type="file" id="file_import"></input>
+                </div>
+                <div id="drop_is_available_container">
+                    <span id="drop_label">ドラッグ＆ドロップもできます</span>
+                </div>
+                <div id="error_message_container">
+                    <span id="error_message"></span>
+                </div>
+            </div>
         </div>
-
-        <div id="add_worker_container">
-            <button class="add_worker_button" id="add_worker_button">新しい従業員を追加</button>
-        </div>
-
-
-        <div id="enter_container">
-            <button class="enter_button" id="enter_button">ダウンロード</button>
-            
-        </div>
-
-        <div id="enter_container">
-            <input type="file" id="file_import"></input>
-        </div>
-        <span id="error_message"></span>
-
     </div>
 </body>
 <script src='エディタプログラム.js'></script>
