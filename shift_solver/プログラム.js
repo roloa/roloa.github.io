@@ -36,20 +36,28 @@
         // 最初のワーカー要素から場所のリストを作る
         place_list =  Object.keys( worker_json[0] ).slice(1);
         place_list.forEach(element => {
-             let place_ul = document.getElementById("place_list");
-             let new_list_item = document.createElement("li");
+             let place_table = document.getElementById("place_table");
+             let new_tr = document.createElement("tr");
+             let new_th = document.createElement("th");
+
              let new_span = document.createElement("span");
              new_span.textContent = element + ": ";
+             new_th.appendChild(new_span);
+             new_tr.appendChild( new_th );
+
+             let new_td = document.createElement("td");
              let new_span_result = document.createElement("span");
              new_span_result.textContent = "";
- 
+             new_td.appendChild(new_span_result);
+             new_tr.appendChild(new_td);
+
              // 場所リストを保持しておく
              place_result_list[ element ] = new_span_result ;
  
-             new_list_item.appendChild(new_span);
-             new_list_item.appendChild(new_span_result);
              
-             place_ul.appendChild(new_list_item);              
+             
+             
+             place_table.appendChild(new_tr);              
          });
     }
 
