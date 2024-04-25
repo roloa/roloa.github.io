@@ -2,7 +2,23 @@
 
     
     var place_list = [
-        "東エリア","西エリア","南エリア","北エリア"
+        "ウォッチ1F",
+        "ウォッチ2・3F",
+        "シフゾウ",
+        "正門",
+        "うさぎ",
+        "さくら",
+        "飛び地",
+        "平原",
+        "サバンナキッチン",
+        "はやし",
+        "ライオンバス",
+        "ライオンカフェ",
+        "チンパンジー",
+        "ワラビー・コアラ館",
+        "コアラ下",
+        "昆虫館",
+        "生態園",
     ]
     var checkbox_list = [];
     var place_result_list = {};
@@ -56,9 +72,35 @@
         let worker_delete_button = document.createElement("button");
         worker_delete_button.textContent = "従業員を削除";
         worker_delete_button.onclick = function(){
-            delete_worker_div( new_worker_div );
+            if( worker_delete_button.textContent == "本当に消す？" ){
+                delete_worker_div( new_worker_div );
+            }
+            worker_delete_button.textContent = "本当に消す？";
         };
-        new_worker_div.appendChild(worker_delete_button);   
+        worker_delete_button.onmouseleave = function(){
+            worker_delete_button.textContent = "従業員を削除";
+        };       
+        new_worker_div.appendChild(worker_delete_button);
+
+        let up_button = document.createElement("button");
+        up_button.textContent = "↑";
+        up_button.onclick = function(){
+            //console.log( new_worker_div.previousElementSibling );
+            if( new_worker_div.previousElementSibling ) {
+                new_worker_div.previousElementSibling.before( new_worker_div );
+            }
+        };
+        new_worker_div.appendChild(up_button);
+
+        let down_button = document.createElement("button");
+        down_button.textContent = "↓";
+        down_button.onclick = function(){
+            //console.log( new_worker_div.nextElementSibling );
+            if( new_worker_div.nextElementSibling ){
+                new_worker_div.nextElementSibling.after( new_worker_div );
+            }
+        };
+        new_worker_div.appendChild(down_button);
 
         let place_list_container = document.createElement("div");
         new_worker_div.appendChild(place_list_container);   
@@ -95,65 +137,86 @@
         add_worker_div( null );
     };
     
+    let gather_data_to_json = function(){
+         // DOMからデータを集めてjsonにする
+         let json_object = []
+
+         for( worker_div of document.getElementById("worker_list_container").childNodes ){
+             let worker_json = {};
+             worker_json.名前 = worker_div.worker_name.value;
+ 
+             if( worker_div == document.getElementById("worker_list_container").firstChild){
+                 // 最初のノードだけ全場所を0でクリアしておく特殊処理
+                 for( place of place_list){
+                     worker_json[ place ] = 0;
+                 }
+             }
+             
+             
+             for( place_container of worker_div.place_list_container.childNodes ){
+                 worker_json[ place_container.place_selector.value ] = 1;
+             }
+             json_object.push(worker_json);
+             
+         }
+ 
+         let json_string = JSON.stringify(json_object, null,  "  ");
+         
+         return json_string;
+    };
+
+    document.getElementById("save_button").onclick = function(){
+        let json_string = gather_data_to_json();
+
+        localStorage.setItem("worker_data_json", json_string );
+
+        document.getElementById("save_message").textContent = "保存しました";
+    };
+    document.getElementById("save_button").onmouseleave = function(){
+        document.getElementById("save_message").textContent = "　";
+    };
+
     document.getElementById("download_button").onclick = function(){
 
-        // DOMからデータを集めてjsonにする
-        let json_object = []
+        let json_string = gather_data_to_json();
 
-        for( worker_div of document.getElementById("worker_list_container").childNodes ){
-            let worker_json = {};
-            worker_json.名前 = worker_div.worker_name.value;
-
-            if( worker_div == document.getElementById("worker_list_container").firstChild){
-                // 最初のノードだけ全場所を0でクリアしておく特殊処理
-                for( place of place_list){
-                    worker_json[ place ] = 0;
-                }
-            }
-            
-            
-            for( place_container of worker_div.place_list_container.childNodes ){
-                worker_json[ place_container.place_selector.value ] = 1;
-            }
-            json_object.push(worker_json);
-            
-        }
-
-        let json_string = JSON.stringify(json_object, null,  "  ");
         json_string = "window.worker_json = " + json_string;
         console.log( json_string );
         // jsonをダウンロードさせる
         let blob = new Blob([ json_string ], {type: 'text/plain'});
         let link = document.createElement('a');
-        link.download = '従業員リスト.js';
+        link.download = '従業員リスト.txt';
         link.href = URL.createObjectURL(blob);
         link.click();
         URL.revokeObjectURL(link.href);
     };
-
-    let import_file = function( result ){
-        //console.log(reader.result);
-
+    let import_json = function( json_string ){
         // 従業員リストをクリアしておく
         let worker_list = document.getElementById("worker_list_container")
         while( worker_list.firstChild ){
             worker_list.removeChild( worker_list.firstChild );
         } 
-
-        let header = "window.worker_json =";
-        let startindex = result.indexOf( header ) + header.length;
-        let json_string = result.substring(startindex);
         let json_object = null;
         try {
             json_object = JSON.parse(json_string);
         } catch ( error ) {
-            document.getElementById("error_message").textContent = "ファイル読み込みエラー: " + error;
+            document.getElementById("error_message").textContent = "読み込みエラー: " + error;
             return;
         }
 
         for (const worker_obj of json_object) {
             add_worker_div( worker_obj );
         }
+    }
+    let import_file = function( result ){
+        //console.log(reader.result);
+        let header = "window.worker_json =";
+        let startindex = result.indexOf( header ) + header.length;
+        let json_string = result.substring(startindex);
+        import_json( json_string );
+
+        let json_string_regather = gather_data_to_json();
+        localStorage.setItem("worker_data_json", json_string_regather );
     }
 
     // ファイルのドロップ
@@ -184,4 +247,7 @@
         reader.readAsText( event.target.files[0] );
     }
 
+    // ローカルストレージから読み込み
+    let localStorage_json = localStorage.getItem("worker_data_json");
+    import_json( localStorage_json);
 })();

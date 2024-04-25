@@ -5,14 +5,14 @@
 <head>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" href="webclip.png" />
-    <title>従業員リストエディタ</title>
+    <title>従業員情報の変更</title>
     <style>
         #app {
             margin-top: 30px;
             margin-right: auto;
             margin-left: auto;
             min-height: 600px;
-            width: 80%;
+            width: 90%;
             min-width: 300px;
             border: solid;
             font-size: large;
@@ -22,7 +22,7 @@
         }
         #worker_list_and_add_button_container{
             display: block;
-            min-width: 400px;
+            min-width: 450px;
         }
         #control_panel{
             display: block;
@@ -30,12 +30,13 @@
         .worker_div{
             border: solid 1px;
             padding: 5px;
-            max-width: 400px;
+            width: 420px;
             margin: 2px;
         }
         button {
 	        padding: 3px 10px;
             margin: 1px;
+            margin-left: 4px;
         }
         #add_worker_button{
             padding: 5px 10px;
@@ -44,7 +45,7 @@
         }
         input[type=text ]{
             font-size: large;
-            margin-right: 20px;
+            margin-right: 10px;
         }
         select{
             margin-right: 10px;
@@ -62,7 +63,7 @@
 <body>
     <div id="app">
 
-        <h3>従業員リストエディタ</h3>
+        <h3>従業員情報の変更</h3>
         <div id="interface_container">
             <div id="worker_list_and_add_button_container">
                 <div id="worker_list_container"></div>
@@ -72,13 +73,19 @@
                 </div>
             </div>
             <div id="control_panel">
-                <div id="download_container">
-                    <span id="import_label">リストを保存</span>
-                    <button id="download_button">リストを保存</button>
+                <div id="save_container">
+                    <span id="import_label">従業員情報の変更を保存する</span>
+                    <button id="save_button">保存</button>
+                <div id="save_message_container">
+                    <span id="save_message">　</span>
                 </div>
-
+                </div>
+                <div id="download_container">
+                    <span id="import_label">従業員情報をファイルに書き出し</span>
+                    <button id="download_button">書き出し</button>
+                </div>
                 <div id="import_container">
-                    <span id="import_label">リストを読み込み</span>
+                    <span id="import_label">従業員情報をファイルから読み込み</span>
                     <input type="file" id="file_import"></input>
                 </div>
                 <div id="drop_is_available_container">

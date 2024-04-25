@@ -5,12 +5,30 @@
     var checkbox_list = [];
     var place_result_list = {};
 
+    let place_to_assignable_worker_list = {}
+
     loading_dictionary = function( url ){
     }
 
 
     window.onload = function(){
         console.log("onload!");
+
+        // ローカルストレージから読み込み
+        let worker_data_json_string = localStorage.getItem("worker_data_json");
+        let worker_json;
+        console.log( worker_data_json_string );
+        if( worker_data_json_string ){
+            try {
+                worker_json = JSON.parse(worker_data_json_string);
+            } catch ( error ) {
+                document.getElementById("error_message").textContent = "読み込みエラー: " + error;
+                return;
+            }
+        } else {
+            document.getElementById("error_message").textContent = "従業員データがありません。従業員情報の変更の画面から入力またはファイル読み込みしてください。";
+            return;
+        }
 
         worker_json.forEach(element => {
             // ワーカーリストUIをつくる
@@ -73,18 +91,34 @@
              new_tr.appendChild( new_th );
 
              let new_td = document.createElement("td");
-             let new_span_result = document.createElement("span");
-             new_span_result.textContent = "";
-             new_td.appendChild(new_span_result);
+             let result_div = document.createElement("div");
+             new_td.appendChild(result_div);
              new_tr.appendChild(new_td);
 
              // 場所リストを保持しておく
-             place_result_list[ element ] = new_span_result;
+             place_result_list[ element ] = result_div;
+             // 場所リストに場所の名前を記録しておく
+             result_div.place_name = element;
 
              place_table.appendChild(new_tr);              
          });
 
-
+        // 場所名から担当可能な従業員を引ける連想配列をつくる
+        place_list.forEach(place => {
+            let assigned_worker_list = [];
+            worker_json.forEach(worker => {
+                for (const key in worker) {
+                    if( key == "名前" ){
+                        continue;
+                    }
+                    if( key == place ){
+                        assigned_worker_list.push( worker.名前 );
+                    }
+                }
+            });
+            place_to_assignable_worker_list[ place ] = assigned_worker_list;
+        });
+        console.log(place_to_assignable_worker_list);
 
     }
 
@@ -174,9 +208,14 @@
         return false;
     }
 
+    let selected_to_swap_worker;
+    let assigned_worker_list;
+    
     document.getElementById("enter_button").onclick = function(){
         console.log("click!")
 
+        selected_to_swap_worker = null;
+        assigned_worker_list = [];
         clear_results();
 
         let shift_table = {};
@@ -228,12 +267,98 @@
             document.getElementById("error_message").innerHTML = error_html;
         }
 
-        for ( const key in completed_table ) {
-            for (const worker of completed_table[ key ]) {
-                place_result_list[ key ].textContent += (worker.名前) + ", ";
+        make_assigned_worker_div = function( worker , place_name ){
+
+
+            let new_div = document.createElement("div");
+            let new_button = document.createElement("button");
+            new_button.textContent = "＠";   
+            new_button.onclick = function(){
+
+                if( selected_to_swap_worker ) {
+                    if( new_div.classList.contains("highlight_worker") ){
+                        // ハイライトされている場合、入替を発生させる
+                        let distination_parent = selected_to_swap_worker.parentNode;
+                        new_div.parentNode.appendChild( selected_to_swap_worker );
+                        distination_parent.appendChild( new_div );
+                    }
+                    // 選択従業員を解除する処理
+                    selected_to_swap_worker = null;
+                    for( other_worker of assigned_worker_list){
+                        other_worker.classList.remove("highlight_worker");
+                    }
+                } else {
+                    // 従業員を選択し、入替可能な従業員をハイライトする
+                    selected_to_swap_worker = new_div;
+
+                    for( other_worker of assigned_worker_list){
+                        if( 0 <= place_to_assignable_worker_list[ new_div.parentNode.place_name ]
+                            .indexOf(other_worker.worker_name) || other_worker.worker_name == "--"){
+                                // 行先にいる人が、選択した場所に来れる
+                                // もしくはカラ
+                                if( new_div.worker_info[ other_worker.parentNode.place_name ] ){
+                                    // 選択した従業員が、行先にいける
+                                    if( other_worker.worker_name != new_div.worker_name || other_worker == new_div){
+                                        // 名前が違う
+                                        other_worker.classList.add("highlight_worker");
+                                    }
+                                }
+                            }
+                    }
+                }
+            };
+
+            new_div.appendChild( new_button );
+            let new_span = document.createElement("span");
+            new_span.textContent = worker.名前;
+            new_div.appendChild( new_span );
+
+            // divに名前を記録しておく
+            new_div.worker_name = worker.名前;
+            new_div.worker_info = worker;
+
+            assigned_worker_list.push( new_div );
+            place_result_list[ place_name ].appendChild( new_div );
+
+        }
+
+        for ( const place_name in completed_table ) {
+            if( completed_table[ place_name ].length == 0 ){
+                // let new_div = document.createElement("div");
+                // let new_button = document.createElement("button");
+                // new_button.textContent = "＠";
+                // new_div.appendChild( new_button );
+                // let new_span = document.createElement("span");
+                // new_span.textContent = "--";
+                // new_div.appendChild( new_span );
+    
+                // place_result_list[ place_name ].appendChild( new_div );
+
+                //
+                let empty_worker;
+                empty_worker = {};
+                empty_worker.名前 = "--";
+                for (const place_name of place_list) {
+                    empty_worker[ place_name ] = 1;
+                }
+
+                make_assigned_worker_div( empty_worker , place_name);
             }
+            for (const worker of completed_table[ place_name ]) {
+                
+                make_assigned_worker_div( worker , place_name);
+            }
+
         }
 
     }
 
+    document.getElementById("checkbox_hide_place_name").onchange = function(){
+        let checked = document.getElementById("checkbox_hide_place_name").checked;
+        // console.log( checked );
+        
+        for (let table_header of document.getElementsByTagName("th")) {
+            table_header.hidden = checked;
+        }
+    }
 })();

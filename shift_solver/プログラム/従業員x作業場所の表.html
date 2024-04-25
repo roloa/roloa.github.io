@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" href="webclip.png" />
+    <title>従業員x作業場所の表</title>
+    <style>
+        #app {
+            margin-top: 30px;
+            margin-right: auto;
+            margin-left: auto;
+            min-height: 600px;
+            width: 80%;
+            min-width: 300px;
+            border: solid;
+            font-size: 10px;
+            padding: 10px;
+        }
+        input[type=checkbox] {
+	        transform: scale(2);
+	        margin: 0 6px 0 0;
+        }
+        ul#worker_list {
+          column-count: auto;
+          column-width: 250px;
+        }
+        li{
+            margin: 3px;
+        }
+        tr:nth-child(odd){
+            background: #CFF;
+        }
+        button#enter_button{
+	        padding: 10px 30px;
+            font-size: large;
+            font-weight: bold;
+        }
+        #error_message{
+            color: brown;
+        }
+        #enter_container{
+            margin-left: 30px;
+        }
+        table, td, th {
+            border: solid 1px;
+            
+        }
+        td, th {
+            width: 100px;
+        }
+
+
+        .highlight_worker{
+            background: #CFC;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <div id="place_list_container">
+            <h3>従業員x作業場所の表</h3>
+            <table id="place_table">
+                    
+            </table>
+        </div>
+
+    </div>
+</body>
+<script src='表プログラム.js'></script>
+
+<html>
