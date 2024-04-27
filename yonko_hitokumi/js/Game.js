@@ -73,7 +73,6 @@ class Game extends Object {
         let field_div = document.getElementById("field");
         for (let y = 0; y < FIELD_HEIGHT; y++) {
             this.field_cell_div.push([]);
-
             // 行のdiv
             let new_row_div = document.createElement("div");
             new_row_div.classList.add("field_row");
@@ -83,31 +82,37 @@ class Game extends Object {
                 new_row_div.appendChild(new_cell);
                 this.field_cell_div[y].push(new_cell);
             }
-            field_div.appendChild( new_row_div );
+            field_div.appendChild(new_row_div);
         }
         // ホールド
         this.hold_cell_div = [];
         let hold_div = document.getElementById("hold_mino");
         for (let y = 0; y < 4; y++) {
             this.hold_cell_div.push([]);
+            let new_row_div = document.createElement("div");
+            new_row_div.classList.add("field_row");
             for (let x = 0; x < 4; x++) {
                 let new_cell = document.createElement("div");
                 new_cell.classList.add("non_field_cell");
-                hold_div.appendChild(new_cell);
+                new_row_div.appendChild(new_cell);
                 this.hold_cell_div[y].push(new_cell);
             }
+            hold_div.appendChild(new_row_div);
         }
         // ネクスト
         this.next_cell_div = [];
         let next_div = document.getElementById("next_mino");
         for (let y = 0; y < NEXT_HEIGHT; y++) {
             this.next_cell_div.push([]);
+            let new_row_div = document.createElement("div");
+            new_row_div.classList.add("field_row");
             for (let x = 0; x < 4; x++) {
                 let new_cell = document.createElement("div");
                 new_cell.classList.add("non_field_cell");
-                next_div.appendChild(new_cell);
+                new_row_div.appendChild(new_cell);
                 this.next_cell_div[y].push(new_cell);
             }
+            next_div.appendChild(new_row_div);
         }
 
         this.input_controller = new InputController(this);
