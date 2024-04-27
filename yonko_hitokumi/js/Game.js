@@ -12,7 +12,7 @@ class Game extends Object  {
 
     constructor(){
         super();
-        this.name = 'text_holdem';
+        this.name = 'yonko_hitokumi';
         this.version = '0.1';
         this.game = this;
     }
@@ -34,12 +34,34 @@ class Game extends Object  {
         this.mino_y = 0;
         this.mino = new Mino( 1 );
 
+        this.next_queue = [
+            new Mino( 7 ),
+            new Mino( 6 ),
+            new Mino( 5 ),
+            new Mino( 4 ),
+            new Mino( 3 )
+        ]
+
+        this.hold_mino = null;
+
+        this.das_charge_right = 0;
+        this.das_charge_left = 0;
+
+        this.mino_fall_timer = 0;
+        this.mino_fall_timer_max = 20;
+        this.mino_rockdown_timer = 0;
+        this.mino_rockdown_timer_max = 20;
+
         this.spawn_next_mino();
         
         this.CELL_COLOR_CLASS_LIST = [
-            "cell_none","cell_J", "cell_L", "cell_S", "cell_Z", "cell_T", "cell_I", "cell_O"
+            "cell_none",
+            ,"cell_J", "cell_L", "cell_S", "cell_Z", "cell_T", "cell_I", "cell_O"
+            ,"cell_shadow_J", "cell_shadow_L", "cell_shadow_S", "cell_shadow_Z", "cell_shadow_T", "cell_shadow_I", "cell_shadow_O"
         ]
 
+        // 表示部分の準備
+        // フィールド
         this.field_cell_div = [];
         let field_div = document.getElementById("field");
         for (let y = 0; y < FIELD_HEIGHT; y++) {
@@ -49,6 +71,30 @@ class Game extends Object  {
                 new_cell.classList.add("field_cell");
                 field_div.appendChild(new_cell);
                 this.field_cell_div[y].push( new_cell );
+            }
+        }
+        // ホールド
+        this.hold_cell_div = [];
+        let hold_div = document.getElementById("hold_mino");
+        for (let y = 0; y < 4; y++) {
+            this.hold_cell_div.push([]);
+            for (let x = 0; x < 4; x++) {
+                let new_cell = document.createElement("div");
+                new_cell.classList.add("non_field_cell");
+                hold_div.appendChild(new_cell);
+                this.hold_cell_div[y].push( new_cell );
+            }
+        }
+        // ネクスト
+        this.next_cell_div = [];
+        let next_div = document.getElementById("next_mino");
+        for (let y = 0; y < NEXT_HEIGHT; y++) {
+            this.next_cell_div.push([]);
+            for (let x = 0; x < 4; x++) {
+                let new_cell = document.createElement("div");
+                new_cell.classList.add("non_field_cell");
+                next_div.appendChild(new_cell);
+                this.next_cell_div[y].push( new_cell );
             }
         }
 
@@ -113,16 +159,32 @@ class Game extends Object  {
                 for( let x2 = 0 ; x2 < FIELD_WIDTH ; x2++){
                     this.field[0][x2] = 0;                        
                 }
+                // ラインが揃ったのでループを1段分巻き戻す
+                y++;
             }
         }
     }
     spawn_next_mino(){
         this.mino_x = 3;
         this.mino_y = 0;
+        this.mino_rockdown_timer = 0;
 
-        let next_mino = Math.floor(Math.random() * 7) + 1;
-        this.mino = new Mino( next_mino );
-
+        this.mino = this.next_queue[0];
+        for( let i = 0 ; i < this.next_queue.length - 1 ; i++ ){
+            this.next_queue[i] = this.next_queue[i+1];
+        }
+        if( !this.is_mino_can_move_to(0, 0, 0) ){
+            // 窒息
+            // とりあえずリセット
+            for (let y = 0; y < FIELD_HEIGHT; y++) {
+                for (let x = 0; x < FIELD_WIDTH; x++) {
+                    this.field[y][x] = 0;
+                }
+            }
+        }
+        // TODO 7-bag
+        this.next_queue[ this.next_queue.length - 1 ] = new Mino( Math.floor(Math.random() * 7) + 1 );
+        
     }
     lockdown_mino(){
         for( let y = 0 ; y < 4 ; y++ ){
@@ -139,41 +201,92 @@ class Game extends Object  {
         // 新しいミノを降らせる
         this.spawn_next_mino();
     }
+    calc_y_to_harddrop(){
+        // ハードドロップ先を計算
+        let harddrop_distance = 0;
+        while( this.is_mino_can_move_to(harddrop_distance, 0, 0) ){
+            harddrop_distance += 1;
+        }
+        return this.mino_y + harddrop_distance - 1;
+    }
 
     on_update(){
         this.input_controller.on_update( game );
 
-        // ミノの操作
-        if( this.input_controller.get_press_right()){
-            if( this.is_mino_can_move_to(0, 1, 0) ){
-                this.mino_x += 1;
+        // ミノの自然落下
+        if( this.is_mino_can_move_to(1, 0, 0) ){
+            if( this.mino_fall_timer_max <= this.mino_fall_timer ){
+                this.mino_fall_timer = 0;
+                
+                    this.mino_y += 1;
+
+            } else {
+                this.mino_fall_timer += 1;
+            }
+        } else {
+            // ミノが地面にぶつかったら固定
+            if( this.mino_rockdown_timer_max < this.mino_rockdown_timer ){
+                this.lockdown_mino();
+            } else {
+                this.mino_rockdown_timer += 1;
             }
         }
-        if( this.input_controller.get_press_left()){
-            if( this.is_mino_can_move_to(0, -1, 0) ){
-                this.mino_x -= 1;
+        // ミノの操作
+        if( this.input_controller.get_down_right()){
+            if( this.das_charge_right == 0 || 5 <= this.das_charge_right){
+                if( this.is_mino_can_move_to(0, 1, 0) ){
+                    this.mino_x += 1;
+                    this.mino_rockdown_timer = 0;
+                }
             }
+            this.das_charge_right += 1;
+        } else {
+            this.das_charge_right = 0;
+        }
+        if( this.input_controller.get_down_left()){
+            if( this.das_charge_left == 0 || 5 <= this.das_charge_left){
+                if( this.is_mino_can_move_to(0, -1, 0) ){
+                    this.mino_x -= 1;
+                    this.mino_rockdown_timer = 0;
+                }
+            }
+            this.das_charge_left += 1;
+        } else {
+            this.das_charge_left = 0;
         }
         if( this.input_controller.get_press_up()){
-            this.mino_y -= 1;
+            this.mino_y = this.calc_y_to_harddrop();
+            this.lockdown_mino();   
         }
         if( this.input_controller.get_down_down()){
-            if( this.is_mino_can_move_to(1, 0, 0) ){
-               this.mino_y += 1;
-            } else {
-               // ミノが地面にぶつかったら固定 
-                this.lockdown_mino();
-            }
+            this.mino_fall_timer = this.mino_fall_timer_max;
         }
         if( this.input_controller.get_press_rotate_right() || this.input_controller.get_press_space() ||
             this.input_controller.get_press_enter()){
             if( this.is_mino_can_move_to(0, 0, 1) ){
-                    this.mino.rotate(1);
+                this.mino.rotate(1);
+                this.mino_rockdown_timer = 0;
             }
         }
         if( this.input_controller.get_press_rotate_left()){
             if( this.is_mino_can_move_to(0, 0, -1) ){
                 this.mino.rotate(-1);
+                this.mino_rockdown_timer = 0;
+            }
+        }
+        if( this.input_controller.get_press_mino_hold() || this.input_controller.get_press_tab()){
+            // ホールド
+            this.mino.rotation = 0; 
+            if( this.hold_mino != null ){
+                let tmp = this.hold_mino;
+                this.hold_mino = this.mino;
+                this.mino = tmp;
+                this.mino_x = 3;
+                this.mino_y = 0;
+                this.mino_rockdown_timer = 0;
+            } else {
+                this.hold_mino = this.mino;
+                this.spawn_next_mino();
             }
         }
 
@@ -185,6 +298,18 @@ class Game extends Object  {
             }
         }
 
+        // ミノの影を表示
+        let y_to_harddrop = this.calc_y_to_harddrop();
+        for( let y = 0 ; y < 4 ; y++ ){
+            for( let x = 0 ; x < 4 ; x++ ){
+                if( this.mino.get_cell( y, x )){
+                    this.field_cell_div[ y_to_harddrop + y ][ this.mino_x + x ].classList.add(
+                        MINO_ID_TO_SHADOW_CLASS_NAME[ this.mino.mino_id ]
+                    );
+                }
+            }
+        }
+        
         // 操作中のミノの描画
         for( let y = 0 ; y < 4 ; y++ ){
             for( let x = 0 ; x < 4 ; x++ ){
@@ -204,5 +329,31 @@ class Game extends Object  {
                 }
             }
         }
+
+        // ネクストの描画
+        for( let i = 0 ; i < this.next_queue.length; i++){
+            for( let y = 0 ; y < 4 ; y++ ){
+                for( let x = 0 ; x < 4 ; x++ ){
+                    this.next_cell_div[y + i * 3 + 1][x].classList.remove( ...this.CELL_COLOR_CLASS_LIST );
+                    if( this.next_queue[i].get_cell(y, x) ){
+                        this.next_cell_div[y + i * 3 + 1][x].classList.add( 
+                            MINO_ID_TO_CLASS_NAME[this.next_queue[i].mino_id] );
+                    }
+                }
+            }
+        }
+        // ホールドの描画
+        if( this.hold_mino != null){
+            for( let y = 0 ; y < 3 ; y++ ){
+                for( let x = 0 ; x < 4 ; x++ ){
+                    this.hold_cell_div[y+1][x].classList.remove( ...this.CELL_COLOR_CLASS_LIST );
+                    if( this.hold_mino.get_cell(y, x) ){
+                        this.hold_cell_div[y+1][x].classList.add( 
+                            MINO_ID_TO_CLASS_NAME[this.hold_mino.mino_id] );
+                    }
+                }
+            }
+        }
     }
+
 }

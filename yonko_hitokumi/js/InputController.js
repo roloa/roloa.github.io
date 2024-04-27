@@ -154,6 +154,9 @@ class InputController {
     get_press_rotate_left(){
         return this.is_press_rotate_left;
     }
+    get_press_mino_hold(){
+        return this.is_press_mino_hold;
+    }
 
     on_key_down(e) {
         if(!e.repeat){
