@@ -1,0 +1,19 @@
+#app {
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+    padding: 10px;
+    border: solid;
+    font-size:50px;
+    font-weight: normal;
+    font-family: monospace;
+}
+
+
+a:link{
+    color: #00E;
+}
+a:visited{
+    color: #00E;
+}
