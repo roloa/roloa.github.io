@@ -163,7 +163,7 @@ class InputController {
             // リピートは捨てる
 
             //console.log('key_down', e.code);
-            document.getElementById("debug_log").innerText = e.code;
+            //document.getElementById("debug_log").innerText = e.code;
 
             if( e.code == 'Space'){
                 this.is_down_space = true;

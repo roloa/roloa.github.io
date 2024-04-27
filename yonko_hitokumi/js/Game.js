@@ -34,15 +34,18 @@ class Game extends Object  {
         this.mino_y = 0;
         this.mino = new Mino( 1 );
 
+        this.seven_bag = [];
+
         this.next_queue = [
-            new Mino( 7 ),
-            new Mino( 6 ),
-            new Mino( 5 ),
-            new Mino( 4 ),
-            new Mino( 3 )
+            this.pop_seven_bag(),
+            this.pop_seven_bag(),
+            this.pop_seven_bag(),
+            this.pop_seven_bag(),
+            this.pop_seven_bag()
         ]
 
         this.hold_mino = null;
+        this.is_hold_active = true;
 
         this.das_charge_right = 0;
         this.das_charge_left = 0;
@@ -53,6 +56,10 @@ class Game extends Object  {
         this.mino_rockdown_timer_max = 20;
 
         this.spawn_next_mino();
+
+        this.score = 0;
+        this.score_div = document.getElementById("score_text");
+        this.clear_text_div = document.getElementById("clear_text");
         
         this.CELL_COLOR_CLASS_LIST = [
             "cell_none",
@@ -104,7 +111,14 @@ class Game extends Object  {
         this.input_controller.setup()
         this.interbal_handle = setInterval( this.on_update.bind(this), 40 )
     }
-
+    pop_seven_bag(){
+        if( this.seven_bag.length == 0) {
+            this.seven_bag = [
+                new Mino(1),new Mino(2),new Mino(3),new Mino(4),new Mino(5),new Mino(6),new Mino(7)
+            ];
+        }
+        return this.seven_bag.splice( Math.floor( Math.random() * this.seven_bag.length) , 1)[0];
+    }
     is_mino_can_move_to( move_by_y, move_by_x, rotate ){
         for( let y = 0 ; y < 4 ; y++ ){
             for( let x = 0 ; x < 4 ; x++ ){
@@ -136,6 +150,7 @@ class Game extends Object  {
         return true;
     }
     check_line_clear(){
+        let cleared_line_count = 0;
         for( let y = FIELD_HEIGHT - 1 ; 0 <= y ; y--){
             let filled = true;
             for( let x = 0 ; x < FIELD_WIDTH ; x++){
@@ -159,8 +174,22 @@ class Game extends Object  {
                 for( let x2 = 0 ; x2 < FIELD_WIDTH ; x2++){
                     this.field[0][x2] = 0;                        
                 }
+                cleared_line_count += 1;
                 // ラインが揃ったのでループを1段分巻き戻す
                 y++;
+            }
+        }
+        if( 0 < cleared_line_count ){
+            if( cleared_line_count == 1 ){
+                this.clear_text_div.innerText = "Single";
+            } else if( cleared_line_count == 2 ){
+                this.clear_text_div.innerText = "Double";
+            } else if( cleared_line_count == 3 ){
+                this.clear_text_div.innerText = "Triple";
+            } else if( cleared_line_count == 4 ){
+                this.clear_text_div.innerText = "Quad";
+            } else {
+                this.clear_text_div.innerText = "Super!?";
             }
         }
     }
@@ -183,7 +212,7 @@ class Game extends Object  {
             }
         }
         // TODO 7-bag
-        this.next_queue[ this.next_queue.length - 1 ] = new Mino( Math.floor(Math.random() * 7) + 1 );
+        this.next_queue[ this.next_queue.length - 1 ] = this.pop_seven_bag();
         
     }
     lockdown_mino(){
@@ -196,6 +225,9 @@ class Game extends Object  {
                 }
             }
         }
+        this.is_hold_active = true;
+
+        this.clear_text_div.innerText = "";
         // ライン消去
         this.check_line_clear();
         // 新しいミノを降らせる
@@ -276,17 +308,20 @@ class Game extends Object  {
         }
         if( this.input_controller.get_press_mino_hold() || this.input_controller.get_press_tab()){
             // ホールド
-            this.mino.rotation = 0; 
-            if( this.hold_mino != null ){
-                let tmp = this.hold_mino;
-                this.hold_mino = this.mino;
-                this.mino = tmp;
-                this.mino_x = 3;
-                this.mino_y = 0;
-                this.mino_rockdown_timer = 0;
-            } else {
-                this.hold_mino = this.mino;
-                this.spawn_next_mino();
+            if( this.is_hold_active ){
+                this.is_hold_active = false;
+                this.mino.rotation = 0; 
+                if( this.hold_mino != null ){
+                    let tmp = this.hold_mino;
+                    this.hold_mino = this.mino;
+                    this.mino = tmp;
+                    this.mino_x = 3;
+                    this.mino_y = 0;
+                    this.mino_rockdown_timer = 0;
+                } else {
+                    this.hold_mino = this.mino;
+                    this.spawn_next_mino();
+                }
             }
         }
 
