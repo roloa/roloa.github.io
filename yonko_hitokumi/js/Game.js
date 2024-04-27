@@ -73,12 +73,17 @@ class Game extends Object {
         let field_div = document.getElementById("field");
         for (let y = 0; y < FIELD_HEIGHT; y++) {
             this.field_cell_div.push([]);
+
+            // 行のdiv
+            let new_row_div = document.createElement("div");
+            new_row_div.classList.add("field_row");
             for (let x = 0; x < FIELD_WIDTH; x++) {
                 let new_cell = document.createElement("div");
                 new_cell.classList.add("field_cell");
-                field_div.appendChild(new_cell);
+                new_row_div.appendChild(new_cell);
                 this.field_cell_div[y].push(new_cell);
             }
+            field_div.appendChild( new_row_div );
         }
         // ホールド
         this.hold_cell_div = [];
