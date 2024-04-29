@@ -69,6 +69,8 @@ class Game extends Object {
         this.clear_score_text_span = document.getElementById("clear_score_text");
         this.combo_text_span = document.getElementById("combo_text");
         this.combo_score_text_span = document.getElementById("combo_score_text");
+        this.perfect_text_span = document.getElementById("perfect_text");
+        this.perfect_score_text_span = document.getElementById("perfect_score_text");
 
         this.CELL_COLOR_CLASS_LIST = [
             "cell_none",
@@ -131,13 +133,26 @@ class Game extends Object {
         this.sound_snare = new Audio("sound/snare.mp3");
         this.sound_perc = new Audio("sound/perc.mp3");
         this.sound_perc2 = new Audio("sound/perc2.mp3");
+        this.sound_perfect = new Audio("sound/perfect.mp3")
 
         this.sound_t_rotate = new Audio("sound/t_rotate.mp3");
         this.sound_t_spin = new Audio("sound/t_spin.mp3");
 
+        this.is_sound_on = false;
+        document.getElementById("sound_switch").onchange = function(){
+            console.log( document.getElementById("sound_switch").checked );
+            this.is_sound_on = document.getElementById("sound_switch").checked;
+        }.bind(this);
 
         this.input_controller.setup()
         this.interbal_handle = setInterval(this.on_update.bind(this), 40)
+    }
+    play_sound( audio_elem ){
+        if( this.is_sound_on ){
+            audio_elem.pause();
+            audio_elem.currentTime = 0;
+            audio_elem.play();
+        }
     }
     pop_seven_bag() {
         if (this.seven_bag.length == 0) {
@@ -214,20 +229,13 @@ class Game extends Object {
             }
         }
 
-        // サウンドを中断する
-        this.sound_cymbal.pause();
-        this.sound_cymbal.currentTime = 0;
-        this.sound_kick.pause();
-        this.sound_kick.currentTime = 0;
-        this.sound_snare.pause();
-        this.sound_snare.currentTime = 0;
         // 消したライン数に応じた処理
         if (0 < cleared_line_count) {
             if (cleared_line_count == 1) {
                 if (this.is_t_spin) {
                     if (this.is_t_spin_mini) {
                         this.clear_text_span.innerText = "TS-Mini";
-                        this.sound_t_spin.play();
+                        this.play_sound(this.sound_t_spin);
                         if( this.is_b2b ){
                             this.b2b_text_span.innerText = "B2B +1";
                             this.score += 1;
@@ -235,20 +243,20 @@ class Game extends Object {
                         this.is_b2b = true;
                     } else {
                         this.clear_text_span.innerText = "TS-Single";
-                        this.sound_t_spin.play();
+                        this.play_sound(this.sound_t_spin);
                         this.clear_score_text_span.innerText = "+2";
                         this.score += 2;
                         this.is_b2b = false;
                     }
                 } else {
                     this.clear_text_span.innerText = "Single";
-                    this.sound_snare.play();
+                    this.play_sound(this.sound_snare);
                     this.is_b2b = false;
                 }
             } else if (cleared_line_count == 2) {
                 if (this.is_t_spin) {
                     this.clear_text_span.innerText = "TS-Double";
-                    this.sound_t_spin.play();
+                    this.play_sound(this.sound_t_spin);
                     this.clear_score_text_span.innerText = "+4";
                     this.score += 4;
                     if( this.is_b2b ){
@@ -258,7 +266,7 @@ class Game extends Object {
                     this.is_b2b = true;
             } else {
                     this.clear_text_span.innerText = "Double";
-                    this.sound_snare.play();
+                    this.play_sound(this.sound_snare);
                     this.clear_score_text_span.innerText = "+1";
                     this.score += 1;
                     this.is_b2b = false;
@@ -266,7 +274,7 @@ class Game extends Object {
             } else if (cleared_line_count == 3) {
                 if (this.is_t_spin) {
                     this.clear_text_span.innerText = "TS-Triple";
-                    this.sound_t_spin.play();
+                    this.play_sound(this.sound_t_spin);
                     this.clear_score_text_span.innerText = "+6";
                     this.score += 6;
                     if( this.is_b2b ){
@@ -276,14 +284,14 @@ class Game extends Object {
                     this.is_b2b = true;
                 } else {
                     this.clear_text_span.innerText = "Triple";
-                    this.sound_snare.play();
+                    this.play_sound(this.sound_snare);
                     this.clear_score_text_span.innerText = "+2";
                     this.score += 2;
                     this.is_b2b = false;
                 }
             } else if (cleared_line_count == 4) {
                 this.clear_text_span.innerText = "Quad";
-                this.sound_cymbal.play();
+                this.play_sound(this.sound_cymbal);
                 this.clear_score_text_span.innerText = "+4";
                 this.score += 4;
                 if( this.is_b2b ){
@@ -293,8 +301,9 @@ class Game extends Object {
                 this.is_b2b = true;
             } else {
                 this.clear_text_span.innerText = "Super!?";
-                this.sound_cymbal.play();
+                this.play_sound(this.sound_cymbal);
             }
+            // コンボ判定
             this.combo_count += 1;
             if (1 <= this.combo_count) {
                 this.combo_text_span.innerText =  this.combo_count + " Combo";
@@ -306,14 +315,31 @@ class Game extends Object {
                     this.score += COMBO_TABLE[ this.combo_count ];
                 }
             }
+            // パーフェクト判定
+            if(this.is_perfect()){
+                this.play_sound(this.sound_perfect);
+                this.perfect_text_span.innerText = "Perfect";
+                this.perfect_score_text_span.innerText = "+10";
+                this.score += 10;
+            }
         } else {
-            this.sound_kick.play();
+            this.play_sound( this.sound_kick );
             this.combo_count = -1;
         }
 
 
 
 
+    }
+    is_perfect(){
+        for (let y = 0; y < FIELD_HEIGHT; y++) {
+            for (let x = 0; x < FIELD_WIDTH; x++) {
+                if(this.field[y][x] != 0){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     spawn_next_mino() {
         this.mino_x = 3;
@@ -356,7 +382,8 @@ class Game extends Object {
         this.clear_score_text_span.innerText = "";
         this.combo_text_span.innerText = "";
         this.combo_score_text_span.innerText = "";
-
+        this.perfect_text_span.innerText = "";
+        this.perfect_score_text_span.innerText = "";
         // ライン消去
         this.check_line_clear();
 
@@ -434,13 +461,9 @@ class Game extends Object {
             }
         }
         if (this.check_t_spin()) {
-            this.sound_t_rotate.pause();
-            this.sound_t_rotate.currentTime = 0;
-            this.sound_t_rotate.play();
+            this.play_sound(this.sound_t_rotate);
         } else {
-            this.sound_perc.pause();
-            this.sound_perc.currentTime = 0;
-            this.sound_perc.play();
+            this.play_sound(this.sound_perc);
         }
     }
     mino_rotate_left() {
@@ -472,13 +495,11 @@ class Game extends Object {
             }
         }
         if (this.check_t_spin()) {
-            this.sound_t_rotate.pause();
-            this.sound_t_rotate.currentTime = 0;
-            this.sound_t_rotate.play();
+            this.play_sound(this.sound_t_rotate);
         } else {
             this.sound_perc.pause();
             this.sound_perc.currentTime = 0;
-            this.sound_perc.play();
+            this.play_sound(this.sound_perc);
         }
     }
     on_update() {
@@ -511,9 +532,7 @@ class Game extends Object {
                     this.mino_x += 1;
                     this.mino_rockdown_timer = 0;
 
-                    this.sound_perc2.pause();
-                    this.sound_perc2.currentTime = 0;
-                    this.sound_perc2.play();
+                    this.play_sound(this.sound_perc2);
                 }
             }
             this.das_charge_right += 1;
@@ -527,9 +546,7 @@ class Game extends Object {
                     this.mino_x -= 1;
                     this.mino_rockdown_timer = 0;
 
-                    this.sound_perc2.pause();
-                    this.sound_perc2.currentTime = 0;
-                    this.sound_perc2.play();
+                    this.play_sound(this.sound_perc2);
                 }
             }
             this.das_charge_left += 1;
@@ -576,9 +593,8 @@ class Game extends Object {
                     this.hold_mino = this.mino;
                     this.spawn_next_mino();
                 }
-                this.sound_perc.pause();
-                this.sound_perc.currentTime = 0;
-                this.sound_perc.play();
+                
+                this.play_sound(this.sound_perc);
             }
         }
 

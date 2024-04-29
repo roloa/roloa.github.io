@@ -33,6 +33,9 @@ body {
 #combo_text_container {
     height: 80px;
 }
+#perfect_text_container {
+    height: 80px;
+}
 
 #hold_mino {
     width: 160px;
@@ -149,7 +152,10 @@ body {
 }
 
 
-
+input[type=checkbox] {
+    transform: scale(3);
+    margin-left: 20px;
+}
 a:link {
     color: #00E;
 }
