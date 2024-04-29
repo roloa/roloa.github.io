@@ -4,6 +4,9 @@ try {
 
     window.game = game;
 
+    //document.getElementById("start_button").onclick = function(){
+    //}
+
     game.init();
     // game.test();
     // game.start();

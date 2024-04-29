@@ -138,10 +138,11 @@ class Game extends Object {
         this.sound_t_rotate = new Audio("sound/t_rotate.mp3");
         this.sound_t_spin = new Audio("sound/t_spin.mp3");
 
-        this.is_sound_on = false;
+        this.is_sound_on = true;
+        
         document.getElementById("sound_switch").onchange = function(){
-            console.log( document.getElementById("sound_switch").checked );
             this.is_sound_on = document.getElementById("sound_switch").checked;
+            this.play_sound( this.sound_perc );
         }.bind(this);
 
         this.input_controller.setup()
@@ -234,7 +235,7 @@ class Game extends Object {
             if (cleared_line_count == 1) {
                 if (this.is_t_spin) {
                     if (this.is_t_spin_mini) {
-                        this.clear_text_span.innerText = "TS-Mini";
+                        this.clear_text_span.innerText = "TSM";
                         this.play_sound(this.sound_t_spin);
                         if( this.is_b2b ){
                             this.b2b_text_span.innerText = "B2B +1";
@@ -242,7 +243,7 @@ class Game extends Object {
                         }
                         this.is_b2b = true;
                     } else {
-                        this.clear_text_span.innerText = "TS-Single";
+                        this.clear_text_span.innerText = "TSS";
                         this.play_sound(this.sound_t_spin);
                         this.clear_score_text_span.innerText = "+2";
                         this.score += 2;
@@ -255,7 +256,7 @@ class Game extends Object {
                 }
             } else if (cleared_line_count == 2) {
                 if (this.is_t_spin) {
-                    this.clear_text_span.innerText = "TS-Double";
+                    this.clear_text_span.innerText = "TSD";
                     this.play_sound(this.sound_t_spin);
                     this.clear_score_text_span.innerText = "+4";
                     this.score += 4;
@@ -273,7 +274,7 @@ class Game extends Object {
                 }
             } else if (cleared_line_count == 3) {
                 if (this.is_t_spin) {
-                    this.clear_text_span.innerText = "TS-Triple";
+                    this.clear_text_span.innerText = "TST";
                     this.play_sound(this.sound_t_spin);
                     this.clear_score_text_span.innerText = "+6";
                     this.score += 6;
@@ -300,13 +301,13 @@ class Game extends Object {
                 }
                 this.is_b2b = true;
             } else {
-                this.clear_text_span.innerText = "Super!?";
+                this.clear_text_span.innerText = "Super?";
                 this.play_sound(this.sound_cymbal);
             }
             // コンボ判定
             this.combo_count += 1;
             if (1 <= this.combo_count) {
-                this.combo_text_span.innerText =  this.combo_count + " Combo";
+                this.combo_text_span.innerText =  this.combo_count + " REN";
                 if( 10 <= this.combo_count ){
                     this.combo_score_text_span.innerText = "+" + 5;
                     this.score += 5;
