@@ -55,11 +55,20 @@ class Game extends Object {
         this.mino_rockdown_timer = 0;
         this.mino_rockdown_timer_max = 20;
 
+        this.is_t_spin = false;
+        this.is_t_spin_mini = false;
+        this.is_b2b = false;
+        this.combo_count = -1;
+
         this.spawn_next_mino();
 
         this.score = 0;
-        this.score_div = document.getElementById("score_text");
-        this.clear_text_div = document.getElementById("clear_text");
+        this.score_text_span = document.getElementById("score_text");
+        this.b2b_text_span = document.getElementById("b2b_text");
+        this.clear_text_span = document.getElementById("clear_text");
+        this.clear_score_text_span = document.getElementById("clear_score_text");
+        this.combo_text_span = document.getElementById("combo_text");
+        this.combo_score_text_span = document.getElementById("combo_score_text");
 
         this.CELL_COLOR_CLASS_LIST = [
             "cell_none",
@@ -117,6 +126,15 @@ class Game extends Object {
 
         this.input_controller = new InputController(this);
 
+        this.sound_cymbal = new Audio("sound/cymbal.mp3");
+        this.sound_kick = new Audio("sound/kick.mp3");
+        this.sound_snare = new Audio("sound/snare.mp3");
+        this.sound_perc = new Audio("sound/perc.mp3");
+        this.sound_perc2 = new Audio("sound/perc2.mp3");
+
+        this.sound_t_rotate = new Audio("sound/t_rotate.mp3");
+        this.sound_t_spin = new Audio("sound/t_spin.mp3");
+
 
         this.input_controller.setup()
         this.interbal_handle = setInterval(this.on_update.bind(this), 40)
@@ -129,6 +147,25 @@ class Game extends Object {
         }
         return this.seven_bag.splice(Math.floor(Math.random() * this.seven_bag.length), 1)[0];
     }
+    is_blocked(y, x) {
+        // 壁かどうか
+        if (x < 0) {
+            return true;
+        }
+        if (FIELD_WIDTH <= x) {
+            return true;
+        }
+        if (y < 0) {
+            return true;
+        }
+        if (FIELD_HEIGHT <= y) {
+            return true;
+        }
+        if (this.field[y][x]) {
+            // ブロックがあったら                        
+            return true;
+        }
+    }
     is_mino_can_move_to(move_by_y, move_by_x, rotate) {
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
@@ -137,20 +174,7 @@ class Game extends Object {
                     let checking_x = this.mino_x + x + move_by_x;
                     let checking_y = this.mino_y + y + move_by_y;
 
-                    if (checking_x < 0) {
-                        return false;
-                    }
-                    if (FIELD_WIDTH <= checking_x) {
-                        return false;
-                    }
-                    if (checking_y < 0) {
-                        return false;
-                    }
-                    if (FIELD_HEIGHT <= checking_y) {
-                        return false;
-                    }
-                    if (this.field[checking_y][checking_x]) {
-                        // ブロックがあったら                        
+                    if (this.is_blocked(checking_y, checking_x)) {
                         return false;
                     }
                 }
@@ -189,24 +213,114 @@ class Game extends Object {
                 y++;
             }
         }
+
+        // サウンドを中断する
+        this.sound_cymbal.pause();
+        this.sound_cymbal.currentTime = 0;
+        this.sound_kick.pause();
+        this.sound_kick.currentTime = 0;
+        this.sound_snare.pause();
+        this.sound_snare.currentTime = 0;
+        // 消したライン数に応じた処理
         if (0 < cleared_line_count) {
             if (cleared_line_count == 1) {
-                this.clear_text_div.innerText = "Single";
+                if (this.is_t_spin) {
+                    if (this.is_t_spin_mini) {
+                        this.clear_text_span.innerText = "TS-Mini";
+                        this.sound_t_spin.play();
+                        if( this.is_b2b ){
+                            this.b2b_text_span.innerText = "B2B +1";
+                            this.score += 1;
+                        }
+                        this.is_b2b = true;
+                    } else {
+                        this.clear_text_span.innerText = "TS-Single";
+                        this.sound_t_spin.play();
+                        this.clear_score_text_span.innerText = "+2";
+                        this.score += 2;
+                        this.is_b2b = false;
+                    }
+                } else {
+                    this.clear_text_span.innerText = "Single";
+                    this.sound_snare.play();
+                    this.is_b2b = false;
+                }
             } else if (cleared_line_count == 2) {
-                this.clear_text_div.innerText = "Double";
-            } else if (cleared_line_count == 3) {
-                this.clear_text_div.innerText = "Triple";
-            } else if (cleared_line_count == 4) {
-                this.clear_text_div.innerText = "Quad";
+                if (this.is_t_spin) {
+                    this.clear_text_span.innerText = "TS-Double";
+                    this.sound_t_spin.play();
+                    this.clear_score_text_span.innerText = "+4";
+                    this.score += 4;
+                    if( this.is_b2b ){
+                        this.b2b_text_span.innerText = "B2B +1";
+                        this.score += 1;
+                    }
+                    this.is_b2b = true;
             } else {
-                this.clear_text_div.innerText = "Super!?";
+                    this.clear_text_span.innerText = "Double";
+                    this.sound_snare.play();
+                    this.clear_score_text_span.innerText = "+1";
+                    this.score += 1;
+                    this.is_b2b = false;
+                }
+            } else if (cleared_line_count == 3) {
+                if (this.is_t_spin) {
+                    this.clear_text_span.innerText = "TS-Triple";
+                    this.sound_t_spin.play();
+                    this.clear_score_text_span.innerText = "+6";
+                    this.score += 6;
+                    if( this.is_b2b ){
+                        this.b2b_text_span.innerText = "B2B +1";
+                        this.score += 1;
+                    }
+                    this.is_b2b = true;
+                } else {
+                    this.clear_text_span.innerText = "Triple";
+                    this.sound_snare.play();
+                    this.clear_score_text_span.innerText = "+2";
+                    this.score += 2;
+                    this.is_b2b = false;
+                }
+            } else if (cleared_line_count == 4) {
+                this.clear_text_span.innerText = "Quad";
+                this.sound_cymbal.play();
+                this.clear_score_text_span.innerText = "+4";
+                this.score += 4;
+                if( this.is_b2b ){
+                    this.b2b_text_span.innerText = "B2B +1";
+                    this.score += 1;
+                }
+                this.is_b2b = true;
+            } else {
+                this.clear_text_span.innerText = "Super!?";
+                this.sound_cymbal.play();
             }
+            this.combo_count += 1;
+            if (1 <= this.combo_count) {
+                this.combo_text_span.innerText =  this.combo_count + " Combo";
+                if( 10 <= this.combo_count ){
+                    this.combo_score_text_span.innerText = "+" + 5;
+                    this.score += 5;
+                } else if( 0 <= COMBO_TABLE[ this.combo_count ] ){
+                    this.combo_score_text_span.innerText = "+" + COMBO_TABLE[ this.combo_count ];
+                    this.score += COMBO_TABLE[ this.combo_count ];
+                }
+            }
+        } else {
+            this.sound_kick.play();
+            this.combo_count = -1;
         }
+
+
+
+
     }
     spawn_next_mino() {
         this.mino_x = 3;
         this.mino_y = 0;
         this.mino_rockdown_timer = 0;
+        this.is_t_spin = false;
+        this.is_t_spin_mini = false;
 
         this.mino = this.next_queue[0];
         for (let i = 0; i < this.next_queue.length - 1; i++) {
@@ -237,9 +351,18 @@ class Game extends Object {
         }
         this.is_hold_active = true;
 
-        this.clear_text_div.innerText = "";
+        this.b2b_text_span.innerText = "";
+        this.clear_text_span.innerText = "";
+        this.clear_score_text_span.innerText = "";
+        this.combo_text_span.innerText = "";
+        this.combo_score_text_span.innerText = "";
+
         // ライン消去
         this.check_line_clear();
+
+        // スコアの表示を更新
+        this.score_text_span.innerText = this.score;
+
         // 新しいミノを降らせる
         this.spawn_next_mino();
     }
@@ -250,6 +373,36 @@ class Game extends Object {
             harddrop_distance += 1;
         }
         return this.mino_y + harddrop_distance - 1;
+    }
+    check_t_spin() {
+        if (this.mino.mino_id == 5) {
+            let blocked_corner = 0;
+            if (this.is_blocked(this.mino_y, this.mino_x)) {
+                blocked_corner += 1;
+            }
+            if (this.is_blocked(this.mino_y, this.mino_x + 2)) {
+                blocked_corner += 1;
+            }
+            if (this.is_blocked(this.mino_y + 2, this.mino_x)) {
+                blocked_corner += 1;
+            }
+            if (this.is_blocked(this.mino_y + 2, this.mino_x + 2)) {
+                blocked_corner += 1;
+            }
+            if (3 <= blocked_corner) {
+                this.is_t_spin = true;
+                if (this.is_blocked(this.mino_y + 1, this.mino_x) ||
+                    this.is_blocked(this.mino_y, this.mino_x + 1) ||
+                    this.is_blocked(this.mino_y + 1, this.mino_x + 2) ||
+                    this.is_blocked(this.mino_y + 2, this.mino_x + 1)) {
+                    this.is_t_spin_mini = true;
+                } else {
+                    this.is_t_spin_mini = false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
     mino_rotate_right() {
         if (this.mino.mino_id == 6) {
@@ -280,6 +433,15 @@ class Game extends Object {
                 }
             }
         }
+        if (this.check_t_spin()) {
+            this.sound_t_rotate.pause();
+            this.sound_t_rotate.currentTime = 0;
+            this.sound_t_rotate.play();
+        } else {
+            this.sound_perc.pause();
+            this.sound_perc.currentTime = 0;
+            this.sound_perc.play();
+        }
     }
     mino_rotate_left() {
         if (this.mino.mino_id == 6) {
@@ -309,6 +471,15 @@ class Game extends Object {
                 }
             }
         }
+        if (this.check_t_spin()) {
+            this.sound_t_rotate.pause();
+            this.sound_t_rotate.currentTime = 0;
+            this.sound_t_rotate.play();
+        } else {
+            this.sound_perc.pause();
+            this.sound_perc.currentTime = 0;
+            this.sound_perc.play();
+        }
     }
     on_update() {
         this.input_controller.on_update(game);
@@ -320,6 +491,8 @@ class Game extends Object {
 
                 this.mino_y += 1;
 
+                this.is_t_spin = false;
+                this.is_t_spin_mini = false;
             } else {
                 this.mino_fall_timer += 1;
             }
@@ -337,9 +510,14 @@ class Game extends Object {
                 if (this.is_mino_can_move_to(0, 1, 0)) {
                     this.mino_x += 1;
                     this.mino_rockdown_timer = 0;
+
+                    this.sound_perc2.pause();
+                    this.sound_perc2.currentTime = 0;
+                    this.sound_perc2.play();
                 }
             }
             this.das_charge_right += 1;
+
         } else {
             this.das_charge_right = 0;
         }
@@ -348,6 +526,10 @@ class Game extends Object {
                 if (this.is_mino_can_move_to(0, -1, 0)) {
                     this.mino_x -= 1;
                     this.mino_rockdown_timer = 0;
+
+                    this.sound_perc2.pause();
+                    this.sound_perc2.currentTime = 0;
+                    this.sound_perc2.play();
                 }
             }
             this.das_charge_left += 1;
@@ -355,7 +537,15 @@ class Game extends Object {
             this.das_charge_left = 0;
         }
         if (this.input_controller.get_press_up()) {
-            this.mino_y = this.calc_y_to_harddrop();
+            let mino_y_drop_to = this.calc_y_to_harddrop();
+
+            if (mino_y_drop_to != this.mino_y) {
+                // ミノが落下したらTスピン判定を消す
+                this.is_t_spin = false;
+                this.is_t_spin_mini = false;
+            }
+
+            this.mino_y = mino_y_drop_to;
             this.lockdown_mino();
         }
         if (this.input_controller.get_down_down()) {
@@ -380,10 +570,15 @@ class Game extends Object {
                     this.mino_x = 3;
                     this.mino_y = 0;
                     this.mino_rockdown_timer = 0;
+                    this.is_t_spin = false;
+                    this.is_t_spin_mini = false;
                 } else {
                     this.hold_mino = this.mino;
                     this.spawn_next_mino();
                 }
+                this.sound_perc.pause();
+                this.sound_perc.currentTime = 0;
+                this.sound_perc.play();
             }
         }
 

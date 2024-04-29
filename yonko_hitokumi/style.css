@@ -1,28 +1,45 @@
-
-body{
+body {
     background-color: #222;
-    color:#DDD;
+    color: #DDD;
 }
+
 #app {
     margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     max-width: 900px;
     padding: 10px;
-    /* border: solid; */ 
+    /* border: solid; */
     border-color: #000;
-    font-size:35px;
+    font-size: 35px;
     font-weight: normal;
     font-family: monospace;
 }
-#left_container{
-    float:left;
+
+#left_container {
+    float: left;
 }
-#hold_mino{
+
+#score_text_container {
+    height: 80px;
+}
+
+#b2b_text_container {
+    height: 40px;
+}
+#clear_text_container {
+    height: 80px;
+}
+#combo_text_container {
+    height: 80px;
+}
+
+#hold_mino {
     width: 160px;
-    height:200px;
+    height: 200px;
 }
-#field{
+
+#field {
     margin-left: 20px;
     margin-right: 20px;
     width: 500px;
@@ -33,20 +50,24 @@ body{
     grid-template-columns: repeat(10, 50px);
     grid-template-rows: repeat(22, 50px);
 
-    float:left;
-}
-#right_container{
     float: left;
 }
-#next_mino{
-    float:left;
-    width: 160px;
-    height:700px;
+
+#right_container {
+    float: left;
 }
-.field_row{
+
+#next_mino {
+    float: left;
+    width: 160px;
+    height: 700px;
+}
+
+.field_row {
     display: flex;
 }
-.non_field_cell{
+
+.non_field_cell {
     width: 38px;
     height: 38px;
     border: solid 1px;
@@ -54,7 +75,8 @@ body{
     float: left;
 
 }
-.field_cell{
+
+.field_cell {
     width: 48px;
     height: 48px;
     border: solid 1px;
@@ -62,62 +84,76 @@ body{
     /* float: left; */
 }
 
-#debug_log_container{
+#debug_log_container {
     float: none;
 }
 
-.cell_shadow_J{
+.cell_shadow_J {
     background-color: #11a;
 }
-.cell_shadow_L{
+
+.cell_shadow_L {
     background-color: #720;
 }
-.cell_shadow_S{
+
+.cell_shadow_S {
     background-color: #050;
 }
-.cell_shadow_Z{
+
+.cell_shadow_Z {
     background-color: #611;
 }
-.cell_shadow_T{
+
+.cell_shadow_T {
     background-color: #505;
 }
-.cell_shadow_I{
+
+.cell_shadow_I {
     background-color: #066;
 }
-.cell_shadow_O{
+
+.cell_shadow_O {
     background-color: #660;
 }
 
-.cell_none{
+.cell_none {
     background-color: black;
 }
-.cell_J{
+
+.cell_J {
     background-color: #33e;
 }
-.cell_L{
+
+.cell_L {
     background-color: #f90;
 }
-.cell_S{
+
+.cell_S {
     background-color: #0c0;
 }
-.cell_Z{
+
+.cell_Z {
     background-color: #c33;
 }
-.cell_T{
+
+.cell_T {
     background-color: #909;
 }
-.cell_I{
+
+.cell_I {
     background-color: #3dd;
 }
-.cell_O{
+
+.cell_O {
     background-color: #cc3;
 }
 
 
 
-a:link{
+a:link {
     color: #00E;
 }
-a:visited{
+
+a:visited {
     color: #00E;
 }
