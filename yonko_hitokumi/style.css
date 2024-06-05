@@ -27,12 +27,15 @@ body {
 #b2b_text_container {
     height: 40px;
 }
+
 #clear_text_container {
     height: 80px;
 }
+
 #combo_text_container {
     height: 80px;
 }
+
 #perfect_text_container {
     height: 80px;
 }
@@ -156,9 +159,14 @@ input[type=checkbox] {
     transform: scale(3);
     margin-left: 20px;
 }
-#start_button{
-    margin-top: 20px;;
+
+#start_button {
+    margin-top: 20px;
     font-size: 40px;
+}
+
+#description_container{
+    clear: both;
 }
 a:link {
     color: #00E;
