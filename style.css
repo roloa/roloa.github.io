@@ -21,3 +21,20 @@ a:link { color: #AAF; }
 a:visited { color: #FAF; }
 a:hover { color: #AAF; }
 a:active { color: #FAA; }
+
+.work_container{
+	border: solid;
+	margin: 10px;
+	padding:10px;
+	clear: both;
+	overflow: hidden;
+}
+
+.work_title{
+	font: bold 20px monospace;
+	margin-bottom: 5px;
+}
+.work_screenshot{
+	float: left;
+	margin-right: 10px;
+}
