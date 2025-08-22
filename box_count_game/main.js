@@ -1,14 +1,14 @@
 
-(function(){
+(function () {
 
 
-    function drawCube(disp, oku, dan, haba, quiz_size){
+    function drawCube(disp, oku, dan, haba, quiz_size) {
         // 0,0,0が一番左奥下
         // キャンバスは300
         // 問題サイズが5なら
         // キューブサイズ x 5 + キューブサイズ / 4 x 5 = 300
         cube_quoter = 0.33
-        cube_size = (CANVAS_SIZE / quiz_size) * ( 1 - cube_quoter )
+        cube_size = (CANVAS_SIZE / quiz_size) * (1 - cube_quoter)
 
         // キューブの右、手前、下端の座標を計算する
         edge_x = (
@@ -29,31 +29,31 @@
         // 側面
         disp.beginPath()
         disp.lineWidth = 2
-        disp.moveTo(edge_x - cube_size , edge_y );
-        disp.lineTo(edge_x - cube_size * (1 + cube_quoter) , edge_y - cube_size * ( cube_quoter));
-        disp.lineTo(edge_x - cube_size * (1 + cube_quoter) , edge_y - cube_size * (1+cube_quoter));
-        disp.lineTo(edge_x - cube_size , edge_y - cube_size);
-        disp.lineTo(edge_x - cube_size , edge_y );
+        disp.moveTo(edge_x - cube_size, edge_y);
+        disp.lineTo(edge_x - cube_size * (1 + cube_quoter), edge_y - cube_size * (cube_quoter));
+        disp.lineTo(edge_x - cube_size * (1 + cube_quoter), edge_y - cube_size * (1 + cube_quoter));
+        disp.lineTo(edge_x - cube_size, edge_y - cube_size);
+        disp.lineTo(edge_x - cube_size, edge_y);
         disp.fill();
         disp.stroke();
         // 天面
         disp.fillStyle = 'rgb(244,244,244)'; //塗りつぶしの色は赤
         disp.beginPath()
-        disp.moveTo(edge_x , edge_y - cube_size );
-        disp.lineTo(edge_x - cube_size , edge_y - cube_size);
+        disp.moveTo(edge_x, edge_y - cube_size);
+        disp.lineTo(edge_x - cube_size, edge_y - cube_size);
         disp.lineTo(edge_x - cube_size * (1 + cube_quoter), edge_y - cube_size * (1 + cube_quoter));
-        disp.lineTo(edge_x - cube_size * ( cube_quoter), edge_y - cube_size * (1 + cube_quoter));
-        disp.lineTo(edge_x  , edge_y - cube_size);
+        disp.lineTo(edge_x - cube_size * (cube_quoter), edge_y - cube_size * (1 + cube_quoter));
+        disp.lineTo(edge_x, edge_y - cube_size);
         disp.fill();
         disp.stroke();
         // 手前面
         disp.fillStyle = 'rgb(222,222,222)'; //塗りつぶしの色は赤
         disp.beginPath()
-        disp.moveTo(edge_x  , edge_y);
-        disp.lineTo(edge_x - cube_size , edge_y);
-        disp.lineTo(edge_x - cube_size , edge_y - cube_size);
-        disp.lineTo(edge_x , edge_y - cube_size);
-        disp.lineTo(edge_x  , edge_y);
+        disp.moveTo(edge_x, edge_y);
+        disp.lineTo(edge_x - cube_size, edge_y);
+        disp.lineTo(edge_x - cube_size, edge_y - cube_size);
+        disp.lineTo(edge_x, edge_y - cube_size);
+        disp.lineTo(edge_x, edge_y);
         disp.fill();
         disp.stroke();
 
@@ -61,14 +61,14 @@
     }
 
 
-    function canBeStack(stack, oku, dan, haba, size){
+    function canBeStack(stack, oku, dan, haba, size) {
 
         // 高さ制限を超えていたら積めない
-        if( size <= dan ){
+        if (size <= dan) {
             return false;
         }
         // 無限ループ防止用
-        if( Math.random() < 0.001 ){
+        if (Math.random() < 0.001) {
             console.log("fallback!!")
             return true;
         }
@@ -79,24 +79,24 @@
 
 
         //後ろにブロックがないと積めない
-        if(0 < oku && stack[oku-1][dan][haba] == false){
-             return false;
+        if (0 < oku && stack[oku - 1][dan][haba] == false) {
+            return false;
         }
         // 横にブロックがないと積めない
-        if(0 < haba && stack[oku][dan][haba-1] == false){
-             return false;
+        if (0 < haba && stack[oku][dan][haba - 1] == false) {
+            return false;
         }
         return true;
     }
 
-    function make_quiz(stack, sum, size){
+    function make_quiz(stack, sum, size) {
 
         // 初期化
-        for(oku = 0 ; oku < size ; oku++ ){
+        for (oku = 0; oku < size; oku++) {
             stack[oku] = []
-            for(dan = 0 ; dan < size ; dan++ ){
+            for (dan = 0; dan < size; dan++) {
                 stack[oku][dan] = []
-                for(haba = 0 ; haba < size ; haba++ ){
+                for (haba = 0; haba < size; haba++) {
                     stack[oku][dan][haba] = false
                 }
             }
@@ -113,15 +113,15 @@
         stack[1][1][1] = true;
 
         // ランダムな奥と幅に、1段ずつ重ねていく
-        for(let cnt=0 ; cnt < sum ; ){
-            let oku = Math.floor( Math.random()  * quiz_size)
-            let haba = Math.floor( Math.random()  * quiz_size)
+        for (let cnt = 0; cnt < sum;) {
+            let oku = Math.floor(Math.random() * quiz_size)
+            let haba = Math.floor(Math.random() * quiz_size)
             let dan = 0;
-            while( dan < size && stack[oku][dan][haba] ){
+            while (dan < size && stack[oku][dan][haba]) {
                 dan += 1
             }
 
-            if(canBeStack(stack, oku, dan, haba, quiz_size)){
+            if (canBeStack(stack, oku, dan, haba, quiz_size)) {
                 stack[oku][dan][haba] = true;
                 cnt += 1
                 continue;
@@ -131,14 +131,14 @@
     }
 
 
-    function redraw_cube(){
+    function redraw_cube() {
         // 画面クリア
         disp1.fillStyle = 'rgb(244,244,244)';
         disp1.beginPath();
         disp1.moveTo(1, 1);
-        disp1.lineTo(1, CANVAS_SIZE-1);
-        disp1.lineTo(CANVAS_SIZE-1, CANVAS_SIZE-1);
-        disp1.lineTo(CANVAS_SIZE-1, 1);
+        disp1.lineTo(1, CANVAS_SIZE - 1);
+        disp1.lineTo(CANVAS_SIZE - 1, CANVAS_SIZE - 1);
+        disp1.lineTo(CANVAS_SIZE - 1, 1);
         disp1.lineTo(1, 1);
         disp1.fill();
         disp1.stroke();
@@ -146,25 +146,25 @@
         disp2.fillStyle = 'rgb(244,244,244)';
         disp2.beginPath();
         disp2.moveTo(1, 1);
-        disp2.lineTo(1, CANVAS_SIZE-1);
-        disp2.lineTo(CANVAS_SIZE-1, CANVAS_SIZE-1);
-        disp2.lineTo(CANVAS_SIZE-1, 1);
+        disp2.lineTo(1, CANVAS_SIZE - 1);
+        disp2.lineTo(CANVAS_SIZE - 1, CANVAS_SIZE - 1);
+        disp2.lineTo(CANVAS_SIZE - 1, 1);
         disp2.lineTo(1, 1);
         disp2.fill();
         disp2.stroke();
 
         // キューブを描画順になめて
-        for(oku = 0 ; oku < quiz_size ; oku++ ){
-            for(dan = 0 ; dan < quiz_size ; dan++ ){
-                for(haba = 0 ; haba < quiz_size ; haba++ ){
+        for (oku = 0; oku < quiz_size; oku++) {
+            for (dan = 0; dan < quiz_size; dan++) {
+                for (haba = 0; haba < quiz_size; haba++) {
                     // キューブがあったら
-                    if( stack1[oku][dan][haba] ){
+                    if (stack1[oku][dan][haba]) {
                         // キューブを描画する
                         disp1.strokeStyle = 'rgb(200,0,0)'; //枠線の色は青
 
                         drawCube(disp1, oku, dan, haba, quiz_size)
                     }
-                    if( stack2[oku][dan][haba] ){
+                    if (stack2[oku][dan][haba]) {
                         // キューブを描画する
                         disp2.strokeStyle = 'rgb(0,0,200)'; //枠線の色は青
                         drawCube(disp2, oku, dan, haba, quiz_size)
@@ -176,11 +176,11 @@
 
 
 
-    function pick_cube(stack){
-        for(oku = quiz_size-1 ; 0 <= oku ; oku-- ){
-            for(dan = quiz_size-1 ; 0 <= dan ; dan-- ){
-                for(haba = quiz_size-1 ; 0 <= haba ; haba-- ){
-                    if( stack[oku][dan][haba] ){
+    function pick_cube(stack) {
+        for (oku = quiz_size - 1; 0 <= oku; oku--) {
+            for (dan = quiz_size - 1; 0 <= dan; dan--) {
+                for (haba = quiz_size - 1; 0 <= haba; haba--) {
+                    if (stack[oku][dan][haba]) {
                         stack[oku][dan][haba] = false
                         return true;
                     }
@@ -190,59 +190,66 @@
         return false;
     }
 
-    function counting_cube(){
+    function counting_cube() {
         // キューブを逆順に消していく
         let picked1 = pick_cube(stack1)
-        if( picked1 ){
+        if (picked1) {
             count_stack1 += 1;
             document.getElementById('count1').innerHTML = count_stack1
         }
         let picked2 = pick_cube(stack2)
-        if( picked2 ){
+        if (picked2) {
             count_stack2 += 1;
             document.getElementById('count2').innerHTML = count_stack2
         }
         redraw_cube();
         count_speed *= 0.9
-        if( picked1 || picked2){
-            setTimeout( counting_cube, count_speed )
+        if (picked1 || picked2) {
+            setTimeout(counting_cube, count_speed)
         } else {
             document.getElementById('message').innerHTML = '予想は' + answer_judge + 'でした。<br />'
-            if(count_stack1 < count_stack2){
+            if (count_stack1 < count_stack2) {
                 document.getElementById('count2').innerHTML += " !!"
                 document.getElementById('message').innerHTML += '正解は' + '青' + 'でした。<br />'
-                if(answer_judge == '青'){
+                if (answer_judge == '青') {
                     document.getElementById('message').innerHTML += 'おめでとう！'
                 }
             } else {
                 document.getElementById('count1').innerHTML += " !!"
                 document.getElementById('message').innerHTML += '正解は' + '赤' + 'でした。<br />'
-                if(answer_judge == '赤'){
+                if (answer_judge == '赤') {
                     document.getElementById('message').innerHTML += 'おめでとう！'
                 }
             }
 
+            setTimeout(restack_quiz, 500)
         }
 
     }
+    function restack_quiz() {
+        // 積まれた箱の初期配置を再現しなおす
+        stack1 = initial_stack1;
+        stack2 = initial_stack2;
+        redraw_cube();
+    }
 
-    function reset(){
+    function reset() {
         quiz_size = document.getElementById('size_input').value;
         quiz_size = Number(quiz_size)
         quiz_size = Math.floor(quiz_size)
         document.getElementById('message').innerHTML = '箱が多いと思う方のボタンを押してください。'
 
-        if( Number.isNaN(quiz_size) ){
-            quiz_size = 5
+        if (Number.isNaN(quiz_size)) {
+            quiz_size = 4
         }
-        if( 15 < quiz_size ){
-            if(window.confirm('レベルが大きすぎるとブラウザが止まったりします。レベルを['+ quiz_size +']に設定しますか。')){
+        if (15 < quiz_size) {
+            if (window.confirm('レベルが大きすぎるとブラウザが止まったりします。レベルを[' + quiz_size + ']に設定しますか。')) {
 
             } else {
                 quiz_size = 7
             }
         }
-        if( quiz_size < 3 ){
+        if (quiz_size < 3) {
             document.getElementById('message').innerHTML = 'レベルは3以上の整数で指定してください。'
             quiz_size = 3
         }
@@ -252,39 +259,56 @@
         document.getElementById('count2').innerHTML = "?"
         //
         quiz_size = Number(quiz_size)
-        stack1_sum = (quiz_size) * (quiz_size-1) * (quiz_size-2) + quiz_size
-        stack1_sum = Math.floor( stack1_sum * (Math.random() * 0.1 + 0.3 ) )
+        stack1_sum = (quiz_size) * (quiz_size - 1) * (quiz_size - 2) + quiz_size
+        stack1_sum = Math.floor(stack1_sum * (Math.random() * 0.1 + 0.3))
         diff_num = Math.floor(2 + (quiz_size) * (Math.random()))
         stack2_sum = stack1_sum
-        if(Math.random() < 0.5){
+        if (Math.random() < 0.5) {
             stack2_sum += diff_num
         } else {
             stack2_sum -= diff_num
         }
-        make_quiz( stack1, stack1_sum, quiz_size )
-        initial_stack1 = stack1
-        make_quiz( stack2, stack2_sum, quiz_size )
+        make_quiz(stack1, stack1_sum, quiz_size)
+        initial_stack1 = structuredClone(stack1);
+        make_quiz(stack2, stack2_sum, quiz_size)
+        initial_stack2 = structuredClone(stack2);
         //
         redraw_cube();
         count_stack1 = 0
         count_stack2 = 0
         answer_judge = null
     }
-    function red_judge(){
-        if(answer_judge == null){
+    function red_judge() {
+        if (answer_judge == null) {
             count_speed = 200;
             answer_judge = '赤'
             document.getElementById('message').innerHTML = '計数中...'
-            setTimeout( counting_cube, count_speed )
+            setTimeout(counting_cube, count_speed)
         }
     }
-    function blue_judge(){
-        if(answer_judge == null){
+    function blue_judge() {
+        if (answer_judge == null) {
             count_speed = 200;
             answer_judge = '青'
             document.getElementById('message').innerHTML = '計数中...'
-            setTimeout( counting_cube, count_speed )
+            setTimeout(counting_cube, count_speed)
         }
+    }
+    function level_up(){
+        quiz_size += 1;
+        if( 15 < quiz_size ){
+            quiz_size = 15;
+        }
+        document.getElementById('size_input').value = quiz_size;
+        reset();
+    }
+    function level_down(){
+        quiz_size -= 1;
+        if( quiz_size < 3){
+            quiz_size = 3;
+        }
+        document.getElementById('size_input').value = quiz_size;
+        reset();
     }
     //document.getElementById('hoge').innerHTML = 'hogehoges'
 
@@ -296,8 +320,8 @@
 
     answer_judge = null;
 
-    disp1.scale(-1,1);
-    disp1.translate( -CANVAS_SIZE, 0);
+    disp1.scale(-1, 1);
+    disp1.translate(-CANVAS_SIZE, 0);
     // stack[dan][oku][haba_from_left]
 
     stack1 = []
@@ -305,7 +329,7 @@
     initial_stack1 = null
     initial_stack2 = null
 
-    quiz_size = 5
+    quiz_size = 4
     // 問題作成
 
     // まず双方の個数を決める
@@ -325,6 +349,8 @@
     reset();
 
 
+    document.getElementById('level_up_button').onclick = level_up;
+    document.getElementById('level_down_button').onclick = level_down;
 
     document.getElementById('reset_button').onclick = reset;
     document.getElementById('red_button').onclick = red_judge;
