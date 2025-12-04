@@ -12,3 +12,11 @@ li{
   padding: 4px;
   font: 20px monospace;
 }
+
+tr.month_odd{
+  background-color: #EEE;
+}
+
+tr.month_even{
+  background-color: #EEB;
+}
