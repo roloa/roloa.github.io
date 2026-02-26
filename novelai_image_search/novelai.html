@@ -2,178 +2,167 @@
 <html lang="ja">
 
 <head>
-  <meta charset="UTF-8">
-  <title>NovelAI Image Search</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #333;
-      color: #ccc;
-    }
-
-    .results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    img {
-      width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-    }
-
-    input {
-      font-size: 150%;
-    }
-
-    button {
-      font-size: 150%;
-    }
-
-    input[type=checkbox] {
-      transform: scale(2);
-      margin-left: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>NovelAI Image Search</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <h1>Image Search</h1>
+    <h1><a href="novelai.html">Image Search</a></h1>
 
-  <input id="query" type="text" placeholder="search keyword">
-  <button onclick="search()">Search</button>
-  <label>
-    <input type="checkbox" id="randomize" checked>
-    ランダム
-  </label>
-  <label>
-    <input type="checkbox" id="check_v3">
-    v3
-  </label>
-  <label>
-    <input type="checkbox" id="check_v4" checked>
-    v4
-  </label>
+    <input id="query" type="text" placeholder="search keyword">
+    <button onclick="search_button()">Search</button>
+    <label>
+        <input type="checkbox" id="randomize" checked>
+        ランダム
+    </label>
+    <label>
+        <input type="checkbox" id="check_v3">
+        v3
+    </label>
+    <label>
+        <input type="checkbox" id="check_v4" checked>
+        v4
+    </label>
 
 
-  <div id="results" class="results"></div>
+    <div id="results" class="results"></div>
 
-  <script>
+    <script>
 
-    const input_field = document.getElementById("query");
+        const input_field = document.getElementById("query");
 
-    input_field.addEventListener("keydown", query_on_key_down);
+        input_field.addEventListener("keydown", query_on_key_down);
 
-    function query_on_key_down(e) {
-      if (e.key === "Enter") {
-        search();
-      }
-      return false;
-    }
-
-    let indexData = [];
-
-    // index.json を読み込む
-    fetch("index.json")
-      .then(res => res.json())
-      .then(data => {
-        indexData = data;
-      });
-
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-    function splitTerms(q) {
-      const rawTerms = q.split(/\s+/);
-
-      const includeTerms = [];
-      const excludeTerms = [];
-
-      for (const term of rawTerms) {
-        if (term.startsWith("-") && term.length > 1) {
-          excludeTerms.push(term.slice(1).toLowerCase());
-        } else {
-          includeTerms.push(term.toLowerCase());
+        function query_on_key_down(e) {
+            if (e.key === "Enter") {
+                search_button();
+            }
+            return false;
         }
-      }
 
-      return { includeTerms, excludeTerms };
-    }
+        let indexData = [];
 
-    function matchText(text, includeTerms, excludeTerms) {
-      // 通常検索：すべて含まれているか
-      if (!includeTerms.every(term => text.includes(term))) {
-        return false;
-      }
+        // index.json を読み込む
+        fetch("index.json")
+            .then(res => res.json())
+            .then(data => {
+                indexData = data;
 
-      // マイナス検索：一つでも含まれていたら除外
-      if (excludeTerms.some(term => text.includes(term))) {
-        return false;
-      }
+                automatic_search_from_get_parameter();
+            });
 
-      return true;
-    }
+        function automatic_search_from_get_parameter() {
+            const params = new URLSearchParams(window.location.search);
 
-    function matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4) {
-      const text = (item.prompt + " " + item.character_prompt).toLowerCase();
+            // 個別に取得
+            const q = params.get("query");
 
-      if (!matchText(text, includeTerms, excludeTerms)) {
-        return false;
-      }
-
-      if ((item.isLegacy === true && is_search_v3) ||
-        (item.isLegacy === false && is_search_v4)) {
-        return true;
-      }
-
-      return false;
-    }
-
-    function search() {
-      const q = document.getElementById("query").value.toLowerCase().trim();
-      const randomize = document.getElementById("randomize").checked;
-      const is_search_v3 = document.getElementById("check_v3").checked;
-      const is_search_v4 = document.getElementById("check_v4").checked;
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
-
-      //if (!q) return;
-
-      const { includeTerms, excludeTerms } = splitTerms(q);
-      const matches = [];
-
-      for (const item of indexData) {
-        if (matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4)) {
-          matches.push(item);
+            if (q) {
+                search(q);
+            }
         }
-      }
 
-      // ランダム表示
-      if (randomize) {
-        shuffle(matches);
-      }
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
 
-      // 最大15件表示
-      for (const item of matches.slice(0, 15)) {
-        const a = document.createElement("a");
-        a.href = item.path;
-        a.target = "_blank";
+        function splitTerms(q) {
+            const rawTerms = q.split(/\s+/);
 
-        const img = document.createElement("img");
-        img.src = item.path;
+            const includeTerms = [];
+            const excludeTerms = [];
 
-        a.appendChild(img);
-        resultsDiv.appendChild(a);
-      }
-    }
-  </script>
+            for (const term of rawTerms) {
+                if (term.startsWith("-") && term.length > 1) {
+                    excludeTerms.push(term.slice(1).toLowerCase());
+                } else {
+                    includeTerms.push(term.toLowerCase());
+                }
+            }
+
+            return { includeTerms, excludeTerms };
+        }
+
+        function matchText(text, includeTerms, excludeTerms) {
+            // 通常検索：すべて含まれているか
+            if (!includeTerms.every(term => text.includes(term))) {
+                return false;
+            }
+
+            // マイナス検索：一つでも含まれていたら除外
+            if (excludeTerms.some(term => text.includes(term))) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4) {
+            const text = (item.prompt + " " + item.character_prompt).toLowerCase();
+
+            if (!matchText(text, includeTerms, excludeTerms)) {
+                return false;
+            }
+
+            if ((item.isLegacy === true && is_search_v3) ||
+                (item.isLegacy === false && is_search_v4)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        function search_button() {
+            const q = document.getElementById("query").value;
+            search(q);
+        }
+
+        function search(q) {
+
+            if (!q) { q = ""; }
+
+            q = q.toLowerCase().trim();
+            const randomize = document.getElementById("randomize").checked;
+            const is_search_v3 = document.getElementById("check_v3").checked;
+            const is_search_v4 = document.getElementById("check_v4").checked;
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+
+
+
+            const { includeTerms, excludeTerms } = splitTerms(q);
+            const matches = [];
+
+            for (const item of indexData) {
+                if (matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4)) {
+                    matches.push(item);
+                }
+            }
+
+            // ランダム表示
+            if (randomize) {
+                shuffle(matches);
+            }
+
+            // 最大15件表示
+            for (const item of matches.slice(0, 15)) {
+                const a = document.createElement("a");
+                a.href = `image.html?id=${item.id}`;
+                //a.target = "_blank";
+
+                const img = document.createElement("img");
+                img.src = item.path;
+
+                a.appendChild(img);
+                resultsDiv.appendChild(a);
+            }
+        }
+    </script>
 
 </body>
 

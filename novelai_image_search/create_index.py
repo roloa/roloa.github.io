@@ -7,6 +7,11 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_JSON = "index.json"
 
 def extract_metadata(png_path):
+
+    if not hasattr(extract_metadata, "id_countup"):
+        extract_metadata.id_countup = 0
+    extract_metadata.id_countup += 1
+
     img = Image.open(png_path)
     info = img.info
 
@@ -30,6 +35,7 @@ def extract_metadata(png_path):
     timestamp = int(stat.st_mtime)  # 更新時刻
 
     return {
+        "id": extract_metadata.id_countup,
         "path": os.path.relpath(png_path, ROOT_DIR),
         "timestamp": timestamp,
         "prompt": prompt,

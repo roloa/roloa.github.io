@@ -18,7 +18,7 @@ python -m http.server 8000
 
 - ブラウザでアクセスします。
 ```
-http://localhost.127.0.0.1:/novelai.html
+http://127.0.0.1:8000/novelai.html
 ```
 
 - index.htmlは誤アクセスの軽減のため白紙になっています。
