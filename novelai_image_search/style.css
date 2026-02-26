@@ -30,6 +30,9 @@ input[type=checkbox] {
     margin-left: 20px;
 }
 
+div#prompt {
+    font-size: 150%;
+}
 
 
 a:link { color: #AAF; }
