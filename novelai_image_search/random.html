@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NovelAI Random Image</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+
+
+    <div id="canvas" class="canvas" onclick="rerender()"></div>
+    <div>プロンプト:</div>
+    <div id="prompt"></div>
+    <h1><a href="novelai.html">Image Search</a></h1>
+    <script>
+
+
+        document.body.addEventListener("keydown", body_on_key_down);
+
+        function body_on_key_down(e) {
+
+        }
+
+        let indexData = [];
+
+        // index.json を読み込む
+        fetch("index.json")
+            .then(res => res.json())
+            .then(data => {
+                indexData = data;
+                render();
+            })
+
+        function getItemById(id) {
+            for (const item of indexData) {
+                if (item.id == id) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        function render() {
+
+            const img = document.createElement("img");
+
+            const id = Math.floor(Math.random() * 15000);
+            item = getItemById(id);
+            if (!item) {
+                return;
+            }
+            img.id = "canvas_img";
+            img.src = item.path;
+
+            canvasDiv = document.getElementById("canvas");
+            canvasDiv.appendChild(img);
+
+            render_prompt();
+
+        }
+
+        function rerender() {
+            const img = document.getElementById("canvas_img");
+            
+            const id = Math.floor(Math.random() * 15000);
+            item = getItemById(id);
+            if (!item) {
+                return;
+            }
+            img.id = "canvas_img";
+            img.src = item.path;
+
+            render_prompt();
+        }
+
+        function render_prompt() {
+            const prompt_list = item.prompt
+                .split(",")
+                .map(s => s.trim())
+                .filter(s => s.length > 0);
+
+
+            const container = document.getElementById("prompt");
+            container.innerHTML = "";
+
+            prompt_list.forEach(prompt => {
+                // aタグを作成
+                const a = document.createElement("a");
+
+                // GETパラメータを安全に付与
+                a.href = "novelai.html?query=" + encodeURIComponent(prompt);
+
+                // リンクテキスト
+                a.textContent = prompt;
+
+                // 必要なら見た目用に改行
+                const br = document.createElement("br");
+
+                // div#prompt に追加
+                container.appendChild(a);
+                container.appendChild(br);
+
+            });
+        }
+    </script>
+
+</body>
+
+</html>
