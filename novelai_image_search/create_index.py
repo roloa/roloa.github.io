@@ -34,9 +34,13 @@ def extract_metadata(png_path):
     stat = os.stat(png_path)
     timestamp = int(stat.st_mtime)  # 更新時刻
 
+    rel_path = os.path.relpath(png_path, ROOT_DIR)
+    top_folder = rel_path.split(os.sep)[0]
+
     return {
         "id": extract_metadata.id_countup,
-        "path": os.path.relpath(png_path, ROOT_DIR),
+        "path": rel_path,
+        "top_folder": top_folder,
         "timestamp": timestamp,
         "prompt": prompt,
         "isLegacy": isLegacy

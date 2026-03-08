@@ -14,9 +14,18 @@
     <input id="query" type="text" placeholder="search keyword">
     <button onclick="search_button()">Search</button>
     <label>
-        <input type="checkbox" id="randomize" checked>
+        <input type="radio" id="result_latest" name="result_order">
+        最新
+    </label>
+    <label>
+        <input type="radio" id="result_random" name="result_order">
         ランダム
     </label>
+    <label>
+        <input type="radio" id="result_timeline" name="result_order" checked>
+        タイムライン
+    </label>
+
     <label>
         <input type="checkbox" id="check_v3">
         v3
@@ -26,6 +35,10 @@
         v4
     </label>
 
+    <label>
+        <input type="text" id="result_count" value="8" size="1">
+        枚
+    </label>
 
     <div id="results" class="results"></div>
 
@@ -74,6 +87,36 @@
             }
         }
 
+        function summarizeArray(arr, target) {
+
+            if (arr.length < target) {
+                return arr;
+            }
+
+            const step = (arr.length - 1) / (target - 1);
+            const selected = [];
+
+            for (let i = 0; i < target; i++) {
+                let base = i * step;
+
+                // 先頭と末尾は固定
+                if (i !== 0 && i !== target - 1) {
+                    const jitter = (Math.random() - 0.5) * step; // ±step/2
+                    base += jitter;
+                }
+
+                let index = Math.round(base);
+
+                // 範囲補正
+                index = Math.max(0, Math.min(arr.length - 1, index));
+
+                selected.push(arr[index]);
+            }
+
+            arr.splice(0, arr.length, ...selected);
+            return arr;
+        }
+
         function splitTerms(q) {
             const rawTerms = q.split(/\s+/);
 
@@ -106,7 +149,7 @@
         }
 
         function matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4) {
-            const text = (item.prompt + " " + item.character_prompt).toLowerCase();
+            const text = (item.prompt + " " + item.character_prompt + " " + item.top_folder).toLowerCase();
 
             if (!matchText(text, includeTerms, excludeTerms)) {
                 return false;
@@ -130,13 +173,14 @@
             if (!q) { q = ""; }
 
             q = q.toLowerCase().trim();
-            const randomize = document.getElementById("randomize").checked;
+            const is_result_random = document.getElementById("result_random").checked;
+            const is_result_timeline = document.getElementById("result_timeline").checked;
             const is_search_v3 = document.getElementById("check_v3").checked;
             const is_search_v4 = document.getElementById("check_v4").checked;
+            const result_count = document.getElementById("result_count").value;
+
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = "";
-
-
 
             const { includeTerms, excludeTerms } = splitTerms(q);
             const matches = [];
@@ -148,12 +192,17 @@
             }
 
             // ランダム表示
-            if (randomize) {
+            if (is_result_random) {
                 shuffle(matches);
             }
 
+            // タイムライン表示
+            if (is_result_timeline) {
+                summarizeArray(matches, result_count);
+            }
+
             // 最大15件表示
-            for (const item of matches.slice(0, 15)) {
+            for (const item of matches.slice(0, result_count)) {
                 const a = document.createElement("a");
                 a.href = `image.html?id=${item.id}`;
                 //a.target = "_blank";

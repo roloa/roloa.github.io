@@ -2,6 +2,7 @@
   {
     "id": 2,
     "path": "sample_images\\bird, feral, solo, full body, apple, s-2343773316.png",
+    "top_folder": "sample_images",
     "timestamp": 1772092056,
     "prompt": "bird, feral, solo, full body, apple,",
     "isLegacy": true
@@ -9,6 +10,7 @@
   {
     "id": 25,
     "path": "sample_images\\shark, feral, solo, full body, s-1689999038.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091975,
     "prompt": "shark, feral, solo, full body, ",
     "isLegacy": true
@@ -16,6 +18,7 @@
   {
     "id": 22,
     "path": "sample_images\\rabbit, feral, solo, full body, s-627699682.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091964,
     "prompt": "rabbit, feral, solo, full body, ",
     "isLegacy": true
@@ -23,6 +26,7 @@
   {
     "id": 14,
     "path": "sample_images\\fox, white pupils, feral, solo, full body, s-4280287720.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091933,
     "prompt": "fox, white pupils, feral, solo, full body, ",
     "isLegacy": true
@@ -30,6 +34,7 @@
   {
     "id": 13,
     "path": "sample_images\\fox, hair, white pupils, furry, feral, solo, full body, s-2722881226.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091493,
     "prompt": "fox, hair, white pupils, furry, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -37,6 +42,7 @@
   {
     "id": 12,
     "path": "sample_images\\fox, hair, white pupils, furry, feral, solo, full body, apple, s-3207454868.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091434,
     "prompt": "fox, hair, white pupils, furry, feral, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -44,6 +50,7 @@
   {
     "id": 15,
     "path": "sample_images\\fox, white pupils, furry, feral, solo, full body, apple, s-1412533009.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091403,
     "prompt": "fox, white pupils, furry, feral, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -51,6 +58,7 @@
   {
     "id": 16,
     "path": "sample_images\\fox, white pupils, furry, feral, solo, full body, s-2187492965.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091367,
     "prompt": "fox, white pupils, furry, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -58,6 +66,7 @@
   {
     "id": 23,
     "path": "sample_images\\rabbit, white pupils, furry, feral, dress, -1__hair__, solo, full body, apple, s-1766743320.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091111,
     "prompt": "fur dataset, rabbit, white pupils, furry, feral, dress, -1::hair::, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -65,6 +74,7 @@
   {
     "id": 24,
     "path": "sample_images\\rabbit, white pupils, furry, feral, dress, -1__hair__, solo, full body, s-2683010849.png",
+    "top_folder": "sample_images",
     "timestamp": 1772091085,
     "prompt": "fur dataset, rabbit, white pupils, furry, feral, dress, -1::hair::, solo, full body,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -72,6 +82,7 @@
   {
     "id": 8,
     "path": "sample_images\\bird, white pupils, furry, anthro, solo, full body, apple, s-1371371444.png",
+    "top_folder": "sample_images",
     "timestamp": 1772090822,
     "prompt": "bird, white pupils, furry, anthro, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -79,6 +90,7 @@
   {
     "id": 1,
     "path": "sample_images\\bird, anthro, solo, full body, apple, s-2873164893.png",
+    "top_folder": "sample_images",
     "timestamp": 1772090757,
     "prompt": "bird, anthro, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -86,6 +98,7 @@
   {
     "id": 11,
     "path": "sample_images\\duo, forest, s-3376417851.png",
+    "top_folder": "sample_images",
     "timestamp": 1772090693,
     "prompt": "duo, forest,, very aesthetic, masterpiece, no text,rabbit, anthro,,shark, white pupils, anthro,",
     "isLegacy": false
@@ -93,6 +106,7 @@
   {
     "id": 9,
     "path": "sample_images\\duo, forest, s-1962445204.png",
+    "top_folder": "sample_images",
     "timestamp": 1772090638,
     "prompt": "duo, forest,, very aesthetic, masterpiece, no text,bird, anthro,,shark, white pupils, anthro,",
     "isLegacy": false
@@ -100,6 +114,7 @@
   {
     "id": 10,
     "path": "sample_images\\duo, forest, s-2597131075.png",
+    "top_folder": "sample_images",
     "timestamp": 1772090417,
     "prompt": "duo, forest,, very aesthetic, masterpiece, no text,bird, anthro,,rabbit, anthro,",
     "isLegacy": false
@@ -107,6 +122,7 @@
   {
     "id": 7,
     "path": "sample_images\\bird, white pupils, feral, solo, apple, s-3777762155.png",
+    "top_folder": "sample_images",
     "timestamp": 1772090014,
     "prompt": "bird, white pupils, feral, solo, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -114,6 +130,7 @@
   {
     "id": 6,
     "path": "sample_images\\bird, white pupils, feral, solo, apple, s-1888335601.png",
+    "top_folder": "sample_images",
     "timestamp": 1772089909,
     "prompt": "bird, white pupils, feral, solo, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -121,6 +138,7 @@
   {
     "id": 29,
     "path": "sample_images\\shark, white pupils, anime, feral, solo, full body, apple, s-1926218213.png",
+    "top_folder": "sample_images",
     "timestamp": 1772089422,
     "prompt": "shark, white pupils, anime, feral, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -128,6 +146,7 @@
   {
     "id": 18,
     "path": "sample_images\\rabbit, feral, solo, full body, apple, s-2738935088.png",
+    "top_folder": "sample_images",
     "timestamp": 1772089278,
     "prompt": "rabbit, feral, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -135,6 +154,7 @@
   {
     "id": 17,
     "path": "sample_images\\rabbit, feral, solo, full body, apple, s-21148827.png",
+    "top_folder": "sample_images",
     "timestamp": 1772089244,
     "prompt": "rabbit, feral, solo, full body, apple,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -142,6 +162,7 @@
   {
     "id": 3,
     "path": "sample_images\\bird, feral, solo, full body, s-2873164893.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088993,
     "prompt": "bird, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -149,6 +170,7 @@
   {
     "id": 4,
     "path": "sample_images\\bird, feral, solo, full body, s-331061823.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088848,
     "prompt": "bird, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -156,6 +178,7 @@
   {
     "id": 5,
     "path": "sample_images\\bird, feral, solo, full body, s-3404146859.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088832,
     "prompt": "bird, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -163,6 +186,7 @@
   {
     "id": 21,
     "path": "sample_images\\rabbit, feral, solo, full body, s-3206908020.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088739,
     "prompt": "rabbit, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -170,6 +194,7 @@
   {
     "id": 28,
     "path": "sample_images\\shark, feral, solo, full body, s-93252436.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088717,
     "prompt": "shark, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -177,6 +202,7 @@
   {
     "id": 27,
     "path": "sample_images\\shark, feral, solo, full body, s-2952633191.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088700,
     "prompt": "shark, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -184,6 +210,7 @@
   {
     "id": 26,
     "path": "sample_images\\shark, feral, solo, full body, s-193202280.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088623,
     "prompt": "shark, feral, solo, full body, , very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -191,6 +218,7 @@
   {
     "id": 19,
     "path": "sample_images\\rabbit, feral, solo, full body, s-2179985806.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088555,
     "prompt": "rabbit, feral, solo, full body,, very aesthetic, masterpiece, no text",
     "isLegacy": false
@@ -198,6 +226,7 @@
   {
     "id": 20,
     "path": "sample_images\\rabbit, feral, solo, full body, s-2544989730.png",
+    "top_folder": "sample_images",
     "timestamp": 1772088546,
     "prompt": "rabbit, feral, solo, full body,, very aesthetic, masterpiece, no text",
     "isLegacy": false
