@@ -2,9 +2,12 @@
 import os
 import json
 from PIL import Image
+from collections import Counter
 
+counter = Counter()
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_JSON = "index.json"
+OUTPUT_JSON_TAG_COUNT = "tag_count.json"
 
 def extract_metadata(png_path):
 
@@ -30,6 +33,14 @@ def extract_metadata(png_path):
     else:
         prompt = img_info_dict.get("prompt","")
         isLegacy = True
+
+    # タグカウント
+    tags = prompt.split(",")
+
+    for tag in tags:
+        tag = tag.strip()
+        if tag:
+            counter[tag] += 1
 
     stat = os.stat(png_path)
     timestamp = int(stat.st_mtime)  # 更新時刻
@@ -63,7 +74,16 @@ for root, _, files in os.walk(ROOT_DIR):
 # タイムスタンプ降順ソート
 index.sort(key=lambda x: x["timestamp"], reverse=True)
 
+# 辞書 → 辞書の配列に変換
+counter_list = [{"name": k, "value": v} for k, v in counter.items()]
+
+# valueで降順ソート
+counter_list.sort(key=lambda x: x["value"], reverse=True)
+
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(index, f, ensure_ascii=False, indent=2)
+
+with open(OUTPUT_JSON_TAG_COUNT, "w", encoding="utf-8") as f:
+    json.dump(counter_list, f, ensure_ascii=False, indent=2)
 
 print(f"indexed {len(index)} images")

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "solo",
+    "value": 26
+  },
+  {
+    "name": "very aesthetic",
+    "value": 25
+  },
+  {
+    "name": "masterpiece",
+    "value": 25
+  },
+  {
+    "name": "no text",
+    "value": 25
+  },
+  {
+    "name": "full body",
+    "value": 24
+  },
+  {
+    "name": "feral",
+    "value": 24
+  },
+  {
+    "name": "white pupils",
+    "value": 13
+  },
+  {
+    "name": "apple",
+    "value": 11
+  },
+  {
+    "name": "bird",
+    "value": 10
+  },
+  {
+    "name": "rabbit",
+    "value": 10
+  },
+  {
+    "name": "anthro",
+    "value": 8
+  },
+  {
+    "name": "furry",
+    "value": 7
+  },
+  {
+    "name": "shark",
+    "value": 7
+  },
+  {
+    "name": "fox",
+    "value": 5
+  },
+  {
+    "name": "duo",
+    "value": 3
+  },
+  {
+    "name": "forest",
+    "value": 3
+  },
+  {
+    "name": "hair",
+    "value": 2
+  },
+  {
+    "name": "fur dataset",
+    "value": 2
+  },
+  {
+    "name": "dress",
+    "value": 2
+  },
+  {
+    "name": "-1::hair::",
+    "value": 2
+  },
+  {
+    "name": "anime",
+    "value": 1
+  }
+]
