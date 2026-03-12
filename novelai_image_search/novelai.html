@@ -18,14 +18,17 @@
         最新
     </label>
     <label>
-        <input type="radio" id="result_random" name="result_order">
+        <input type="radio" id="result_random" name="result_order" checked>
         ランダム
     </label>
     <label>
-        <input type="radio" id="result_timeline" name="result_order" checked>
+        <input type="radio" id="result_timeline" name="result_order">
         タイムライン
     </label>
-
+    <label>
+        <input type="radio" id="result_near_id" name="result_order">
+        近傍ID
+    </label>
     <label>
         <input type="checkbox" id="check_v3">
         v3
@@ -36,8 +39,16 @@
     </label>
 
     <label>
-        <input type="text" id="result_count" value="8" size="1">
-        枚
+        <label for="result_count">表示枚数:</label>
+        <select id="result_count" name="result_count">
+            <option value="1">1枚</option>
+            <option value="2">2枚</option>
+            <option value="4" selected>4枚</option>
+            <option value="8">8枚</option>
+            <option value="16">16枚</option>
+            <option value="32">32枚</option>
+            <option value="64">64枚</option>
+        </select>
     </label>
 
     <div id="results" class="results"></div>
@@ -70,6 +81,23 @@
 
         function automatic_search_from_get_parameter() {
             const params = new URLSearchParams(window.location.search);
+
+            // 検索結果の並びタイプを取得して指定
+            const resultType = params.get("result_type");
+
+            if (resultType) {
+                const radio = document.getElementById(resultType);
+                if (radio) {
+                    radio.checked = true;
+                }
+            }
+
+            // 検索枚数
+            const resultCount = params.get("result_count");
+            if (resultCount) {
+                const select = document.getElementById("result_count");
+                select.value = resultCount;
+            }
 
             // 個別に取得
             const q = params.get("query");
@@ -148,7 +176,24 @@
             return true;
         }
 
-        function matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4) {
+        function matchItem(item, query, is_search_v3, is_search_v4) {
+
+            const match = query.match(/^id:(\d+)$/);
+            // id:で始まる文字列なら特殊処理
+            if (match) {
+                const id = Number(match[1]);
+
+                // console.log(item);
+
+                // ここに処理を書く
+                if (item.id == id) {
+                    return true;
+                }
+                return false;
+            }
+
+            const { includeTerms, excludeTerms } = splitTerms(query);
+
             const text = (item.prompt + " " + item.character_prompt + " " + item.top_folder).toLowerCase();
 
             if (!matchText(text, includeTerms, excludeTerms)) {
@@ -175,6 +220,8 @@
             q = q.toLowerCase().trim();
             const is_result_random = document.getElementById("result_random").checked;
             const is_result_timeline = document.getElementById("result_timeline").checked;
+            const is_result_near_id = document.getElementById("result_near_id").checked;
+
             const is_search_v3 = document.getElementById("check_v3").checked;
             const is_search_v4 = document.getElementById("check_v4").checked;
             const result_count = document.getElementById("result_count").value;
@@ -182,23 +229,62 @@
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = "";
 
-            const { includeTerms, excludeTerms } = splitTerms(q);
-            const matches = [];
 
-            for (const item of indexData) {
-                if (matchItem(item, includeTerms, excludeTerms, is_search_v3, is_search_v4)) {
-                    matches.push(item);
-                }
-            }
+            let matches = [];
 
             // ランダム表示
             if (is_result_random) {
+                for (const item of indexData) {
+                    if (matchItem(item, q, is_search_v3, is_search_v4)) {
+                        matches.push(item);
+                    }
+                }
                 shuffle(matches);
             }
 
             // タイムライン表示
             if (is_result_timeline) {
+                for (const item of indexData) {
+                    if (matchItem(item, q, is_search_v3, is_search_v4)) {
+                        matches.push(item);
+                    }
+                }
                 summarizeArray(matches, result_count);
+            }
+
+            // 近傍ID表示
+            if (is_result_near_id) {
+                let firstMatchIndex = -1;
+
+                for (let i = 0; i < indexData.length; i++) {
+                    const item = indexData[i];
+
+                    if (matchItem(item, q, is_search_v3, is_search_v4)) {
+                        firstMatchIndex = i;
+                        break;
+                    }
+                }
+
+                if (firstMatchIndex !== -1) {
+
+                    const half = Math.floor(result_count / 2);
+
+                    let start = firstMatchIndex - half;
+                    let end = start + Number(result_count);
+
+                    // 配列の範囲を超えないよう調整
+                    if (start < 0) {
+                        start = 0;
+                        end = Math.min(result_count, indexData.length);
+                    }
+
+                    if (end > indexData.length) {
+                        end = indexData.length;
+                        start = Math.max(0, end - result_count);
+                    }
+                    console.log(`${firstMatchIndex}iscenter, ${start}-${end}`);
+                    matches = indexData.slice(start, end);
+                }
             }
 
             // 最大15件表示

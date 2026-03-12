@@ -13,6 +13,7 @@
 
 
     <div id="canvas" class="canvas"></div>
+    <div>ID:<a id="image_id" href=""></a></div>
     <div>プロンプト:</div>
     <div id="prompt"></div>
     <h1><a href="novelai.html">Image Search</a></h1>
@@ -64,6 +65,9 @@
             canvasDiv = document.getElementById("canvas");
             canvasDiv.appendChild(img);
 
+            const id_div = document.getElementById("image_id");
+            id_div.textContent = id;
+            id_div.href = "novelai.html?result_type=result_near_id&result_count=16&query=id:" + id;
 
             render_prompt();
 
