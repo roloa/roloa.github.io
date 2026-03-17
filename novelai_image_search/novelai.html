@@ -218,6 +218,7 @@
             if (!q) { q = ""; }
 
             q = q.toLowerCase().trim();
+            const is_result_latest = document.getElementById("result_latest").checked;
             const is_result_random = document.getElementById("result_random").checked;
             const is_result_timeline = document.getElementById("result_timeline").checked;
             const is_result_near_id = document.getElementById("result_near_id").checked;
@@ -231,6 +232,15 @@
 
 
             let matches = [];
+
+            // 最新表示
+            if (is_result_latest) {
+                for (const item of indexData) {
+                    if (matchItem(item, q, is_search_v3, is_search_v4)) {
+                        matches.push(item);
+                    }
+                }
+            }
 
             // ランダム表示
             if (is_result_random) {
