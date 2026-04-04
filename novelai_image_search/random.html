@@ -35,31 +35,42 @@
                 render();
             })
 
+        function getItemById(id) {
+            for (const item of indexData) {
+                if (item.id == id) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
         function render() {
-            if (indexData.length === 0) return;
 
             const img = document.createElement("img");
 
-            const randomIndex = Math.floor(Math.random() * indexData.length);
-            item = indexData[randomIndex];
-
+            const id = Math.floor(Math.random() * 15000);
+            item = getItemById(id);
+            if (!item) {
+                return;
+            }
             img.id = "canvas_img";
             img.src = item.path;
 
-            const canvasDiv = document.getElementById("canvas");
+            canvasDiv = document.getElementById("canvas");
             canvasDiv.appendChild(img);
 
             render_prompt();
+
         }
 
         function rerender() {
-            if (indexData.length === 0) return;
-
             const img = document.getElementById("canvas_img");
-
-            const randomIndex = Math.floor(Math.random() * indexData.length);
-            item = indexData[randomIndex];
-
+            
+            const id = Math.floor(Math.random() * 15000);
+            item = getItemById(id);
+            if (!item) {
+                return;
+            }
             img.id = "canvas_img";
             img.src = item.path;
 
