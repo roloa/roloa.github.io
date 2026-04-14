@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spire-like Card Battle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <section class="top-bar">
+        <div class="title-block">
+          <p class="eyebrow">Deckbuilding Battle Prototype</p>
+          <h1>Spire-like Card Battle</h1>
+          <p class="subtitle">
+            JavaScriptとHTMLだけで動く、構築型カードバトルの最小プロトタイプ
+          </p>
+        </div>
+        <button id="restartButton" class="secondary-button">戦闘をリセット</button>
+      </section>
+
+      <section class="battlefield">
+        <article class="combatant player-panel">
+          <div class="panel-heading">
+            <h2>プレイヤー</h2>
+            <span class="badge">あなた</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-label">HP</span>
+              <strong id="playerHp">0 / 0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">ブロック</span>
+              <strong id="playerBlock">0</strong>
+            </div>
+            <div class="stat-card energy">
+              <span class="stat-label">エナジー</span>
+              <strong id="playerEnergy">0 / 0</strong>
+            </div>
+          </div>
+          <div class="deck-stats">
+            <span>山札: <strong id="drawPileCount">0</strong></span>
+            <span>捨て札: <strong id="discardPileCount">0</strong></span>
+            <span>手札: <strong id="handCount">0</strong></span>
+          </div>
+        </article>
+
+        <article class="combatant enemy-panel">
+          <div class="panel-heading">
+            <h2 id="enemyName">敵</h2>
+            <span class="badge danger">Enemy</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-label">HP</span>
+              <strong id="enemyHp">0 / 0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">ブロック</span>
+              <strong id="enemyBlock">0</strong>
+            </div>
+            <div class="stat-card intent">
+              <span class="stat-label">次の行動</span>
+              <strong id="enemyIntent">-</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="controls">
+        <button id="drawButton" class="secondary-button">1枚引く</button>
+        <button id="endTurnButton" class="primary-button">ターン終了</button>
+      </section>
+
+      <section class="hand-section">
+        <div class="section-heading">
+          <h3>手札</h3>
+          <p>カードをクリックすると使用します</p>
+        </div>
+        <div id="handArea" class="hand-area"></div>
+      </section>
+
+      <section class="log-section">
+        <div class="section-heading">
+          <h3>戦闘ログ</h3>
+          <p>直近の出来事を確認できます</p>
+        </div>
+        <div id="logArea" class="log-area"></div>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>
