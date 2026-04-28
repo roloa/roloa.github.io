@@ -6,38 +6,45 @@
     <title>NovelAI Random Image</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        .canvas {
+            width: 90vw;
+            /* 画面幅の90% */
+            aspect-ratio: 1 / 1;
+            /* 正方形にする */
+        }
+
+        #canvas_img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* 全体を収める */
+        }
+
         .diamond {
-            position: relative;
-            width: 80%;
-            height: 250px;
-            margin: 50px;
+            display: grid;
+            grid-template-rows: auto auto auto;
+            gap: 10px;
+            width: 90%;
         }
 
-        .diamond button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        /* 1番目 → 上 */
+        /* 1番目 → 中央 */
         .diamond button:nth-child(1) {
-            transform: translate(-50%, -150%);
+            justify-self: center;
         }
 
-        /* 2番目 → 左（中央から左へ） */
+        /* 2番目 → 左 */
         .diamond button:nth-child(2) {
-            transform: translate(-150%, -50%);
+            justify-self: start;
         }
 
-        /* 3番目 → 右（中央から右へ） */
+        /* 3番目 → 右 */
         .diamond button:nth-child(3) {
-            transform: translate(50%, -50%);
+            justify-self: end;
         }
 
-        /* 4番目 → 下 */
+        /* 4番目 → 中央 */
         .diamond button:nth-child(4) {
-            transform: translate(-50%, 50%);
+            justify-self: center;
         }
     </style>
 </head>
@@ -54,6 +61,7 @@
     </div>
     <div>プロンプト:</div>
     <div id="prompt" class="diamond"></div>
+    <div><button id="reroll_button">リロール</button></div>
     <h1><a href="novelai.html">Image Search</a></h1>
     <script>
 
@@ -99,6 +107,11 @@
             if (buttonIndex === 3) {
                 getNthButton(1).click();
             }
+
+            if (4 <= buttonIndex) {
+                document.getElementById("reroll_button").click();
+            }
+
 
         }
 
@@ -160,6 +173,8 @@
             return null;
         }
 
+        let first_tag = "audino";
+
         function render(tag) {
 
             let item = getItemByTag(tag)
@@ -174,6 +189,9 @@
             img.id = "canvas_img";
             img.src = item.path;
             a.href = "image.html?id=" + item.id;
+
+            const reroll_button = document.getElementById("reroll_button");
+            reroll_button.onclick = (function () { console.log("reroll!"); render_prompt(tag, item); })
 
             render_prompt(tag, item);
 
