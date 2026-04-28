@@ -1,23 +1,23 @@
 [
   {
     "name": "solo",
-    "value": 26
+    "value": 32
   },
   {
     "name": "very aesthetic",
-    "value": 25
+    "value": 31
   },
   {
     "name": "masterpiece",
-    "value": 25
+    "value": 31
   },
   {
     "name": "no text",
-    "value": 25
+    "value": 31
   },
   {
     "name": "full body",
-    "value": 24
+    "value": 30
   },
   {
     "name": "feral",
@@ -25,6 +25,10 @@
   },
   {
     "name": "white pupils",
+    "value": 19
+  },
+  {
+    "name": "furry",
     "value": 13
   },
   {
@@ -44,12 +48,28 @@
     "value": 8
   },
   {
-    "name": "furry",
+    "name": "shark",
     "value": 7
   },
   {
-    "name": "shark",
-    "value": 7
+    "name": "dog",
+    "value": 6
+  },
+  {
+    "name": "huge sword",
+    "value": 6
+  },
+  {
+    "name": "simple",
+    "value": 6
+  },
+  {
+    "name": "standing",
+    "value": 6
+  },
+  {
+    "name": "hair",
+    "value": 5
   },
   {
     "name": "fox",
@@ -64,19 +84,11 @@
     "value": 3
   },
   {
-    "name": "hair",
-    "value": 2
-  },
-  {
     "name": "fur dataset",
     "value": 2
   },
   {
     "name": "dress",
-    "value": 2
-  },
-  {
-    "name": "-1::hair::",
     "value": 2
   },
   {

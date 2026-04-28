@@ -1,6 +1,7 @@
 
 import os
 import json
+import re
 from PIL import Image
 from collections import Counter
 
@@ -8,6 +9,44 @@ counter = Counter()
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_JSON = "index.json"
 OUTPUT_JSON_TAG_COUNT = "tag_count.json"
+
+
+def process_prompt(prompt: str) -> str:
+    try:
+        original = prompt
+
+        # 1. 重み構文のチェック（開閉が一致しているか）
+        if prompt.count("::") % 2 != 0:
+            return original
+
+        # 2. 負の重み → 丸ごと削除
+        # 例: -1.2::tag1, tag2::
+        prompt = re.sub(
+            r'-\d+(?:\.\d+)?::.*?::',
+            '',
+            prompt
+        )
+
+        # 3. 正の重み → 構文だけ除去（中身は残す）
+        # 例: 2.5::tag1, tag2:: → tag1, tag2
+        prompt = re.sub(
+            r'\d+(?:\.\d+)?::(.*?)::',
+            r'\1',
+            prompt
+        )
+
+        # 4. カッコ除去（中身は残す）
+        prompt = re.sub(r'[{}\[\]]', '', prompt)
+
+        # 5. カンマ周りを軽く整形
+        prompt = re.sub(r'\s*,\s*', ', ', prompt)
+        prompt = re.sub(r',\s*,+', ',', prompt)  # 連続カンマ削除
+        prompt = prompt.strip(', ').strip()
+
+        return prompt
+
+    except Exception:
+        return original
 
 def extract_metadata(png_path):
 
@@ -33,6 +72,8 @@ def extract_metadata(png_path):
     else:
         prompt = img_info_dict.get("prompt","")
         isLegacy = True
+
+    prompt = process_prompt(prompt)
 
     # タグカウント
     tags = prompt.split(",")
