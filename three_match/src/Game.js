@@ -10,4 +10,8 @@ export class Game {
   initialize() {
     this.renderer.renderBoard(this.board);
   }
+
+  debugReload() {
+    window.location.reload();
+  }
 }
