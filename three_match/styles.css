@@ -390,15 +390,19 @@ body {
 
 .inventory-panel {
   padding: 10px 10px 12px;
+  overflow: hidden;
 }
 
 .inventory-slots {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+  width: 100%;
 }
 
 .inventory-slot {
+  min-width: 0;
+  width: 100%;
   aspect-ratio: 1;
   border-radius: 16px;
   padding: 5px;
