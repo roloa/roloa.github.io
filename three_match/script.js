@@ -1,16 +1,14 @@
-const BOARD_SIZE = 9;
+const BOARD_SIZE = 7;
 const PIECE_TYPES = ["red", "yellow", "blue", "green", "purple"];
 
 const layout = [
-  ["red", "yellow", "blue", "green", "purple", "blue", "yellow", "green", "red"],
-  ["green", "purple", "yellow", "red", "blue", "yellow", "purple", "red", "green"],
-  ["blue", "green", "red", "purple", "yellow", "green", "red", "blue", "yellow"],
-  ["yellow", "blue", "green", "yellow", "red", "purple", "green", "yellow", "blue"],
-  ["purple", "red", "blue", "green", "purple", "red", "yellow", "green", "purple"],
-  ["green", "yellow", "purple", "blue", "green", "yellow", "blue", "red", "green"],
-  ["red", "blue", "green", "red", "yellow", "purple", "green", "blue", "yellow"],
-  ["yellow", "green", "red", "purple", "blue", "green", "red", "yellow", "purple"],
-  ["blue", "purple", "yellow", "green", "red", "blue", "purple", "green", "red"],
+  ["red", "yellow", "blue", "green", "purple", "blue", "yellow"],
+  ["green", "purple", "yellow", "red", "blue", "yellow", "purple"],
+  ["blue", "green", "red", "purple", "yellow", "green", "red"],
+  ["yellow", "blue", "green", "yellow", "red", "purple", "green"],
+  ["purple", "red", "blue", "green", "purple", "red", "yellow"],
+  ["green", "yellow", "purple", "blue", "green", "yellow", "blue"],
+  ["red", "blue", "green", "red", "yellow", "purple", "green"],
 ];
 
 const boardGrid = document.getElementById("board-grid");
