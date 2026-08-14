@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第一印象 / 今の印象</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+      background: #eeeae5;
+      color: #5f5958;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+    }
+
+    .page {
+      width: min(100%, 1014px);
+      margin: 0 auto;
+      background: #fff;
+      box-shadow: 0 0 32px rgb(76 68 64 / 12%);
+    }
+
+    .sheet {
+      position: relative;
+      width: 100%;
+      line-height: 0;
+    }
+
+    .share-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 28px;
+      border-top: 1px solid #ddd6cf;
+      background: #f5f2ee;
+    }
+
+    .share-copy {
+      margin: 0;
+      color: #77706e;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .share-button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 220px;
+      min-height: 50px;
+      padding: 12px 24px;
+      border: 0;
+      border-radius: 999px;
+      background: #655f5e;
+      color: #fff;
+      font: 700 15px / 1 "Yu Gothic", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+      letter-spacing: .05em;
+      cursor: pointer;
+      box-shadow: 0 5px 14px rgb(72 65 62 / 18%);
+      transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+    }
+
+    .share-button:hover {
+      background: #514c4b;
+      box-shadow: 0 7px 18px rgb(72 65 62 / 24%);
+      transform: translateY(-1px);
+    }
+
+    .share-button:focus-visible {
+      outline: 3px solid rgb(101 95 94 / 30%);
+      outline-offset: 3px;
+    }
+
+    .share-button:disabled {
+      cursor: wait;
+      opacity: .66;
+      transform: none;
+    }
+
+    .sheet-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .entry {
+      position: absolute;
+      margin: 0;
+      padding: 1.6% 1.8%;
+      resize: none;
+      overflow: hidden;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      outline: none;
+      background: rgb(232 227 219 / 88%);
+      color: #5a5453;
+      font: 600 clamp(10px, 2.15vw, 22px) / 1.55 "Yu Gothic", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+      letter-spacing: .04em;
+      transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .entry::placeholder {
+      color: rgb(101 94 91 / 34%);
+      font-weight: 500;
+    }
+
+    .entry:hover {
+      background: rgb(235 230 223 / 94%);
+    }
+
+    .entry:focus {
+      border-color: rgb(104 96 93 / 42%);
+      background: rgb(240 236 230 / 96%);
+      box-shadow: inset 0 0 0 1px rgb(255 255 255 / 55%);
+    }
+
+    .entry.small {
+      font-size: clamp(9px, 1.8vw, 18px);
+      line-height: 1.45;
+    }
+
+    .entry.tiny {
+      font-size: clamp(8px, 1.48vw, 15px);
+      line-height: 1.38;
+    }
+
+    /* Coordinates are percentages of the 1014 × 1367 source image. */
+    .left  { left: 23.47%; width: 32.84%; }
+    .right { left: 58.09%; width: 34.12%; }
+    .row-1 { top: 12.51%; height: 12.58%; }
+    .row-2 { top: 29.48%; height: 12.58%; }
+    .row-3 { top: 46.45%; height: 12.58%; }
+    .row-4 { top: 63.42%; height: 12.58%; }
+    .row-5 { top: 80.40%; height: 12.58%; }
+
+    .status {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 10;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgb(77 71 69 / 86%);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.2;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(5px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .status.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 520px) {
+      .entry {
+        padding: 1.2% 1.4%;
+        letter-spacing: 0;
+      }
+
+      .share-footer {
+        flex-direction: column;
+        padding: 20px 18px 24px;
+        text-align: center;
+      }
+
+      .share-button {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media print {
+      :root, body {
+        background: #fff;
+      }
+
+      .page {
+        width: 100%;
+        box-shadow: none;
+      }
+
+      .entry {
+        border-color: transparent !important;
+        background: rgb(232 227 219 / 88%) !important;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .share-footer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="sheet" aria-label="キャラクターの第一印象と今の印象">
+      <img class="sheet-image" src="assets/impression-sheet.png" alt="第一印象と今の印象の記入シート">
+
+      <textarea class="entry left row-1" data-key="character-1-first" aria-label="1人目の第一印象" placeholder="第一印象を入力"></textarea>
+      <textarea class="entry right row-1" data-key="character-1-now" aria-label="1人目の今の印象" placeholder="今の印象を入力"></textarea>
+
+      <textarea class="entry left row-2" data-key="character-2-first" aria-label="2人目の第一印象" placeholder="第一印象を入力"></textarea>
+      <textarea class="entry right row-2" data-key="character-2-now" aria-label="2人目の今の印象" placeholder="今の印象を入力"></textarea>
+
+      <textarea class="entry left row-3" data-key="character-3-first" aria-label="3人目の第一印象" placeholder="第一印象を入力"></textarea>
+      <textarea class="entry right row-3" data-key="character-3-now" aria-label="3人目の今の印象" placeholder="今の印象を入力"></textarea>
+
+      <textarea class="entry left row-4" data-key="character-4-first" aria-label="4人目の第一印象" placeholder="第一印象を入力"></textarea>
+      <textarea class="entry right row-4" data-key="character-4-now" aria-label="4人目の今の印象" placeholder="今の印象を入力"></textarea>
+
+      <textarea class="entry left row-5" data-key="character-5-first" aria-label="5人目の第一印象" placeholder="第一印象を入力"></textarea>
+      <textarea class="entry right row-5" data-key="character-5-now" aria-label="5人目の今の印象" placeholder="今の印象を入力"></textarea>
+    </section>
+
+    <footer class="share-footer">
+      <p class="share-copy">入力内容を背景と合成して、1枚の画像にできます。</p>
+      <button class="share-button" type="button" id="share-button">画像としてシェア</button>
+    </footer>
+  </main>
+
+  <div class="status" role="status" aria-live="polite">保存しました</div>
+
+  <script>
+    const STORAGE_KEY = "cat-fantasy-impressions-v1";
+    const entries = [...document.querySelectorAll(".entry")];
+    const status = document.querySelector(".status");
+    const shareButton = document.querySelector("#share-button");
+    const sheet = document.querySelector(".sheet");
+    const sheetImage = document.querySelector(".sheet-image");
+    let statusTimer;
+
+    function loadEntries() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        entries.forEach((entry) => {
+          entry.value = saved[entry.dataset.key] || "";
+          fitText(entry);
+        });
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function saveEntries() {
+      const values = Object.fromEntries(
+        entries.map((entry) => [entry.dataset.key, entry.value])
+      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
+      showStatus();
+    }
+
+    function fitText(entry) {
+      const length = entry.value.replace(/\s/g, "").length;
+      entry.classList.toggle("small", length > 75 && length <= 130);
+      entry.classList.toggle("tiny", length > 130);
+    }
+
+    function showStatus(message = "保存しました") {
+      clearTimeout(statusTimer);
+      status.textContent = message;
+      status.classList.add("visible");
+      statusTimer = setTimeout(() => status.classList.remove("visible"), 900);
+    }
+
+    function roundedRect(context, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      context.beginPath();
+      context.moveTo(x + r, y);
+      context.arcTo(x + width, y, x + width, y + height, r);
+      context.arcTo(x + width, y + height, x, y + height, r);
+      context.arcTo(x, y + height, x, y, r);
+      context.arcTo(x, y, x + width, y, r);
+      context.closePath();
+    }
+
+    function wrapText(context, text, maxWidth) {
+      const lines = [];
+      const paragraphs = text.replace(/\r/g, "").split("\n");
+
+      paragraphs.forEach((paragraph) => {
+        if (!paragraph) {
+          lines.push("");
+          return;
+        }
+
+        let line = "";
+        for (const character of Array.from(paragraph)) {
+          const candidate = line + character;
+          if (line && context.measureText(candidate).width > maxWidth) {
+            lines.push(line);
+            line = character;
+          } else {
+            line = candidate;
+          }
+        }
+        lines.push(line);
+      });
+
+      return lines;
+    }
+
+    function drawEntry(context, entry, scaleX, scaleY, sheetRect) {
+      const rect = entry.getBoundingClientRect();
+      const style = getComputedStyle(entry);
+      const x = (rect.left - sheetRect.left) * scaleX;
+      const y = (rect.top - sheetRect.top) * scaleY;
+      const width = rect.width * scaleX;
+      const height = rect.height * scaleY;
+      const paddingLeft = parseFloat(style.paddingLeft) * scaleX;
+      const paddingRight = parseFloat(style.paddingRight) * scaleX;
+      const paddingTop = parseFloat(style.paddingTop) * scaleY;
+      const paddingBottom = parseFloat(style.paddingBottom) * scaleY;
+      const fontSize = parseFloat(style.fontSize) * scaleX;
+      const lineHeight = parseFloat(style.lineHeight) * scaleY;
+
+      context.save();
+      context.fillStyle = "rgb(232 227 219 / 0.88)";
+      roundedRect(context, x, y, width, height, 2 * scaleX);
+      context.fill();
+
+      if (entry.value.trim()) {
+        context.fillStyle = "#5a5453";
+        context.font = `${style.fontWeight} ${fontSize}px "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif`;
+        context.textBaseline = "top";
+
+        const textWidth = width - paddingLeft - paddingRight;
+        const maxTextHeight = height - paddingTop - paddingBottom;
+        const lines = wrapText(context, entry.value, textWidth);
+        const maxLines = Math.max(1, Math.floor(maxTextHeight / lineHeight));
+        const visibleLines = lines.slice(0, maxLines);
+
+        if (lines.length > maxLines && visibleLines.length) {
+          let lastLine = visibleLines.at(-1);
+          while (lastLine && context.measureText(`${lastLine}…`).width > textWidth) {
+            lastLine = lastLine.slice(0, -1);
+          }
+          visibleLines[visibleLines.length - 1] = `${lastLine}…`;
+        }
+
+        visibleLines.forEach((line, index) => {
+          context.fillText(line, x + paddingLeft, y + paddingTop + (lineHeight * index));
+        });
+      }
+
+      context.restore();
+    }
+
+    async function createShareImage() {
+      if (!sheetImage.complete || !sheetImage.naturalWidth) {
+        await new Promise((resolve, reject) => {
+          sheetImage.addEventListener("load", resolve, { once: true });
+          sheetImage.addEventListener("error", reject, { once: true });
+        });
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = sheetImage.naturalWidth;
+      canvas.height = sheetImage.naturalHeight;
+      const context = canvas.getContext("2d");
+      const sheetRect = sheet.getBoundingClientRect();
+      const scaleX = canvas.width / sheetRect.width;
+      const scaleY = canvas.height / sheetRect.height;
+
+      context.drawImage(sheetImage, 0, 0, canvas.width, canvas.height);
+      entries.forEach((entry) => drawEntry(context, entry, scaleX, scaleY, sheetRect));
+
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (blob) => blob ? resolve(blob) : reject(new Error("画像を生成できませんでした。")),
+          "image/png"
+        );
+      });
+    }
+
+    function downloadImage(blob) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "cat-fantasy-impressions.png";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showStatus("PNGを保存しました");
+    }
+
+    async function shareImage() {
+      const defaultLabel = shareButton.textContent;
+      shareButton.disabled = true;
+      shareButton.textContent = "画像を作成中…";
+
+      try {
+        const blob = await createShareImage();
+        const file = new File([blob], "cat-fantasy-impressions.png", { type: "image/png" });
+        const shareData = { files: [file], title: "第一印象 / 今の印象" };
+
+        const mobileShare = matchMedia("(max-width: 700px)").matches;
+
+        if (mobileShare && navigator.share && navigator.canShare?.(shareData)) {
+          try {
+            await navigator.share(shareData);
+            showStatus("共有しました");
+          } catch (error) {
+            if (error.name !== "AbortError") {
+              downloadImage(blob);
+            }
+          }
+        } else {
+          downloadImage(blob);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("画像を生成できませんでした。ブラウザを変えてお試しください。");
+      } finally {
+        shareButton.disabled = false;
+        shareButton.textContent = defaultLabel;
+      }
+    }
+
+    entries.forEach((entry) => {
+      entry.addEventListener("input", () => {
+        fitText(entry);
+        saveEntries();
+      });
+    });
+
+    shareButton.addEventListener("click", shareImage);
+
+    loadEntries();
+  </script>
+</body>
+</html>
