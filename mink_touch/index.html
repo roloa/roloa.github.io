@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#09090c" />
+    <meta
+      name="description"
+      content="表情とセリフの切り替えを試すインタラクティブビューア"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2309090c'/%3E%3Cpath d='M12 26 19 9l13 12L45 9l7 17v23H12z' fill='%23331b20' stroke='%23f07c57' stroke-width='4'/%3E%3Ccircle cx='24' cy='34' r='4' fill='%23b69cff'/%3E%3Ccircle cx='40' cy='34' r='4' fill='%23b69cff'/%3E%3C/svg%3E"
+    />
+    <title>Mink Reaction Viewer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="viewer" id="viewer" aria-label="Mink リアクションビューア">
+      <div class="scene" id="scene">
+        <div class="image-stack" aria-hidden="true">
+          <img class="character is-visible" id="character-a" src="./image/mink1.png" alt="" />
+          <img class="character" id="character-b" src="./image/mink1.png" alt="" />
+          <div class="vignette"></div>
+        </div>
+
+        <div class="topbar">
+          <p class="status"><span class="status-dot"></span>REACTION TEST</p>
+          <button class="reset-button" id="reset-button" type="button">最初から</button>
+        </div>
+
+        <div class="choice-panel" id="choice-panel" aria-label="選択肢"></div>
+
+        <button class="advance-layer" id="advance-layer" type="button" aria-label="セリフを進める"></button>
+
+        <section class="dialogue" id="dialogue" aria-live="polite">
+          <p class="speaker">ミンク</p>
+          <div class="dialogue-row">
+            <p class="line" id="line"></p>
+            <span class="continue-mark" id="continue-mark" aria-hidden="true"></span>
+          </div>
+          <p class="hint" id="hint">クリック、Enter、または Space で進む</p>
+        </section>
+
+        <div class="loading" id="loading" role="status">
+          <span class="loader"></span>
+          <span>画像を読み込んでいます</span>
+        </div>
+      </div>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
