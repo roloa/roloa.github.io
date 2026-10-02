@@ -1,0 +1,25 @@
+
+#app {
+    margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 600px;
+    width: 90%;
+    min-width: 300px;
+    border: solid;
+    font-size: large;
+    padding: 10px;
+
+    background-image: url("../画像/animal_sai.png");
+    background-position: right 10% bottom 10px;
+    background-repeat: no-repeat;
+    background-attachment: local;
+}
+
+a:link {
+    color: #00E;
+}
+
+a:visited {
+    color: #00E;
+}

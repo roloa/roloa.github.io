@@ -7,6 +7,10 @@
 
     let place_to_assignable_worker_list = {}
 
+    let worker_name_in_sheet_list = [];
+    let place_name_in_sheet_list = [];
+    let is_display_place_name_mode = false;
+
     loading_dictionary = function( url ){
     }
 
@@ -69,6 +73,13 @@
                 if( worker[place_name] ){
                     let new_span = document.createElement("span");
                     new_span.textContent = place_name;
+                    place_name_in_sheet_list.push(new_span);
+                    new_th.appendChild(new_span);
+
+                    new_span = document.createElement("span");
+                    new_span.textContent = worker.名前;
+                    new_span.hidden = true;
+                    worker_name_in_sheet_list.push(new_span);
                     new_th.appendChild(new_span);
                 }
                 
@@ -87,7 +98,17 @@
 
     }
 
+    document.getElementById("name_toggle_button").onclick = function(){
 
+        is_display_place_name_mode = !is_display_place_name_mode;
+
+        for (const span of place_name_in_sheet_list) {
+            span.hidden = is_display_place_name_mode;
+        }
+        for (const span of worker_name_in_sheet_list) {
+            span.hidden = !is_display_place_name_mode;
+        }
+    };
 
 
 })();

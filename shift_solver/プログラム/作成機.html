@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" href="webclip.png" />
     <link href="style.css" rel="stylesheet" />
     <title>シフト作成機</title>
-   
+
 </head>
 
 <body>
@@ -15,8 +15,46 @@
 
         <div id="worker_list_container">
             <h3>従業員リスト</h3>
-            <ul id="worker_list">
 
+            <div id="dayofweek_container">
+                <span id="span_sunday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_sunday" class="radio_dayofweek" />
+                    <label for="radio_sunday">日曜日</label>
+                </span>
+                <span id="span_monday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_monday" class="radio_dayofweek" />
+                    <label for="radio_monday">月曜日</label>
+                </span>
+                <span id="span_tuesday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_tuesday" class="radio_dayofweek" />
+                    <label for="radio_tuesday">火曜日</label>
+                </span>
+                <span id="span_wednesday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_wednesday" class="radio_dayofweek" />
+                    <label for="radio_wednesday">水曜日</label>
+                </span>
+                <span id="span_thursday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_thursday" class="radio_dayofweek" />
+                    <label for="radio_thursday">木曜日</label>
+                </span>
+                <span id="span_friday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_friday" class="radio_dayofweek" />
+                    <label for="radio_friday">金曜日</label>
+                </span>
+                <span id="span_saturday" class="span_dayofweek">
+                    <input type="radio" name="dayofweek" id="radio_saturday" class="radio_dayofweek" />
+                    <label for="radio_saturday">土曜日</label>
+                </span>
+            </div>
+
+                <div id="clear_button_container">
+                    <!-- クリアボタンは曜日ラジオボタンに吸収
+                        <button class="clear_button" id="clear_button">クリア</button>
+                    -->
+                </div>
+           
+            <ul id="worker_list">
+                <!-- 従業員リストはスクリプトが作成 -->
             </ul>
         </div>
 
@@ -25,17 +63,30 @@
             <div id="error_conainer">
                 <span id="error_message"></span>
             </div>
+            <div id="checked_worker_count_span_contaier">
+                <span id="checked_worker_count_span">チェック人数: 0人</span>
+            </div>
         </div>
 
         <div id="place_list_container">
             <h3>場所リスト</h3>
             <table id="place_table">
-                    
+
             </table>
             <ul>
+                <!--
                 <li>
-                    <input type="checkbox" id="checkbox_hide_place_name"/>
+                    <input type="checkbox" id="checkbox_hide_place_name" />
                     <label for="checkbox_hide_place_name">場所名を隠す</label>
+                </li>
+                -->
+            </ul>
+            <hr />
+            <h3>設定</h3>
+            <ul>
+                <li>
+                    <input type="checkbox" id="checkbox_stripe_start_from_cyan" />
+                    <label for="checkbox_stripe_start_from_cyan">従業員リストの縞模様は水色から始まる</label>
                 </li>
             </ul>
         </div>
@@ -44,5 +95,7 @@
 </body>
 <script src='従業員リスト.js'></script>
 <script src='プログラム.js'></script>
+<script src='image_filename_list.js'></script>
+<script src='background.js'></script>
 
 <html>

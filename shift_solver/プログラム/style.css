@@ -1,3 +1,4 @@
+
 #app {
     margin-top: 30px;
     margin-right: auto;
@@ -8,42 +9,128 @@
     border: solid;
     font-size: large;
     padding: 10px;
+
+    background-image: url("../画像/animal_sai.png");
+    background-position: right 10% bottom 10px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 50%;
 }
+
+input[type=radio] {
+    transform: scale(2);
+}
+
+.span_dayofweek {
+    margin-left: 20px;
+}
+
+#span_sunday {
+    background-color: #FCF;
+}
+
+#span_monday {
+    background-color: #FCC;
+}
+
+#span_tuesday {
+    background-color: #FDC;
+}
+
+#span_wednesday {
+    background-color: #FFC;
+}
+
+#span_thursday {
+    background-color: #CFC;
+}
+
+#span_friday {
+    background-color: #CFF;
+}
+
+#span_saturday {
+    background-color: #CCF;
+}
+
+.span_dayofweek {
+    display: block;
+    float: left;
+    margin-bottom: 10px;
+}
+
+#clear_button_container {
+    padding-top: 20px;
+    margin-left: 30px;
+    clear: both;
+}
+
+button#clear_button {
+    padding: 10px 10px;
+    font-size: large;
+    font-weight: bold;
+}
+
 input[type=checkbox] {
     transform: scale(2);
     margin: 0 6px 0 0;
 }
+
 ul#worker_list {
-  column-count: auto;
-  column-width: 250px;
+    column-count: auto;
+    column-width: 250px;
+    width: 130px;
 }
-li{
+
+li {
     margin: 3px;
 }
-li:nth-child(even){
+
+.stripe_even_cyan li:nth-child(even) {
     background: #CFF;
 }
-button#enter_button{
+
+.stripe_even_cyan li:nth-child(odd) {
+    background: #FFF;
+}
+
+.stripe_odd_cyan li:nth-child(odd) {
+    background: #CFF;
+}
+
+.stripe_odd_cyan li:nth-child(even) {
+    background: #FFF;
+}
+
+button#enter_button {
     padding: 10px 30px;
     font-size: large;
     font-weight: bold;
 }
-#error_message{
+
+#error_message {
     color: brown;
 }
-#enter_container{
+
+#enter_container {
     margin-left: 30px;
 }
-table, td, th {
+
+table,
+td,
+th {
     border: solid 1px;
+    background-color: #FFF;
 }
-.highlight_worker{
+
+.highlight_worker {
     background: #CFC;
 }
 
-a:link{
+a:link {
     color: #00E;
 }
-a:visited{
+
+a:visited {
     color: #00E;
 }

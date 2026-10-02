@@ -7,6 +7,7 @@
     <link rel="apple-touch-icon" href="webclip.png" />
     <title>従業員情報の変更</title>
     <style>
+
         #app {
             margin-top: 30px;
             margin-right: auto;
@@ -16,47 +17,63 @@
             min-width: 300px;
             border: solid;
             font-size: large;
+            margin-bottom: 300px;
+
+            background-image: url("../画像/animal_sai.png");
+            background-position: right 10% bottom 10%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
-        #interface_container{
+
+        #interface_container {
             display: flex;
         }
-        #worker_list_and_add_button_container{
+
+        #worker_list_and_add_button_container {
             display: block;
             min-width: 450px;
         }
-        #control_panel{
+
+        #control_panel {
             display: block;
         }
-        .worker_div{
+
+        .worker_div {
             border: solid 1px;
             padding: 5px;
-            width: 420px;
+            width: 430px;
             margin: 2px;
         }
+
         button {
-	        padding: 3px 10px;
+            padding: 3px 10px;
             margin: 1px;
             margin-left: 4px;
         }
-        #add_worker_button{
+
+        #add_worker_button {
             padding: 5px 10px;
             margin: 5px;
             font-size: large;
         }
-        input[type=text ]{
+
+        input[type=text] {
             font-size: large;
             margin-right: 10px;
         }
-        select{
+
+        select {
             margin-right: 10px;
-        }
-        #error_message{
-            color: brown;
-        }
-        #enter_container{
-            margin-left: 30px;
+            font-size: medium;
         }
 
+        #error_message {
+            color: brown;
+        }
+
+        #enter_container {
+            margin-left: 30px;
+        }
     </style>
 </head>
 
@@ -76,9 +93,9 @@
                 <div id="save_container">
                     <span id="import_label">従業員情報の変更を保存する</span>
                     <button id="save_button">保存</button>
-                <div id="save_message_container">
-                    <span id="save_message">　</span>
-                </div>
+                    <div id="save_message_container">
+                        <span id="save_message">　</span>
+                    </div>
                 </div>
                 <div id="download_container">
                     <span id="import_label">従業員情報をファイルに書き出し</span>
@@ -99,5 +116,7 @@
     </div>
 </body>
 <script src='エディタプログラム.js'></script>
+<script src='image_filename_list.js'></script>
+<script src='background.js'></script>
 
 <html>

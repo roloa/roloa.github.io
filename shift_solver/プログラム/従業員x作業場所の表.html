@@ -5,14 +5,14 @@
 <head>
     <meta charset="utf-8" />
     <link rel="apple-touch-icon" href="webclip.png" />
-    <title>従業員x作業場所の表</title>
+    <title>従業員情報の表示</title>
     <style>
         #app {
             margin-top: 30px;
             margin-right: auto;
             margin-left: auto;
             min-height: 600px;
-            width: 80%;
+            width: 90%;
             min-width: 300px;
             border: solid;
             font-size: 10px;
@@ -43,15 +43,13 @@
         #enter_container{
             margin-left: 30px;
         }
+
         table, td, th {
             border: solid 1px;
-            
         }
         td, th {
             width: 100px;
         }
-
-
         .highlight_worker{
             background: #CFC;
         }
@@ -64,7 +62,10 @@
     <div id="app">
 
         <div id="place_list_container">
-            <h3>従業員x作業場所の表</h3>
+            <h2>従業員情報の表示</h2>
+            <p>
+                <button id="name_toggle_button">名前&lt;=&gt;場所名切り替え</button><br />
+            </p>
             <table id="place_table">
                     
             </table>

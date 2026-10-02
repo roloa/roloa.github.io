@@ -84,20 +84,22 @@
 
         let up_button = document.createElement("button");
         up_button.textContent = "↑";
-        up_button.onclick = function(){
+        up_button.onclick = function( event ){
             //console.log( new_worker_div.previousElementSibling );
             if( new_worker_div.previousElementSibling ) {
                 new_worker_div.previousElementSibling.before( new_worker_div );
+                scrollTo(0, up_button.getBoundingClientRect().top + up_button.getBoundingClientRect().height / 2 + window.scrollY - event.clientY);
             }
         };
         new_worker_div.appendChild(up_button);
 
         let down_button = document.createElement("button");
         down_button.textContent = "↓";
-        down_button.onclick = function(){
+        down_button.onclick = function( event ){
             //console.log( new_worker_div.nextElementSibling );
             if( new_worker_div.nextElementSibling ){
                 new_worker_div.nextElementSibling.after( new_worker_div );
+                scrollTo(0, down_button.getBoundingClientRect().top + down_button.getBoundingClientRect().height / 2 + window.scrollY - event.clientY);
             }
         };
         new_worker_div.appendChild(down_button);
@@ -182,41 +184,58 @@
 
         json_string = "window.worker_json = " + json_string;
         console.log( json_string );
+
+        // 日付文字列をつくる
+        let date = new Date();
+        let date_string = "従業員リスト_" +
+        date.getFullYear() + 
+        String((date.getMonth() + 1)).padStart(2, "0") + 
+        String(date.getDay()).padStart(2, "0") + 
+        "_" +
+        String(date.getHours()).padStart(2, "0") + 
+        String(date.getMinutes()).padStart(2, "0") + 
+        String(date.getSeconds()).padStart(2, "0") +
+        ".txt";
         // jsonをダウンロードさせる
         let blob = new Blob([ json_string ], {type: 'text/plain'});
         let link = document.createElement('a');
-        link.download = '従業員リスト.txt';
+        link.download = date_string;
         link.href = URL.createObjectURL(blob);
         link.click();
         URL.revokeObjectURL(link.href);
     };
     let import_json = function( json_string ){
+
+        let json_object = null;
+        try {
+            json_object = JSON.parse(json_string);
+
+        } catch ( error ) {
+            document.getElementById("error_message").textContent = "読み込みエラー: " + error;
+            return false;
+        }
+
         // 従業員リストをクリアしておく
         let worker_list = document.getElementById("worker_list_container")
         while( worker_list.firstChild ){
             worker_list.removeChild( worker_list.firstChild );
         } 
-        let json_object = null;
-        try {
-            json_object = JSON.parse(json_string);
-        } catch ( error ) {
-            document.getElementById("error_message").textContent = "読み込みエラー: " + error;
-            return;
-        }
-
+        
         for (const worker_obj of json_object) {
             add_worker_div( worker_obj );
         }
+        return true;
     }
     let import_file = function( result ){
         //console.log(reader.result);
         let header = "window.worker_json =";
         let startindex = result.indexOf( header ) + header.length;
         let json_string = result.substring(startindex);
-        import_json( json_string );
-
-        let json_string_regather = gather_data_to_json();
-        localStorage.setItem("worker_data_json", json_string_regather );
+        if( import_json( json_string ) ){
+            // 読み込みが正常に完了したらすぐにローカルストレージに保存
+            let json_string_regather = gather_data_to_json();
+            localStorage.setItem("worker_data_json", json_string_regather );
+        }
     }
 
     // ファイルのドロップ
