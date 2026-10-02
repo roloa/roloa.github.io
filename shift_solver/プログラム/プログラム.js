@@ -6,6 +6,23 @@
     var place_result_list = {};
 
     let place_to_assignable_worker_list = {}
+    const worker_categories = new Map();
+
+    // 場所ごとに従業員の行をまとめ、場所名は人数分の行をまたいで表示する。
+    const update_result_headings = function () {
+        for (const place_name in place_result_list) {
+            const group = place_result_list[place_name];
+            for (const old_heading of group.querySelectorAll("th")) {
+                old_heading.remove();
+            }
+            if (group.firstElementChild) {
+                const heading = document.createElement("th");
+                heading.textContent = place_name + ": ";
+                heading.rowSpan = group.children.length;
+                group.firstElementChild.prepend(heading);
+            }
+        }
+    };
 
     loading_dictionary = function (url) {
     }
@@ -75,7 +92,7 @@
         document.getElementById("radio_friday").onclick = clear_button_function;
         document.getElementById("radio_saturday").onclick = clear_button_function;
 
-        worker_json.forEach(element => {
+        worker_json.forEach((element, worker_index) => {
             // ワーカーリストUIをつくる
             let worker_list = document.getElementById("worker_list");
             let new_list_item = document.createElement("li");
@@ -97,6 +114,32 @@
 
             new_list_item.appendChild(new_check_box);
             new_list_item.appendChild(new_label);
+
+            const category_group = document.createElement("span");
+            category_group.className = "worker_categories";
+            category_group.setAttribute("role", "radiogroup");
+            category_group.setAttribute("aria-label", element.名前 + "の区分");
+            for (const category of ["A", "B", "C"]) {
+                const label = document.createElement("label");
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = "worker_category_" + worker_index;
+                radio.value = category;
+                radio.checked = false;
+                radio.autocomplete = "off";
+                radio.onchange = function () {
+                    worker_categories.set(element.名前, category);
+                    for (const row of assigned_worker_list || []) {
+                        if (row.worker_name === element.名前) {
+                            row.category_cell.textContent = category;
+                        }
+                    }
+                };
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(category));
+                category_group.appendChild(label);
+            }
+            new_list_item.appendChild(category_group);
 
             worker_list.appendChild(new_list_item);
         });
@@ -157,16 +200,17 @@
             new_tr.appendChild(new_th);
 
             let new_td = document.createElement("td");
-            let result_div = document.createElement("div");
-            new_td.appendChild(result_div);
+            let result_div = document.createElement("tbody");
             new_tr.appendChild(new_td);
+            new_tr.appendChild(document.createElement("td"));
+            result_div.appendChild(new_tr);
 
             // 場所リストを保持しておく
             place_result_list[element] = result_div;
             // 場所リストに場所の名前を記録しておく
             result_div.place_name = element;
 
-            place_table.appendChild(new_tr);
+            place_table.appendChild(result_div);
         });
 
         // 場所名から担当可能な従業員を引ける連想配列をつくる
@@ -336,7 +380,12 @@
         make_assigned_worker_div = function (worker, place_name) {
 
 
-            let new_div = document.createElement("div");
+            let new_div = document.createElement("tr");
+            const worker_cell = document.createElement("td");
+            const category_cell = document.createElement("td");
+            category_cell.className = "worker_category_result";
+            category_cell.textContent = worker_categories.get(worker.名前) || "";
+            new_div.category_cell = category_cell;
             let new_button = document.createElement("button");
             new_button.textContent = "＠";
             new_button.onclick = function () {
@@ -347,6 +396,7 @@
                         let distination_parent = selected_to_swap_worker.parentNode;
                         new_div.parentNode.appendChild(selected_to_swap_worker);
                         distination_parent.appendChild(new_div);
+                        update_result_headings();
                     }
                     // 選択従業員を解除する処理
                     selected_to_swap_worker = null;
@@ -374,10 +424,12 @@
                 }
             };
 
-            new_div.appendChild(new_button);
+            worker_cell.appendChild(new_button);
             let new_span = document.createElement("span");
             new_span.textContent = worker.名前;
-            new_div.appendChild(new_span);
+            worker_cell.appendChild(new_span);
+            new_div.appendChild(worker_cell);
+            new_div.appendChild(category_cell);
 
             // divに名前を記録しておく
             new_div.worker_name = worker.名前;
@@ -417,6 +469,7 @@
 
         }
 
+        update_result_headings();
     }
 
 
