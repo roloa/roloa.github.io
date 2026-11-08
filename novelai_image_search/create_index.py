@@ -62,7 +62,15 @@ def extract_metadata(png_path):
 
     img_info_dict = json.loads(info.get("Comment", ""))
 
-    if "v4_prompt" in img_info_dict:
+    if "actual_prompts" in img_info_dict:
+        # ランダムプロンプトの結果を表示用に採用
+        prompt = img_info_dict["actual_prompts"]["prompt"]["base_caption"]
+        char_prompt_list = img_info_dict["actual_prompts"]["prompt"]["char_captions"]
+        for char_prompt in char_prompt_list:
+            prompt += ","
+            prompt += char_prompt["char_caption"]
+
+    elif "v4_prompt" in img_info_dict:
         prompt = img_info_dict["v4_prompt"]["caption"]["base_caption"]
         char_prompt_list = img_info_dict["v4_prompt"]["caption"]["char_captions"]
         for char_prompt in char_prompt_list:
